@@ -167,6 +167,7 @@ class PhpRack_Package
     protected function _failure($log) 
     {
         $this->_latestCallSuccess = false;
+        $this->_result->fail();
         $this->_result->addLog('[FAILURE] ' . $log);
     }
         

@@ -21,6 +21,18 @@
  */
 class PhpRack_Package_Simple extends PhpRack_Package
 {
+    
+    /**
+     * Just fail the test
+     *
+     * @param string Message to show
+     * @return $this
+     */
+    public function fail($msg) 
+    {
+        $this->_failure($msg);
+        return $this;
+    }
 
     /**
      * Is it true?
