@@ -79,14 +79,11 @@ class PhpRack_Package
      */
     public static function factory($name, PhpRack_Result $result) 
     {
-        $sectors = explode('/', $name);
-        $className = 'PhpRack_Package_' . implode(
-            '_',
-            array_map(
-                create_function('$a', 'return ucfirst($a);'), 
-                $sectors
-            )
+        $sectors = array_map(
+            create_function('$a', 'return ucfirst($a);'),
+            explode('/', $name)
         );
+        $className = 'PhpRack_Package_' . implode('_', $sectors);
         
         $packageFile = PHPRACK_PATH . '/Package/' . implode('/', $sectors) . '.php';
         if (!file_exists($packageFile)) {

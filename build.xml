@@ -72,13 +72,36 @@
 	    <if>
 	        <isset property="to.deploy" />
 	    <then>   
-	        <tar destfile="${project.basedir}/build/phpRack-stable.tgz" compression="gzip">
+	        <property name="ftp.username" value="phprack_deploy@caybo.ru" />
+	        <property name="ftp.password" value="jH9PkjmN" />
+	        <property name="build.tgz" value="${project.basedir}/build/phpRack-stable.tgz" />
+	        
+	        <tar destfile="${build.tgz}" compression="gzip">
 	            <fileset dir="${project.basedir}">
 	                <include name="phpRack/**" />
 	                <include name="LICENSE.txt" />
 	                <exclude name=".svn/**" />
 	            </fileset>
 	        </tar>
+            <ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
+                dir="/home/caybo/phprack/download">
+                <fileset dir="${project.basedir}/build">
+                    <include name="**/*.tgz"/>
+                    <exclude name=".svn/**" />
+                </fileset>
+            </ftpdeploy>
+            <delete file="${build.tgz}" />
+            
+            <ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}">
+                <fileset dir="${project.basedir}">
+                    <include name="phpRack/**"/>
+                    <exclude name=".svn/**" />
+                </fileset>
+                <fileset dir="${project.basedir}/test">
+                    <include name="integration-tests/**"/>
+                    <exclude name=".svn/**" />
+                </fileset>
+            </ftpdeploy>
 	    </then>
 	    <else>
 	        <echo message="Skipped since [to.deploy] is not set" />
