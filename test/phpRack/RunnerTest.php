@@ -25,7 +25,7 @@ class RunnerTest extends AbstractTest
         $test = array_shift($tests);
         $result = $test->run();
         $this->assertTrue($result instanceof PhpRack_Result);
-        $this->assertTrue($result->wasSuccessful());
+        $this->assertTrue(is_bool($result->wasSuccessful()));
         $this->assertTrue(is_string($result->getLog()));
     }
         
