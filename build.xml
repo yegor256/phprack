@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<!--
+ *
+ * Copyright (c) phpRack.com
+ * All rights reserved.
+ *
+ * You can use this product "as is" without any warranties from authors.
+ * You can change the product only through Google Code repository
+ * at http://code.google.com/p/phprack
+ * If you have any questions about privacy, please email privacy@phpRack.com
+ *
+ * @copyright Copyright (c) phpRack.com
+ * @version $Id$
+ * @category phpRack
+ *
+ * This Phing build file. For more information see this document:
+ * http://phing.info/docs/guide/current/
+ *
+-->
+
+<project name="phpRack tests" basedir="." default="main"> 
+
+	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
+	<tstamp/>
+
+	<includepath classpath="${project.basedir}" />
+	<includepath classpath="${project.basedir}/test/" />
+
+	<target name="main" depends="lint, phpcs, test" >
+	</target>
+
+	<target name="lint" description="Run syntax check for all classes" >
+		<phplint haltonfailure="yes">
+			<fileset dir="${project.basedir}">
+				<include name="**/*.php"/>
+				<include name="**/*.html"/>
+				<include name="**/*.phtml"/>
+				<exclude name=".svn/**"/>
+			</fileset>
+		</phplint>
+	</target>
+
+    <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
+        <exec command="phpcs 
+            -n
+            --report=full
+            --standard=Zend 
+            --ignore='.svn/*' 
+            --extensions='php,phtml' 
+            ${project.basedir}" 
+            escape="false"
+            checkreturn="true" 
+            passthru="true" />
+    </target>
+
+	<target name="test" description="Run all existing unit-tests">
+   		<phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+			<formatter type="plain" usefile="no" />
+			<batchtest>
+				<fileset dir="${project.basedir}/test">
+					<include name="**/*Test*.php"/>
+					<exclude name="**/Abstract*.php"/>
+					<exclude name="**/_*.php"/>
+					<exclude name=".svn/**"/>
+				</fileset>
+			</batchtest>
+		</phpunit>
+	</target>	
+
+</project>
