@@ -90,7 +90,7 @@ class PhpRack_Package
         
         $packageFile = PHPRACK_PATH . '/Package/' . implode('/', $sectors) . '.php';
         if (!file_exists($packageFile)) {
-            throw new Exception("Package '$name' is absent in phpRack");
+            throw new Exception("Package '$name' is absent in phpRack: '{$packageFile}'");
         }
         
         require_once $packageFile;
