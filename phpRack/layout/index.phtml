@@ -1,0 +1,60 @@
+<html>
+<head>
+    <style>
+    body {
+        font-family: Verdana;
+        font-size: 12px;
+    }
+    .success {
+        color: green;
+        cursor: pointer;
+    }
+    .failure {
+        color: red;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    </style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+    <title>phpRack Testing Report</title>
+</head>
+
+<body>
+    <p><b>phpRack v<?php echo PHPRACK_VERSION?></b></p>
+        
+    <?php $i = 1; ?>
+    <?php foreach ($this->_runner->getTests() as $test): ?>
+        <p><?php echo $test->getFileName() ?>:
+            <span id="s<?php echo ++$i?>">running...</span></p>
+        <pre style="display:none;" id="p<?php echo $i?>"></pre>
+        
+        <script type="text/javascript">
+        $(document).ready(
+            function()
+            { 
+                $.getJSON(
+                    '<?php echo $_SERVER['REQUEST_URI']?>',
+                    {<?php echo PHPRACK_AJAX_TAG?>: '<?php echo $test->getFileName()?>'},
+                    function (json)
+                    {
+                        if (json.success == true) {
+                            $('span#s<?php echo $i?>').html('OK').addClass('success');
+                        } else {
+                            $('span#s<?php echo $i?>').html('FAILURE').addClass('failure');
+                        }
+                        $('pre#p<?php echo $i?>').html(json.log);
+                        $('span#s<?php echo $i?>').click(
+                            function()
+                            {
+                                $('pre#p<?php echo $i?>').toggle();
+                            }
+                        );
+                    }
+                );
+                return false; 
+            }
+        );
+        </script>
+    <?php endforeach; ?>
+</body>
+</html>

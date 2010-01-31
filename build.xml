@@ -62,6 +62,7 @@
 					<exclude name="**/Abstract*.php"/>
 					<exclude name="**/_*.php"/>
 					<exclude name=".svn/**"/>
+					<exclude name="**/integration-tests/**"/>
 				</fileset>
 			</batchtest>
 		</phpunit>
