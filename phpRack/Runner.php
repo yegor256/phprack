@@ -50,6 +50,10 @@ class PhpRack_Runner
      */
     public function getTests() 
     {
+        if (!file_exists($this->_dir)) {
+            throw new Exception("Test directory '{$this->_dir}' is not found");
+        }
+
         $tests = array();
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->_dir)) as $file) {
             if (!preg_match(self::TEST_PATTERN, $file->getFilename(), $matches)) {
