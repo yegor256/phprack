@@ -30,14 +30,22 @@ abstract class PhpRack_Test
     protected $_fileName;
     
     /**
+     * Runner of tests
+     *
+     * @var phpRack_Runner
+     */
+    protected $_runner;
+    
+    /**
      * Construct the class
      *
      * @param string ID of the test, file name
      * @return void
      */
-    public final function __construct($fileName)
+    public final function __construct($fileName, phpRack_Runner $runner)
     {
         $this->_fileName = realpath($fileName);
+        $this->_runner = $runner;
     }
     
     /**
@@ -62,6 +70,16 @@ abstract class PhpRack_Test
     public function getFileName() 
     {
         return $this->_fileName;
+    }
+    
+    /**
+     * Get label of the test
+     *
+     * @return string
+     */
+    public function getLabel() 
+    {
+        return ltrim(substr($this->_fileName, strlen($this->_runner->getDir())), '/');
     }
     
     /**

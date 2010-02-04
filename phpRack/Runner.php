@@ -44,6 +44,16 @@ class PhpRack_Runner
     }
     
     /**
+     * Get tests location directory
+     *
+     * @return string
+     */
+    public function getDir() 
+    {
+        return realpath($this->_dir);
+    }
+    
+    /**
      * Get full list of tests, in array
      *
      * @return PhpRack_Test[]
@@ -63,7 +73,7 @@ class PhpRack_Runner
                 
             $className = $matches[1];    
             require_once $file;
-            $tests[] = new $className(strval($file));
+            $tests[] = new $className(strval($file), $this);
         }
         return $tests;
     }
@@ -88,7 +98,7 @@ class PhpRack_Runner
         
         $className = pathinfo($fileName, PATHINFO_FILENAME);
         require_once $fileName;
-        $test = new $className($fileName);
+        $test = new $className($fileName, $this);
         
         $result = $test->run();
         return json_encode(

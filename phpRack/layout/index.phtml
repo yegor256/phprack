@@ -30,7 +30,7 @@
     <?php $i = 0; ?>
     <?php $jsCalls = array(); ?>
     <?php foreach ($this->_runner->getTests() as $test): ?>
-        <div id="d<?php echo ++$i?>"><?php echo $test->getFileName() ?>:
+        <div id="d<?php echo ++$i?>"><?php echo $test->getLabel() ?>:
             <span class="result">running...</span>
         <pre style="display:none;"></pre></div>
         <?php $jsCalls[$i] = $test->getFileName() ?>
