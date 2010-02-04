@@ -47,6 +47,7 @@ class PhpRack_Runner
      * Get full list of tests, in array
      *
      * @return PhpRack_Test[]
+     * @throws Exception
      */
     public function getTests() 
     {
