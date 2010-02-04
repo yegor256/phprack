@@ -5,13 +5,15 @@
         font-family: Verdana;
         font-size: 12px;
     }
+    span.result {
+        cursor: pointer;
+        text-decoration: underline;
+    }
     .success {
         color: green;
-        cursor: pointer;
     }
     .failure {
         color: red;
-        cursor: pointer;
         font-weight: bold;
     }
     </style>
@@ -25,7 +27,7 @@
     <?php $i = 1; ?>
     <?php foreach ($this->_runner->getTests() as $test): ?>
         <p><?php echo $test->getFileName() ?>:
-            <span id="s<?php echo ++$i?>">running...</span></p>
+            <span class="result" id="s<?php echo ++$i?>">running...</span></p>
         <pre style="display:none;" id="p<?php echo $i?>"></pre>
         
         <script type="text/javascript">
