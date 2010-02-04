@@ -72,10 +72,11 @@ class PhpRack_Runner
      * Run one test and return JSON result
      *
      * @param string Test file name (absolute name of PHP file)
+     * @param string Unique token to return back
      * @return JSON
      * @throws Exception
      */
-    public function run($fileName) 
+    public function run($fileName, $token) 
     {
         if (!file_exists($fileName)) {
             throw new Exception("File '{$fileName}' is not found");
@@ -93,7 +94,8 @@ class PhpRack_Runner
         return json_encode(
             array(
                 'success' => $result->wasSuccessful(),
-                'log' => $result->getLog()
+                'log' => $result->getLog(),
+                PHPRACK_AJAX_TOKEN => $token,
             )
         );
     }

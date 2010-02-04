@@ -28,7 +28,10 @@ try {
         define('PHPRACK_VERSION', '0.1');
 
     defined('PHPRACK_AJAX_TAG') or
-        define('PHPRACK_AJAX_TAG', 'tst');
+        define('PHPRACK_AJAX_TAG', 'test');
+
+    defined('PHPRACK_AJAX_TOKEN') or
+        define('PHPRACK_AJAX_TOKEN', 'token');
 
     defined('PHPRACK_PATH') or
         define('PHPRACK_PATH', dirname(__FILE__));
@@ -42,7 +45,7 @@ try {
         $view = new PhpRack_View($runner);
         echo $view->render();
     } else {
-        echo $runner->run($_GET[PHPRACK_AJAX_TAG]);
+        echo $runner->run($_GET[PHPRACK_AJAX_TAG], $_GET[PHPRACK_AJAX_TOKEN]);
     }
 
 } catch (Exception $e) {

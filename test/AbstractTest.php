@@ -11,6 +11,7 @@ $phpRackConfig = array(
 // but here we should set them explicitly, for tests only
 $_SERVER['REQUEST_URI'] = 'no-URL-it-is-testing.com';
 define('PHPRACK_AJAX_TAG', 'testing-tag');
+define('PHPRACK_AJAX_TOKEN', 'testing-token');
 
 require_once 'PHPUnit/Framework/TestCase.php';
 

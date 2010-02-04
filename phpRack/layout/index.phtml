@@ -5,6 +5,9 @@
         font-family: Verdana;
         font-size: 12px;
     }
+    div {
+        margin-bottom: 10px;
+    }
     span.result {
         cursor: pointer;
         text-decoration: underline;
@@ -24,39 +27,50 @@
 <body>
     <p><b>phpRack v<?php echo PHPRACK_VERSION?></b></p>
         
-    <?php $i = 1; ?>
+    <?php $i = 0; ?>
+    <?php $jsCalls = array(); ?>
     <?php foreach ($this->_runner->getTests() as $test): ?>
-        <p><?php echo $test->getFileName() ?>:
-            <span class="result" id="s<?php echo ++$i?>">running...</span></p>
-        <pre style="display:none;" id="p<?php echo $i?>"></pre>
-        
-        <script type="text/javascript">
-        $(document).ready(
-            function()
-            { 
-                $.getJSON(
-                    '<?php echo $_SERVER['REQUEST_URI']?>',
-                    {<?php echo PHPRACK_AJAX_TAG?>: '<?php echo $test->getFileName()?>'},
-                    function (json)
-                    {
-                        if (json.success == true) {
-                            $('span#s<?php echo $i?>').html('OK').addClass('success');
-                        } else {
-                            $('span#s<?php echo $i?>').html('FAILURE').addClass('failure');
-                        }
-                        $('pre#p<?php echo $i?>').html(json.log);
-                        $('span#s<?php echo $i?>').click(
-                            function()
-                            {
-                                $('pre#p<?php echo $i?>').toggle();
-                            }
-                        );
-                    }
-                );
-                return false; 
-            }
-        );
-        </script>
+        <div id="d<?php echo ++$i?>"><?php echo $test->getFileName() ?>:
+            <span class="result">running...</span>
+        <pre style="display:none;"></pre></div>
+        <?php $jsCalls[$i] = $test->getFileName() ?>
     <?php endforeach; ?>
+
+    <script type="text/javascript">
+    $(function()
+    {
+        var calls = {
+            <?php foreach ($jsCalls as $i=>$testName): ?>
+                'div#d<?php echo $i ?>': '<?php echo $testName?>',
+            <?php endforeach; ?>
+        };
+        for (var id in calls) {
+            $.getJSON(
+                '<?php echo $_SERVER['REQUEST_URI']?>',
+                {
+                    '<?php echo PHPRACK_AJAX_TAG?>': calls[id], 
+                    '<?php echo PHPRACK_AJAX_TOKEN?>': id
+                },
+                function (json)
+                {
+                    var id = json.<?php echo PHPRACK_AJAX_TOKEN?>;
+                    if (json.success == true) {
+                        $(id).find('span').html('OK').addClass('success');
+                    } else {
+                        $(id).find('span').html('FAILURE').addClass('failure');
+                    }
+                    $(id).find('pre').html(json.log);
+                    $(id).find('span').click(
+                        function()
+                        {
+                            $(id).find('pre').toggle();
+                        }
+                    );
+                }
+            );
+            $.
+        }
+    });
+    </script>
 </body>
 </html>
