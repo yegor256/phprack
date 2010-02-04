@@ -104,4 +104,15 @@ abstract class PhpRack_Test
         return $this->assert->getResult();
     }
     
+    /**
+     * Log one message
+     *
+     * @param string The message
+     * @return void
+     */
+    protected function _log($message) 
+    {
+        $this->assert->getResult()->addLog($message);
+    }
+    
 }
