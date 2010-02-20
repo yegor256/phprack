@@ -15,6 +15,16 @@
  */
 
 /**
+ * @see phpRack_Result
+ */
+require_once PHPRACK_PATH . '/Result.php';
+
+/**
+ * @see phpRack_Test
+ */
+require_once PHPRACK_PATH . '/Test.php';
+
+/**
  * One test assertion package
  *
  * @package Tests
@@ -165,7 +175,7 @@ class PhpRack_Package
     {
         $this->_latestCallSuccess = false;
         $this->_result->fail();
-        $this->_result->addLog('[FAILURE] ' . $log);
+        $this->_result->addLog('[' . phpRack_Test::FAILURE . '] ' . $log);
     }
         
     /**
@@ -177,7 +187,7 @@ class PhpRack_Package
     protected function _success($log) 
     {
         $this->_latestCallSuccess = true;
-        $this->_result->addLog('[OK] ' . $log);
+        $this->_result->addLog('[' . phpRack_Test::OK . '] ' . $log);
     }
         
 }

@@ -15,6 +15,16 @@
  */
 
 /**
+ * @see phpRack_Runner
+ */
+require_once PHPRACK_PATH . '/Runner.php';
+
+/**
+ * @see phpRack_Assertion
+ */
+require_once PHPRACK_PATH . '/Assertion.php';
+
+/**
  * Parent class of all integration tests
  *
  * @package Tests
@@ -42,13 +52,37 @@ abstract class PhpRack_Test
     /**
      * Construct the class
      *
-     * @param string ID of the test, file name
+     * @param string ID of the test, absolute (!) file name
+     * @param phpRack_Runner Instance of test runner
      * @return void
      */
-    public final function __construct($fileName, phpRack_Runner $runner)
+    private final function __construct($fileName, phpRack_Runner $runner)
     {
         $this->_fileName = realpath($fileName);
         $this->_runner = $runner;
+    }
+    
+    /**
+     * undocumented function
+     *
+     * @param string ID of the test, absolute (!) file name
+     * @param phpRack_Runner Instance of test runner
+     * @return phpRack_Test
+     * @throws Exception
+     */
+    public static function factory($fileName, phpRack_Runner $runner) 
+    {
+        if (!file_exists($fileName)) {
+            throw new Exception("File '{$fileName}' is not found");
+        }
+        
+        if (!preg_match(phpRack_Runner::TEST_PATTERN, $fileName, $matches)) {
+            throw new Exception("File '{$fileName}' is not named properly, can't run it");
+        }
+        
+        $className = pathinfo($fileName, PATHINFO_FILENAME);
+        require_once $fileName;
+        return new $className($fileName, $runner);
     }
     
     /**
@@ -60,7 +94,6 @@ abstract class PhpRack_Test
     public final function __get($name) 
     {
         if ($name == 'assert') {
-            require_once PHPRACK_PATH . '/Assertion.php';
             return PhpRack_Assertion::factory(__FILE__);
         }
     }

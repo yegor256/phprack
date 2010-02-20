@@ -23,19 +23,33 @@ require_once PHPRACK_PATH . '/Test.php';
  * Run all tests together, or one by one
  *
  * First you should create an instance of this class, providing it an array
- * of options.
+ * of options. Then you can either run individual test or all tests in a 
+ * test suite:
+ *
+ * <code>
+ * $runner = new phpRack_Runner(array('dir'=>'/path/to/my-tests'));
+ * echo $runner->runSuite();
+ * </code>
+ *
+ * This code will give you a plain-text report of all tests in your collection,
+ * executed and logged.
  *
  * @package Tests
  */
 class PhpRack_Runner
 {
     
+    /**
+     * This is how you should name your test files, if you want
+     * them to be found by the Runner
+     */
     const TEST_PATTERN = '/^(.*Test)\.php$/i';
     
     /**
-     * List of options
+     * List of options, which are changeable
      *
      * @var array
+     * @see __construct()
      */
     protected $_options = array(
         'dir' => null,
@@ -48,6 +62,7 @@ class PhpRack_Runner
      * @param array Options to set to the class
      * @return void
      * @throws Exception If an option is invalid
+     * @see $this->_options
      */
     public function __construct(array $options) 
     {
@@ -64,6 +79,7 @@ class PhpRack_Runner
      *
      * @return string
      * @throws Exception If directory is absent
+     * @see $this->_options
      */
     public function getDir() 
     {
@@ -78,7 +94,6 @@ class PhpRack_Runner
      * Get full list of tests, in array
      *
      * @return PhpRack_Test[]
-     * @throws Exception
      */
     public function getTests() 
     {
@@ -88,9 +103,7 @@ class PhpRack_Runner
                 continue;
             }
                 
-            $className = $matches[1];    
-            require_once $file;
-            $tests[] = new $className(strval($file), $this);
+            $tests[] = phpRack_Test::factory(strval($file), $this);
         }
         return $tests;
     }
@@ -99,6 +112,8 @@ class PhpRack_Runner
      * Run all tests and return a text report about their execution
      *
      * @return string
+     * @see $this->getTests()
+     * @see $this->run()
      */
     public function runSuite() 
     {
@@ -121,22 +136,12 @@ class PhpRack_Runner
      *
      * @param string Test file name (absolute name of PHP file)
      * @param string Unique token to return back, if required
-     * @return JSON
+     * @return string JSON
      * @throws Exception
      */
     public function run($fileName, $token = 'token') 
     {
-        if (!file_exists($fileName)) {
-            throw new Exception("File '{$fileName}' is not found");
-        }
-        
-        if (!preg_match(self::TEST_PATTERN, $fileName, $matches)) {
-            throw new Exception("File '{$fileName}' is not named properly, can't run it");
-        }
-        
-        $className = pathinfo($fileName, PATHINFO_FILENAME);
-        require_once $fileName;
-        $test = new $className($fileName, $this);
+        $test = phpRack_Test::factory($fileName, $this);
         
         $result = $test->run();
         return json_encode(
