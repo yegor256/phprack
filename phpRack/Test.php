@@ -63,7 +63,7 @@ abstract class PhpRack_Test
     }
     
     /**
-     * undocumented function
+     * Create new instance of the class, using PHP absolute file name
      *
      * @param string ID of the test, absolute (!) file name
      * @param phpRack_Runner Instance of test runner
@@ -90,12 +90,14 @@ abstract class PhpRack_Test
      *
      * @param string Name of the property to get
      * @return mixed
+     * @throws Exception If nothing found
      */
     public final function __get($name) 
     {
         if ($name == 'assert') {
             return PhpRack_Assertion::factory(__FILE__);
         }
+        throw new Exception("Property '{$name}' not found in " . get_class($this));
     }
     
     /**

@@ -26,7 +26,7 @@
 	<includepath classpath="${project.basedir}" />
 	<includepath classpath="${project.basedir}/test/" />
 
-	<target name="main" depends="lint, phpcs, test, deploy" >
+	<target name="main" depends="lint, phpcs, phpmd, test, deploy" >
 	</target>
 
 	<target name="lint" description="Run syntax check for all classes" >
@@ -51,6 +51,14 @@
             escape="false"
             checkreturn="true" 
             passthru="true" />
+    </target>
+
+    <target name="phpmd" description="PHP Mess Detector (PHPMD)">
+        <exec command="phpmd 
+            --extensions='php,phtml'
+            ${project.basedir} 
+            text
+            codesize,unusedcode" />
     </target>
 
 	<target name="test" description="Run all existing unit-tests">
