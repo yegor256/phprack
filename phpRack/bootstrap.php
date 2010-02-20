@@ -36,11 +36,17 @@ try {
     defined('PHPRACK_PATH') or
         define('PHPRACK_PATH', dirname(__FILE__));
 
+    /**
+     * @see phpRack_Runner
+     */
     require_once PHPRACK_PATH . '/Runner.php';
     $runner = new PhpRack_Runner($phpRackConfig);
     
     // Global layout is required
     if (empty($_GET[PHPRACK_AJAX_TAG])) {
+        /**
+         * @see phpRack_View
+         */
         require_once PHPRACK_PATH . '/View.php';
         $view = new PhpRack_View($runner);
         echo $view->render();

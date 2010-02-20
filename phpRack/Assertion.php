@@ -15,7 +15,17 @@
  */
 
 /**
- *
+ * @see phpRack_Package
+ */
+require_once PHPRACK_PATH . '/Package.php';
+
+/**
+ * @see phpRack_Result
+ */
+require_once PHPRACK_PATH . '/Result.php';
+
+/**
+ * One single test assertion
  *
  * @package Tests
  */
@@ -43,7 +53,6 @@ class PhpRack_Assertion
      */
     public function __construct()
     {
-        require_once PHPRACK_PATH . '/Result.php';
         $this->_result = new PhpRack_Result();
     }
 
@@ -69,7 +78,6 @@ class PhpRack_Assertion
      */
     public function __get($name) 
     {
-        require_once PHPRACK_PATH . '/Package.php';
         return PhpRack_Package::factory($name, $this->_result);
     }
         
@@ -82,7 +90,6 @@ class PhpRack_Assertion
      */
     public function __call($name, array $args) 
     {
-        require_once PHPRACK_PATH . '/Package.php';
         return call_user_func_array(
             array(
                 PhpRack_Package::factory('simple', $this->_result),

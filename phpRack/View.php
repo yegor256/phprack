@@ -15,7 +15,12 @@
  */
 
 /**
- *
+ * @see phpRack_Test
+ */
+require_once PHPRACK_PATH . '/Test.php';
+
+/**
+ * View in order to render test presentation page
  *
  * @package Tests
  */

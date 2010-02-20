@@ -15,7 +15,7 @@
  */
 
 /**
- *
+ * Result of a test execution
  *
  * @package Tests
  */
@@ -76,6 +76,16 @@ class PhpRack_Result
     {
         $this->_lines[] = $line;
         return $this;
+    }
+    
+    /**
+     * Clean log
+     *
+     * @return void
+     */
+    public function clean() 
+    {
+        $this->_lines = array();
     }
         
 }

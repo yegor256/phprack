@@ -1,4 +1,7 @@
 <?php
+/**
+ * @version $Id$
+ */
 
 define('PHPRACK_PATH', realpath(dirname(__FILE__) . '/../phpRack'));
 
@@ -13,6 +16,9 @@ $_SERVER['REQUEST_URI'] = 'no-URL-it-is-testing.com';
 define('PHPRACK_AJAX_TAG', 'testing-tag');
 define('PHPRACK_AJAX_TOKEN', 'testing-token');
 
+/**
+ * @see PHPUnit_Framework_TestCase
+ */
 require_once 'PHPUnit/Framework/TestCase.php';
 
 abstract class AbstractTest extends PHPUnit_Framework_TestCase

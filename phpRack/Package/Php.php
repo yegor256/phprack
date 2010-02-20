@@ -15,28 +15,15 @@
  */
 
 /**
+ * @see phpRack_Package
+ */
+require_once PHPRACK_PATH . '/Package.php';
+
+/**
  * PHP related assertions
  *
  * @package Tests
  */
 class PhpRack_Package_Php extends PhpRack_Package
 {
-
-    /**
-     * Is it true?
-     *
-     * @param mixed Variable to check
-     * @return $this
-     */
-    protected function True($var) 
-    {
-        if ($var) {
-            $this->_success('Variable is TRUE, success');
-        } else {
-            $this->_failure('Failed to assert that variable is TRUE');
-        }
-            
-        return $this;
-    }
-        
 }

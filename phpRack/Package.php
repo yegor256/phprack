@@ -15,7 +15,7 @@
  */
 
 /**
- *
+ * One test assertion package
  *
  * @package Tests
  */

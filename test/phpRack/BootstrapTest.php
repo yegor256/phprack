@@ -1,6 +1,17 @@
 <?php
+/**
+ * @version $Id$
+ */
 
+/**
+ * @see AbstractTest
+ */
 require_once 'AbstractTest.php';
+
+/**
+ * @see phpRack_Runner
+ */
+require_once PHPRACK_PATH . '/Runner.php';
 
 class BootstrapTest extends AbstractTest
 {
@@ -13,13 +24,13 @@ class BootstrapTest extends AbstractTest
     
     public function testHttpGetRequestDeliversValidJSON()
     {
-        require_once PHPRACK_PATH . '/Runner.php';
         global $phpRackConfig;
         $runner = new PhpRack_Runner($phpRackConfig);
         $tests = $runner->getTests();
         $test = array_shift($tests);
         
         $_GET[PHPRACK_AJAX_TAG] = $test->getFileName();
+        $_GET[PHPRACK_AJAX_TOKEN] = 'token';
         
         include PHPRACK_PATH . '/bootstrap.php';
     }

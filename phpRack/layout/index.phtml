@@ -1,3 +1,6 @@
+<!--
+ * @version $Id$
+ -->
 <html>
 <head>
     <style>
@@ -55,9 +58,9 @@
                 {
                     var id = json.<?php echo PHPRACK_AJAX_TOKEN?>;
                     if (json.success == true) {
-                        $(id).find('span').html('OK').addClass('success');
+                        $(id).find('span').html('<?php echo phpRack_Test::OK?>').addClass('success');
                     } else {
-                        $(id).find('span').html('FAILURE').addClass('failure');
+                        $(id).find('span').html('<?php echo phpRack_Test::FAILURE?>').addClass('failure');
                     }
                     $(id).find('pre').html(json.log);
                     $(id).find('span').click(

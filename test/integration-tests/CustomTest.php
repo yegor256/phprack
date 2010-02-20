@@ -1,4 +1,12 @@
 <?php
+/**
+ * @version $Id$
+ */
+
+/**
+ * @see phpRack_Test
+ */
+require_once PHPRACK_PATH . '/Test.php';
 
 class CustomTest extends PhpRack_Test
 {

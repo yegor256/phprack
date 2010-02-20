@@ -20,28 +20,10 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * PHP related assertions
+ * Network-related assertions
  *
  * @package Tests
  */
-class PhpRack_Package_Php_Extensions extends PhpRack_Package
+class PhpRack_Package_Network extends PhpRack_Package
 {
-
-    /**
-     * Given extension is loaded?
-     *
-     * @param string Name of the extension to check
-     * @return $this
-     */
-    public function isLoaded($name) 
-    {
-        if (extension_loaded($name)) {
-            $this->_success("Extension '{$name}' is loaded");
-        } else {
-            $this->_failure("Extension '{$name}' is NOT loaded");
-        }
-            
-        return $this;
-    }
-        
 }

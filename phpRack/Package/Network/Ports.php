@@ -10,7 +10,7 @@
  * to license@phprack.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) phpRack.com
- * @version $Id$
+ * @version $Id: Php.php 19 2010-02-07 07:44:16Z yegor256@yahoo.com $
  * @category phpRack
  */
 
@@ -20,25 +20,28 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * PHP related assertions
+ * Ports on the server
  *
  * @package Tests
  */
-class PhpRack_Package_Php_Extensions extends PhpRack_Package
+class PhpRack_Package_Network_Ports extends PhpRack_Package
 {
 
     /**
-     * Given extension is loaded?
+     * This port is open on this machine as INPUT port?
      *
-     * @param string Name of the extension to check
+     * @param integer Port number to check
+     * @param string IP address of the server to check
      * @return $this
      */
-    public function isLoaded($name) 
+    public function isOpen($port, $server = '127.0.0.1') 
     {
-        if (extension_loaded($name)) {
-            $this->_success("Extension '{$name}' is loaded");
+        $result = shell_exec("telnet {$server} {$port} 2>&1 </dev/null");
+        
+        if (preg_match('/Connection refused/', $result)) {
+            $this->_failure("Port {$port} is NOT open at {$server}");
         } else {
-            $this->_failure("Extension '{$name}' is NOT loaded");
+            $this->_success("Port {$port} is open at {$server}, it's OK");
         }
             
         return $this;

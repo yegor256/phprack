@@ -15,6 +15,11 @@
  */
 
 /**
+ * @see phpRack_Package
+ */
+require_once PHPRACK_PATH . '/Package.php';
+
+/**
  * PHP-version related assertions
  *
  * @package Tests

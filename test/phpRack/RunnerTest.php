@@ -1,6 +1,22 @@
 <?php
+/**
+ * @version $Id$
+ */
 
+/**
+ * @see AbstractTest
+ */
 require_once 'AbstractTest.php';
+
+/**
+ * @see phpRack_Runner
+ */
+require_once PHPRACK_PATH . '/Runner.php';
+
+/**
+ * @see phpRack_Result
+ */
+require_once PHPRACK_PATH . '/Result.php';
 
 class RunnerTest extends AbstractTest
 {
@@ -8,7 +24,6 @@ class RunnerTest extends AbstractTest
     public function setUp()
     {
         parent::setUp();
-        require_once PHPRACK_PATH . '/Runner.php';
         global $phpRackConfig;
         $this->_runner = new PhpRack_Runner($phpRackConfig);
     }
@@ -29,4 +44,11 @@ class RunnerTest extends AbstractTest
         $this->assertTrue(is_string($result->getLog()));
     }
         
+    public function testWeCanRunEntireSuiteInOneCall()
+    {
+        $report = $this->_runner->runSuite();
+        $this->assertFalse(empty($report), "Empty test report, why?");
+        echo $report;
+    }
+    
 }

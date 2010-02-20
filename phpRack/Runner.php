@@ -14,10 +14,16 @@
  * @category phpRack
  */
 
+/**
+ * @see phpRack_Test
+ */
 require_once PHPRACK_PATH . '/Test.php';
 
 /**
+ * Run all tests together, or one by one
  *
+ * First you should create an instance of this class, providing it an array
+ * of options.
  *
  * @package Tests
  */
@@ -27,30 +33,45 @@ class PhpRack_Runner
     const TEST_PATTERN = '/^(.*Test)\.php$/i';
     
     /**
-     * Directory with tests
+     * List of options
      *
-     * @var string
+     * @var array
      */
-    protected $_dir;
+    protected $_options = array(
+        'dir' => null,
+        'auth' => array(),
+    );
     
     /**
      * Construct the class
      *
+     * @param array Options to set to the class
      * @return void
+     * @throws Exception If an option is invalid
      */
-    public function __construct(array $config) 
+    public function __construct(array $options) 
     {
-        $this->_dir = $config['dir'];
+        foreach ($options as $option=>$value) {
+            if (!array_key_exists($option, $this->_options)) {
+                throw new Exception("Option '{$option}' is not recognized");
+            }
+            $this->_options[$option] = $value;
+        }
     }
     
     /**
      * Get tests location directory
      *
      * @return string
+     * @throws Exception If directory is absent
      */
     public function getDir() 
     {
-        return realpath($this->_dir);
+        $dir = $this->_options['dir'];
+        if (!file_exists($dir)) {
+            throw new Exception("Test directory '{$dir}' is not found");
+        }
+        return realpath($dir);
     }
     
     /**
@@ -61,12 +82,8 @@ class PhpRack_Runner
      */
     public function getTests() 
     {
-        if (!file_exists($this->_dir)) {
-            throw new Exception("Test directory '{$this->_dir}' is not found");
-        }
-
         $tests = array();
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->_dir)) as $file) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getDir())) as $file) {
             if (!preg_match(self::TEST_PATTERN, $file->getFilename(), $matches)) {
                 continue;
             }
@@ -79,14 +96,35 @@ class PhpRack_Runner
     }
     
     /**
+     * Run all tests and return a text report about their execution
+     *
+     * @return string
+     */
+    public function runSuite() 
+    {
+        $tests = $this->getTests();
+        $report = '';
+        foreach ($tests as $test) {
+            $result = $test->run();
+            $report .= sprintf(
+                "%s: %s\n%s",
+                $test->getLabel(),
+                $result->wasSuccessful() ? phpRack_Test::OK : phpRack_Test::FAILURE,
+                $result->getLog()
+            );
+        }
+        return $report;
+    }
+    
+    /**
      * Run one test and return JSON result
      *
      * @param string Test file name (absolute name of PHP file)
-     * @param string Unique token to return back
+     * @param string Unique token to return back, if required
      * @return JSON
      * @throws Exception
      */
-    public function run($fileName, $token) 
+    public function run($fileName, $token = 'token') 
     {
         if (!file_exists($fileName)) {
             throw new Exception("File '{$fileName}' is not found");

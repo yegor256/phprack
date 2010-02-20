@@ -1,4 +1,7 @@
 <?php
+/**
+ * @version $Id$
+ */
 
 global $phpRackConfig;
 $phpRackConfig = array(

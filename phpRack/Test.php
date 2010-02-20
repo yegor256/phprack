@@ -22,6 +22,9 @@
 abstract class PhpRack_Test
 {
 
+    const OK = 'OK';
+    const FAILURE = 'FAILURE';
+
     /**
      * ID of the test (unique in the system)
      *
@@ -89,8 +92,13 @@ abstract class PhpRack_Test
      */
     public final function run() 
     {
+        // clean all previous results, if any
+        $this->assert->getResult()->clean();
+        
+        // start execution of the test with time calculation
         $start = microtime(true);
         
+        // find all methods that start with "test" and call them
         $rc = new ReflectionClass($this);
         foreach ($rc->getMethods() as $method) {
             if (!preg_match('/^test/', $method->getName())) {
@@ -111,6 +119,7 @@ abstract class PhpRack_Test
             }
         }
         
+        // add final log line, summarizing the test execution
         $this->assert->getResult()->addLog(
             sprintf(
                 'Finished %s, %0.3fsec',
@@ -119,6 +128,7 @@ abstract class PhpRack_Test
             )
         );
         
+        // return instance of phpRack_Result class
         return $this->assert->getResult();
     }
     

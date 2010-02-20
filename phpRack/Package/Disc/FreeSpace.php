@@ -15,6 +15,11 @@
  */
 
 /**
+ * @see phpRack_Package
+ */
+require_once PHPRACK_PATH . '/Package.php';
+
+/**
  * Free space on HDD
  *
  * @package Tests
