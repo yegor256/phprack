@@ -1,13 +1,14 @@
 <?xml version="1.0" ?>
 <!--
  *
- * Copyright (c) phpRack.com
- * All rights reserved.
+ * phpRack: Integration Testing Framework
  *
- * You can use this product "as is" without any warranties from authors.
- * You can change the product only through Google Code repository
- * at http://code.google.com/p/phprack
- * If you have any questions about privacy, please email privacy@phpRack.com
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt. It is also available 
+ * through the world-wide-web at this URL: http://www.phprack.com/license
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@phprack.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
