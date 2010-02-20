@@ -29,20 +29,20 @@ require_once PHPRACK_PATH . '/Test.php';
  *
  * @package Tests
  */
-class PhpRack_Package
+class phpRack_Package
 {
     
     /**
      * Static instances of packages
      *
-     * @var PhpRack_Package
+     * @var phpRack_Package
      */
     protected static $_packages = array();
     
     /**
      * Result collector
      *
-     * @var PhpRack_Result
+     * @var phpRack_Result
      */
     protected $_result;
     
@@ -58,10 +58,10 @@ class PhpRack_Package
     /**
      * Construct the class
      *
-     * @param PhpRack_Result Result to use
+     * @param phpRack_Result Result to use
      * @return void
      */
-    public function __construct(PhpRack_Result $result)
+    public function __construct(phpRack_Result $result)
     {
         $this->_result = $result;
     }
@@ -83,17 +83,17 @@ class PhpRack_Package
      * Create new assertion
      *
      * @param string Name of the package, like "php/version"
-     * @param PhpRack_Result Collector of log lines
-     * @return PhpRack_Package
+     * @param phpRack_Result Collector of log lines
+     * @return phpRack_Package
      * @throws Exception
      */
-    public static function factory($name, PhpRack_Result $result) 
+    public static function factory($name, phpRack_Result $result) 
     {
         $sectors = array_map(
             create_function('$a', 'return ucfirst($a);'),
             explode('/', $name)
         );
-        $className = 'PhpRack_Package_' . implode('_', $sectors);
+        $className = 'phpRack_Package_' . implode('_', $sectors);
         
         $packageFile = PHPRACK_PATH . '/Package/' . implode('/', $sectors) . '.php';
         if (!file_exists($packageFile)) {
@@ -112,7 +112,7 @@ class PhpRack_Package
      * Dispatcher of calls to packages
      *
      * @param string Name of the property to get
-     * @return PhpRack_Package
+     * @return phpRack_Package
      */
     public function __get($name)
     {
@@ -126,7 +126,7 @@ class PhpRack_Package
      */
     public function getName() 
     {
-        $sectors = explode('_', get_class($this)); // e.g. "PhpRack_Package_Php_Version"
+        $sectors = explode('_', get_class($this)); // e.g. "phpRack_Package_Php_Version"
         return implode(
             '/', 
             array_slice(

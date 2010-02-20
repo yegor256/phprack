@@ -24,22 +24,23 @@ require_once PHPRACK_PATH . '/Test.php';
  *
  * @package Tests
  */
-class PhpRack_View
+class phpRack_View
 {
     
     /**
      * Runner of all tests
      *
-     * @var PhpRack_Runner
+     * @var phpRack_Runner
      */
     protected $_runner;
     
     /**
      * Construct the class
      *
+     * @param phpRack_Runner
      * @return void
      */
-    public function __construct(PhpRack_Runner $runner) 
+    public function __construct(phpRack_Runner $runner) 
     {
         $this->_runner = $runner;
     }

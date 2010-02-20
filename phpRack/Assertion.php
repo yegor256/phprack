@@ -29,7 +29,7 @@ require_once PHPRACK_PATH . '/Result.php';
  *
  * @package Tests
  */
-class PhpRack_Assertion
+class phpRack_Assertion
 {
     
     /**
@@ -42,7 +42,7 @@ class PhpRack_Assertion
     /**
      * Result collector
      *
-     * @var PhpRack_Result
+     * @var phpRack_Result
      */
     protected $_result;
     
@@ -53,14 +53,14 @@ class PhpRack_Assertion
      */
     public function __construct()
     {
-        $this->_result = new PhpRack_Result();
+        $this->_result = new phpRack_Result();
     }
 
     /**
      * Create new assertion
      *
      * @param string Absolute name of PHP file with test
-     * @return PhpRack_Assertion
+     * @return phpRack_Assertion
      */
     public static function factory($test) 
     {
@@ -74,11 +74,11 @@ class PhpRack_Assertion
      * Dispatcher of calls to packages
      *
      * @param string Name of the package to get
-     * @return PhpRack_Package
+     * @return phpRack_Package
      */
     public function __get($name) 
     {
-        return PhpRack_Package::factory($name, $this->_result);
+        return phpRack_Package::factory($name, $this->_result);
     }
         
     /**
@@ -92,7 +92,7 @@ class PhpRack_Assertion
     {
         return call_user_func_array(
             array(
-                PhpRack_Package::factory('simple', $this->_result),
+                phpRack_Package::factory('simple', $this->_result),
                 $name
             ),
             $args
@@ -102,7 +102,7 @@ class PhpRack_Assertion
     /**
      * Get instance of result collector
      *
-     * @return PhpRack_Result
+     * @return phpRack_Result
      */
     public function getResult() 
     {

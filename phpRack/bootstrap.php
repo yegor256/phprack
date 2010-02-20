@@ -40,7 +40,7 @@ try {
      * @see phpRack_Runner
      */
     require_once PHPRACK_PATH . '/Runner.php';
-    $runner = new PhpRack_Runner($phpRackConfig);
+    $runner = new phpRack_Runner($phpRackConfig);
     
     // Global layout is required
     if (empty($_GET[PHPRACK_AJAX_TAG])) {
@@ -48,7 +48,7 @@ try {
          * @see phpRack_View
          */
         require_once PHPRACK_PATH . '/View.php';
-        $view = new PhpRack_View($runner);
+        $view = new phpRack_View($runner);
         echo $view->render();
     } else {
         echo $runner->run($_GET[PHPRACK_AJAX_TAG], $_GET[PHPRACK_AJAX_TOKEN]);

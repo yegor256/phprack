@@ -25,7 +25,7 @@ class BootstrapTest extends AbstractTest
     public function testHttpGetRequestDeliversValidJSON()
     {
         global $phpRackConfig;
-        $runner = new PhpRack_Runner($phpRackConfig);
+        $runner = new phpRack_Runner($phpRackConfig);
         $tests = $runner->getTests();
         $test = array_shift($tests);
         

@@ -8,7 +8,7 @@
  */
 require_once PHPRACK_PATH . '/Test.php';
 
-class NetworkTest extends PhpRack_Test
+class NetworkTest extends phpRack_Test
 {
 
     public function testGooglePortsAreOpen()

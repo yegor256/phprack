@@ -8,7 +8,7 @@
  */
 require_once PHPRACK_PATH . '/Test.php';
 
-class CustomTest extends PhpRack_Test
+class CustomTest extends phpRack_Test
 {
 
     public function testCustomAssertionsAreValid()

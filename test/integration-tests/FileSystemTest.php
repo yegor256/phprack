@@ -8,7 +8,7 @@
  */
 require_once PHPRACK_PATH . '/Test.php';
 
-class FileSystemTest extends PhpRack_Test
+class FileSystemTest extends phpRack_Test
 {
 
     public function testWeHaveEnoughFreeSpace()

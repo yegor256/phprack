@@ -24,6 +24,6 @@ require_once PHPRACK_PATH . '/Package.php';
  *
  * @package Tests
  */
-class PhpRack_Package_Php extends PhpRack_Package
+class phpRack_Package_Php extends phpRack_Package
 {
 }

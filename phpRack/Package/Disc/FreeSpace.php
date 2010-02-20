@@ -24,7 +24,7 @@ require_once PHPRACK_PATH . '/Package.php';
  *
  * @package Tests
  */
-class PhpRack_Package_Disc_FreeSpace extends PhpRack_Package
+class phpRack_Package_Disc_FreeSpace extends phpRack_Package
 {
 
     /**

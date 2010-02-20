@@ -8,7 +8,7 @@
  */
 require_once PHPRACK_PATH . '/Test.php';
 
-class PhpConfigurationTest extends PhpRack_Test
+class PhpConfigurationTest extends phpRack_Test
 {
 
     public function testPhpVersionIsCorrect()

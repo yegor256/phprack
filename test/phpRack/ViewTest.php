@@ -24,9 +24,9 @@ class ViewTest extends AbstractTest
     public function testRenderingReturnsValidHtml()
     {
         global $phpRackConfig;
-        $runner = new PhpRack_Runner($phpRackConfig);
+        $runner = new phpRack_Runner($phpRackConfig);
 
-        $view = new PhpRack_View($runner);
+        $view = new phpRack_View($runner);
         
         $html = $view->render();
         $this->assertFalse(empty($html), "Empty HTML, why?");

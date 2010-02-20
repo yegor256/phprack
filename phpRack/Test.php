@@ -29,7 +29,7 @@ require_once PHPRACK_PATH . '/Assertion.php';
  *
  * @package Tests
  */
-abstract class PhpRack_Test
+abstract class phpRack_Test
 {
 
     const OK = 'OK';
@@ -95,7 +95,7 @@ abstract class PhpRack_Test
     public final function __get($name) 
     {
         if ($name == 'assert') {
-            return PhpRack_Assertion::factory(__FILE__);
+            return phpRack_Assertion::factory(__FILE__);
         }
         throw new Exception("Property '{$name}' not found in " . get_class($this));
     }
@@ -104,6 +104,7 @@ abstract class PhpRack_Test
      * Get unique test ID (file name of the test)
      *
      * @return string
+     * @see $this->_fileName
      */
     public function getFileName() 
     {
@@ -123,7 +124,7 @@ abstract class PhpRack_Test
     /**
      * Run the test and return result
      *
-     * @return PhpRack_Result
+     * @return phpRack_Result
      */
     public final function run() 
     {

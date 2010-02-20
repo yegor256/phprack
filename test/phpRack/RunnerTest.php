@@ -25,7 +25,7 @@ class RunnerTest extends AbstractTest
     {
         parent::setUp();
         global $phpRackConfig;
-        $this->_runner = new PhpRack_Runner($phpRackConfig);
+        $this->_runner = new phpRack_Runner($phpRackConfig);
     }
     
     public function testTestFilesAreCollectedCorrectly()
@@ -39,7 +39,7 @@ class RunnerTest extends AbstractTest
         $tests = $this->_runner->getTests();
         $test = array_shift($tests);
         $result = $test->run();
-        $this->assertTrue($result instanceof PhpRack_Result);
+        $this->assertTrue($result instanceof phpRack_Result);
         $this->assertTrue(is_bool($result->wasSuccessful()));
         $this->assertTrue(is_string($result->getLog()));
     }

@@ -19,7 +19,7 @@
  *
  * @package Tests
  */
-class PhpRack_Result
+class phpRack_Result
 {
     
     /**

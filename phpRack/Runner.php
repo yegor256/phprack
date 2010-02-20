@@ -36,7 +36,7 @@ require_once PHPRACK_PATH . '/Test.php';
  *
  * @package Tests
  */
-class PhpRack_Runner
+class phpRack_Runner
 {
     
     /**
@@ -93,7 +93,7 @@ class PhpRack_Runner
     /**
      * Get full list of tests, in array
      *
-     * @return PhpRack_Test[]
+     * @return phpRack_Test[]
      */
     public function getTests() 
     {
