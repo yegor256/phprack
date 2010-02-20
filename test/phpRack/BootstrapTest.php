@@ -27,6 +27,10 @@ class BootstrapTest extends AbstractTest
         global $phpRackConfig;
         $runner = new phpRack_Runner($phpRackConfig);
         $tests = $runner->getTests();
+        $this->assertTrue(count($tests) > 1, 'too few tests, why?');
+        
+        // get one random test
+        shuffle($tests);
         $test = array_shift($tests);
         
         $_GET[PHPRACK_AJAX_TAG] = $test->getFileName();

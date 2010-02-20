@@ -20,7 +20,8 @@ class NetworkTest extends phpRack_Test
     public function testOurIncomingPortIsOpen()
     {
         $this->assert->network->ports
-            ->isOpen(80);
+            ->isOpen(80)
+            ->isOpen(9999);
     }
 
 }
