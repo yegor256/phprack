@@ -27,7 +27,7 @@
 	<includepath classpath="${project.basedir}" />
 	<includepath classpath="${project.basedir}/test/" />
 
-	<target name="main" depends="lint, phpcs, phpmd, test, deploy" >
+	<target name="main" depends="lint, phpcs, phpmd, zca, test, deploy" >
 	</target>
 
 	<target name="lint" description="Run syntax check for all classes" >
@@ -54,12 +54,31 @@
             passthru="true" />
     </target>
 
+    <target name="zca" description="Zend Code Analyzer">
+        <foreach target="zca-file" param="fileName" absparam="zca.fileName">
+            <fileset dir="${project.basedir}">
+                <include name="**/*.php" />
+                <exclude name=".svn/**" />
+            </fileset>
+        </foreach>
+    </target>
+    
+    <target name="zca-file" description="Zend Code Analyzer of one file">
+        <exec command="zca ${zca.fileName}" 
+            escape="false"
+            checkreturn="true" 
+            passthru="true" />
+    </target>
+
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
         <exec command="phpmd 
             --extensions='php,phtml'
-            ${project.basedir} 
             text
-            codesize,unusedcode" />
+            ${project.basedir} 
+            codesize,unusedcode"
+            escape="false"
+            checkreturn="false" 
+            passthru="true" />
     </target>
 
 	<target name="test" description="Run all existing unit-tests">

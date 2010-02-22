@@ -28,6 +28,8 @@ class PhpConfigurationTest extends phpRack_Test
             ->isLoaded('xsl')
             ->isLoaded('simplexml')
             ->isLoaded('fileinfo');
+            
+        $this->assert->php->extensions->finfo->isAlive();
     }
 
 }
