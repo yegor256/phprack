@@ -76,7 +76,14 @@ class phpRack_Package
      */
     public final function __call($name, array $args) 
     {
-        throw new Exception("Method '{$name}' is absent in '{$this->getName()}' package");
+        throw new Exception(
+            sprintf(
+                "Method '%s' is absent in '%s' package, %d args passed",
+                $name,
+                $this->getName(),
+                count($args)
+            )
+        );
     }
 
     /**

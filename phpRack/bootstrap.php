@@ -20,21 +20,26 @@ try {
     // values in your phprack.php file, which calls this bootstraper. For
     // complete reference on this variable see:
     // http://trac.fazend.com/phpRack/wiki/Bootstrap
+    global $phpRackConfig;
     if (!isset($phpRackConfig)) {
         throw new Exception('Invalid configuration: $phpRackConfig is missed');
     }
 
-    defined('PHPRACK_VERSION') or
+    if (!defined('PHPRACK_VERSION')) {
         define('PHPRACK_VERSION', '0.1');
+    }
 
-    defined('PHPRACK_AJAX_TAG') or
+    if (!defined('PHPRACK_AJAX_TAG')) {
         define('PHPRACK_AJAX_TAG', 'test');
+    }
 
-    defined('PHPRACK_AJAX_TOKEN') or
+    if (!defined('PHPRACK_AJAX_TOKEN')) {
         define('PHPRACK_AJAX_TOKEN', 'token');
+    }
 
-    defined('PHPRACK_PATH') or
+    if (!defined('PHPRACK_PATH')) {
         define('PHPRACK_PATH', dirname(__FILE__));
+    }
 
     /**
      * @see phpRack_Runner

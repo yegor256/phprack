@@ -99,7 +99,7 @@ class phpRack_Runner
     {
         $tests = array();
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getDir())) as $file) {
-            if (!preg_match(self::TEST_PATTERN, $file->getFilename(), $matches)) {
+            if (!preg_match(self::TEST_PATTERN, $file->getFilename())) {
                 continue;
             }
                 

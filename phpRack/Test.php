@@ -76,7 +76,7 @@ abstract class phpRack_Test
             throw new Exception("File '{$fileName}' is not found");
         }
         
-        if (!preg_match(phpRack_Runner::TEST_PATTERN, $fileName, $matches)) {
+        if (!preg_match(phpRack_Runner::TEST_PATTERN, $fileName)) {
             throw new Exception("File '{$fileName}' is not named properly, can't run it");
         }
         
