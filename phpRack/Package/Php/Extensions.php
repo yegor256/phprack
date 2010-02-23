@@ -38,7 +38,7 @@ class phpRack_Package_Php_Extensions extends phpRack_Package
         if (extension_loaded($name)) {
             $this->_success("Extension '{$name}' is loaded");
         } else {
-            $this->_failure("Extension '{$name}' is NOT loaded");
+            $this->_failure("Extension '{$name}' is NOT loaded: extension_loaded('{$name}') returned FALSE");
         }
             
         return $this;
