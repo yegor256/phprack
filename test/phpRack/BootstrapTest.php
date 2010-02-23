@@ -18,7 +18,6 @@ class BootstrapTest extends AbstractTest
     
     public function testBootstrapIsRendered()
     {
-        global $phpRackConfig;
         include PHPRACK_PATH . '/bootstrap.php';
     }
     
