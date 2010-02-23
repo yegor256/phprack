@@ -39,15 +39,16 @@ class phpRack_Package_Php_Extensions_Finfo extends phpRack_Package
             return $this;
         }
         
-        $finfo = new finfo(FILEINFO_MIME, '/usr/share/misc/magic');
+        $magic = '/usr/share/misc/magic';
+        $finfo = new finfo(FILEINFO_MIME, $magic);
         if (!$finfo) {
-            $this->_failure("finfo() failed to load");
+            $this->_failure("finfo() failed to load magic: '{$magic}'");
             return $this;
         }
         
         $type = $finfo->file(__FILE__);
         if (strpos($type, 'text/plain') !== 0) {
-            $this->_failure("finfo() failed to load");
+            $this->_failure("finfo() failed to detect PHP file type, returned: '{$type}'");
             return $this;
         }
             
