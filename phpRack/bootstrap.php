@@ -56,6 +56,9 @@ try {
         $view = new phpRack_View($runner);
         echo $view->render();
     } else {
+        // Execute one individual test and return its result
+        // in JSON format. We reach this point only in AJAX calls from
+        // already rendered testing page.
         echo $runner->run($_GET[PHPRACK_AJAX_TAG], $_GET[PHPRACK_AJAX_TOKEN]);
     }
 
