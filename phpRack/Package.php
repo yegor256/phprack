@@ -154,8 +154,9 @@ class phpRack_Package
      */
     public final function onSuccess($action) 
     {
-        if ($this->_latestCallSuccess)
+        if ($this->_latestCallSuccess) {
             $this->_result->addLog($action);
+        }
         return $this;
     }
         
@@ -167,8 +168,9 @@ class phpRack_Package
      */
     public final function onFailure($action) 
     {
-        if (!$this->_latestCallSuccess)
+        if (!$this->_latestCallSuccess) {
             $this->_result->addLog($action);
+        }
         return $this;
     }
     

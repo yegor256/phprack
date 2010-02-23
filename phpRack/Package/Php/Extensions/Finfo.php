@@ -36,16 +36,19 @@ class phpRack_Package_Php_Extensions_Finfo extends phpRack_Package
     {
         if (!extension_loaded('finfo')) {
             $this->_failure("Extension 'finfo' is NOT loaded");
+            return;
         }
         
         $finfo = new finfo(FILEINFO_MIME, '/usr/share/misc/magic');
         if (!$finfo) {
             $this->_failure("finfo() failed to load");
+            return;
         }
         
         $type = $finfo->file(__FILE__);
         if (strpos($type, 'text/plain') !== 0) {
             $this->_failure("finfo() failed to load");
+            return;
         }
             
         $this->_success("Extension 'finfo' is configured properly");
