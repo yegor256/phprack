@@ -29,7 +29,7 @@ class PhpConfigurationTest extends phpRack_Test
             ->isLoaded('simplexml')
             ->isLoaded('fileinfo');
             
-        $this->assert->php->extensions->finfo->isAlive();
+        $this->assert->php->extensions->fileinfo->isAlive();
     }
 
 }

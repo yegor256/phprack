@@ -20,11 +20,11 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * finfo to validate
+ * fileinfo to validate
  *
  * @package Tests
  */
-class phpRack_Package_Php_Extensions_Finfo extends phpRack_Package
+class phpRack_Package_Php_Extensions_Fileinfo extends phpRack_Package
 {
 
     /**
@@ -34,8 +34,8 @@ class phpRack_Package_Php_Extensions_Finfo extends phpRack_Package
      */
     public function isAlive() 
     {
-        if (!extension_loaded('finfo')) {
-            $this->_failure("Extension 'finfo' is NOT loaded, we can't validate it any further");
+        if (!extension_loaded('fileinfo')) {
+            $this->_failure("Extension 'fileinfo' is NOT loaded, we can't validate it any further");
             return $this;
         }
         
@@ -52,7 +52,7 @@ class phpRack_Package_Php_Extensions_Finfo extends phpRack_Package
             return $this;
         }
             
-        $this->_success("Extension 'finfo' is configured properly");
+        $this->_success("Extension 'fileinfo' is configured properly");
         return $this;
     }
         
