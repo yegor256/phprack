@@ -47,7 +47,7 @@ class phpRack_Package_Php_Extensions_Fileinfo extends phpRack_Package
         }
         
         $type = $finfo->file(__FILE__);
-        if (strpos($type, 'text/plain') !== 0) {
+        if (strpos($type, 'text/') !== 0) {
             $this->_failure("finfo() failed to detect PHP file type, returned: '{$type}'");
             return $this;
         }
