@@ -155,7 +155,7 @@ class phpRack_Package
     public final function onSuccess($action) 
     {
         if ($this->_latestCallSuccess) {
-            $this->_result->addLog($action);
+            $this->_log($action);
         }
         return $this;
     }
@@ -169,7 +169,7 @@ class phpRack_Package
     public final function onFailure($action) 
     {
         if (!$this->_latestCallSuccess) {
-            $this->_result->addLog($action);
+            $this->_log($action);
         }
         return $this;
     }
@@ -184,7 +184,7 @@ class phpRack_Package
     {
         $this->_latestCallSuccess = false;
         $this->_result->fail();
-        $this->_result->addLog('[' . phpRack_Test::FAILURE . '] ' . $log);
+        $this->_log('[' . phpRack_Test::FAILURE . '] ' . $log);
     }
         
     /**
@@ -196,7 +196,18 @@ class phpRack_Package
     protected function _success($log) 
     {
         $this->_latestCallSuccess = true;
-        $this->_result->addLog('[' . phpRack_Test::OK . '] ' . $log);
+        $this->_log('[' . phpRack_Test::OK . '] ' . $log);
+    }
+        
+    /**
+     * Just log a line
+     *
+     * @param string String to log
+     * @return void
+     */
+    protected function _log($log) 
+    {
+        $this->_result->addLog($log);
     }
         
 }

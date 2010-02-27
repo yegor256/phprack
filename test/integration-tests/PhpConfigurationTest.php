@@ -32,4 +32,9 @@ class PhpConfigurationTest extends phpRack_Test
         $this->assert->php->extensions->fileinfo->isAlive();
     }
 
+    public function testPhpinfoIsVisible()
+    {
+        $this->assert->php->phpinfo();
+    }
+
 }
