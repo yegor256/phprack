@@ -59,10 +59,10 @@ class phpRack_Package_Php extends phpRack_Package
                     $line = $ln;
                     break;
                 case 'h1':
-                    $line = "\n\n" . $line;
+                    $line = "\n\n= {$line} =";
                     break;
                 case 'h2':
-                    $line = "\n" . $line;
+                    $line = "\n== {$line} ==";
                     break;
             }
             $lines[] = strval($line);
