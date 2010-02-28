@@ -52,9 +52,6 @@ class phpRack_Package_Disc extends phpRack_Package
             if (!is_array($exclude)) {
                 $exclude = array($exclude);
             }
-            foreach ($exclude as &$path) {
-                $path = trim($path, ' /.');
-            }
         }
         
         $lines = array();
@@ -66,8 +63,8 @@ class phpRack_Package_Disc extends phpRack_Package
             $name = substr($file, strlen($dir) + 1);
             $toExclude = false;
             
-            foreach ($exclude as $path) {
-                if (strpos($name, $path . '/') === 0) {
+            foreach ($exclude as $regex) {
+                if (preg_match($regex, $name)) {
                     $toExclude = true;
                 }
             }
