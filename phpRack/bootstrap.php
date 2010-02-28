@@ -14,12 +14,15 @@
  * @category phpRack
  */
 
+// Here we define a error handler in order to catch all possible
+// PHP errors and show them online, no matter what server settings
+// exist for error handling...
 set_error_handler(
     create_function(
         '$errno, $errstr, $errfile, $errline',
         '
         echo sprintf(
-            "phpRack error (%s): %s, in %s[%d]",
+            "phpRack error (%s): %s, in %s [line:%d]",
             $errno,
             $errstr,
             $errfile,
@@ -30,7 +33,6 @@ set_error_handler(
 );
 
 try {
-
     // This variable ($phpRackConfig) shall be declared and filled with
     // values in your phprack.php file, which calls this bootstraper. For
     // complete reference on this variable see:
