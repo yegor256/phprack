@@ -26,4 +26,63 @@ require_once PHPRACK_PATH . '/Package.php';
  */
 class phpRack_Package_Disc extends phpRack_Package
 {
+    
+    /**
+     * Show directory structure
+     *
+     * @param string Relative path, in relation to the location of {@link PHPRACK_PATH} file
+     * @param array List of options
+     * @return $this
+     */
+    public function showDirectory($dir, array $options = array()) 
+    {
+        $dir = realpath(PHPRACK_PATH . '/' . $dir);
+        if (!$dir) {
+            $this->_failure(
+                "Directory 'PHPRACK_PATH.\$dir' is absent: '" .
+                PHPRACK_PATH . "' . '{$dir}'"
+            );
+            return $this;
+        }
+        
+        // list of directory prefixes to exclude from listing
+        $exclude = array();
+        if (isset($options['exclude'])) {
+            $exclude = $options['exclude'];
+            if (!is_array($exclude)) {
+                $exclude = array($exclude);
+            }
+            foreach ($exclude as &$path) {
+                $path = trim($path, ' /.');
+            }
+        }
+        
+        $lines = array();
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dir),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+        foreach ($iterator as $file) {
+            $name = substr($file, strlen($dir) + 1);
+            $toExclude = false;
+            
+            foreach ($exclude as $path) {
+                if (strpos($name, $path . '/') === 0) {
+                    $toExclude = true;
+                }
+            }
+            if ($toExclude) {
+                continue;
+            }
+            
+            $lines[] = 
+            str_repeat("\t", substr_count($name, '/')) . $file->getBaseName()
+            . ($file->isFile() ? ': ' . $file->getSize() : false);
+        }
+        
+        $this->_log(implode("\n", $lines));
+        
+        return $this;
+    }
+    
 }

@@ -17,4 +17,9 @@ class FileSystemTest extends phpRack_Test
             ->atLeast(100);
     }
 
+    public function testShowDirectoryWorks()
+    {
+        $this->assert->disc->showDirectory('.');
+    }
+
 }
