@@ -45,6 +45,8 @@ class phpRack_Package_Disc extends phpRack_Package
             return $this;
         }
         
+        $this->_log("Directory tree: '{$dir}'");
+        
         // list of directory prefixes to exclude from listing
         $exclude = array();
         if (isset($options['exclude'])) {
@@ -72,9 +74,20 @@ class phpRack_Package_Disc extends phpRack_Package
                 continue;
             }
             
-            $lines[] = 
-            str_repeat("\t", substr_count($name, '/')) . $file->getBaseName()
-            . ($file->isFile() ? ': ' . $file->getSize() : false);
+            $line = str_repeat('  ', substr_count($name, '/')) . $file->getBaseName();
+            $attribs = array();
+            
+            if ($file->isFile()) {
+                $attribs[] = $file->getSize() . ' bytes';
+                $attribs[] = date('m/d/y h:i:s', $file->getMTime());
+                $attribs[] = sprintf('0x%o', $file->getPerms());
+            }
+            
+            if ($file->isLink()) {
+                $attribs[] = "link to '{$file->getRealPath()}']";
+            }
+            
+            $lines[] = $line . ($attribs ? ': ' . implode('; ', $attribs) : false);
         }
         
         $this->_log(implode("\n", $lines));

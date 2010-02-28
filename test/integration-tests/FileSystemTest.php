@@ -19,7 +19,14 @@ class FileSystemTest extends phpRack_Test
 
     public function testShowDirectoryWorks()
     {
-        $this->assert->disc->showDirectory('.');
+        $this->assert->disc->showDirectory(
+            '.',
+            array(
+                'exclude' => array(
+                    '/\.svn\//'
+                ),
+            )
+        );
     }
 
 }
