@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: PhpConfigurationTest.php 37 2010-02-27 07:41:05Z yegor256@yahoo.com $
+ * @version $Id$
  */
 
 /**
