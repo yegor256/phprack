@@ -14,6 +14,21 @@
  * @category phpRack
  */
 
+set_error_handler(
+    create_function(
+        '$errno, $errstr, $errfile, $errline',
+        '
+        echo sprintf(
+            "phpRack error (%s): %s, in %s[%d]",
+            $errno,
+            $errstr,
+            $errfile,
+            $errline
+        );
+        '
+    )
+);
+
 try {
 
     // This variable ($phpRackConfig) shall be declared and filled with
@@ -24,7 +39,7 @@ try {
     if (!isset($phpRackConfig)) {
         throw new Exception('Invalid configuration: $phpRackConfig is missed');
     }
-
+    
     if (!defined('PHPRACK_VERSION')) {
         define('PHPRACK_VERSION', '0.1');
     }
