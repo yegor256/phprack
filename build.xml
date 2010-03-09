@@ -31,7 +31,7 @@
 	</target>
 
 	<target name="lint" description="Run syntax check for all classes" >
-		<phplint haltonfailure="yes">
+		<phplint haltonfailure="yes" level="verbose">
 			<fileset dir="${project.basedir}">
 				<include name="**/*.php"/>
 				<include name="**/*.html"/>
@@ -72,12 +72,13 @@
 
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
         <exec command="phpmd 
-            --extensions='php,phtml'
-            text
             ${project.basedir} 
-            codesize,unusedcode"
+            text
+            codesize,unusedcode
+            --extensions='php,phtml'
+			"
             escape="false"
-            checkreturn="false" 
+            checkreturn="true" 
             passthru="true" />
     </target>
 
@@ -112,10 +113,9 @@
 	            </fileset>
 	        </tar>
             <ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
-                dir="/home/caybo/phprack/download">
+                dir="./public">
                 <fileset dir="${project.basedir}/build">
-                    <include name="**/*.tgz"/>
-                    <exclude name=".svn/**" />
+                    <include name="phpRack-stable.tgz"/>
                 </fileset>
             </ftpdeploy>
             <delete file="${build.tgz}" />
@@ -127,6 +127,14 @@
                 </fileset>
                 <fileset dir="${project.basedir}/test">
                     <include name="integration-tests/**"/>
+                    <exclude name=".svn/**" />
+                </fileset>
+            </ftpdeploy>
+
+            <ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
+				dir="./public">
+                <fileset dir="${project.basedir}/phprack.com">
+                    <include name="**"/>
                     <exclude name=".svn/**" />
                 </fileset>
             </ftpdeploy>

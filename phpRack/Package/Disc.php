@@ -47,6 +47,26 @@ class phpRack_Package_Disc extends phpRack_Package
         
         $this->_log("Directory tree: '{$dir}'");
         
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dir),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+        $lines = $this->_convertDirectoriesToLines($iterator, $dir, $options);
+        $this->_log(implode("\n", $lines));
+        
+        return $this;
+    }
+    
+    /**
+     * Convert list of files to lines to show
+     *
+     * @param Iterator List of files
+     * @param string Parent directory name, absolute
+     * @param array List of options
+     * @return void
+     */
+    protected function _convertDirectoriesToLines(Iterator $iterator, $dir, array $options) 
+    {
         // list of directory prefixes to exclude from listing
         $exclude = array();
         if (isset($options['exclude'])) {
@@ -57,10 +77,6 @@ class phpRack_Package_Disc extends phpRack_Package
         }
         
         $lines = array();
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($dir),
-            RecursiveIteratorIterator::SELF_FIRST
-        );
         foreach ($iterator as $file) {
             $name = substr($file, strlen($dir) + 1);
             $toExclude = false;
@@ -89,10 +105,7 @@ class phpRack_Package_Disc extends phpRack_Package
             
             $lines[] = $line . ($attribs ? ': ' . implode('; ', $attribs) : false);
         }
-        
-        $this->_log(implode("\n", $lines));
-        
-        return $this;
+        return $lines;
     }
     
 }
