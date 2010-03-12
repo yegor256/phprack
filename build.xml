@@ -54,6 +54,7 @@
             passthru="true" />
     </target>
 
+	<!--
     <target name="zca" description="Zend Code Analyzer">
         <foreach target="zca-file" param="fileName" absparam="zca.fileName">
             <fileset dir="${project.basedir}">
@@ -69,6 +70,7 @@
             checkreturn="true" 
             passthru="true" />
     </target>
+	-->
 
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
         <exec command="phpmd 
