@@ -24,6 +24,9 @@
 	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
 	<tstamp/>
 
+    <!-- get properties from file -->
+	<property file="./build.properties" />
+
 	<includepath classpath="${project.basedir}" />
 	<includepath classpath="${project.basedir}/test/" />
 
@@ -103,8 +106,6 @@
 	    <if>
 	        <isset property="to.deploy" />
 	    <then>   
-	        <property name="ftp.username" value="deploy@phprack.com" />
-	        <property name="ftp.password" value="jH9PkjmN" />
 	        <property name="build.tgz" value="${project.basedir}/build/phpRack-stable.tgz" />
 	        
 	        <tar destfile="${build.tgz}" compression="gzip">
