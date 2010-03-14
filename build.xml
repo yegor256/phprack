@@ -30,7 +30,7 @@
 	<includepath classpath="${project.basedir}" />
 	<includepath classpath="${project.basedir}/test/" />
 
-	<target name="main" depends="lint, phpcs, phpmd, zca, test, deploy" >
+	<target name="main" depends="lint, phpcs, phpmd, test, deploy" >
 	</target>
 
 	<target name="lint" description="Run syntax check for all classes" >

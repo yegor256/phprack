@@ -20,6 +20,11 @@
 require_once PHPRACK_PATH . '/Test.php';
 
 /**
+ * @see phpRack_Runner_AuthResult
+ */
+require_once PHPRACK_PATH . '/Runner/AuthResult.php';
+
+/**
  * Run all tests together, or one by one
  *
  * First you should create an instance of this class, providing it an array
@@ -57,6 +62,14 @@ class phpRack_Runner
     );
     
     /**
+     * Auth result, if authentication was already performed
+     *
+     * @var phpRack_Runner_AuthResult
+     * @see authenticate()
+     */
+    protected $_authResult = null;
+    
+    /**
      * Construct the class
      *
      * @param array Options to set to the class
@@ -72,6 +85,20 @@ class phpRack_Runner
             }
             $this->_options[$option] = $value;
         }
+    }
+    
+    /**
+     * Authenticate the user before running any tests
+     *
+     * @param string Login of the user
+     * @param string Secret password of the user
+     * @return phpRack_Runner_AuthResult
+     * @see $this->_authResult
+     * @todo #8 implement it properly
+     */
+    public function authenticate($login, $password) 
+    {
+        return new phpRack_Runner_AuthResult();
     }
     
     /**

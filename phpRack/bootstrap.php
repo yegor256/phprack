@@ -64,6 +64,17 @@ try {
     require_once PHPRACK_PATH . '/Runner.php';
     $runner = new phpRack_Runner($phpRackConfig);
     
+    /*
+     * @todo #8 we shall replace $login and $password with real values from HTTP headers
+     */
+    $login = $password = 'test';
+    $auth = $runner->authenticate($login, $password);
+    if (!$auth->isValid()) {
+        // here we should challenge HTTP client, if it exists
+        // or just return error page (if the call is made from some other place)
+        throw new Exception('failure in auth');
+    }
+    
     // Global layout is required
     if (empty($_GET[PHPRACK_AJAX_TAG])) {
         /**
