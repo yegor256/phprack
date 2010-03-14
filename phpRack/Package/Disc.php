@@ -36,7 +36,7 @@ class phpRack_Package_Disc extends phpRack_Package
      */
     public function showDirectory($dir, array $options = array()) 
     {
-        $dir = realpath(PHPRACK_PATH . '/' . $dir);
+        $dir = realpath($this->_convertFileName($dir));
         if (!$dir) {
             $this->_failure(
                 "Directory 'PHPRACK_PATH.\$dir' is absent: '" .
