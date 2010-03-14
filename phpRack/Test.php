@@ -141,7 +141,9 @@ abstract class phpRack_Test
                 continue;
             }
             try {
+                $this->setUp();
                 $this->{$method->getName()}();
+                $this->tearDown();
             } catch (Exception $e) {
                 $this->assert->getResult()->addLog(
                     sprintf(
@@ -166,6 +168,28 @@ abstract class phpRack_Test
         
         // return instance of phpRack_Result class
         return $this->assert->getResult();
+    }
+    
+    /**
+     * Setup test environment, if necessary, before running every test
+     *
+     * @return void
+     * @see run()
+     * @todo #3 to check default timezone and set it if necessary
+     */
+    public function setUp() 
+    {
+        // ...
+    }
+    
+    /**
+     * Clean environment if necessary
+     *
+     * @return void
+     * @see run()
+     */
+    public function tearDown() 
+    {
     }
     
     /**
