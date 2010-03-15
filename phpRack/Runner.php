@@ -94,11 +94,15 @@ class phpRack_Runner
      * @param string Secret password of the user
      * @return phpRack_Runner_AuthResult
      * @see $this->_authResult
-     * @todo #8 implement it properly
      */
     public function authenticate($login, $password) 
     {
-        return new phpRack_Runner_AuthResult();
+    	$password = md5($password);
+    	if (is_null($this->_authResult))
+    	{
+            $this->_authResult = new phpRack_Runner_AuthResult($login, $password);
+    	}
+        return $this->_authResult;
     }
     
     /**
