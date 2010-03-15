@@ -24,9 +24,6 @@
 	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
 	<tstamp/>
 
-    <!-- get properties from file -->
-	<property file="./build.properties" />
-
 	<includepath classpath="${project.basedir}" />
 	<includepath classpath="${project.basedir}/test/" />
 
@@ -107,6 +104,9 @@
 	        <isset property="to.deploy" />
 	    <then>   
 	        <property name="build.tgz" value="${project.basedir}/build/phpRack-stable.tgz" />
+
+		    <!-- get FTP properties from file -->
+			<property file="./build.properties" />
 	        
 	        <tar destfile="${build.tgz}" compression="gzip">
 	            <fileset dir="${project.basedir}">
