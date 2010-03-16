@@ -57,17 +57,13 @@ class phpRack_View
     }
 
     /**
-     * Escapes special char "\" for windows os
+     * Escapes special chars "\" and "'" in javascript
      *
-     * @param string $p
+     * @param string $path
      * @return string
      */
-    public function jsPath($p)
+    public function jsPath($path)
     {
-	if (stripos(PHP_OS, 'win') !== false) {
-	    $p = str_replace('\\', '\\\\', $p);
-	}
-
-	return $p;
+	return addcslashes($path, "\\'");
     }
 }
