@@ -48,7 +48,7 @@ class phpRack_Runner
      * This is how you should name your test files, if you want
      * them to be found by the Runner
      */
-    const TEST_PATTERN = '/^(\w+Test)\.php$/i';
+    const TEST_PATTERN = '/^([\w\/\-]*Test)\.php$/i';
     
     /**
      * List of options, which are changeable
