@@ -41,7 +41,7 @@ class phpRack_View
      */
     public function __construct(phpRack_Runner $runner)
     {
-	    $this->_runner = $runner;
+        $this->_runner = $runner;
     }
 
     /**
@@ -51,9 +51,9 @@ class phpRack_View
      */
     public function render()
     {
-    	ob_start();
-    	include PHPRACK_PATH . '/layout/index.phtml';
-    	return ob_get_clean();
+        ob_start();
+        include PHPRACK_PATH . '/layout/index.phtml';
+        return ob_get_clean();
     }
 
     /**
@@ -65,6 +65,6 @@ class phpRack_View
      */
     public function jsPath($path)
     {
-    	return addcslashes($path, "\\'");
+        return addcslashes($path, "\\'");
     }
 }

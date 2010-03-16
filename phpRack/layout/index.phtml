@@ -3,7 +3,7 @@
 -->
 <html>
     <head>
-        <style type="text/css"><? include PHPRACK_PATH . '/layout/index.css' ?></style>
+        <style type="text/css"><?php include PHPRACK_PATH . '/layout/index.css' ?></style>
         <title>phpRack Testing Report</title>
     </head>
 
@@ -12,7 +12,11 @@
 
         <div id='logo'>
             <a href='http://www.phprack.com' target="_blank"><img
-                src='data:image/png;base64,<?=base64_encode(file_get_contents(PHPRACK_PATH . '/layout/logo.png'))?>'
+                src='data:image/png;base64,<?php 
+                    echo base64_encode(
+                        file_get_contents(PHPRACK_PATH . '/layout/logo.png')
+                    )
+                ?>'
                 alt='phpRack' /></a>
             <span>v<?php echo PHPRACK_VERSION?></span>
         </div>
@@ -38,7 +42,7 @@
                     var calls = {
                         <?php $jsCallsCount = count($jsCalls) ?>
                         <?php foreach ($jsCalls as $i => $testName): ?>
-                                'div#d<?php echo $i ?>': '<?php echo $testName?>'<?php if ($i < $jsCallsCount) echo ',' ?>
+                            'div#d<?php echo $i ?>': '<?php echo $testName?>'<?php if ($i < $jsCallsCount) echo ',' ?>
                         <?php endforeach; ?>
                     };
 
