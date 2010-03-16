@@ -1,80 +1,198 @@
 <!--
  * @version $Id$
- -->
+-->
 <html>
-<head>
-    <style>
-    body {
-        font-family: Verdana;
-        font-size: 12px;
-    }
-    div {
-        margin-bottom: 10px;
-    }
-    span.result {
-        cursor: pointer;
-        color: gray;
-    }
-    .success {
-        color: green !important;
-        text-decoration: underline;
-    }
-    .failure {
-        color: red !important;
-        font-weight: bold;
-        text-decoration: underline;
-    }
-    </style>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-    <title>phpRack Testing Report</title>
-</head>
+    <head>
+        <style type="text/css">
+            body {
+                font-family: Verdana;
+                font-size: 12px;
+            }
 
-<body>
-    <p><b>phpRack v<?php echo PHPRACK_VERSION?></b></p>
-        
-    <?php $i = 0; ?>
-    <?php $jsCalls = array(); ?>
-    <?php foreach ($this->_runner->getTests() as $test): ?>
-        <div id="d<?php echo ++$i?>"><?php echo $test->getLabel() ?>:
-            <span class="result">running...</span>
-        <pre style="display:none;"></pre></div>
-        <?php $jsCalls[$i] = $test->getFileName() ?>
-    <?php endforeach; ?>
+            img{ border: 0; }
 
-    <script type="text/javascript">
-    $(function()
-    {
-        var calls = {
-            <?php foreach ($jsCalls as $i=>$testName): ?>
-                'div#d<?php echo $i ?>': '<?php echo $testName?>',
+            a{ color: #25AAE1; text-decoration: none; }
+            a:hover{ text-decoration: underline; }
+
+            #logo{ position: relative; width: 264px; margin-bottom: 10px; }
+            #logo img{ width: 228px; height: 60px; }
+            #logo span{ position: absolute; top: 2px; right: 0; color: #25AAE1; }
+
+            #task-list{  }
+            #task-list .task{ padding: 5px; }
+            #task-list .task pre{ padding: 5px; margin-left: 10px; border-left: 2px solid #25AAE1; }
+
+            #task-list .result{ cursor: pointer; color: gray; }
+            #task-list .label{ cursor: pointer; }
+            #task-list .success { color: green !important; text-decoration: underline; }
+            #task-list .failure { color: red !important; font-weight: bold; text-decoration: underline; }
+        </style>
+
+        <title>phpRack Testing Report</title>
+    </head>
+
+    <body>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
+        <div id='logo'>
+            <a href='http://phprack.com' target="_blank"><img src='data:image/png;base64,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' alt='phpRack' /></a>
+            <span>v<?php echo PHPRACK_VERSION?></span>
+        </div>
+
+        <?php $i = 0; ?>
+        <?php $jsCalls = array(); ?>
+        <div id='task-list'>
+            <?php foreach ($this->_runner->getTests() as $test): ?>
+
+            <div id="d<?php echo ++$i?>" class="task">
+                <span class="label"><?php echo $test->getLabel() ?>:</span>
+                <span class="result">running...</span>
+                <pre style="display:none;"></pre>
+            </div>
+                <?php $jsCalls[$i] = $this->jsPath($test->getFileName())?>
             <?php endforeach; ?>
-        };
-        for (var id in calls) {
-            $.getJSON(
-                '<?php echo $_SERVER['REQUEST_URI']?>',
-                {
-                    '<?php echo PHPRACK_AJAX_TAG?>': calls[id], 
-                    '<?php echo PHPRACK_AJAX_TOKEN?>': id
-                },
-                function (json)
-                {
-                    var id = json.<?php echo PHPRACK_AJAX_TOKEN?>;
-                    if (json.success == true) {
-                        $(id).find('span').html('<?php echo phpRack_Test::OK?>').addClass('success');
-                    } else {
-                        $(id).find('span').html('<?php echo phpRack_Test::FAILURE?>').addClass('failure');
-                    }
-                    $(id).find('pre').html(json.log);
-                    $(id).find('span').click(
-                        function()
-                        {
-                            $(id).find('pre').toggle();
+        </div>
+
+        <script type="text/javascript">
+            $(function() {
+                var calls = {
+                    <?php $jsCallsCount = count($jsCalls) ?>
+                    <?php foreach ($jsCalls as $i => $testName): ?>
+                            'div#d<?php echo $i ?>': '<?php echo $testName?>'<?php if ($i < $jsCallsCount) echo ',' ?>
+                    <?php endforeach; ?>
+                        };
+
+                function phpRack_Timer(options) {
+
+                    var that = {
+                        elapsedSeconds: 0,
+                        intervalId: null,
+                        options: {onTick: null},
+                        __construct: function(options) {
+                            $.extend(that.options, options);
+                        },
+                        tick: function() {
+                            that.elapsedSeconds++;
+                            if (that.options.onTick != null) {
+                                that.options.onTick(that);
+                            }
+                        },
+                        start: function() {
+                            that.stop();
+                            that.elapsedSeconds = 0;
+                            that.intervalId = window.setInterval(that.tick, 1000);
+                        },
+                        stop: function() {
+                            if (that.intervalId != null) {
+                                window.clearInterval(that.intervalId);
+                            }
+                            that.intervalId = null;
+                        },
+                        getFormattedTime: function() {
+                            var result = '';
+                            var minutes = Math.floor(that.elapsedSeconds / 60);
+                            var seconds = that.elapsedSeconds % 60;
+                            result += minutes + ':';
+                            if (seconds < 10) {
+                                result += '0';
+                            }
+                            result += seconds;
+                            return result;
+                        },
+                        isActive: function() {
+                            return that.intervalId != null;
                         }
-                    );
+                    }
+
+                    that.__construct(options);
+                    return that;
                 }
-            );
-        }
-    });
-    </script>
-</body>
+
+                function phpRack_Test(options) {
+
+                    var $this = $(options.id);
+
+                    var that = {
+                        options: options,
+                        timer: null,
+                        isRunning: false,
+                        $result: $this.find('span.result'),
+                        $label: $this.find('span.label'),
+                        $message: $this.find('pre'),
+                        __construct: function() {
+                            that.$result.click(function() {
+                                that.$message.slideToggle();
+                            });
+                            that.$label.click(function() {
+                                that.run();
+                            });
+                        },
+                        _setStatus: function (success, message) {
+                            if (success == true) {
+                                that.$result.html('<?php echo phpRack_Test::OK?>').addClass('success');
+                            } else {
+                                that.$result.html('<?php echo phpRack_Test::FAILURE?>').addClass('failure');
+                            }
+
+                            that.$message.html(message);
+                            that.isRunning = false;
+
+                            if (that.timer != null && that.timer.isActive()) {
+                                that.timer.stop();
+                                that.run();
+                            }
+
+                        },
+                        _startTimer: function() {
+                            if (that.timer == null) {
+                                that.timer = new phpRack_Timer({onTick: that.onTimerTick});
+                            }
+
+                            that.timer.start();
+                            that.onTimerTick(that.timer);
+                        },
+                        onTimerTick: function(timer, event) {
+                            that.$result.html('Running (' + timer.getFormattedTime() + ')...');
+                        },
+                        run: function() {
+                            if (that.isRunning) {
+                                that._startTimer();
+                                return;
+                            }
+
+                            that.isRunning = true;
+                            that.$result.html('Running...');
+                            that.$result.removeClass('success failure');
+
+                            $.ajax({
+                                url: that.options.url,
+                                data: that.options.data,
+                                dataType: 'json',
+                                cache: false,
+                                success: function (json) {
+                                    that._setStatus(json.success, json.log);
+                                },
+                                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                    that._setStatus(false, errorThrown);
+                                }
+                            });
+                        }
+                    }
+
+                    that.__construct();
+                    return that;
+                }
+
+                for (var id in calls) {
+                    var test = new phpRack_Test({id: id,
+                        url: '<?php echo $_SERVER['REQUEST_URI']?>', data: {
+                            '<?php echo PHPRACK_AJAX_TAG?>': calls[id],
+                            '<?php echo PHPRACK_AJAX_TOKEN?>': id
+                        } });
+                    test.run();
+                }
+
+            });
+        </script>
+    </body>
 </html>
