@@ -49,6 +49,7 @@ class phpRack_View
      * Render the view and return HTML
      *
      * @return HTML
+     * @todo ability to render other templates in #19
      */
     public function render() 
     {

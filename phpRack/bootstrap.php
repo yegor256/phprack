@@ -64,12 +64,8 @@ try {
     require_once PHPRACK_PATH . '/Runner.php';
     $runner = new phpRack_Runner($phpRackConfig);
     
-    $login = (array_key_exists('PHP_AUTH_USER', $_SERVER)) ? $_SERVER['PHP_AUTH_USER'] : ''; 
-    $password = (array_key_exists('PHP_AUTH_PW', $_SERVER)) ? $_SERVER['PHP_AUTH_PW'] : '';
-    $auth = $runner->authenticate($login, $password);
-    if (!$auth->isValid()) {
-        header('WWW-Authenticate: Basic realm="phpRack"');
-        header('HTTP/1.0 401 Unauthorized');
+    if (!$runner->isAuthenticated()) {
+        //TODO: handle login screen or exception, if ajax call?
         throw new Exception('failure in auth');
     }
     

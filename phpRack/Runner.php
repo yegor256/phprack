@@ -59,6 +59,7 @@ class phpRack_Runner
     protected $_options = array(
         'dir' => null,
         'auth' => array(),
+        'htpasswd' => null,
     );
     
     /**
@@ -97,13 +98,77 @@ class phpRack_Runner
      */
     public function authenticate($login, $password) 
     {
-    	$password = md5($password);
-    	if (is_null($this->_authResult))
-    	{
-            $this->_authResult = new phpRack_Runner_AuthResult($login, $password);
-    	}
+        $password = md5($password);
+        if (is_null($this->_authResult))
+        {
+            if (array_key_exists('auth', $this->_options) && (count($this->_options['auth']) > 0))
+            {
+                if (($this->_options['auth']['username']==$login) && (md5($this->_options['auth']['username'])==$hash))
+                {
+                    $this->_authResult = new phpRack_Runner_AuthResult(true);
+                } else {
+                    $this->_authResult = new phpRack_Runner_AuthResult(false);
+                }
+            } elseif (array_key_exists('htpasswd', $this->_options) && strlen($this->_options['htpasswd'])) {
+                /* we assume provided path is absolute or at least relative to current directory */
+                $fileContent = file($this->_options['htpasswd']);
+                foreach ($fileContent as $line)
+                {
+                    list($lg, $psw) = explode(':', $line, 2);
+                    /* Just to make sure we don't analyze some whitespace characters */
+                    $lg = trim($lg);
+                    $psw = trim($psw);
+                    if (($lg==$login) && ($psw==$hash))
+                    {
+                        $this->_authResult = new phpRack_Runner_AuthResult(true);
+                    }
+                }
+                if (is_null($this->_authResult))
+                {
+                    $this->_authResult = new phpRack_Runner_AuthResult(false);
+                }
+            } else {
+                $this->_authResult = new phpRack_Runner_AuthResult(true);
+            }
+            
+        }
         return $this->_authResult;
     }
+    
+    /**
+     * Checks whether user is authenticated before running any tests
+     *
+     * @return boolean
+     * @see $this->_authResult
+     * @todo implement displaying login screen - see #19
+     */
+    public function isAuthenticated() 
+    {
+        if (is_null($this->_authResult))
+        {
+            if (array_key_exists('phpRack_auth', $_COOKIE))
+            {
+                list($login, $password) = explode(':', $_COOKIE['phpRack_auth']);
+            } elseif (array_key_exists('phpRack_login', $_POST) && array_key_exists('phpRack_password', $_POST)) {
+                $login = $_POST['phpRack_login'];
+                $password = md5($_POST['phpRack_password']);
+                /* Expiration time is set 1 hour in the future - to be changed if needed */
+                setcookie('phpRack_auth', $login.':'.$password, time()+60*60);
+            } else {
+                /* if we have no authinfo, there is still a chance that site is not protected */
+                $login = '';
+                $password = '';
+            }
+            $this->_authResult = $this->authenticate($login, $password);
+            if (!$this->_authResult->isValid())
+            {
+                //TODO: implement login screen - see #19
+            }
+        }
+        return $this->_authResult->isValid();
+    }
+    
+    
     
     /**
      * Get tests location directory
@@ -172,6 +237,10 @@ class phpRack_Runner
      */
     public function run($fileName, $token = 'token') 
     {
+        if (!$this->isAuthenticated()) {
+            //TODO: handle situation when login screen should appear
+            throw new Exception("Authentication failed, please login first");
+        }
         $test = phpRack_Test::factory($fileName, $this);
         
         $result = $test->run();

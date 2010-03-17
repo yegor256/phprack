@@ -27,71 +27,16 @@ class phpRack_Runner_AuthResult
      * @var boolean
      * @see isValid()
      */
-    protected $valid = false;
-    
-    /**
-     * Stores error message, if ocurred during authentication
-     *
-     * @var string
-     * @see __construct()
-     */
-    protected $errorMsg;
+    protected $_valid = false;
     
     /**
      * Constructor
      *
-     * @param string Login attempting to access phpRack
-     * @param string Hash of password provided by user
+     * @param boolean Whether the auth is valid or not
      */
-    public function __construct($login, $hash)
+    public function __construct($valid)
     {
-        global $phpRackConfig;
-        if (!is_array($phpRackConfig))
-        {
-            $this->errorMsg = 'Config variable $phpRackConfig is not an array';
-            return;
-        }
-        if (array_key_exists('auth', $phpRackConfig))
-        {
-            if (($phpRackConfig['auth']['username']==$login) && (md5($phpRackConfig['auth']['username'])==$hash))
-            {
-                $this->valid = true;
-                return;
-            } else {
-                $this->errorMsg = 'Incorrect login or password';
-                return;
-            }
-        } elseif (array_key_exists('htpasswd', $phpRackConfig)) {
-            /* we assume provided path is absolute or at least relative to current directory */
-            $fileContent = file($phpRackConfig['htpasswd'], FILE_SKIP_EMPTY_LINES);
-            foreach ($fileContent as $line)
-            {
-                list($lg, $psw) = explode(':', $line, 2);
-                /* Just to make sure we don't analyze some whitespace characters */
-                $lg = trim($lg);
-                $psw = trim($psw);
-                if (($lg==$login) && ($psw==$hash))
-                {
-                    $this->valid = true;
-                    return;
-                }
-            }
-            $this->errorMsg = 'Incorrect password or user doesn\'t exist';
-        } else {
-            $this->valid = true;
-            return;
-        }
-    }
-    
-    
-    /**
-     * Returns message of error in authentication, if any
-     *
-     * @return string
-     */
-    public function getErrorMessage() 
-    {
-        return $this->errorMsg;
+        $this->_valid = $valid;
     }
     
     /**
