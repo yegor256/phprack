@@ -34,7 +34,7 @@ abstract class phpRack_Test
 
     const OK = 'OK';
     const FAILURE = 'FAILURE';
-
+    const DEFAULT_TIMEZONE = 'EST';
     /**
      * ID of the test (unique in the system)
      *
@@ -179,7 +179,14 @@ abstract class phpRack_Test
      */
     public function setUp() 
     {
-        // ...
+        // Check the default time zone
+        $defaultTimeZone = ini_get('date.timezone');
+        if (empty($defaultTimeZone)) {
+            ini_set('date.timezone', self::DEFAULT_TIMEZONE);
+            $message  = 'INI setting date.timezone is not set. '.self::DEFAULT_TIMEZONE.' set as the time zone.';
+            $message .= 'Please set date.timezone to you current time zone'; 
+            $this->_log($message);
+        }
     }
     
     /**
