@@ -57,7 +57,7 @@ class RunnerTest extends AbstractTest
         ini_set('date.timezone', 'EST');
         $tests = $this->_runner->getTests();
         $result = $tests[0]->run();
-        $this->assertNotRegExp('/date\.timezone/', $result->getLog(), 'Default TZ warning missing');
+        $this->assertNotRegExp('/date\.timezone/', $result->getLog(), 'Default TZ warning exists, why?');
     }
 
     public function testWeCanRunEntireSuiteInOneCall()
