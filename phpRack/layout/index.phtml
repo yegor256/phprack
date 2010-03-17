@@ -171,7 +171,11 @@
                                         cache: false,
                                         success: function (json)
                                         {
-                                            that._setStatus(json.success, json.log);
+                                            if (json) {
+                                                that._setStatus(json.success, json.log);
+                                            } else {
+                                                that._setStatus(false, 'Server returned empty response');
+                                            }
                                         },
                                         error: function (XMLHttpRequest, textStatus, errorThrown)
                                         {
