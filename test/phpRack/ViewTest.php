@@ -26,7 +26,8 @@ class ViewTest extends AbstractTest
         global $phpRackConfig;
         $runner = new phpRack_Runner($phpRackConfig);
 
-        $view = new phpRack_View($runner);
+        $view = new phpRack_View();
+        $view->assign(array('runner' => $runner));
         
         $html = $view->render();
         $this->assertFalse(empty($html), "Empty HTML, why?");

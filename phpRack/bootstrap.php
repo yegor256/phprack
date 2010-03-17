@@ -81,7 +81,8 @@ try {
          * @see phpRack_View
          */
         require_once PHPRACK_PATH . '/View.php';
-        $view = new phpRack_View($runner);
+        $view = new phpRack_View();
+        $view->assign(array('runner' => $runner));
         echo $view->render();
     } else {
         // Execute one individual test and return its result
