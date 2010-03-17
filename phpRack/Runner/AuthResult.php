@@ -46,7 +46,7 @@ class phpRack_Runner_AuthResult
      */
     public function isValid() 
     {
-        return $this->valid;
+        return $this->_valid;
     }
     
 }

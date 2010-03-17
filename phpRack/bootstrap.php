@@ -66,9 +66,9 @@ try {
     
     if (!$runner->isAuthenticated()) {
         require_once PHPRACK_PATH . '/View.php';
-        $view = new phpRack_View(); 
+        $view = new phpRack_View();
         $view->assign(array('runner' => $runner));
-        echo $view->render('login.phtml');    
+        echo $view->render('login.phtml');
     }
     
     // Global layout is required

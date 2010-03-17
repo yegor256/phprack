@@ -14,6 +14,11 @@ require_once 'AbstractTest.php';
 require_once PHPRACK_PATH . '/Runner.php';
 
 /**
+ * @see phpRack_Runner_AuthResult
+ */
+require_once PHPRACK_PATH . '/Runner/AuthResult.php';
+
+/**
  * @see phpRack_Result
  */
 require_once PHPRACK_PATH . '/Result.php';
@@ -26,6 +31,20 @@ class RunnerTest extends AbstractTest
         parent::setUp();
         global $phpRackConfig;
         $this->_runner = new phpRack_Runner($phpRackConfig);
+    }
+    
+    public function testAuthenticationWorksProperly()
+    {
+        global $phpRackConfig;
+    	if (array_key_exists('auth', $phpRackConfig) && count($phpRackConfig['auth']))
+    	{
+            $this->_runner->authenticate($phpRackConfig['auth']['username'], $phpRackConfig['auth']['password']);
+    	} elseif (array_key_exists('auth', $phpRackConfig) && strlen($phpRackConfig['htaccess'])) {
+    	    $fileContent = file($phpRackConfig['htaccess']);
+    	    list($login, $hash) = explode(':', $fileContent[0], 2);
+    	    $this->_runner->authenticate($login, $hash, true);
+    	}
+        $this->assertFalse($this->_runner->isAuthenticated(), "User can't authenticate properly");
     }
     
     public function testTestFilesAreCollectedCorrectly()

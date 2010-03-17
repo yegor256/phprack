@@ -93,17 +93,18 @@ class phpRack_Runner
      *
      * @param string Login of the user
      * @param string Secret password of the user
+     * @param boolean Defines whether second argument is password or it's hash
      * @return phpRack_Runner_AuthResult
      * @see $this->_authResult
      */
-    public function authenticate($login, $password) 
+    public function authenticate($login, $password, $isHash = false)
     {
-        $password = md5($password);
+        $hash = ($isHash) ? $password : md5($password);
         if (is_null($this->_authResult))
         {
             if (array_key_exists('auth', $this->_options) && (count($this->_options['auth']) > 0))
             {
-                if (($this->_options['auth']['username']==$login) && (md5($this->_options['auth']['username'])==$hash))
+                if (($this->_options['auth']['username']==$login) && (md5($this->_options['auth']['password'])==$hash))
                 {
                     $this->_authResult = new phpRack_Runner_AuthResult(true);
                 } else {
@@ -140,15 +141,16 @@ class phpRack_Runner
      *
      * @return boolean
      * @see $this->_authResult
-     * @todo implement displaying login screen - see #19
      */
     public function isAuthenticated() 
     {
         if (is_null($this->_authResult))
         {
+            $isHash = false;
             if (array_key_exists('phpRack_auth', $_COOKIE))
             {
                 list($login, $password) = explode(':', $_COOKIE['phpRack_auth']);
+                $isHash = true;
             } elseif (array_key_exists('phpRack_login', $_POST) && array_key_exists('phpRack_password', $_POST)) {
                 $login = $_POST['phpRack_login'];
                 $password = md5($_POST['phpRack_password']);
@@ -159,10 +161,12 @@ class phpRack_Runner
                 $login = '';
                 $password = '';
             }
-            $this->_authResult = $this->authenticate($login, $password);
+            $this->_authResult = $this->authenticate($login, $password, $isHash);
             if (!$this->_authResult->isValid())
             {
-                //TODO: implement login screen - see #19
+                $view = new phpRack_View();
+                $view->assign(array('runner' => $runner));
+                echo $view->render('login.phtml');
             }
         }
         return $this->_authResult->isValid();
