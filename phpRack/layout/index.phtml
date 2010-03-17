@@ -171,6 +171,7 @@
                                         cache: false,
                                         success: function (json)
                                         {
+                                            that.$message.removeClass('word_wrap');
                                             if (json) {
                                                 that._setStatus(json.success, json.log);
                                             } else {
@@ -179,6 +180,7 @@
                                         },
                                         error: function (XMLHttpRequest, textStatus, errorThrown)
                                         {
+                                            that.$message.addClass('word_wrap');
                                             that._setStatus(false, errorThrown);
                                         }
                                     }
