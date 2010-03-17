@@ -88,6 +88,10 @@
                                 result += seconds;
                                 return result;
                             },
+                            getElapsedSeconds: function()
+                            {
+                                return that.elapsedSeconds;
+                            },
                             isActive: function()
                             {
                                 return that.intervalId != null;
@@ -107,8 +111,11 @@
                             $result: $this.find('span.result'),
                             $label: $this.find('span.label'),
                             $message: $this.find('pre'),
+                            displayTimer: false,
                             __construct: function()
                             {
+                                that.timer = new phpRack_Timer({onTick: that.onTimerTick});
+
                                 that.$result.click(
                                     function()
                                     {
@@ -118,6 +125,7 @@
                                 that.$label.click(
                                     function()
                                     {
+                                        that.displayTimer = true;
                                         that.run();
                                     }
                                 );
@@ -132,32 +140,32 @@
 
                                 that.$message.html(message);
                                 that.isRunning = false;
-
-                                if (that.timer != null && that.timer.isActive()) {
-                                    that.timer.stop();
-                                    that.run();
-                                }
-
+                                that.timer.stop();
                             },
                             _startTimer: function()
                             {
-                                if (that.timer == null) {
-                                    that.timer = new phpRack_Timer({onTick: that.onTimerTick});
+                                that.timer.start();
+                                that.onTimerTick();
+                            },
+                            onTimerTick: function()
+                            {
+                                if (that.timer.getElapsedSeconds() > 5) {
+                                    that.displayTimer = true;
                                 }
 
-                                that.timer.start();
-                                that.onTimerTick(that.timer);
-                            },
-                            onTimerTick: function(timer, event)
-                            {
-                                that.$result.html('Running (' + timer.getFormattedTime() + ')...');
+                                if (that.displayTimer) {
+                                    that.$result.html('Running (' + that.timer.getFormattedTime() + ')...');
+                                }
                             },
                             run: function()
                             {
-                                if (that.isRunning) {
-                                    that._startTimer();
+                                if (that.timer.isActive()) {
+                                    that.displayTimer = true;
+                                    that.onTimerTick();
                                     return;
                                 }
+
+                                that._startTimer();
 
                                 that.isRunning = true;
                                 that.$result.html('Running...');
