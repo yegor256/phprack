@@ -65,8 +65,10 @@ try {
     $runner = new phpRack_Runner($phpRackConfig);
     
     if (!$runner->isAuthenticated()) {
-        //TODO: handle login screen or exception, if ajax call?
-        throw new Exception('failure in auth');
+        require_once PHPRACK_PATH . '/View.php';
+        $view = new phpRack_View(); 
+        $view->assign(array('runner' => $runner));
+        echo $view->render('login.phtml');    
     }
     
     // Global layout is required
@@ -75,7 +77,8 @@ try {
          * @see phpRack_View
          */
         require_once PHPRACK_PATH . '/View.php';
-        $view = new phpRack_View($runner);
+        $view = new phpRack_View(); 
+        $view->assign(array('runner' => $runner)); 
         echo $view->render();
     } else {
         // Execute one individual test and return its result

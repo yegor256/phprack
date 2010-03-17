@@ -18,7 +18,10 @@ class BootstrapTest extends AbstractTest
     
     public function testBootstrapIsRendered()
     {
+        ob_start();
         include PHPRACK_PATH . '/bootstrap.php';
+        $result = ob_get_clean();
+        $this->assertFalse(empty($result));
     }
     
     public function testHttpGetRequestDeliversValidJSON()
@@ -35,7 +38,10 @@ class BootstrapTest extends AbstractTest
         $_GET[PHPRACK_AJAX_TAG] = $test->getFileName();
         $_GET[PHPRACK_AJAX_TOKEN] = 'token';
         
+        ob_start();
         include PHPRACK_PATH . '/bootstrap.php';
+        $result = ob_get_clean();
+        $this->assertFalse(empty($result));
     }
         
 }

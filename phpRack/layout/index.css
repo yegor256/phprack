@@ -1,0 +1,81 @@
+/**
+ * @version $Id: index.phtml 82 2010-03-16 13:46:41Z yegor256@yahoo.com $
+ */
+body {
+    font-family: Verdana;
+    font-size: 12px;
+}
+
+img {
+    border: 0;
+}
+
+a {
+    color: #25AAE1;
+    text-decoration: none;
+}
+    a:hover {
+        text-decoration: underline;
+    }
+
+#logo {
+    position: relative;
+    width: 264px;
+    margin-bottom: 10px;
+}
+
+    #logo img {
+        width: 228px;
+        height: 60px;
+    }
+    
+    #logo span {
+        position: absolute;
+        top: 2px;
+        right: 0;
+        color: #25AAE1;
+    }
+
+#task-list {
+    
+}
+
+    #task-list .task {
+        padding: 5px;
+    }
+    
+        #task-list .task pre {
+            padding: 5px;
+            margin-left: 10px;
+            border-left: 2px solid #25AAE1;
+        }
+
+    #task-list .result {
+        cursor: pointer;
+        color: gray;
+    }
+    
+    #task-list .label {
+        cursor: pointer;
+    }
+    
+    #task-list .success {
+        color: green !important;
+        text-decoration: underline;
+    }
+    
+    #task-list .failure { 
+        color: red !important;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+.word_wrap
+{
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+    width: 900px;
+}

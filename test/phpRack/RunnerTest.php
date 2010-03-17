@@ -48,7 +48,6 @@ class RunnerTest extends AbstractTest
     {
         $report = $this->_runner->runSuite();
         $this->assertFalse(empty($report), "Empty test report, why?");
-        echo $report;
     }
     
 }

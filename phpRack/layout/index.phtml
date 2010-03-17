@@ -1,80 +1,42 @@
 <!--
  * @version $Id$
- -->
+-->
 <html>
-<head>
-    <style>
-    body {
-        font-family: Verdana;
-        font-size: 12px;
-    }
-    div {
-        margin-bottom: 10px;
-    }
-    span.result {
-        cursor: pointer;
-        color: gray;
-    }
-    .success {
-        color: green !important;
-        text-decoration: underline;
-    }
-    .failure {
-        color: red !important;
-        font-weight: bold;
-        text-decoration: underline;
-    }
-    </style>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-    <title>phpRack Testing Report</title>
-</head>
+    <head>
+        <style type="text/css"><?php include PHPRACK_PATH . '/layout/index.css' ?></style>
+        <title>phpRack Testing Report</title>
+    </head>
 
-<body>
-    <p><b>phpRack v<?php echo PHPRACK_VERSION?></b></p>
-        
-    <?php $i = 0; ?>
-    <?php $jsCalls = array(); ?>
-    <?php foreach ($this->_runner->getTests() as $test): ?>
-        <div id="d<?php echo ++$i?>"><?php echo $test->getLabel() ?>:
-            <span class="result">running...</span>
-        <pre style="display:none;"></pre></div>
-        <?php $jsCalls[$i] = $test->getFileName() ?>
-    <?php endforeach; ?>
+    <body>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 
-    <script type="text/javascript">
-    $(function()
-    {
-        var calls = {
-            <?php foreach ($jsCalls as $i=>$testName): ?>
-                'div#d<?php echo $i ?>': '<?php echo $testName?>',
+        <div id='logo'>
+            <a href='http://www.phprack.com' target="_blank"><img
+                src='data:image/png;base64,<?php
+                    echo base64_encode(
+                        file_get_contents(PHPRACK_PATH . '/layout/logo.png')
+                    )
+                ?>'
+                alt='phpRack' /></a>
+            <span>v<?php echo PHPRACK_VERSION?></span>
+        </div>
+
+        <?php $i = 0; ?>
+        <?php $jsCalls = array(); ?>
+        <div id='task-list'>
+            <?php foreach ($this->runner->getTests() as $test): ?>
+
+            <div id="d<?php echo ++$i?>" class="task">
+                <span class="label"><?php echo $test->getLabel() ?>:</span>
+                <span class="result">running...</span>
+                <pre style="display:none;"></pre>
+            </div>
+                <?php $jsCalls[$i] = $this->jsPath($test->getFileName())?>
             <?php endforeach; ?>
-        };
-        for (var id in calls) {
-            $.getJSON(
-                '<?php echo $_SERVER['REQUEST_URI']?>',
-                {
-                    '<?php echo PHPRACK_AJAX_TAG?>': calls[id], 
-                    '<?php echo PHPRACK_AJAX_TOKEN?>': id
-                },
-                function (json)
-                {
-                    var id = json.<?php echo PHPRACK_AJAX_TOKEN?>;
-                    if (json.success == true) {
-                        $(id).find('span').html('<?php echo phpRack_Test::OK?>').addClass('success');
-                    } else {
-                        $(id).find('span').html('<?php echo phpRack_Test::FAILURE?>').addClass('failure');
-                    }
-                    $(id).find('pre').html(json.log);
-                    $(id).find('span').click(
-                        function()
-                        {
-                            $(id).find('pre').toggle();
-                        }
-                    );
-                }
-            );
-        }
-    });
-    </script>
-</body>
+        </div>
+
+        <script type="text/javascript">
+            <?php include PHPRACK_PATH . '/layout/index.js' ?>
+        </script>
+    </body>
 </html>
