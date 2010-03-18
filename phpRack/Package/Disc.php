@@ -79,6 +79,13 @@ class phpRack_Package_Disc extends phpRack_Package
         $lines = array();
         foreach ($iterator as $file) {
             $name = substr($file, strlen($dir) + 1);
+            
+            // strange sanity check against these names. they should not
+            // be inside this iterator, but on some systems they are there
+            if (($name == '.') || ($name == '..')) {
+                continue;
+            }
+            
             $toExclude = false;
             
             foreach ($exclude as $regex) {
