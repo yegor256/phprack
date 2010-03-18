@@ -1,3 +1,6 @@
+/**
+ * @version $Id$
+ */
 $(
     function()
     {
