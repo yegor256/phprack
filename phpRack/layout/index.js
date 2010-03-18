@@ -99,14 +99,6 @@ $(
                     // Create timer object and pass callback function to it
                     that.timer = new phpRack_Timer({onTick: that.onTimerTick});
 
-                    // If user click on result span
-                    that.$result.click(
-                        function()
-                        {
-                            // Show message from server with slide
-                            that.$message.slideToggle();
-                        }
-                    );
                     // If user click on test name
                     that.$label.click(
                         function()
@@ -118,6 +110,10 @@ $(
                             that.run();
                         }
                     );
+                },
+                onResultClick: function()
+                {
+                    that.$message.slideToggle();
                 },
                 _setStatus: function (success, message)
                 {
@@ -134,6 +130,10 @@ $(
                     // Stop timer and update its state to user can repeat test
                     that.isRunning = false;
                     that.timer.stop();
+
+                    // Remove earlier added handler to don't have duplicate
+                    that.$result.unbind('click', that.onResultClick);
+                    that.$result.bind('click', that.onResultClick);
                 },
                 _startTimer: function()
                 {
