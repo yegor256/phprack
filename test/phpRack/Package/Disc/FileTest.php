@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: FileTest.php -1   $
+ * @version $Id$
  */
 
 /**
