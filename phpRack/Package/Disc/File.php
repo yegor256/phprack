@@ -146,4 +146,72 @@ class phpRack_Package_Disc_File extends phpRack_Package
         $this->_log($content);
         return $this;
     }
+
+    /**
+     * Checks whether a file exists
+     *
+     * @param string File name to check
+     * @return $this
+     */
+    public function exists($fileName)
+    {
+        clearstatcache();
+        if (file_exists($fileName)) {
+            $this->_success("File '{$fileName}' exists");
+        } else {
+            $this->_failure("File '{$fileName}' does not exist");
+        }
+        return $this;
+    }
+
+    /**
+     * Checks whether a file is readable
+     *
+     * @param string File name to check
+     * @return $this
+     */
+    public function isReadable($fileName)
+    {
+        clearstatcache();
+        if (is_readable($fileName)) {
+            $this->_success("File '{$fileName}' is readable");
+        } else {
+            $this->_failure("File '{$fileName}' is not readable");
+        }
+        return $this;
+    }
+
+    /**
+     * Check whether a file is writable
+     *
+     * @param string File name to check
+     * @return $this
+     */
+    public function isWritable($fileName)
+    {
+        clearstatcache();
+        if (is_writable($fileName)) {
+            $this->_success("File '{$fileName}' is writable");
+        } else {
+            $this->_failure("File '{$fileName}' is not writable");
+        }
+        return $this;
+    }
+
+    /**
+     * Check whether the filename is a directory
+     *
+     * @param string File name to check
+     * @return $this
+     */
+    public function isDir($fileName)
+    {
+        clearstatcache();
+        if (is_dir($fileName)) {
+            $this->_success("File '{$fileName}' is a directory");
+        } else {
+            $this->_failure("File '{$fileName}' is not a directory");
+        }
+        return $this;
+    }
 }
