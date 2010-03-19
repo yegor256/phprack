@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -71,5 +71,49 @@ class phpRack_Package_Php extends phpRack_Package
         
         return $this;
     }
-    
+
+    /**
+     * Check files in directory have correct php syntax
+     *
+     * @param string Directory path to check
+     * @param array List of options
+     * @return $this
+     */
+    public function lint($dir, array $options = array())
+    {
+        $dir = realpath($this->_convertFileName($dir));
+        if (!$dir) {
+            $this->_failure("Directory '{$dir}' is not exists");
+            return $this;
+        }
+
+        // Create our file iterator
+        require_once PHPRACK_PATH . '/DirectoryFilterIterator.php';
+        $iterator = new phpRack_DirectoryFilterIterator(
+            new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($dir)
+        ));
+
+        if (!empty($options['exclude'])) {
+            $iterator->setExclude($options['exclude']);
+        }
+
+        if (!empty($options['extensions'])) {
+            $iterator->setExtensions($options['extensions']);
+        }
+
+        foreach ($iterator as $file) {
+            $command = 'php -l ' . escapeshellarg($file->getPathname()) . ' 2>&1';
+            $output = shell_exec($command);
+
+            if (preg_match('#^No syntax errors detected#', $output)) {
+                $this->_success('File ' . $file->getPathname() . ' is valid');
+            } else {
+                $this->_failure('File ' . $file->getPathname() . ' is not valid');
+                $this->_log($output);
+            }
+        }
+
+        return $this;
+    }
 }
