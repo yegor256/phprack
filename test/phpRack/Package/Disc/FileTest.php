@@ -12,8 +12,16 @@ require_once dirname(__FILE__) . '/../../../../phpRack/Package/Disc/File.php';
 
 class phpRack_Package_Disc_FileTest extends AbstractTest
 {
+    /**
+    * Directory where we have sample files, will be set it in setUp() function
+    */
     private $_testFilesDir;
 
+    /**
+    * We will store here temp file name, which should be removed after test end
+    */
+    private $_tmpFileName;
+    
     /**
      *
      * @var phpRack_Package_Disc_File
@@ -32,6 +40,15 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
         $this->_result = new phpRack_Result();
         $this->_package = new phpRack_Package_Disc_File($this->_result);
         $this->_testFilesDir = dirname(__FILE__) . '/_files';
+    }
+    
+    protected function tearDown()
+    {
+        clearstatcache();
+        // Remove tmp file
+        if ($this->_tmpFileName && file_exists($this->_tmpFileName)) {
+            unlink($this->_tmpFileName);
+        }
     }
     
     public function testCat()
@@ -81,6 +98,15 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
 
         $this->_package->tail($fileName, 2);
         $this->assertFalse($this->_result->wasSuccessful());
+
+        $this->_package->isReadable($fileName);
+        $this->assertFalse($this->_result->wasSuccessful());
+
+        $this->_package->isWritable($fileName);
+        $this->assertFalse($this->_result->wasSuccessful());
+
+        $this->_package->isDir($fileName);
+        $this->assertFalse($this->_result->wasSuccessful());
     }
 
     public function testCatWithEmptyFile()
@@ -107,7 +133,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
         $this->assertTrue('' === $this->_result->getLog());
     }
 
-    public function testHeadIfWeWantRetreveMoreLinesThanFileContain()
+    public function testHeadIfWeTryGetMoreLinesThanFileContain()
     {
         $fileName = $this->_testFilesDir . '/5lines.txt';
         $fileContent = file_get_contents($fileName);
@@ -118,7 +144,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
         $this->assertEquals($fileContent, $this->_result->getLog());
     }
 
-    public function testTailIfWeWantRetreveMoreLinesThanFileContain()
+    public function testTailIfWeTryGetMoreLinesThanFileContain()
     {
         $fileName = $this->_testFilesDir . '/5lines.txt';
         $fileContent = file_get_contents($fileName);
@@ -147,5 +173,43 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
             $this->_package->tail($fileName, 2);
             $this->assertTrue($this->_result->wasSuccessful());
         }
+    }
+
+    public function testExists()
+    {
+        $this->_package->exists($this->_testFilesDir . '/5lines.txt');
+        $this->assertTrue($this->_result->wasSuccessful());
+
+        $this->_package->exists($this->_testFilesDir . '/notexists.txt');
+        $this->assertFalse($this->_result->wasSuccessful());
+    }
+
+    public function testIsReadable()
+    {
+        $fileName = tempnam('/tmp', 'test_');
+        $this->_tmpFileName = $fileName;
+
+        chmod($fileName, 0400); // Set read permission
+        $this->_package->isReadable($fileName);
+        $this->assertTrue($this->_result->wasSuccessful());
+    }
+
+    public function testIsWritable()
+    {
+        $fileName = tempnam('/tmp', 'test_');
+        $this->_tmpFileName = $fileName;
+
+        chmod($fileName, 0200); // Set write permission
+        $this->_package->isWritable($fileName);
+        $this->assertTrue($this->_result->wasSuccessful());
+    }
+
+    public function testIsDir()
+    {
+        $this->_package->isDir($this->_testFilesDir);
+        $this->assertTrue($this->_result->wasSuccessful());
+
+        $this->_package->isDir($this->_testFilesDir . '/5lines.txt');
+        $this->assertFalse($this->_result->wasSuccessful());
     }
 }
