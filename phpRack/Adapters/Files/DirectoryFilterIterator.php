@@ -23,11 +23,11 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
 {
     
     /**
-     * Regular expression pattern used to determine what files should be ignored
+     * Regular expression patterns used to determine what files should be ignored
      *
-     * @var string
+     * @var string[]
      */
-    private $_excludePattern;
+    private $_excludePatterns;
 
     /**
      * Regular expression pattern used to determine what files should returned
@@ -54,12 +54,14 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
     /**
      * Set which extensions will be used as whitelist
      *
-     * @param string Comma separated list of extensions
+     * @param string|array Comma separated list of extensions, or list of them
      * @return void
      */
     public function setExtensions($extensions)
     {
-        $extensions = explode(',', $extensions);
+        if (!is_array($extensions)) {
+            $extensions = explode(',', $extensions);
+        }
 
         // Escape extension special chars to have always valid regular expression
         foreach ($extensions as &$extension) {
@@ -72,12 +74,15 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
     /**
      * Set pattern which will be used as blacklist
      *
-     * @param string Regular expression pattern
+     * @param string|array Regular expression pattern, or list of them
      * @return void
      */
-    public function setExclude($excludePattern)
+    public function setExclude($excludePatterns)
     {
-        $this->_excludePattern = $excludePattern;
+        if (!is_array($excludePatterns)) {
+            $excludePatterns = array($excludePatterns);
+        }
+        $this->_excludePatterns = $excludePatterns;
     }
 
     /**
@@ -102,8 +107,12 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
         }
 
         // Ignore files which match excludePattern
-        if ($this->_excludePattern && preg_match($this->_excludePattern, $file)) {
-            return false;
+        if ($this->_excludePatterns) {
+            foreach ($this->_excludePatterns as $pattern) {
+                if (preg_match($pattern, $file)) {
+                    return false;
+                }
+            }
         }
 
         // Everything rest is allowable
