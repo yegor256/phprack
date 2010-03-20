@@ -36,23 +36,24 @@ class phpRack_Package_Disc extends phpRack_Package
      */
     public function showDirectory($dir, array $options = array()) 
     {
-        $dir = realpath($this->_convertFileName($dir));
-        if (!$dir) {
-            $this->_failure(
-                "Directory 'PHPRACK_PATH.\$dir' is absent: '" .
-                PHPRACK_PATH . "' . '{$dir}'"
-            );
+        $dir = $this->_convertFileName($dir);
+        if (!file_exists($dir)) {
+            $this->_failure("Directory '{$dir}' is absent");
             return $this;
         }
         
-        $this->_log("Directory tree: '{$dir}'");
+        $this->_log("Directory tree '{$dir}':");
         
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($dir),
-            RecursiveIteratorIterator::SELF_FIRST
+        // Create our file iterator
+        require_once PHPRACK_PATH . '/Adapters/Files/DirectoryFilterIterator.php';
+        $iterator = phpRack_Adapters_Files_DirectoryFilterIterator::factory($dir);
+        
+        $this->_log(
+            implode(
+                "\n", 
+                $this->_convertDirectoriesToLines($iterator, $dir, $options)
+            )
         );
-        $lines = $this->_convertDirectoriesToLines($iterator, $dir, $options);
-        $this->_log(implode("\n", $lines));
         
         return $this;
     }
@@ -67,28 +68,9 @@ class phpRack_Package_Disc extends phpRack_Package
      */
     protected function _convertDirectoriesToLines(Iterator $iterator, $dir, array $options) 
     {
-        // list of directory prefixes to exclude from listing
-        $exclude = array();
-        if (isset($options['exclude'])) {
-            $exclude = $options['exclude'];
-            if (!is_array($exclude)) {
-                $exclude = array($exclude);
-            }
-        }
-        
         $lines = array();
         foreach ($iterator as $file) {
             $name = substr($file, strlen($dir) + 1);
-            $toExclude = false;
-            
-            foreach ($exclude as $regex) {
-                if (preg_match($regex, $name)) {
-                    $toExclude = true;
-                }
-            }
-            if ($toExclude) {
-                continue;
-            }
             
             $line = str_repeat('  ', substr_count($name, '/')) . $file->getBaseName();
             $attribs = array();

@@ -34,7 +34,15 @@ abstract class phpRack_Test
 
     const OK = 'OK';
     const FAILURE = 'FAILURE';
-
+    
+    /**
+     * This timezone will be used in there is NO timezone
+     * set on the server
+     *
+     * @see setUp()
+     */
+    const DEFAULT_TIMEZONE = 'EST';
+    
     /**
      * ID of the test (unique in the system)
      *
@@ -175,11 +183,19 @@ abstract class phpRack_Test
      *
      * @return void
      * @see run()
-     * @todo #3 to check default timezone and set it if necessary
      */
     public function setUp() 
     {
-        // ...
+        // Check the default time zone
+        $defaultTimeZone = ini_get('date.timezone');
+        if (empty($defaultTimeZone)) {
+            ini_set('date.timezone', self::DEFAULT_TIMEZONE);
+            $this->_log(
+                'INI setting date.timezone is not set. ' . 
+                self::DEFAULT_TIMEZONE . ' set as the time zone. ' .
+                'Please set date.timezone to you current time zone'
+            );
+        }
     }
     
     /**

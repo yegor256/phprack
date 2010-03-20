@@ -21,25 +21,25 @@
 
 <project name="phpRack tests" basedir="." default="main"> 
 
-	<!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
-	<tstamp/>
+    <!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
+    <tstamp/>
 
-	<includepath classpath="${project.basedir}" />
-	<includepath classpath="${project.basedir}/test/" />
+    <includepath classpath="${project.basedir}" />
+    <includepath classpath="${project.basedir}/test/" />
 
-	<target name="main" depends="lint, phpcs, phpmd, test, deploy" >
-	</target>
+    <target name="main" depends="lint, phpcs, phpmd, test" >
+    </target>
 
-	<target name="lint" description="Run syntax check for all classes" >
-		<phplint haltonfailure="yes" level="verbose">
-			<fileset dir="${project.basedir}">
-				<include name="**/*.php"/>
-				<include name="**/*.html"/>
-				<include name="**/*.phtml"/>
-				<exclude name=".svn/**"/>
-			</fileset>
-		</phplint>
-	</target>
+    <target name="lint" description="Run syntax check for all classes" >
+        <phplint haltonfailure="yes" level="verbose">
+            <fileset dir="${project.basedir}">
+                <include name="**/*.php"/>
+                <include name="**/*.html"/>
+                <include name="**/*.phtml"/>
+                <exclude name=".svn/**"/>
+            </fileset>
+        </phplint>
+    </target>
 
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
         <exec command="phpcs 
@@ -54,7 +54,7 @@
             passthru="true" />
     </target>
 
-	<!--
+    <!--
     <target name="zca" description="Zend Code Analyzer">
         <foreach target="zca-file" param="fileName" absparam="zca.fileName">
             <fileset dir="${project.basedir}">
@@ -70,7 +70,7 @@
             checkreturn="true" 
             passthru="true" />
     </target>
-	-->
+    -->
 
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
         <exec command="phpmd 
@@ -78,73 +78,68 @@
             text
             codesize,unusedcode
             --extensions='php,phtml'
-			"
+            "
             escape="false"
             checkreturn="true" 
             passthru="true" />
     </target>
 
-	<target name="test" description="Run all existing unit-tests">
-   		<phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
-			<formatter type="plain" usefile="no" />
-			<batchtest>
-				<fileset dir="${project.basedir}/test">
-					<include name="**/*Test*.php"/>
-					<exclude name="**/Abstract*.php"/>
-					<exclude name="**/_*.php"/>
-					<exclude name=".svn/**"/>
-					<exclude name="**/integration-tests/**"/>
-				</fileset>
-			</batchtest>
-		</phpunit>
-	</target>
-	
-	<target name="deploy" description="Deploy stable TGZ by FTP and other files">
-	    <if>
-	        <isset property="to.deploy" />
-	    <then>   
-	        <property name="build.tgz" value="${project.basedir}/build/phpRack-stable.tgz" />
-
-		    <!-- get FTP properties from file -->
-			<property file="./build.properties" />
-	        
-	        <tar destfile="${build.tgz}" compression="gzip">
-	            <fileset dir="${project.basedir}">
-	                <include name="phpRack/**" />
-	                <include name="LICENSE.txt" />
-	                <exclude name=".svn/**" />
-	            </fileset>
-	        </tar>
-            <ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
-                dir="./public">
-                <fileset dir="${project.basedir}/build">
-                    <include name="phpRack-stable.tgz"/>
-                </fileset>
-            </ftpdeploy>
-            <delete file="${build.tgz}" />
-            
-            <ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}">
-                <fileset dir="${project.basedir}">
-                    <include name="phpRack/**"/>
-                    <exclude name=".svn/**" />
-                </fileset>
+    <target name="test" description="Run all existing unit-tests">
+           <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+            <formatter type="plain" usefile="no" />
+            <batchtest>
                 <fileset dir="${project.basedir}/test">
-                    <include name="integration-tests/**"/>
-                    <exclude name=".svn/**" />
+                    <include name="**/*Test*.php"/>
+                    <exclude name="**/Abstract*.php"/>
+                    <exclude name="**/_*.php"/>
+                    <exclude name=".svn/**"/>
+                    <exclude name="**/integration-tests/**"/>
                 </fileset>
-            </ftpdeploy>
+            </batchtest>
+        </phpunit>
+    </target>
+    
+    <target name="deploy" description="Deploy stable TGZ by FTP and other files">
+        <property name="build.tgz" value="${project.basedir}/build/phpRack-stable.tgz" />
 
-            <ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
-				dir="./public">
-                <fileset dir="${project.basedir}/phprack.com">
-                    <include name="**"/>
-                    <exclude name=".svn/**" />
-                </fileset>
-            </ftpdeploy>
-	    </then>
-	    <else>
-	        <echo message="Skipped since [to.deploy] is not set" />
-	    </else></if>
+        <!-- get FTP properties from file -->
+        <property file="./build.properties" />
+        
+        <tar destfile="${build.tgz}" compression="gzip">
+            <fileset dir="${project.basedir}">
+                <include name="phpRack/**" />
+                <include name="LICENSE.txt" />
+                <exclude name=".svn/**" />
+            </fileset>
+        </tar>
+		<echo message="uploading .tgz to the server..." />
+		<ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
+			dir="./public">
+			<fileset dir="${project.basedir}/build">
+				<include name="phpRack-stable.tgz"/>
+			</fileset>
+		</ftpdeploy>
+      	<delete file="${build.tgz}" />
+      
+		<echo message="uploading PHP code to the server..." />
+		<ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}">
+			<fileset dir="${project.basedir}">
+				<include name="phpRack/**"/>
+				<exclude name=".svn/**" />
+			</fileset>
+			<fileset dir="${project.basedir}/test">
+				<include name="integration-tests/**"/>
+				<exclude name=".svn/**" />
+			</fileset>
+		</ftpdeploy>
+
+		<ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
+			dir="./public">
+			<fileset dir="${project.basedir}/phprack.com">
+				<include name="**"/>
+				<exclude name=".svn/**" />
+			</fileset>
+		</ftpdeploy>
 	</target>
 
 </project>
