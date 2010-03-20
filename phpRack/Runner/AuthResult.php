@@ -22,7 +22,7 @@
 class phpRack_Runner_AuthResult
 {
     /**
-     * Password validation result, if file not found or password doesn't match defaults to false
+     * Stores auth result
      *
      * @var boolean
      * @see isValid()

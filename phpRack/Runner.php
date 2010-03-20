@@ -100,32 +100,32 @@ class phpRack_Runner
     public function authenticate($login, $password, $isHash = false)
     {
         $hash = ($isHash) ? $password : md5($password);
-        if (is_null($this->_authResult))
-        {
-            if (array_key_exists('auth', $this->_options) && (count($this->_options['auth']) > 0))
-            {
-                if (($this->_options['auth']['username']==$login) && (md5($this->_options['auth']['password'])==$hash))
-                {
+        if (is_null($this->_authResult)) {
+            if (array_key_exists('auth', $this->_options) 
+                && (count($this->_options['auth']) > 0)
+            ) {
+                if (($this->_options['auth']['username']==$login) 
+                    && (md5($this->_options['auth']['password'])==$hash)
+                ) {
                     $this->_authResult = new phpRack_Runner_AuthResult(true);
                 } else {
                     $this->_authResult = new phpRack_Runner_AuthResult(false);
                 }
-            } elseif (array_key_exists('htpasswd', $this->_options) && strlen($this->_options['htpasswd'])) {
-                /* we assume provided path is absolute or at least relative to current directory */
+            } elseif (array_key_exists('htpasswd', $this->_options)
+                      && strlen($this->_options['htpasswd'])
+            ) {
+                /* we assume provided path is absolute */
                 $fileContent = file($this->_options['htpasswd']);
-                foreach ($fileContent as $line)
-                {
+                foreach ($fileContent as $line) {
                     list($lg, $psw) = explode(':', $line, 2);
-                    /* Just to make sure we don't analyze some whitespace characters */
+                    /* Just to make sure we don't analyze some whitespace */
                     $lg = trim($lg);
                     $psw = trim($psw);
-                    if (($lg==$login) && ($psw==$hash))
-                    {
+                    if (($lg==$login) && ($psw==$hash)) {
                         $this->_authResult = new phpRack_Runner_AuthResult(true);
                     }
                 }
-                if (is_null($this->_authResult))
-                {
+                if (is_null($this->_authResult)) {
                     $this->_authResult = new phpRack_Runner_AuthResult(false);
                 }
             } else {
@@ -144,26 +144,25 @@ class phpRack_Runner
      */
     public function isAuthenticated() 
     {
-        if (is_null($this->_authResult))
-        {
-            $isHash = false;
-            if (array_key_exists('phpRack_auth', $_COOKIE))
-            {
+        if (is_null($this->_authResult)) {
+            $hash = false;
+            if (array_key_exists('phpRack_auth', $_COOKIE)) {
                 list($login, $password) = explode(':', $_COOKIE['phpRack_auth']);
-                $isHash = true;
-            } elseif (array_key_exists('phpRack_login', $_POST) && array_key_exists('phpRack_password', $_POST)) {
+                $hash = true;
+            } elseif (array_key_exists('phpRack_login', $_POST)
+                      && array_key_exists('phpRack_password', $_POST)
+            ) {
                 $login = $_POST['phpRack_login'];
                 $password = md5($_POST['phpRack_password']);
-                /* Expiration time is set 1 hour in the future - to be changed if needed */
+                /* Expiration time is set 1 hour in the future */
                 setcookie('phpRack_auth', $login.':'.$password, time()+60*60);
             } else {
-                /* if we have no authinfo, there is still a chance that site is not protected */
+                /* no authinfo, chances are that site is not protected */
                 $login = '';
                 $password = '';
             }
-            $this->_authResult = $this->authenticate($login, $password, $isHash);
-            if (!$this->_authResult->isValid())
-            {
+            $this->_authResult = $this->authenticate($login, $password, $hash);
+            if (!$this->_authResult->isValid()) {
                 $view = new phpRack_View();
                 $view->assign(array('runner' => $runner));
                 echo $view->render('login.phtml');
