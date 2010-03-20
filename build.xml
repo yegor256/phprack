@@ -112,6 +112,7 @@
                 <exclude name=".svn/**" />
             </fileset>
         </tar>
+		<echo message="uploading .tgz to the server..." />
 		<ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
 			dir="./public">
 			<fileset dir="${project.basedir}/build">
@@ -120,6 +121,7 @@
 		</ftpdeploy>
       	<delete file="${build.tgz}" />
       
+		<echo message="uploading PHP code to the server..." />
 		<ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}">
 			<fileset dir="${project.basedir}">
 				<include name="phpRack/**"/>
