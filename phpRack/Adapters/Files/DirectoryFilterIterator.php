@@ -46,7 +46,8 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
     {
         return new self(
             new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($dir)
+                new RecursiveDirectoryIterator($dir),
+                RecursiveIteratorIterator::SELF_FIRST
             )
         );
     }
@@ -100,9 +101,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
         }
 
         // Ignore files which don't match extensionsPattern
-        if ($this->_extensionsPattern
-            && !preg_match($this->_extensionsPattern, $file)
-        ) {
+        if ($this->_extensionsPattern && !preg_match($this->_extensionsPattern, $file)) {
             return false;
         }
 
