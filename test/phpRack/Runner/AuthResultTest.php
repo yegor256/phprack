@@ -12,7 +12,7 @@ require_once PHPRACK_PATH . '/Runner/AuthResult.php';
 
 
 class AuthResultTest extends AbstractTest
-{   
+{
     public function testResultInitializeProperly()
     {
         $auth1 = new phpRack_Runner_AuthResult(true);

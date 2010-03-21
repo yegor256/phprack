@@ -36,15 +36,14 @@ class RunnerTest extends AbstractTest
     public function testAuthenticationWorksProperly()
     {
         global $phpRackConfig;
-    	if (array_key_exists('auth', $phpRackConfig) && count($phpRackConfig['auth']))
-    	{
+        if (array_key_exists('auth', $phpRackConfig) && count($phpRackConfig['auth'])) {
             $this->_runner->authenticate($phpRackConfig['auth']['username'], $phpRackConfig['auth']['password']);
-    	} elseif (array_key_exists('auth', $phpRackConfig) && strlen($phpRackConfig['htaccess'])) {
-    	    $fileContent = file($phpRackConfig['htaccess']);
-    	    list($login, $hash) = explode(':', $fileContent[0], 2);
-    	    $this->_runner->authenticate($login, $hash, true);
-    	}
-        $this->assertFalse($this->_runner->isAuthenticated(), "User can't authenticate properly");
+        } elseif (array_key_exists('auth', $phpRackConfig) && strlen($phpRackConfig['htaccess'])) {
+            $fileContent = file($phpRackConfig['htaccess']);
+            list($login, $hash) = explode(':', $fileContent[0], 2);
+            $this->_runner->authenticate($login, $hash, true);
+        }
+        $this->assertTrue($this->_runner->isAuthenticated(), "User authentication not working properly");
     }
     
     public function testTestFilesAreCollectedCorrectly()
