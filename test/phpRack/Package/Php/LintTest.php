@@ -44,7 +44,9 @@ class phpRack_Package_Php_LintTest extends AbstractTest
     public function testLintExcludeOption()
     {
         $options = array(
-            'exclude' => '/corrupt*/',
+            'exclude' => array(
+                '/corrupt*/',
+                '/\.svn/')
         );
         $this->_package->lint($this->_testFilesDir . '/php', $options);
         $this->assertTrue($this->_result->wasSuccessful());
@@ -68,7 +70,9 @@ class phpRack_Package_Php_LintTest extends AbstractTest
     public function testLintWithNotExistedDirectory()
     {
         $options = array(
-            'exclude' => '/corrupt*/',
+            'exclude' => array(
+                '/corrupt*/',
+                '/\.svn/')
         );
         $this->_package->lint($this->_testFilesDir . '/notexists', $options);
         $this->assertFalse($this->_result->wasSuccessful());

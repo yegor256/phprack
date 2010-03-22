@@ -50,6 +50,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
         clearstatcache();
         // Remove tmp file
         if ($this->_tmpFileName && file_exists($this->_tmpFileName)) {
+            chmod($this->_tmpFileName, 0600); // Reset file permissions, for avoid permission denied on Windows
             unlink($this->_tmpFileName);
         }
     }
