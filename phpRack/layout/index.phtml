@@ -1,7 +1,8 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--
  * @version $Id$
 -->
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <style type="text/css"><?php include PHPRACK_PATH . '/layout/index.css' ?></style>
         <title>phpRack Testing Report</title>
@@ -28,7 +29,7 @@
 
             <div id="d<?php echo ++$i?>" class="task">
                 <span class="label"><?php echo $test->getLabel() ?>:</span>
-                <span class="result">running...</span>
+                <span class="result">waiting...</span>
                 <pre style="display:none;"></pre>
             </div>
                 <?php $jsCalls[$i] = $this->jsPath($test->getFileName())?>

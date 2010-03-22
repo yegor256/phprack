@@ -8,7 +8,10 @@
  */
 require_once 'AbstractTest.php';
 
-require_once dirname(__FILE__) . '/../../../../phpRack/Package/Disc/File.php';
+/**
+ * @see phpRack_Package_Disc_File
+ */
+require_once PHPRACK_PATH . '/Package/Disc/File.php';
 
 class phpRack_Package_Disc_FileTest extends AbstractTest
 {
@@ -161,7 +164,8 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
         $fileNames = array(
             '../' . $fileName,
             './../' . $fileName,
-            '/../' . $fileName);
+            '/../' . $fileName
+        );
 
         foreach ($fileNames as $fileName) {
             $this->_package->cat($fileName);

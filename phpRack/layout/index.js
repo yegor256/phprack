@@ -12,6 +12,61 @@ $(
             <?php endforeach; ?>
         };
 
+        String.prototype.stripTags = function ()
+        {
+            return this.replace(/<[^>]*>/g, '');
+        }
+
+        String.prototype.htmlspecialchars = function ()
+        {
+            return this.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // Our processing queue to control tests concurrency
+        function phpRack_TaskQueue()
+        {
+            var that = {
+                queue: [], // Used for storing waiting tasks
+                threadsCount: 1, // How many concurent threads we can have
+                activeThreadsCount: 0, // How many threads is currently running
+                // Callback function executed after each task is finished
+                onTaskFinish: function()
+                {
+                    that.activeThreadsCount--;
+                    that._runNextTask();
+                },
+                // Add task to our processing queue
+                add: function(task)
+                {
+                    that.queue.push(task);
+                    that._runNextTask();
+                },
+                // Control tasks proccessing
+                _runNextTask: function()
+                {
+                    // If we have free thread
+                    if (that.activeThreadsCount < that.threadsCount) {
+                        that.activeThreadsCount++;
+
+                        // Get next task from queue and run it
+                        task = that.queue.shift();
+                        if (task) {
+                            // Set callback function on task, to know that we can execute next one
+                            task.setOption('onFinish', that.onTaskFinish);
+                            task.run();
+                        }
+                    }
+                },
+                // Set how many threads should be used for processing our task queue
+                setThreadsCount: function(threadsCount)
+                {
+                    that.threadsCount = threadsCount;
+                }
+            }
+
+            return that;
+        }
+
         function phpRack_Timer(options)
         {
             var that = {
@@ -111,6 +166,10 @@ $(
                         }
                     );
                 },
+                setOption: function(key, value)
+                {
+                    that.options[key] = value;
+                },
                 onResultClick: function()
                 {
                     that.$message.slideToggle();
@@ -134,6 +193,11 @@ $(
                     // Remove earlier added handler to don't have duplicate
                     that.$result.unbind('click', that.onResultClick);
                     that.$result.bind('click', that.onResultClick);
+
+                    // If we have registered callback function after test finish, execute it
+                    if (that.options.onFinish) {
+                        that.options.onFinish();
+                    }
                 },
                 _startTimer: function()
                 {
@@ -151,7 +215,7 @@ $(
 
                     // Check that should display timer (User click or time execution > 5s)
                     if (that.displayTimer) {
-                        that.$result.html('Running (' + that.timer.getFormattedTime() + ')...');
+                        that.$result.html('running (' + that.timer.getFormattedTime() + ')...');
                     }
                 },
                 run: function()
@@ -169,7 +233,7 @@ $(
                     // Set initial states
                     that._startTimer();
                     that.isRunning = true;
-                    that.$result.html('Running...');
+                    that.$result.html('running...');
 
                     // Remove added classes, because test can be executed many times
                     that.$result.removeClass('success failure');
@@ -197,15 +261,25 @@ $(
                                     that._setStatus(false, 'Server returned empty response');
                                 }
                             },
-                            // Callback if server returned from some reasons non well formatted JSON
-                            // (php script throwed some warning, unhandled exception, extra data, etc...)
+                            // Callback function if have some communication errors
                             error: function (XMLHttpRequest, textStatus, errorThrown)
                             {
+                                // If we have some problem with server (Internal error, 404, 301/302 redirection)
+                                if (XMLHttpRequest.status != 200) {
+                                    // Create error message with headers
+                                    message = XMLHttpRequest.status + ' ' + XMLHttpRequest.statusText + "\n"
+                                              + XMLHttpRequest.responseText;
+                                } else {
+                                    // We received malformed JSON
+                                    // (php script throwed some warning, unhandled exception, extra data, etc...)
+                                    message = errorThrown;
+                                }
+
                                 // Use word wrap for this messages type
                                 that.$message.addClass('word_wrap');
 
                                 // Set status to FAILURE with errorThrown as message
-                                that._setStatus(false, errorThrown);
+                                that._setStatus(false, message.htmlspecialchars());
                             }
                         }
                     );
@@ -215,6 +289,13 @@ $(
             that.__construct();
             return that;
         }
+
+        // Create queue for processing our tests
+        var taskQueue = new phpRack_TaskQueue();
+
+        // Set how many threads(tests) should be executed in same time
+        // (not too high to avoid Apache limit problems)
+        taskQueue.setThreadsCount(2);
 
         for (var id in calls) {
             // Create test object
@@ -229,8 +310,8 @@ $(
                 }
             );
 
-            // Execute test
-            test.run();
+            // Add test to processing queue
+            taskQueue.add(test);
         }
     }
 );

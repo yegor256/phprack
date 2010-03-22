@@ -8,10 +8,14 @@
  */
 require_once 'AbstractTest.php';
 
-require_once dirname(__FILE__) . '/../../../../phpRack/Package/Php.php';
+/**
+ * @see phpRack_Package_Php
+ */
+require_once PHPRACK_PATH . '/Package/Php.php';
 
 class phpRack_Package_Php_LintTest extends AbstractTest
 {
+    
     /**
     * Directory where we have sample files, will be set it in setUp() function
     */
@@ -69,4 +73,5 @@ class phpRack_Package_Php_LintTest extends AbstractTest
         $this->_package->lint($this->_testFilesDir . '/notexists', $options);
         $this->assertFalse($this->_result->wasSuccessful());
     }
+    
 }

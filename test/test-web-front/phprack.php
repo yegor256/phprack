@@ -5,6 +5,10 @@
 
 global $phpRackConfig;
 $phpRackConfig = array(
+    'auth' => array(
+        'username' => 'phprack',
+        'password' => 'phprack',
+    ),
     'dir' => dirname(__FILE__) . '/../integration-tests',
 );
 

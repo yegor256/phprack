@@ -17,8 +17,12 @@
 /**
  * @see phpRack_Package
  */
-
 require_once PHPRACK_PATH . '/Package.php';
+
+/**
+ * @see phpRack_Adapters_File
+ */
+require_once PHPRACK_PATH . '/Adapters/File.php';
 
 /**
  * File informations and content
@@ -56,7 +60,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      */
     public function cat($fileName)
     {
-        $fileName = $this->_convertFileName($fileName);
+        $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
 
         // Check that file exists
         if (!$this->_isFileExists($fileName)) {
@@ -77,7 +81,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      */
     public function tail($fileName, $linesCount)
     {
-        $fileName = $this->_convertFileName($fileName);
+        $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
 
         // Check that file exists
         if (!$this->_isFileExists($fileName)) {
@@ -125,7 +129,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      */
     public function head($fileName, $linesCount)
     {
-        $fileName = $this->_convertFileName($fileName);
+        $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
 
         // Check that file exists
         if (!$this->_isFileExists($fileName)) {
@@ -155,6 +159,8 @@ class phpRack_Package_Disc_File extends phpRack_Package
      */
     public function exists($fileName)
     {
+        $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
+
         clearstatcache();
         if (file_exists($fileName)) {
             $this->_success("File '{$fileName}' exists");
@@ -172,6 +178,8 @@ class phpRack_Package_Disc_File extends phpRack_Package
      */
     public function isReadable($fileName)
     {
+        $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
+
         clearstatcache();
         if (is_readable($fileName)) {
             $this->_success("File '{$fileName}' is readable");
@@ -189,6 +197,8 @@ class phpRack_Package_Disc_File extends phpRack_Package
      */
     public function isWritable($fileName)
     {
+        $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
+
         clearstatcache();
         if (is_writable($fileName)) {
             $this->_success("File '{$fileName}' is writable");
@@ -206,6 +216,8 @@ class phpRack_Package_Disc_File extends phpRack_Package
      */
     public function isDir($fileName)
     {
+        $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
+
         clearstatcache();
         if (is_dir($fileName)) {
             $this->_success("File '{$fileName}' is a directory");

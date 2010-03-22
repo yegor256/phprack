@@ -81,18 +81,17 @@ class phpRack_Package_Php extends phpRack_Package
      */
     public function lint($dir, array $options = array())
     {
-        $dir = realpath($this->_convertFileName($dir));
-        if (!$dir) {
-            $this->_failure("Directory '{$dir}' is not exists");
+        require_once PHPRACK_PATH . '/Adapters/File.php';
+        $dir = phpRack_Adapters_File::factory($dir)->getFileName();
+
+        if (!file_exists($dir)) {
+            $this->_failure("Directory '{$dir}' does not exist");
             return $this;
         }
 
         // Create our file iterator
-        require_once PHPRACK_PATH . '/DirectoryFilterIterator.php';
-        $iterator = new phpRack_DirectoryFilterIterator(
-            new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($dir)
-        ));
+        require_once PHPRACK_PATH . '/Adapters/Files/DirectoryFilterIterator.php';
+        $iterator = phpRack_Adapters_Files_DirectoryFilterIterator::factory($dir);
 
         if (!empty($options['exclude'])) {
             $iterator->setExclude($options['exclude']);
@@ -107,13 +106,13 @@ class phpRack_Package_Php extends phpRack_Package
             $output = shell_exec($command);
 
             if (preg_match('#^No syntax errors detected#', $output)) {
-                $this->_success('File ' . $file->getPathname() . ' is valid');
+                $this->_success("File '{$file->getPathname()}' is valid");
             } else {
-                $this->_failure('File ' . $file->getPathname() . ' is not valid');
+                $this->_failure("File '{$file->getPathname()}' is NOT valid");
                 $this->_log($output);
             }
         }
-
         return $this;
     }
+    
 }
