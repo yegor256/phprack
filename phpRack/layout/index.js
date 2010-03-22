@@ -12,6 +12,16 @@ $(
             <?php endforeach; ?>
         };
 
+        String.prototype.stripTags = function ()
+        {
+            return this.replace(/<[^>]*>/g, '');
+        }
+
+        String.prototype.htmlspecialchars = function ()
+        {
+            return this.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
         // Our processing queue to control tests concurrency
         function phpRack_TaskQueue()
         {
@@ -269,7 +279,7 @@ $(
                                 that.$message.addClass('word_wrap');
 
                                 // Set status to FAILURE with errorThrown as message
-                                that._setStatus(false, message);
+                                that._setStatus(false, message.htmlspecialchars());
                             }
                         }
                     );
