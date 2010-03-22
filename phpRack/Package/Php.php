@@ -81,7 +81,9 @@ class phpRack_Package_Php extends phpRack_Package
      */
     public function lint($dir, array $options = array())
     {
-        $dir = $this->_convertFileName($dir);
+        require_once PHPRACK_PATH . '/Adapters/File.php';
+        $dir = phpRack_Adapters_File::factory($dir)->getFileName();
+
         if (!file_exists($dir)) {
             $this->_failure("Directory '{$dir}' does not exist");
             return $this;

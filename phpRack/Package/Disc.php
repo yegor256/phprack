@@ -36,7 +36,9 @@ class phpRack_Package_Disc extends phpRack_Package
      */
     public function showDirectory($dir, array $options = array()) 
     {
-        $dir = $this->_convertFileName($dir);
+        require_once PHPRACK_PATH . '/Adapters/File.php';
+        $dir = phpRack_Adapters_File::factory($dir)->getFileName();
+        
         if (!file_exists($dir)) {
             $this->_failure("Directory '{$dir}' is absent");
             return $this;
