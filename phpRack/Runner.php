@@ -45,10 +45,29 @@ class phpRack_Runner
 {
     
     /**
+     * COOKIE name
+     * @see isAuthenticated()
+     */
+    const COOKIE_NAME = 'phpRack_auth';
+    
+    /**
+     * COOKIE lifetime in seconds
+     * @see isAuthenticated()
+     */
+    const COOKIE_LIFETIME = 384000;
+    
+    /**
+     * Form param names
+     * @see isAuthenticated()
+     */
+    const POST_LOGIN = 'login';
+    const POST_PWD = 'password';
+    
+    /**
      * This is how you should name your test files, if you want
      * them to be found by the Runner
      */
-    const TEST_PATTERN = '/^([\w\/\-]*Test)\.php$/i';
+    const TEST_PATTERN = '/(\w+Test)\.php$/i';
     
     /**
      * List of options, which are changeable
@@ -58,7 +77,8 @@ class phpRack_Runner
      */
     protected $_options = array(
         'dir' => null,
-        'auth' => array(),
+        'auth' => null,
+        'htpasswd' => null,
     );
     
     /**
@@ -92,13 +112,96 @@ class phpRack_Runner
      *
      * @param string Login of the user
      * @param string Secret password of the user
+     * @param boolean Defines whether second argument is password or it's hash
      * @return phpRack_Runner_AuthResult
      * @see $this->_authResult
-     * @todo #8 implement it properly
      */
-    public function authenticate($login, $password) 
+    public function authenticate($login, $password, $isHash = false)
     {
-        return new phpRack_Runner_AuthResult();
+        // if it's already authenticated, just return it
+        if (!is_null($this->_authResult)) {
+            return $this->_authResult;
+        }
+            
+        // make sure that we're working with HASH
+        $hash = ($isHash) ? $password : md5($password);
+        
+        // plain authentication by login/password
+        if (is_array($this->_options['auth'])) {
+            $auth = $this->_options['auth'];
+            if ($auth['username'] != $login) {
+                return $this->_validated(false, 'Invalid login');
+            }
+            if (md5($auth['password']) != $hash) {
+                return $this->_validated(false, 'Invalid password');
+            }
+            return $this->_validated(true);
+        }
+        
+        // list of login/password provided in file
+        if (is_string($this->_options['htpasswd'])) {
+            require_once PHPRACK_PATH . '/Adapters/File.php';
+            $file = phpRack_Adapters_File::factory($this->_options['htpasswd'])->getFileName();
+            
+            $fileContent = file($file);
+            foreach ($fileContent as $line) {
+                list($lg, $psw) = explode(':', $line, 2);
+                /* Just to make sure we don't analyze some whitespace */
+                $lg = trim($lg);
+                $psw = trim($psw);
+                if (($lg == $login) && ($psw == $hash)) {
+                    return $this->_validated(true);
+                }
+            }
+            return $this->_validated(false, 'Invalid login credentials provided');
+        }
+
+        // authenticated TRUE, if no authentication required
+        return $this->_validated(true);
+    }
+    
+    /**
+     * Checks whether user is authenticated before running any tests
+     *
+     * @return boolean
+     * @see $this->_authResult
+     */
+    public function isAuthenticated() 
+    {
+        if (!is_null($this->_authResult)) {
+            return $this->_authResult->isValid();
+        }
+        
+        global $_COOKIE;
+        if (array_key_exists(self::POST_LOGIN, $_POST) && array_key_exists(self::POST_PWD, $_POST)) {
+            $login = $_POST[self::POST_LOGIN];
+            $password = md5($_POST[self::POST_PWD]);
+            /* Expiration time is set 1 hour in the future */
+            setcookie(self::COOKIE_NAME, $login . ':' . $password, time() + self::COOKIE_LIFETIME);
+        } elseif (array_key_exists(self::COOKIE_NAME, $_COOKIE)) {
+            list($login, $password) = explode(':', $_COOKIE[self::COOKIE_NAME]);
+        } else {
+            /* no authinfo, chances are that site is not protected */
+            $login = '';
+            $password = '';
+        }
+        
+        return $this->authenticate($login, $password, true)->isValid();
+    }
+    
+    /**
+     * Get current auth result, if it exists
+     *
+     * @return phpRack_Runner_AuthResult
+     * @see $this->_authResult
+     * @throws Exception If the result is not set yet
+     */
+    public function getAuthResult() 
+    {
+        if (!isset($this->_authResult)) {
+            throw new Exception("AuthResult is not set yet, use authenticate() before");
+        }
+        return $this->_authResult;
     }
     
     /**
@@ -168,6 +271,10 @@ class phpRack_Runner
      */
     public function run($fileName, $token = 'token') 
     {
+        if (!$this->isAuthenticated()) {
+            //TODO: handle situation when login screen should appear
+            throw new Exception("Authentication failed, please login first");
+        }
         $test = phpRack_Test::factory($fileName, $this);
         
         $result = $test->run();
@@ -178,6 +285,19 @@ class phpRack_Runner
                 PHPRACK_AJAX_TOKEN => $token,
             )
         );
+    }
+    
+    /**
+     * Save and return an AuthResult
+     *
+     * @param boolean Success/failure of the validation
+     * @param string Optional error message
+     * @return phpRack_Runner_AuthResult
+     * @see authenticate()
+     */
+    protected function _validated($result, $message = null) 
+    {
+        return $this->_authResult = new phpRack_Runner_AuthResult($result, $message);
     }
     
 }

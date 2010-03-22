@@ -1,7 +1,8 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--
  * @version $Id$
 -->
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <style type="text/css"><?php include PHPRACK_PATH . '/layout/index.css' ?></style>
         <title>phpRack Testing Report</title>
@@ -12,7 +13,7 @@
 
         <div id='logo'>
             <a href='http://www.phprack.com' target="_blank"><img
-                src='data:image/png;base64,<?php 
+                src='data:image/png;base64,<?php
                     echo base64_encode(
                         file_get_contents(PHPRACK_PATH . '/layout/logo.png')
                     )
@@ -28,7 +29,7 @@
 
             <div id="d<?php echo ++$i?>" class="task">
                 <span class="label"><?php echo $test->getLabel() ?>:</span>
-                <span class="result">running...</span>
+                <span class="result">waiting...</span>
                 <pre style="display:none;"></pre>
             </div>
                 <?php $jsCalls[$i] = $this->jsPath($test->getFileName())?>
@@ -36,175 +37,7 @@
         </div>
 
         <script type="text/javascript">
-            $(
-                function()
-                {
-                    var calls = {
-                        <?php $jsCallsCount = count($jsCalls) ?>
-                        <?php foreach ($jsCalls as $i => $testName): ?>
-                            'div#d<?php echo $i ?>': '<?php echo $testName?>'<?php if ($i < $jsCallsCount) echo ',' ?>
-                        <?php endforeach; ?>
-                    };
-
-                    function phpRack_Timer(options)
-                    {
-                        var that = {
-                            elapsedSeconds: 0,
-                            intervalId: null,
-                            options: {onTick: null},
-                            __construct: function(options)
-                            {
-                                $.extend(that.options, options);
-                            },
-                            tick: function()
-                            {
-                                that.elapsedSeconds++;
-                                if (that.options.onTick != null) {
-                                    that.options.onTick(that);
-                                }
-                            },
-                            start: function()
-                            {
-                                that.stop();
-                                that.elapsedSeconds = 0;
-                                that.intervalId = window.setInterval(that.tick, 1000);
-                            },
-                            stop: function()
-                            {
-                                if (that.intervalId != null) {
-                                    window.clearInterval(that.intervalId);
-                                }
-                                that.intervalId = null;
-                            },
-                            getFormattedTime: function()
-                            {
-                                var result = '';
-                                var minutes = Math.floor(that.elapsedSeconds / 60);
-                                var seconds = that.elapsedSeconds % 60;
-                                result += minutes + ':';
-                                if (seconds < 10) {
-                                    result += '0';
-                                }
-                                result += seconds;
-                                return result;
-                            },
-                            isActive: function()
-                            {
-                                return that.intervalId != null;
-                            }
-                        }
-                        that.__construct(options);
-                        return that;
-                    }
-
-                    function phpRack_Test(options)
-                    {
-                        var $this = $(options.id);
-                        var that = {
-                            options: options,
-                            timer: null,
-                            isRunning: false,
-                            $result: $this.find('span.result'),
-                            $label: $this.find('span.label'),
-                            $message: $this.find('pre'),
-                            __construct: function()
-                            {
-                                that.$result.click(
-                                    function()
-                                    {
-                                        that.$message.slideToggle();
-                                    }
-                                );
-                                that.$label.click(
-                                    function()
-                                    {
-                                        that.run();
-                                    }
-                                );
-                            },
-                            _setStatus: function (success, message)
-                            {
-                                if (success == true) {
-                                    that.$result.html('<?php echo phpRack_Test::OK?>').addClass('success');
-                                } else {
-                                    that.$result.html('<?php echo phpRack_Test::FAILURE?>').addClass('failure');
-                                }
-
-                                that.$message.html(message);
-                                that.isRunning = false;
-
-                                if (that.timer != null && that.timer.isActive()) {
-                                    that.timer.stop();
-                                    that.run();
-                                }
-
-                            },
-                            _startTimer: function()
-                            {
-                                if (that.timer == null) {
-                                    that.timer = new phpRack_Timer({onTick: that.onTimerTick});
-                                }
-
-                                that.timer.start();
-                                that.onTimerTick(that.timer);
-                            },
-                            onTimerTick: function(timer, event)
-                            {
-                                that.$result.html('Running (' + timer.getFormattedTime() + ')...');
-                            },
-                            run: function()
-                            {
-                                if (that.isRunning) {
-                                    that._startTimer();
-                                    return;
-                                }
-
-                                that.isRunning = true;
-                                that.$result.html('Running...');
-                                that.$result.removeClass('success failure');
-
-                                $.ajax(
-                                    {
-                                        url: that.options.url,
-                                        data: that.options.data,
-                                        dataType: 'json',
-                                        cache: false,
-                                        success: function (json)
-                                        {
-                                            if (json) {
-                                                that._setStatus(json.success, json.log);
-                                            } else {
-                                                that._setStatus(false, 'Server returned empty response');
-                                            }
-                                        },
-                                        error: function (XMLHttpRequest, textStatus, errorThrown)
-                                        {
-                                            that._setStatus(false, errorThrown);
-                                        }
-                                    }
-                                );
-                            }
-                        }
-
-                        that.__construct();
-                        return that;
-                    }
-
-                    for (var id in calls) {
-                        var test = new phpRack_Test(
-                            {
-                                id: id,
-                                url: '<?php echo $_SERVER['REQUEST_URI']?>',
-                                data: {
-                                    '<?php echo PHPRACK_AJAX_TAG?>': calls[id],
-                                    '<?php echo PHPRACK_AJAX_TOKEN?>': id
-                                }
-                            }
-                        );
-                        test.run();
-                    }
-                }
-            );
+            <?php include PHPRACK_PATH . '/layout/index.js' ?>
         </script>
     </body>
 </html>

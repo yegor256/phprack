@@ -64,31 +64,27 @@ try {
     require_once PHPRACK_PATH . '/Runner.php';
     $runner = new phpRack_Runner($phpRackConfig);
     
-    /*
-     * @todo #8 we shall replace $login and $password with real values from HTTP headers
-     */
-    $login = $password = 'test';
-    $auth = $runner->authenticate($login, $password);
-    if (!$auth->isValid()) {
-        // here we should challenge HTTP client, if it exists
-        // or just return error page (if the call is made from some other place)
-        throw new Exception('failure in auth');
-    }
-    
-    // Global layout is required
-    if (empty($_GET[PHPRACK_AJAX_TAG])) {
-        /**
-         * @see phpRack_View
-         */
+    if (!$runner->isAuthenticated()) {
         require_once PHPRACK_PATH . '/View.php';
         $view = new phpRack_View();
-        $view->assign(array('runner' => $runner));
-        echo $view->render();
+        $view->assign(array('authResult' => $runner->getAuthResult()));
+        echo $view->render('login.phtml');
     } else {
-        // Execute one individual test and return its result
-        // in JSON format. We reach this point only in AJAX calls from
-        // already rendered testing page.
-        echo $runner->run($_GET[PHPRACK_AJAX_TAG], $_GET[PHPRACK_AJAX_TOKEN]);
+        // Global layout is required
+        if (empty($_GET[PHPRACK_AJAX_TAG])) {
+            /**
+             * @see phpRack_View
+             */
+            require_once PHPRACK_PATH . '/View.php';
+            $view = new phpRack_View(); 
+            $view->assign(array('runner' => $runner)); 
+            echo $view->render();
+        } else {
+            // Execute one individual test and return its result
+            // in JSON format. We reach this point only in AJAX calls from
+            // already rendered testing page.
+            echo $runner->run($_GET[PHPRACK_AJAX_TAG], $_GET[PHPRACK_AJAX_TOKEN]);
+        }
     }
 
 } catch (Exception $e) {

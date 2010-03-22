@@ -18,20 +18,57 @@
  * Result of authentication before running tests
  *
  * @package Tests
- * @todo #8 we should implement it properly
  */
 class phpRack_Runner_AuthResult
 {
 
     /**
+     * Stores auth result
+     *
+     * @var boolean
+     * @see isValid()
+     */
+    protected $_valid;
+    
+    /**
+     * Optional error message
+     *
+     * @var string
+     * @see isValid()
+     */
+    protected $_message;
+    
+    /**
+     * Constructor
+     *
+     * @param boolean Whether the auth is valid or not
+     * @param string Optional error message
+     * @return void
+     */
+    public function __construct($valid, $message = null)
+    {
+        $this->_valid = $valid;
+        $this->_message = $message;
+    }
+    
+    /**
      * Result is VALID?
      *
      * @return boolean
-     * @todo #8 we should implement it properly
      */
     public function isValid() 
     {
-        return true;
+        return $this->_valid;
+    }
+    
+    /**
+     * Error message, if exists
+     *
+     * @return string
+     */
+    public function getMessage() 
+    {
+        return $this->_message;
     }
     
 }
