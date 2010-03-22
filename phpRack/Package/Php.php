@@ -101,8 +101,15 @@ class phpRack_Package_Php extends phpRack_Package
             $iterator->setExtensions($options['extensions']);
         }
 
+        $lintCommand = 'php -l';
+
+        // If we are not on Windows, add environment ignoring, to prevent many PHP script forks
+        if (!in_array(PHP_OS, array('WIN32', 'WINNT'))) {
+            $lintCommand = 'env -i ' . $lintCommand;
+        }
+
         foreach ($iterator as $file) {
-            $command = 'php -l ' . escapeshellarg($file->getPathname()) . ' 2>&1';
+            $command = $lintCommand . ' ' . escapeshellarg($file->getPathname()) . ' 2>&1';
             $output = shell_exec($command);
 
             if (preg_match('#^No syntax errors detected#', $output)) {
