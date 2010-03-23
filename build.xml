@@ -54,23 +54,12 @@
             passthru="true" />
     </target>
 
-    <!--
-    <target name="zca" description="Zend Code Analyzer">
-        <foreach target="zca-file" param="fileName" absparam="zca.fileName">
-            <fileset dir="${project.basedir}">
-                <include name="**/*.php" />
-                <exclude name=".svn/**" />
-            </fileset>
-        </foreach>
-    </target>
-    
-    <target name="zca-file" description="Zend Code Analyzer of one file">
-        <exec command="zca ${zca.fileName}" 
-            escape="false"
-            checkreturn="true" 
-            passthru="true" />
-    </target>
-    -->
+    <zendcodeanalyzer analyzerPath="zca" haltonwarning="true">
+        <fileset dir="${project.basedir}">
+            <include name="**/*.php" />
+            <exclude name=".svn/**" />
+        </fileset>
+    </zendcodeanalyzer>
 
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
         <exec command="phpmd 

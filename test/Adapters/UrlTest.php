@@ -24,8 +24,9 @@ class Adatpers_UrlTest extends AbstractTest
             $this->markTestIncomplete();
         }
         try {
-            $content = $url->getContent();
+            $url->getContent();
         } catch (Exception $e) {
+            $this->_log(get_class($e) . ': ' . $e->getMessage());
             $this->markTestIncomplete();
         }
     }

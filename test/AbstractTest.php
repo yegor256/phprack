@@ -24,4 +24,15 @@ require_once 'PHPUnit/Framework/TestCase.php';
 abstract class AbstractTest extends PHPUnit_Framework_TestCase
 {
     
+    /**
+     * Log one message in testing
+     *
+     * @param string Message to log
+     * @return void
+     */
+    protected function _log($message) 
+    {
+        echo $message;
+    }
+    
 }

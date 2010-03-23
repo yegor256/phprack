@@ -33,6 +33,7 @@ class phpRack_Adapters_Url
      */
     public function __construct($url) 
     {
+        assert(is_string($url));
         //...
     }
     

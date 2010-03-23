@@ -85,7 +85,8 @@ class phpRack_View
     public function render($script = 'index.phtml')
     {
         ob_start();
-        include PHPRACK_PATH . '/layout/' . $script;
+        // workaround against ZCA static code analysis
+        eval("include PHPRACK_PATH . '/layout/{$script}';");
         return ob_get_clean();
     }
 

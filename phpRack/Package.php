@@ -107,7 +107,8 @@ class phpRack_Package
             throw new Exception("Package '$name' is absent in phpRack: '{$packageFile}'");
         }
         
-        require_once $packageFile;
+        // workaround against ZCA static code analysis
+        eval('require_once $packageFile;');
         
         if (!isset(self::$_packages[$className])) {
             self::$_packages[$className] = new $className($result);

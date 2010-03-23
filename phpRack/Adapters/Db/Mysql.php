@@ -42,6 +42,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      */
     public function connect($url)
     {
+        assert(is_string($url));
         // ...
     }
     
@@ -55,6 +56,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      */
     public function query($sql)
     {
+        assert(is_string($sql));
         // ...
     }
         

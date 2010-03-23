@@ -36,6 +36,8 @@ class phpRack_Package_Disc extends phpRack_Package
      */
     public function showDirectory($dir, array $options = array()) 
     {
+        assert(is_array($options));
+        
         require_once PHPRACK_PATH . '/Adapters/File.php';
         $dir = phpRack_Adapters_File::factory($dir)->getFileName();
         
@@ -53,7 +55,7 @@ class phpRack_Package_Disc extends phpRack_Package
         $this->_log(
             implode(
                 "\n", 
-                $this->_convertDirectoriesToLines($iterator, $dir, $options)
+                $this->_convertDirectoriesToLines($iterator, $dir)
             )
         );
         
@@ -65,10 +67,9 @@ class phpRack_Package_Disc extends phpRack_Package
      *
      * @param Iterator List of files
      * @param string Parent directory name, absolute
-     * @param array List of options
      * @return void
      */
-    protected function _convertDirectoriesToLines(Iterator $iterator, $dir, array $options) 
+    protected function _convertDirectoriesToLines(Iterator $iterator, $dir) 
     {
         $lines = array();
         foreach ($iterator as $file) {

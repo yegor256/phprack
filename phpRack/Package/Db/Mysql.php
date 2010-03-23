@@ -38,6 +38,10 @@ class phpRack_Package_Db_Mysql extends phpRack_Package_Db_Abstract
      */
     public function connect($host, $port, $username, $password)
     {
+        assert(is_string($host));
+        assert(is_numeric($port));
+        assert(is_string($username));
+        assert(is_string($password));
         $this->_failure('Not implemented');
         return $this;
     }
@@ -52,6 +56,7 @@ class phpRack_Package_Db_Mysql extends phpRack_Package_Db_Abstract
      */
     public function dbExists($dbName)
     {
+        assert(is_string($dbName));
         $this->_failure('Not implemented');
         return $this;
     }
@@ -67,6 +72,7 @@ class phpRack_Package_Db_Mysql extends phpRack_Package_Db_Abstract
      */
     public function tableExists($tableName)
     {
+        assert(is_string($tableName));
         $this->_failure('Not implemented');
         return $this;
     }
