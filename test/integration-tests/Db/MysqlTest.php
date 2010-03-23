@@ -10,12 +10,11 @@ require_once PHPRACK_PATH . '/Test.php';
 
 class MysqlTest extends phpRack_Test
 {
+    /**
+     * @todo #6: I don't know from where take proper values for it
+     */
     public function testDatabase()
     {
-        /**
-        * @todo #6: I don't know from where take proper values for it
-        */
-
         $host = 'test';
         $port = 'test';
         $userName = 'test';
