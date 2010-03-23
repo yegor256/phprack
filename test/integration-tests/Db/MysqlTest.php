@@ -11,15 +11,15 @@ require_once PHPRACK_PATH . '/Test.php';
 class MysqlTest extends phpRack_Test
 {
     /**
-     * @todo #6: I don't know from where take proper values for it
+     * see http://phprack.com:2082/3rdparty/phpMyAdmin/index.php
      */
     public function testDatabase()
     {
-        $host = 'test';
-        $port = 'test';
-        $userName = 'test';
-        $password = 'test';
-        $dbName = 'test';
+        $host     = 'localhost';
+        $port     = '3306';
+        $userName = 'fazend_phprack';
+        $password = 'J8k9Lmn6Hg2Fg';
+        $dbName   = 'fazend_test';
 
         // we validate that the DB is accessible
         $this->assert->db->mysql
