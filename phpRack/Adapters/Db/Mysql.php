@@ -15,6 +15,11 @@
  */
 
 /**
+ * @see phpRack_Adapters_Db_Abstract
+ */
+require_once PHPRACK_PATH . '/Adapters/Db/Abstract.php';
+
+/**
  * MySQL adapter
  *
  * The class is using native PHP mysql_ methods, without any specific

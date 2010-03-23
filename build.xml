@@ -85,18 +85,35 @@
     </target>
 
     <target name="test" description="Run all existing unit-tests">
-           <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes">
-            <formatter type="plain" usefile="no" />
-            <batchtest>
-                <fileset dir="${project.basedir}/test">
-                    <include name="**/*Test*.php"/>
-                    <exclude name="**/Abstract*.php"/>
-                    <exclude name="**/_*.php"/>
-                    <exclude name=".svn/**"/>
-                    <exclude name="**/integration-tests/**"/>
-                </fileset>
-            </batchtest>
-        </phpunit>
+        <property name="coverage.db" value="${project.basedir}/build/coverage.data" />
+        
+        <!-- create coverage database that will collect all reports -->
+        <coverage-setup database="${coverage.db}">
+            <fileset dir="${project.basedir}/phpRack">
+                <include name="**/*.php"/>
+                <exclude name=".svn/**"/>
+            </fileset>
+        </coverage-setup>
+        
+		<phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
+			<formatter type="plain" usefile="no" />
+			<batchtest>
+				<fileset dir="${project.basedir}/test">
+					<include name="**/*Test*.php"/>
+					<exclude name="**/Abstract*.php"/>
+					<exclude name="**/_*.php"/>
+					<exclude name=".svn/**"/>
+					<exclude name="**/integration-tests/**"/>
+				</fileset>
+			</batchtest>
+		</phpunit>
+
+        <!-- make sure that the code is covered -->
+        <coverage-threshold database="${coverage.db}"
+            perProject="80"
+            perClass="0"
+            perMethod="0"
+            />
     </target>
     
     <target name="deploy" description="Deploy stable TGZ by FTP and other files">
