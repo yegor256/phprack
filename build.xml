@@ -54,14 +54,6 @@
             passthru="true" />
     </target>
 
-    <zendcodeanalyzer analyzerPath="zca" haltonwarning="true">
-        <fileset dir="${project.basedir}">
-            <include name="**/*.php" />
-            <include name="**/*.phtml" />
-            <exclude name=".svn/**" />
-        </fileset>
-    </zendcodeanalyzer>
-
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
         <exec command="phpmd 
             ${project.basedir} 
@@ -73,6 +65,14 @@
             checkreturn="true" 
             passthru="true" />
     </target>
+
+    <zendcodeanalyzer analyzerPath="zca" haltonwarning="true">
+        <fileset dir="${project.basedir}">
+            <include name="**/*.php" />
+            <include name="**/*.phtml" />
+            <exclude name=".svn/**" />
+        </fileset>
+    </zendcodeanalyzer>
 
     <target name="test" description="Run all existing unit-tests">
         <property name="coverage.db" value="${project.basedir}/build/coverage.data" />
