@@ -35,7 +35,10 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
     }
 
     /**
-     * @todo #6 From where I should take valid access details for our db test?
+     * There is no way to specify DB details here, since we don't know
+     * in what environment unit tests are executed. The best we can do here
+     * is to test that invalid parameters provided will correctly lead
+     * to un-successfull result of the test.
      */
     public function testTableExists()
     {
