@@ -18,6 +18,7 @@
  * Iterator filter class which help to get only files which match filter rules
  *
  * @package Adapters
+ * @subpackage Files
  */
 class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
 {
