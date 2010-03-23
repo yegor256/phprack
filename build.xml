@@ -57,6 +57,7 @@
     <zendcodeanalyzer analyzerPath="zca" haltonwarning="true">
         <fileset dir="${project.basedir}">
             <include name="**/*.php" />
+            <include name="**/*.phtml" />
             <exclude name=".svn/**" />
         </fileset>
     </zendcodeanalyzer>
