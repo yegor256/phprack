@@ -34,8 +34,7 @@ class phpRack_Package_Db_Mysql extends phpRack_Package_Db_Abstract
      * @param string User name
      * @param string User password
      * @return $this
-     * @todo #6 Should we use some abstraction level for example PDO or just use
-     *       mysql_/mysqli_ functions?
+     * @see phpRack_Adapters_Db_Mysql
      */
     public function connect($host, $port, $username, $password)
     {
@@ -44,11 +43,12 @@ class phpRack_Package_Db_Mysql extends phpRack_Package_Db_Abstract
     }
 
     /**
-     * Check that database exists
+     * Check that database exists, and selects this database as current
      *
      * @param string Database name
      * @return $this
-     * @todo #6 If connect method wasn't called earlier what to do, call _failure and return?
+     * @see connect()
+     * @throws Exception If this method is called before connect()
      */
     public function dbExists($dbName)
     {
@@ -61,7 +61,9 @@ class phpRack_Package_Db_Mysql extends phpRack_Package_Db_Abstract
      *
      * @param Table name
      * @return $this
-     * @todo #6 We must have firstly selected db. Should it be automatically selected in dbExists method?
+     * @see connect()
+     * @throws Exception If this method is called before connect()
+     * @throws Exception If this method is called before dbExists()
      */
     public function tableExists($tableName)
     {

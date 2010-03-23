@@ -17,6 +17,9 @@
 /**
  * MySQL adapter
  *
+ * The class is using native PHP mysql_ methods, without any specific
+ * extensions like PDO or Mysqli.
+ *
  * @package Adapters
  * @subpackage Db
  */
@@ -30,6 +33,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * @return void
      * @see http://java.sun.com/docs/books/tutorial/jdbc/basics/connecting.html
      * @throws Exception If something wrong happens there
+     * @see mysql_connect()
      */
     public function connect($url)
     {
@@ -42,6 +46,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * @param string SQL query
      * @return string Raw result from the server, in text
      * @throws Exception If something wrong happens there
+     * @see mysql_query()
      */
     public function query($sql)
     {
