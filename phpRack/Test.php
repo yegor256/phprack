@@ -89,7 +89,9 @@ abstract class phpRack_Test
         }
         
         $className = pathinfo($fileName, PATHINFO_FILENAME);
-        require_once $fileName;
+        
+        // workaround against ZCA static code analysis
+        eval('require_once $fileName;');
         return new $className($fileName, $runner);
     }
     

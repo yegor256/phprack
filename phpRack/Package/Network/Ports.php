@@ -33,6 +33,10 @@ class phpRack_Package_Network_Ports extends phpRack_Package
      * @param integer Port number to check
      * @param string IP address of the server to check
      * @return $this
+     * @todo #27: This function should be changed.
+     *           On windows we haven't "/dev/null", instead that we have "NUL".
+     *           Additionally we can have localized message from telnet.
+     *           I think we should use here PHP sockets.
      */
     public function isOpen($port, $server = '127.0.0.1') 
     {

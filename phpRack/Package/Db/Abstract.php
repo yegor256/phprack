@@ -27,16 +27,22 @@ require_once PHPRACK_PATH . '/Package.php';
 abstract class phpRack_Package_Db_Abstract extends phpRack_Package
 {
     /**
-    * @todo #6 Should we have this method here or it is too detailed on this abstraction level?
-    */
+     * @todo #6 Should we have this method here or it is too detailed on this abstraction level?
+     * @todo #6 What method should be used to "connect" with file databases like sqlite?
+     *           We must support there other params like "path to file" for example.
+     *           Maybe instead "connect" we should use more abstracted method?
+     */
     abstract public function connect($host, $port, $username, $password);
 
     /**
-    * @todo #6: What method should be used to "connect" with file databases like sqlite?
-    *           We must support there other params like "path to file" for example.
-    *           Maybe instead "connect" we should use more abstracted method?
-    */
-
+     *
+     * 
+     */
     abstract public function dbExists($dbName);
+    
+    /**
+     *
+     *
+     */
     abstract public function tableExists($tableName);
 }

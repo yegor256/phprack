@@ -17,7 +17,7 @@
 /**
  * One file to work with
  *
- * @package Tests
+ * @package Adapters
  */
 class phpRack_Adapters_File
 {

@@ -27,53 +27,52 @@ require_once PHPRACK_PATH . '/Package/Db/Abstract.php';
 class phpRack_Package_Db_Mysql extends phpRack_Package_Db_Abstract
 {
     /**
-    * Check that we can connect to mysql server
-    *
-    * @param string Host
-    * @param integer Port
-    * @param string User name
-    * @param string User password
-    * @return $this
-    */
+     * Check that we can connect to mysql server
+     *
+     * @param string Host
+     * @param integer Port
+     * @param string User name
+     * @param string User password
+     * @return $this
+     * @see phpRack_Adapters_Db_Mysql
+     */
     public function connect($host, $port, $username, $password)
     {
-        /**
-        * @todo #6 Should we use some abstraction level for example PDO or just use
-        * mysql_/mysqli_ functions?
-        */
-
+        assert(is_string($host));
+        assert(is_numeric($port));
+        assert(is_string($username));
+        assert(is_string($password));
         $this->_failure('Not implemented');
         return $this;
     }
 
     /**
-    * Check that database exists
-    *
-    * @param string Database name
-    * @return $this
-    */
+     * Check that database exists, and selects this database as current
+     *
+     * @param string Database name
+     * @return $this
+     * @see connect()
+     * @throws Exception If this method is called before connect()
+     */
     public function dbExists($dbName)
     {
-        /**
-        * @todo #6 If connect method wasn't called earlier what to do, call _failure and return?
-        */
-
+        assert(is_string($dbName));
         $this->_failure('Not implemented');
         return $this;
     }
 
     /**
-    * Check that table exists
-    *
-    * @param Table name
-    * @return $this
-    */
+     * Check that table exists
+     *
+     * @param Table name
+     * @return $this
+     * @see connect()
+     * @throws Exception If this method is called before connect()
+     * @throws Exception If this method is called before dbExists()
+     */
     public function tableExists($tableName)
     {
-        /**
-        * @todo #6 We must have firstly selected db. Should it be automatically selected in dbExists method?
-        */
-
+        assert(is_string($tableName));
         $this->_failure('Not implemented');
         return $this;
     }

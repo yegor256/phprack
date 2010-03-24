@@ -41,7 +41,7 @@ class phpRack_Package_Php extends phpRack_Package
         // maybe it's CLI version, not HTML?
         if (strpos($html, '<') !== 0) {
             $this->_log($html);
-            return;
+            return $this;
         }
         
         // clean HTML out of special symbols
