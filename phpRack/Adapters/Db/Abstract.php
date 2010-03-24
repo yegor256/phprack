@@ -41,5 +41,41 @@ abstract class phpRack_Adapters_Db_Abstract
      * @throws Exception If something wrong happens there
      */
     abstract public function query($sql);
-        
+
+    /**
+    * Parse JDBC URL and return its components
+    * @param string JDBC URL to parse
+    * @throws Exception If JDBC URL have wrong format
+    * @return array
+    * @todo #6 Should we allow in regular expression port or database to be optional?
+    */
+    protected function _parseJdbcUrl($url)
+    {
+        /**
+        * Match urls like:
+        * jdbc:mysql://localhost:3306/test?username=login&password=password
+        * jdbc:mysql://localhost:3306/test
+        * jdbc:mysql://localhost:3306
+        * jdbc:mysql://localhost
+        */
+
+        $pattern = '#jdbc:(?P<adapter>[^:]+)'
+            . '://(?P<host>[^:/]+)'
+            . '(?::(?P<port>\d+))?'
+            . '(?:/(?P<database>[^?]+))?'
+            . '(?:\?(?P<params>.*))?#';
+
+
+        if (!preg_match($pattern, $url, $matches)) {
+            throw new Exception('JDBC URL parse error');
+        }
+
+        // Convert params string to array
+        if (isset($matches['params'])) {
+            $paramsString = $matches['params'];
+            parse_str($paramsString, $matches['params']);
+        }
+
+        return $matches;
+    }
 }
