@@ -55,13 +55,16 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
     /**
      * Check that we can connect to mysql server
      *
+     * This method converts connection parameters to JDBC URL, and uses
+     * DB adapter in order to establish a real connection with MySQL. We
+     * url-encode all parameters, since JDBC URL is just an URL after all.
+     *
      * @param string Host
      * @param integer Port
      * @param string User name
      * @param string User password
      * @return $this
      * @see phpRack_Adapters_Db_Mysql
-     * @todo #6 I think we should escape params in $jdbcUrl using urlencode, maybe other idea?
      */
     public function connect($host, $port, $username, $password)
     {
@@ -132,10 +135,10 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
     }
 
     /**
-    * Close connection to db
-    *
-    * @return void
-    */
+     * Close connection to db
+     *
+     * @return void
+     */
     public function closeConnection()
     {
         $this->_adapter->closeConnection();

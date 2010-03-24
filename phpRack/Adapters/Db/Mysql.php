@@ -44,11 +44,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * @return void
      * @see http://java.sun.com/docs/books/tutorial/jdbc/basics/connecting.html
      * @throws Exception If something wrong happens there
-     * @todo #6 Where and how we should validate that we have all required parameters for mysql_connect?
-     *          Should we use some default values, if jdbc url doesn't contain them?
-     *
-     *          Maybe add for our error handler case to don't display error from php functions
-     *          which are preceded by @, to allow script return well formatted failure message.
+     * @throws Exception If any of the required params are missed in the URL
      */
     public function connect($url)
     {
