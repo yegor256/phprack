@@ -17,15 +17,41 @@
 /**
  * @see phpRack_Package
  */
-require_once PHPRACK_PATH . '/Package/Db/Abstract.php';
+require_once PHPRACK_PATH . '/Package.php';
+
+/**
+ * @see phpRack_Adapters_Db_Mysql
+ */
+require_once PHPRACK_PATH . '/Adapters/Db/Mysql.php';
 
 /**
  * Db abstract
  *
  * @package Tests
  */
-class phpRack_Package_Db_Mysql extends phpRack_Package_Db_Abstract
+class phpRack_Package_Db_Mysql extends phpRack_Package
 {
+    /**
+     * MySQL adapter
+     *
+     * @var phpRack_Adapters_Db_Mysql
+     * @see __construct()
+     */
+    private $_adapter;
+
+    /**
+     * Construct the class
+     *
+     * @param phpRack_Result
+     * @return void
+     * @see phpRack_Package::__construct()
+     */
+    public function __construct(phpRack_Result $result)
+    {
+        parent::__construct($result);
+        $this->_adapter = new phpRack_Adapters_Db_Mysql();
+    }
+
     /**
      * Check that we can connect to mysql server
      *
@@ -35,14 +61,20 @@ class phpRack_Package_Db_Mysql extends phpRack_Package_Db_Abstract
      * @param string User password
      * @return $this
      * @see phpRack_Adapters_Db_Mysql
+     * @todo #6 I think we should escape params in $jdbcUrl using urlencode, maybe other idea?
      */
     public function connect($host, $port, $username, $password)
     {
-        assert(is_string($host));
-        assert(is_numeric($port));
-        assert(is_string($username));
-        assert(is_string($password));
-        $this->_failure('Not implemented');
+        $jdbcUrl = "jdbc:mysql://{$host}:{$port}?username={$username}&password={$password}";
+
+        try {
+            $this->_adapter->connect($jdbcUrl);
+            $this->_success("Connected successfully to MySQL server {$host}:{$port}");
+        } catch(Exception $e) {
+            assert($e instanceof Exception); // for ZCA only
+            $this->_failure("Can't connect to MySQL server {$host}:{$port}");
+        }
+
         return $this;
     }
 
@@ -56,8 +88,17 @@ class phpRack_Package_Db_Mysql extends phpRack_Package_Db_Abstract
      */
     public function dbExists($dbName)
     {
-        assert(is_string($dbName));
-        $this->_failure('Not implemented');
+        if (!$this->_adapter->isConnected()) {
+            throw new Exception('You must call connect() method before');
+        }
+
+        try {
+            $this->_adapter->query("USE {$dbName}");
+            $this->_success("Database '{$dbName}' exists");
+        } catch (Exception $e) {
+            $this->_failure($e->getMessage());
+        }
+
         return $this;
     }
 
@@ -72,8 +113,31 @@ class phpRack_Package_Db_Mysql extends phpRack_Package_Db_Abstract
      */
     public function tableExists($tableName)
     {
-        assert(is_string($tableName));
-        $this->_failure('Not implemented');
+        if (!$this->_adapter->isConnected()) {
+            throw new Exception('You must call connect() method before');
+        }
+
+        if (!$this->_adapter->isDatabaseSelected()) {
+            throw new Exception('You must call dbExists() method before');
+        }
+
+        $response = $this->_adapter->query(sprintf("SHOW TABLES LIKE '%s'", addslashes($tableName)));
+        if ($response == '') {
+            $this->_failure("Table '{$tableName}' doesn't exist");
+        } else {
+            $this->_success("Table '{$tableName}' exists");
+        }
+
         return $this;
+    }
+
+    /**
+    * Close connection to db
+    *
+    * @return void
+    */
+    public function closeConnection()
+    {
+        $this->_adapter->closeConnection();
     }
 }
