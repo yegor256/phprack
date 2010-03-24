@@ -27,7 +27,7 @@
     <includepath classpath="${project.basedir}" />
     <includepath classpath="${project.basedir}/test/" />
 
-    <target name="main" depends="lint, phpcs, phpmd, test" >
+    <target name="main" depends="lint, phpcs, phpmd, test, zca" >
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
@@ -66,13 +66,15 @@
             passthru="true" />
     </target>
 
-    <zendcodeanalyzer analyzerPath="zca" haltonwarning="true">
-        <fileset dir="${project.basedir}">
-            <include name="**/*.php" />
-            <include name="**/*.phtml" />
-            <exclude name=".svn/**" />
-        </fileset>
-    </zendcodeanalyzer>
+    <target name="zca" description="Zend Code Analyzer">
+        <zendcodeanalyzer analyzerPath="zca" haltonwarning="true">
+            <fileset dir="${project.basedir}">
+                <include name="**/*.php" />
+                <include name="**/*.phtml" />
+                <exclude name=".svn/**" />
+            </fileset>
+        </zendcodeanalyzer>
+    </target>
 
     <target name="test" description="Run all existing unit-tests">
         <property name="coverage.db" value="${project.basedir}/build/coverage.data" />
