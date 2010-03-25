@@ -21,6 +21,9 @@ set_error_handler(
     create_function(
         '$errno, $errstr, $errfile, $errline',
         '
+        if (in_array($errno, array(E_WARNING))) {
+            return;
+        }
         echo sprintf(
             "phpRack error (%s): %s, in %s [line:%d]\n",
             $errno,
