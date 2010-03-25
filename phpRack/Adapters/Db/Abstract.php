@@ -43,29 +43,33 @@ abstract class phpRack_Adapters_Db_Abstract
     abstract public function query($sql);
 
     /**
-    * Parse JDBC URL and return its components
-    * @param string JDBC URL to parse
-    * @throws Exception If JDBC URL have wrong format
-    * @return array
-    * @todo #6 Should we allow in regular expression port or database to be optional?
-    */
+     * Parse JDBC URL and return its components
+     *
+     * This method matches URLSs like:
+     *
+     * <code>
+     * jdbc:mysql://localhost:3306/test?username=login&password=password
+     * jdbc:mysql://localhost:3306/test
+     * jdbc:mysql://localhost:3306
+     * jdbc:mysql://localhost
+     * </code>
+     *
+     * Mandatory parts of the URL are: "adapter", "host". All other params are
+     * optional and could be omitted. 
+     *
+     * @param string JDBC URL to parse
+     * @throws Exception If JDBC URL have wrong format
+     * @return array We set "adapter", "host", "port", "database", "params"
+     */
     protected function _parseJdbcUrl($url)
     {
-        /**
-        * Match urls like:
-        * jdbc:mysql://localhost:3306/test?username=login&password=password
-        * jdbc:mysql://localhost:3306/test
-        * jdbc:mysql://localhost:3306
-        * jdbc:mysql://localhost
-        */
-
         $pattern = '#jdbc:(?P<adapter>[^:]+)'
             . '://(?P<host>[^:/]+)'
             . '(?::(?P<port>\d+))?'
             . '(?:/(?P<database>[^?]+))?'
             . '(?:\?(?P<params>.*))?#';
 
-
+        $matches = array();
         if (!preg_match($pattern, $url, $matches)) {
             throw new Exception('JDBC URL parse error');
         }

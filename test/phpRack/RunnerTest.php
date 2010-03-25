@@ -43,15 +43,20 @@ class RunnerTest extends AbstractTest
             $fileContent = file($phpRackConfig['htaccess']);
             list($login, $hash) = explode(':', $fileContent[0], 2);
         } else {
-            $login = $hash = ''; // no authentication
+            $login = $hash = false; // no authentication
         }
 
         $auth = $this->_runner->authenticate($login, $hash, true);
         $this->assertTrue($auth instanceof phpRack_Runner_AuthResult);
+        $this->assertTrue(
+            $auth->isValid(),
+            "Invalid auth with authenticate(), " .
+            "login: '{$login}', hash: '{$hash}', message: '{$auth->getMessage()}'"
+        );
         
         $this->assertTrue(
             $this->_runner->isAuthenticated(), 
-            "User authentication not working properly. " .
+            "Invalid result in isAuthenticated(), " .
             "login: '{$login}', hash: '{$hash}', message: '{$auth->getMessage()}'"
         );
     }

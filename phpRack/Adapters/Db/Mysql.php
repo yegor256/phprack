@@ -31,8 +31,10 @@ require_once PHPRACK_PATH . '/Adapters/Db/Abstract.php';
 class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
 {
     /**
-    * Current mysql connection link identifier
-    */
+     * Current mysql connection link identifier
+     *
+     * @var int Result of mysql_connect()
+     */
     private $_linkId;
     
     /**
@@ -42,16 +44,10 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * @return void
      * @see http://java.sun.com/docs/books/tutorial/jdbc/basics/connecting.html
      * @throws Exception If something wrong happens there
-     * @todo #6 Where and how we should validate that we have all required parameters for mysql_connect?
-     *          Should we use some default values, if jdbc url doesn't contain them?
-     *
-     *          Maybe add for our error handler case to don't display error from php functions
-     *          which are preceded by @, to allow script return well formatted failure message.
+     * @throws Exception If any of the required params are missed in the URL
      */
     public function connect($url)
     {
-        assert(is_string($url));
-
         $jdbcUrlParts = $this->_parseJdbcUrl($url);
 
         $server = $jdbcUrlParts['host'];
@@ -79,12 +75,12 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         $this->_linkId = @mysql_connect($server, $username, $password);
 
         if (!$this->_linkId) {
-            throw new Exception("Can't connect to MySQL server {$server}");
+            throw new Exception("Can't connect to MySQL server: '{$server}'");
         }
 
         if ($jdbcUrlParts['database']) {
             if (!@mysql_select_db($jdbcUrlParts['database'], $this->_linkId)) {
-                throw new Exception("Can't select db {$jdbcUrlParts['database']}");
+                throw new Exception("Can't select database '{$jdbcUrlParts['database']}'");
             }
         }
     }
@@ -100,8 +96,6 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      */
     public function query($sql)
     {
-        assert(is_string($sql));
-
         if (!$this->_linkId) {
             throw new Exception('connect() method should be called before');
         }
@@ -117,7 +111,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         }
 
         $response = '';
-        while ($row = mysql_fetch_row($result)) {
+        while (false !== ($row = mysql_fetch_row($result))) {
             $response = implode("\t", $row) . "\n";
         }
 
@@ -125,10 +119,10 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
     }
 
     /**
-    * Return true if adapter is connected with db
-    *
-    * @return boolean
-    */
+     * Return true if adapter is connected with db
+     *
+     * @return boolean
+     */
     public function isConnected()
     {
         if ($this->_linkId) {
@@ -139,10 +133,10 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
     }
 
     /**
-    * Return true if some db was selected for use
-    *
-    * @return boolean
-    */
+     * Return true if some db was selected for use
+     *
+     * @return boolean
+     */
     public function isDatabaseSelected()
     {
         $result = $this->query('SELECT DATABASE()');
@@ -154,10 +148,10 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
     }
 
     /**
-    * Close connection to db, if was earlier opened
-    *
-    * @return void
-    */
+     * Close connection to db, if was earlier opened
+     *
+     * @return void
+     */
     public function closeConnection()
     {
         if ($this->_linkId) {

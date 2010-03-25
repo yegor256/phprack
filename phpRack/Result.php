@@ -27,14 +27,33 @@ class phpRack_Result
      *
      * @var string
      */
-    protected $_lines = array();
+    protected $_lines;
     
     /**
-     * Tottal result is SUCCESS?
+     * Total result is SUCCESS?
      *
      * @var boolean
      */
-    protected $_success = true;
+    protected $_success;
+    
+    /**
+     * When this result was created by test
+     *
+     * @var float
+     * @see clean()
+     * @see getDuration()
+     */
+    protected $_started;
+    
+    /**
+     * Construct the class
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->clean();
+    }
     
     /**
      * Set total result to FAILURE
@@ -67,6 +86,28 @@ class phpRack_Result
     }
     
     /**
+     * Get log of assertions only, without any other messages
+     *
+     * @return string
+     */
+    public function getPureLog() 
+    {
+        return implode("\n", preg_grep('/^\[[A-Z]+\]\s/', $this->_lines));
+    }
+    
+    /**
+     * Get result lifetime, duration in seconds
+     *
+     * @return void
+     * @see phpRack_Runner::runSuite()
+     * @see clean()
+     */
+    public function getDuration() 
+    {
+        return microtime(true) - $this->_started;
+    }
+    
+    /**
      * Add new log line
      *
      * @param string Log line to add
@@ -85,7 +126,9 @@ class phpRack_Result
      */
     public function clean() 
     {
+        $this->_success = true;
         $this->_lines = array();
+        $this->_started = microtime(true);
     }
         
 }
