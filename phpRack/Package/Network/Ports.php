@@ -44,9 +44,9 @@ class phpRack_Package_Network_Ports extends phpRack_Package
         $urlAdapter = phpRack_Adapters_Url::factory("{$server}:{$port}");
 
         if ($urlAdapter->isAccessible()) {
-            $this->_success("Port {$port} is open at {$server}, it's OK");
+            $this->_success("Port '{$port}' is open at '{$server}', it's OK");
         } else {
-            $this->_failure("Port {$port} is NOT open at {$server}");
+            $this->_failure("Port '{$port}' is NOT open at '{$server}'");
         }
 
         return $this;
