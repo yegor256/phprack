@@ -32,7 +32,8 @@ a {
     #logo span {
         position: absolute;
         top: 2px;
-        right: 0;
+        left: 215px;
+        width: 100px;
         color: #25AAE1;
     }
 
