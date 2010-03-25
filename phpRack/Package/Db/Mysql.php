@@ -75,7 +75,7 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
             $this->_success("Connected successfully to MySQL server {$host}:{$port}");
         } catch(Exception $e) {
             assert($e instanceof Exception); // for ZCA only
-            $this->_failure("Can't connect to MySQL server {$host}:{$port}");
+            $this->_failure("Can't connect to MySQL server {$host}:{$port}, login: '{$username}'");
         }
 
         return $this;
