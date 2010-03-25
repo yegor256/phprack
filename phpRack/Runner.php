@@ -126,38 +126,43 @@ class phpRack_Runner
         // make sure that we're working with HASH
         $hash = ($isHash) ? $password : md5($password);
         
-        // plain authentication by login/password
-        if (is_array($this->_options['auth'])) {
-            $auth = $this->_options['auth'];
-            if ($auth['username'] != $login) {
-                return $this->_validated(false, 'Invalid login');
-            }
-            if (md5($auth['password']) != $hash) {
-                return $this->_validated(false, 'Invalid password');
-            }
-            return $this->_validated(true);
-        }
-        
-        // list of login/password provided in file
-        if (is_string($this->_options['htpasswd'])) {
-            require_once PHPRACK_PATH . '/Adapters/File.php';
-            $file = phpRack_Adapters_File::factory($this->_options['htpasswd'])->getFileName();
-            
-            $fileContent = file($file);
-            foreach ($fileContent as $line) {
-                list($lg, $psw) = explode(':', $line, 2);
-                /* Just to make sure we don't analyze some whitespace */
-                $lg = trim($lg);
-                $psw = trim($psw);
-                if (($lg == $login) && ($psw == $hash)) {
-                    return $this->_validated(true);
+        switch (true) {
+            // plain authentication by login/password
+            // this option is set by default to NULL, here we validate that
+            // it was changed to ARRAY
+            case is_array($this->_options['auth']):
+                $auth = $this->_options['auth'];
+                if ($auth['username'] != $login) {
+                    return $this->_validated(false, 'Invalid login');
                 }
-            }
-            return $this->_validated(false, 'Invalid login credentials provided');
+                if (md5($auth['password']) != $hash) {
+                    return $this->_validated(false, 'Invalid password');
+                }
+                return $this->_validated(true);
+        
+            // list of login/password provided in file
+            // this option is set by default to NULL, here we just validate
+            // that it contains a name of file
+            case is_string($this->_options['htpasswd']):
+                require_once PHPRACK_PATH . '/Adapters/File.php';
+                $file = phpRack_Adapters_File::factory($this->_options['htpasswd'])->getFileName();
+            
+                $fileContent = file($file);
+                foreach ($fileContent as $line) {
+                    list($lg, $psw) = explode(':', $line, 2);
+                    /* Just to make sure we don't analyze some whitespace */
+                    $lg = trim($lg);
+                    $psw = trim($psw);
+                    if (($lg == $login) && ($psw == $hash)) {
+                        return $this->_validated(true);
+                    }
+                }
+                return $this->_validated(false, 'Invalid login credentials provided');
+                
+            // authenticated TRUE, if no authentication required
+            default:
+                return $this->_validated(true);
         }
-
-        // authenticated TRUE, if no authentication required
-        return $this->_validated(true);
     }
     
     /**
@@ -172,21 +177,43 @@ class phpRack_Runner
             return $this->_authResult->isValid();
         }
         
+        // global variables, in case they are not declared as global yet
         global $_COOKIE;
-        if (array_key_exists(self::POST_LOGIN, $_POST) && array_key_exists(self::POST_PWD, $_POST)) {
-            $login = $_POST[self::POST_LOGIN];
-            $password = md5($_POST[self::POST_PWD]);
-            /* Expiration time is set 1 hour in the future */
-            setcookie(self::COOKIE_NAME, $login . ':' . $password, time() + self::COOKIE_LIFETIME);
-        } elseif (array_key_exists(self::COOKIE_NAME, $_COOKIE)) {
-            list($login, $password) = explode(':', $_COOKIE[self::COOKIE_NAME]);
-        } else {
-            /* no authinfo, chances are that site is not protected */
-            $login = '';
-            $password = '';
+        
+        // there are a number of possible authentication scenarios
+        switch (true) {
+            // login/password are provided in HTTP request, through POST
+            // params. we should save them in COOKIE in order to avoid
+            // further login requests.
+            case array_key_exists(self::POST_LOGIN, $_POST) && 
+            array_key_exists(self::POST_PWD, $_POST):
+                $login = $_POST[self::POST_LOGIN];
+                $hash = md5($_POST[self::POST_PWD]);
+                setcookie(
+                    self::COOKIE_NAME, // name of HTTP cookie
+                    $login . ':' . $hash, // hashed form of login and pwd
+                    time() + self::COOKIE_LIFETIME // cookie expiration date
+                );
+                break;
+                
+            // this is CLI environment, not web -- we don't require any
+            // authentication
+            case $this->isCliEnvironment():
+                return $this->_validated(true)->isValid();
+                
+            // we already have authentication information in COOKIE, we just
+            // need to parse it and validate
+            case array_key_exists(self::COOKIE_NAME, $_COOKIE):
+                list($login, $hash) = explode(':', $_COOKIE[self::COOKIE_NAME]);
+                break;
+            
+            // no authinfo, chances are that site is not protected
+            default:
+                $login = $hash = false;
+                break;
         }
         
-        return $this->authenticate($login, $password, true)->isValid();
+        return $this->authenticate($login, $hash, true)->isValid();
     }
     
     /**
@@ -202,6 +229,17 @@ class phpRack_Runner
             throw new Exception("AuthResult is not set yet, use authenticate() before");
         }
         return $this->_authResult;
+    }
+    
+    /**
+     * We're running the tests in CLI environment?
+     *
+     * @return boolean
+     */
+    public function isCliEnvironment() 
+    {
+        global $_SERVER;
+        return empty($_SERVER['DOCUMENT_ROOT']);
     }
     
     /**
@@ -249,6 +287,7 @@ class phpRack_Runner
     {
         $tests = $this->getTests();
         $report = '';
+        $success = true;
         foreach ($tests as $test) {
             $result = $test->run();
             $report .= sprintf(
@@ -257,7 +296,9 @@ class phpRack_Runner
                 $result->wasSuccessful() ? phpRack_Test::OK : phpRack_Test::FAILURE,
                 $result->getLog()
             );
+            $success &= $result->wasSuccessful();
         }
+        $report .= "PHPRACK SUITE: " . ($success ? phpRack_Test::OK : phpRack_Test::FAILURE) . "\n";
         return $report;
     }
     

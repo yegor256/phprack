@@ -22,7 +22,7 @@ set_error_handler(
         '$errno, $errstr, $errfile, $errline',
         '
         echo sprintf(
-            "phpRack error (%s): %s, in %s [line:%d]",
+            "phpRack error (%s): %s, in %s [line:%d]\n",
             $errno,
             $errstr,
             $errfile,
@@ -64,28 +64,35 @@ try {
     require_once PHPRACK_PATH . '/Runner.php';
     $runner = new phpRack_Runner($phpRackConfig);
     
+    /**
+     * @see phpRack_View
+     */
+    require_once PHPRACK_PATH . '/View.php';
+
+    // show login form, if the user is not authenticated yet
     if (!$runner->isAuthenticated()) {
         require_once PHPRACK_PATH . '/View.php';
         $view = new phpRack_View();
         $view->assign(array('authResult' => $runner->getAuthResult()));
-        echo $view->render('login.phtml');
-    } else {
-        // Global layout is required
-        if (empty($_GET[PHPRACK_AJAX_TAG])) {
-            /**
-             * @see phpRack_View
-             */
-            require_once PHPRACK_PATH . '/View.php';
-            $view = new phpRack_View(); 
-            $view->assign(array('runner' => $runner)); 
-            echo $view->render();
-        } else {
-            // Execute one individual test and return its result
-            // in JSON format. We reach this point only in AJAX calls from
-            // already rendered testing page.
-            echo $runner->run($_GET[PHPRACK_AJAX_TAG], $_GET[PHPRACK_AJAX_TOKEN]);
-        }
+        throw new Exception($view->render('login.phtml'));
     }
+    
+    // if it's CLI enviroment - just show a full test report
+    if ($runner->isCliEnvironment()) {
+        throw new Exception($runner->runSuite());
+    }
+
+    // Global layout is required, show the front web page of the report
+    if (empty($_GET[PHPRACK_AJAX_TAG])) {
+        $view = new phpRack_View(); 
+        $view->assign(array('runner' => $runner)); 
+        throw new Exception($view->render());
+    }
+    
+    // Execute one individual test and return its result
+    // in JSON format. We reach this point only in AJAX calls from
+    // already rendered testing page.
+    throw new Exception($runner->run($_GET[PHPRACK_AJAX_TAG], $_GET[PHPRACK_AJAX_TOKEN]));
 
 } catch (Exception $e) {
     echo $e->getMessage();
