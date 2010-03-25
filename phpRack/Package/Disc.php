@@ -36,8 +36,6 @@ class phpRack_Package_Disc extends phpRack_Package
      */
     public function showDirectory($dir, array $options = array()) 
     {
-        assert(is_array($options));
-        
         require_once PHPRACK_PATH . '/Adapters/File.php';
         $dir = phpRack_Adapters_File::factory($dir)->getFileName();
         
@@ -51,6 +49,9 @@ class phpRack_Package_Disc extends phpRack_Package
         // Create our file iterator
         require_once PHPRACK_PATH . '/Adapters/Files/DirectoryFilterIterator.php';
         $iterator = phpRack_Adapters_Files_DirectoryFilterIterator::factory($dir);
+        if (array_key_exists('exclude', $options)) {
+            $iterator->setExclude($options['exclude']);
+        }
         
         $this->_log(
             implode(
