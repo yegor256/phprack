@@ -51,22 +51,18 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
 
     protected function tearDown()
     {
-        $this->_package->closeConnection();
+        unset($this->_package);
     }
 
     public function testConnect()
     {
-        try {
-            $this->_package->connect(
-                self::INVALID_HOST,
-                self::INVALID_PORT,
-                self::INVALID_USERNAME,
-                self::INVALID_PASSWORD
-            );
-            $this->assertFalse($this->_result->wasSuccessful());
-        } catch (Exception $e) {
-            $this->_log(get_class($e) . ': ' . $e->getMessage());
-        }
+        $this->_package->connect(
+            self::INVALID_HOST,
+            self::INVALID_PORT,
+            self::INVALID_USERNAME,
+            self::INVALID_PASSWORD
+        );
+        $this->assertFalse($this->_result->wasSuccessful());
     }
 
     public function testDbExists()
@@ -81,7 +77,8 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
                 ->dbExists(self::INVALID_DATABASE);
             $this->assertFalse($this->_result->wasSuccessful());
         } catch (Exception $e) {
-            $this->_log(get_class($e) . ': ' . $e->getMessage());
+            $this->assertTrue($e instanceof Exception);
+            $this->markTestSkipped('Valid MySQL server was not found');
         }
     }
 
@@ -108,10 +105,10 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
                 ->tableExists(self::INVALID_TABLE);
             $this->assertFalse($this->_result->wasSuccessful());
         } catch (Exception $e) {
-            $this->_log(get_class($e) . ': ' . $e->getMessage());
+            $this->assertTrue($e instanceof Exception);
+            $this->markTestSkipped('Valid MySQL database was not found');
         }
     }
-
 
     public function testTableExistsWithoutConnect()
     {
@@ -135,7 +132,7 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
                 ->tableExists(self::INVALID_TABLE);
             $this->fail('An expected exception has not been raised.');
         } catch (Exception $e) {
-            $this->_log(get_class($e) . ': ' . $e->getMessage());
+            $this->assertTrue($e instanceof Exception);
         }
     }
 }

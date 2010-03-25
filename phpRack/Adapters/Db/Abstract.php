@@ -63,11 +63,11 @@ abstract class phpRack_Adapters_Db_Abstract
      */
     protected function _parseJdbcUrl($url)
     {
-        $pattern = '#jdbc:(?P<adapter>[^:]+)'
+        $pattern = '#^jdbc:(?P<adapter>[^:]+)'
             . '://(?P<host>[^:/]+)'
             . '(?::(?P<port>\d+))?'
             . '(?:/(?P<database>[^?]+))?'
-            . '(?:\?(?P<params>.*))?#';
+            . '(?:\?(?P<params>.*))?$#';
 
         $matches = array();
         if (!preg_match($pattern, $url, $matches)) {
