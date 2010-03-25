@@ -291,10 +291,11 @@ class phpRack_Runner
         foreach ($tests as $test) {
             $result = $test->run();
             $report .= sprintf(
-                "%s: %s\n%s\n",
+                "%s\n%s: %s, %0.3fsec\n",
+                $result->getPureLog(),
                 $test->getLabel(),
                 $result->wasSuccessful() ? phpRack_Test::OK : phpRack_Test::FAILURE,
-                $result->getPureLog()
+                $result->getDuration()
             );
             $success &= $result->wasSuccessful();
         }

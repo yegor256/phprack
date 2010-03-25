@@ -141,9 +141,6 @@ abstract class phpRack_Test
         // clean all previous results, if any
         $this->assert->getResult()->clean();
         
-        // start execution of the test with time calculation
-        $start = microtime(true);
-        
         // find all methods that start with "test" and call them
         $rc = new ReflectionClass($this);
         foreach ($rc->getMethods() as $method) {
@@ -172,7 +169,7 @@ abstract class phpRack_Test
             sprintf(
                 'Finished %s, %0.3fsec',
                 get_class($this),
-                microtime(true) - $start
+                $this->assert->getResult()->getDuration()
             )
         );
         
