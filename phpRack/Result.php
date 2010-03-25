@@ -30,7 +30,7 @@ class phpRack_Result
     protected $_lines = array();
     
     /**
-     * Tottal result is SUCCESS?
+     * Total result is SUCCESS?
      *
      * @var boolean
      */
@@ -64,6 +64,16 @@ class phpRack_Result
     public function getLog() 
     {
         return implode("\n", $this->_lines);
+    }
+    
+    /**
+     * Get log of assertions only, without any other messages
+     *
+     * @return string
+     */
+    public function getPureLog() 
+    {
+        return implode("\n", preg_grep('/^\[[A-Z]+\]\s/', $this->_lines));
     }
     
     /**

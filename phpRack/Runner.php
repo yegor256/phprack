@@ -294,7 +294,7 @@ class phpRack_Runner
                 "%s: %s\n%s\n",
                 $test->getLabel(),
                 $result->wasSuccessful() ? phpRack_Test::OK : phpRack_Test::FAILURE,
-                $result->getLog()
+                $result->getPureLog()
             );
             $success &= $result->wasSuccessful();
         }
