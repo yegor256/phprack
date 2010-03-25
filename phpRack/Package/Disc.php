@@ -46,7 +46,7 @@ class phpRack_Package_Disc extends phpRack_Package
             return $this;
         }
         
-        $this->_log("Directory tree '{$dir}':");
+        $this->_log("Directory tree '" . realpath($dir) . "':");
         
         // Create our file iterator
         require_once PHPRACK_PATH . '/Adapters/Files/DirectoryFilterIterator.php';
