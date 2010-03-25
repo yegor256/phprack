@@ -10,7 +10,7 @@
  * to license@phprack.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) phpRack.com
- * @version $Id: Php.php 19 2010-02-07 07:44:16Z yegor256@yahoo.com $
+ * @version $Id$
  * @category phpRack
  */
 
@@ -18,6 +18,11 @@
  * @see phpRack_Package
  */
 require_once PHPRACK_PATH . '/Package.php';
+
+/**
+ * @see phpRack_Adapters_Url
+ */
+require_once PHPRACK_PATH . '/Adapters/Url.php';
 
 /**
  * Ports on the server
@@ -33,21 +38,17 @@ class phpRack_Package_Network_Ports extends phpRack_Package
      * @param integer Port number to check
      * @param string IP address of the server to check
      * @return $this
-     * @todo #27: This function should be changed.
-     *           On windows we haven't "/dev/null", instead that we have "NUL".
-     *           Additionally we can have localized message from telnet.
-     *           I think we should use here PHP sockets.
      */
     public function isOpen($port, $server = '127.0.0.1') 
     {
-        $result = shell_exec("telnet {$server} {$port} 2>&1 </dev/null");
-        
-        if (preg_match('/Connection refused/', $result)) {
-            $this->_failure("Port {$port} is NOT open at {$server}");
-        } else {
+        $urlAdapter = phpRack_Adapters_Url::factory("{$server}:{$port}");
+
+        if ($urlAdapter->isAccessible()) {
             $this->_success("Port {$port} is open at {$server}, it's OK");
+        } else {
+            $this->_failure("Port {$port} is NOT open at {$server}");
         }
-            
+
         return $this;
     }
         
