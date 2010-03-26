@@ -56,6 +56,15 @@ abstract class phpRack_Test
      * @var phpRack_Runner
      */
     protected $_runner;
+
+    /**
+     * Ajax options to control front page behavior
+     *
+     * @var array
+     * @see _setAjaxOptions()
+     * @see getAjaxOptions()
+     */
+    private $_ajaxOptions = array();
     
     /**
      * Construct the class
@@ -216,6 +225,26 @@ abstract class phpRack_Test
     protected function _log($message) 
     {
         $this->assert->getResult()->addLog($message);
+    }
+
+    /**
+     * Set ajax options
+     *
+     * @return void
+     */
+    protected function _setAjaxOptions($options)
+    {
+        $this->_ajaxOptions = $options;
+    }
+
+    /**
+     * Get ajax options
+     *
+     * @return array
+     */
+    public function getAjaxOptions()
+    {
+        return $this->_ajaxOptions;
     }
     
 }

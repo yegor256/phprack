@@ -325,6 +325,7 @@ class phpRack_Runner
                 'success' => $result->wasSuccessful(),
                 'log' => $result->getLog(),
                 PHPRACK_AJAX_TOKEN => $token,
+                'options' => $test->getAjaxOptions()
             )
         );
     }
