@@ -74,8 +74,16 @@ class phpRack_Package_Network_Url extends phpRack_Package
 
         $content = $this->_adapter->getContent();
 
+        $found = @preg_match($pattern, $content);
+
+        // If regexp pattern is invalid, try to use it as string pattern
+        if ($found === false) {
+            $this->_log('Regex is not valid, try to use it as string');
+            $found = (strpos($content, $pattern) !== false);
+        }
+
         // If pattern was found in content
-        if (preg_match($pattern, $content)) {
+        if ($found) {
             $this->_success("Pattern '{$pattern}' was found on '{$this->_url}'");
         } else {
             $this->_failure("Pattern '{$pattern}' was NOT found on '{$this->_url}'");

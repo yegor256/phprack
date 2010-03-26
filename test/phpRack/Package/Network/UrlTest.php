@@ -64,6 +64,18 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
         }
     }
 
+    public function testRegexWithNotRegExpPattern()
+    {
+        try {
+            $this->_package->url('http://www.google.com/')
+                ->regex('google.com');
+            $this->assertTrue($this->_result->wasSuccessful());
+        }  catch (Exception $e) {
+            $this->_log(get_class($e) . ': ' . $e->getMessage());
+            $this->markTestIncomplete();
+        }
+    }
+
     public function testRegexWithoutUrlCall()
     {
         try {

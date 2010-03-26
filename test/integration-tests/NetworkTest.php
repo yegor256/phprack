@@ -28,6 +28,7 @@ class NetworkTest extends phpRack_Test
         // validate that the URL is accessible
         $this->assert->network->url
             ->url('http://www.google.com') // set URL (and validate it here)
-            ->regex('/google\.com/'); // make HTTP call and find pattern in result
+            ->regex('/google\.com/') // make HTTP call and find pattern in result
+            ->regex('google.com');
     }
 }
