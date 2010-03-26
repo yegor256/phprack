@@ -109,13 +109,14 @@ class phpRack_Package_Php extends phpRack_Package
         }
 
         foreach ($iterator as $file) {
-            $command = $lintCommand . ' ' . escapeshellarg($file->getPathname()) . ' 2>&1';
+            $file = realpath($file->getPathname());
+            $command = $lintCommand . ' ' . escapeshellarg($file) . ' 2>&1';
             $output = shell_exec($command);
 
             if (preg_match('#^No syntax errors detected#', $output)) {
-                $this->_success("File '{$file->getPathname()}' is valid");
+                $this->_success("File '{$file}' is valid");
             } else {
-                $this->_failure("File '{$file->getPathname()}' is NOT valid");
+                $this->_failure("File '{$file}' is NOT valid");
                 $this->_log($output);
             }
         }
