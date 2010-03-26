@@ -148,6 +148,7 @@ $(
                 // jQuery object which represent test message Element in DOM tree
                 $message: $this.find('pre'),
                 displayTimer: false,
+                timeoutId: null,
                 // Constructor
                 __construct: function()
                 {
@@ -218,6 +219,19 @@ $(
                         that.$result.html('running (' + that.timer.getFormattedTime() + ')...');
                     }
                 },
+                _setReloadTimeout: function(seconds)
+                {
+                    that._removeReloadTimeout();
+                    var delay = seconds * 1000; // in miliseconds
+                    that.timeoutId = window.setTimeout(that.run, delay);
+                },
+                _removeReloadTimeout: function()
+                {
+                    // If another run() is waiting for execute, ignore it
+                    if (that.timeoutId) {
+                        window.clearTimeout(that.timeoutId);
+                    }
+                },
                 run: function()
                 {
                     // Script still waiting for receive response from server
@@ -229,6 +243,8 @@ $(
                         // Prevent execution one more time because test is still running
                         return;
                     }
+
+                    that._removeReloadTimeout();
 
                     // Set initial states
                     that._startTimer();
@@ -256,6 +272,11 @@ $(
                                 if (json) {
                                     // Set status to OK with log message
                                     that._setStatus(json.success, json.log);
+                                    if (json.options) {
+                                        if (json.options.reload) {
+                                            that._setReloadTimeout(json.options.reload);
+                                        }
+                                    }
                                 } else {
                                     // Set status to FAILURE with empty response message
                                     that._setStatus(false, 'Server returned empty response');
