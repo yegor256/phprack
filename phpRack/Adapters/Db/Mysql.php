@@ -10,7 +10,7 @@
  * to license@phprack.com so we can send you a copy immediately.
  *
  * @copyright Copyright (c) phpRack.com
- * @version $Id: Package.php 82 2010-03-16 13:46:41Z yegor256@yahoo.com $
+ * @version $Id$
  * @category phpRack
  */
 
@@ -34,6 +34,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * Current mysql connection link identifier
      *
      * @var int Result of mysql_connect()
+     * @see connect()
      */
     private $_linkId;
     
@@ -43,42 +44,49 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * @param string JDBC URL to connect to the server
      * @return void
      * @see http://java.sun.com/docs/books/tutorial/jdbc/basics/connecting.html
-     * @throws Exception If something wrong happens there
+     * @throws Exception If MySQL extension is not loaded
      * @throws Exception If any of the required params are missed in the URL
      */
     public function connect($url)
     {
+        // Parse JDBC URl, and throw exception if it is invalid
         $jdbcUrlParts = $this->_parseJdbcUrl($url);
-
-        $server = $jdbcUrlParts['host'];
-
-        if (isset($jdbcUrlParts['port'])) {
-            $server .= ':' . $jdbcUrlParts['port'];
-        }
-
-        if (isset($jdbcUrlParts['params']['username'])) {
-            $username = $jdbcUrlParts['params']['username'];
-        } else {
-            $username = 'root';
-        }
-
-        if (isset($jdbcUrlParts['params']['password'])) {
-            $password = $jdbcUrlParts['params']['password'];
-        } else {
-            $password = '';
-        }
 
         if (!extension_loaded('mysql')) {
             throw new Exception('MySQL extension is not loaded');
         }
 
+        $server = $jdbcUrlParts['host'];
+
+        // Check whether server port was set in JDBC URL
+        if (isset($jdbcUrlParts['port'])) {
+            $server .= ':' . $jdbcUrlParts['port'];
+        }
+
+        // Check whether username was set in JDBC URL
+        if (isset($jdbcUrlParts['params']['username'])) {
+            $username = $jdbcUrlParts['params']['username'];
+        } else {
+            $username = ini_get('mysql.default_user');
+        }
+
+        // Check whether password was set in JDBC URL
+        if (isset($jdbcUrlParts['params']['password'])) {
+            $password = $jdbcUrlParts['params']['password'];
+        } else {
+            $password = ini_get('mysql.default_password');
+        }
+
+        // Try to connect with MySQL server
         $this->_linkId = @mysql_connect($server, $username, $password);
 
         if (!$this->_linkId) {
             throw new Exception("Can't connect to MySQL server: '{$server}'");
         }
 
-        if ($jdbcUrlParts['database']) {
+        // Check whether database was set in JDBC URL
+        if (!empty($jdbcUrlParts['database'])) {
+            // Try to set this database as current
             if (!@mysql_select_db($jdbcUrlParts['database'], $this->_linkId)) {
                 throw new Exception("Can't select database '{$jdbcUrlParts['database']}'");
             }
@@ -102,14 +110,18 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
 
         $result = mysql_query($sql, $this->_linkId);
 
+        // INSERT, UPDATE, DELETE, DROP, USE etc type queries
+        // on success return just true
         if ($result === true) {
             return '';
         }
 
+        // Something goes wrong
         if ($result === false) {
             throw new Exception('MySQL query error: ' . mysql_error());
         }
 
+        // SELECT, SHOW type queries
         $response = '';
         while (false !== ($row = mysql_fetch_row($result))) {
             $response = implode("\t", $row) . "\n";
@@ -119,9 +131,10 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
     }
 
     /**
-     * Return true if adapter is connected with db
+     * Return true if adapter is connected with database
      *
      * @return boolean
+     * @see $this->_linkId
      */
     public function isConnected()
     {
@@ -133,7 +146,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
     }
 
     /**
-     * Return true if some db was selected for use
+     * Return true if some database was selected for use
      *
      * @return boolean
      */
@@ -148,14 +161,25 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
     }
 
     /**
-     * Close connection to db, if was earlier opened
+     * Close connection to database, if was earlier opened
      *
      * @return void
      */
     public function closeConnection()
     {
-        if ($this->_linkId) {
+        if (is_resource($this->_linkId)) {
             mysql_close($this->_linkId);
+            $this->_linkId = null;
         }
+    }
+
+    /**
+     * Destructor automatically close opened connection
+     *
+     * @return void
+     */
+    public function __destruct()
+    {
+        $this->closeConnection();
     }
 }

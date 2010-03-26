@@ -68,14 +68,16 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
      */
     public function connect($host, $port, $username, $password)
     {
-        $jdbcUrl = "jdbc:mysql://{$host}:{$port}?username={$username}&password={$password}";
+        $jdbcUrl = "jdbc:mysql://{$host}:{$port}"
+            . '?username=' . urlencode($username)
+            . '&password=' . urlencode($password);
 
         try {
             $this->_adapter->connect($jdbcUrl);
-            $this->_success("Connected successfully to MySQL server {$host}:{$port}");
+            $this->_success("Connected successfully to MySQL server '{$host}':'{$port}'");
         } catch(Exception $e) {
             assert($e instanceof Exception); // for ZCA only
-            $this->_failure("Can't connect to MySQL server {$host}:{$port}, login: '{$username}'");
+            $this->_failure("Can't connect to MySQL server '{$host}':'{$port}', login: '{$username}'");
         }
 
         return $this;
@@ -96,7 +98,7 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
         }
 
         try {
-            $this->_adapter->query("USE {$dbName}");
+            $this->_adapter->query(sprintf("USE `%s`", addcslashes($dbName, '`')));
             $this->_success("Database '{$dbName}' exists");
         } catch (Exception $e) {
             $this->_failure($e->getMessage());
