@@ -25,14 +25,28 @@
         <?php $i = 0; ?>
         <?php $jsCalls = array(); ?>
         <div id='task-list'>
-            <?php foreach ($this->runner->getTests() as $test): ?>
+            <?php foreach ($this->runner->getTests() as $test):?>
+            <?php $ajaxOptions = $test->getAjaxOptions();?>
 
             <div id="d<?php echo ++$i?>" class="task">
                 <span class="label"><?php echo $test->getLabel() ?>:</span>
-                <span class="result">waiting...</span>
+                <span class="result"><?php
+                if ($ajaxOptions['autoStart']) {
+                    echo 'waiting...';
+                } else {
+                    echo 'click to start...';
+                }
+                // No enter before span to avoid slideToogle() problem in IE
+                ?></span>
                 <pre style="display:none;"></pre>
             </div>
-                <?php $jsCalls[$i] = $this->jsPath($test->getFileName())?>
+                <?php 
+                $jsCalls[$i] = array(
+                    'divId'     => 'div#d' . $i,
+                    'fileName'  => $this->jsPath($test->getFileName()),
+                    'autoStart' => $ajaxOptions['autoStart'] ? true : false
+                );
+                ?>
             <?php endforeach; ?>
         </div>
 

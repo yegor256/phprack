@@ -64,7 +64,9 @@ abstract class phpRack_Test
      * @see _setAjaxOptions()
      * @see getAjaxOptions()
      */
-    private $_ajaxOptions = array();
+    private $_ajaxOptions = array(
+        'autoStart' => true
+    );
     
     /**
      * Construct the class
@@ -77,6 +79,19 @@ abstract class phpRack_Test
     {
         $this->_fileName = realpath($fileName);
         $this->_runner = $runner;
+        $this->_init();
+    }
+
+    /**
+     * Allow child class to overwrite test default options, by overwritting this method
+     * If you want disable ajax auto start it is proper place for that
+     *
+     * @return void
+     * @see __construct()
+     */
+    protected function _init()
+    {
+
     }
     
     /**
@@ -87,7 +102,7 @@ abstract class phpRack_Test
      * @return phpRack_Test
      * @throws Exception
      */
-    public static function factory($fileName, phpRack_Runner $runner) 
+    public static function factory($fileName, phpRack_Runner $runner)
     {
         if (!file_exists($fileName)) {
             throw new Exception("File '{$fileName}' is not found");

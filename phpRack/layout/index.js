@@ -5,12 +5,7 @@ $(
     function()
     {
         // List with DOM ids and test names
-        var calls = {
-            <?php $jsCallsCount = count($jsCalls) ?>
-            <?php foreach ($jsCalls as $i => $testName): ?>
-                'div#d<?php echo $i ?>': '<?php echo $testName?>'<?php if ($i < $jsCallsCount) echo ',' ?>
-            <?php endforeach; ?>
-        };
+        var calls = <?php echo json_encode($jsCalls) ?>
 
         String.prototype.stripTags = function ()
         {
@@ -166,6 +161,11 @@ $(
                             that.run();
                         }
                     );
+
+                    // Attach one time event to "click to start..." text
+                    if (!options.autoStart) {
+                        that.$result.one('click', that.run);
+                    }
                 },
                 setOption: function(key, value)
                 {
@@ -319,20 +319,24 @@ $(
         taskQueue.setThreadsCount(2);
 
         for (var id in calls) {
+            var call = calls[id];
             // Create test object
             var test = new phpRack_Test(
                 {
-                    id: id,
+                    id: call.divId,
                     url: '<?php echo $_SERVER['REQUEST_URI']?>',
                     data: {
-                        '<?php echo PHPRACK_AJAX_TAG?>': calls[id],
-                        '<?php echo PHPRACK_AJAX_TOKEN?>': id
-                    }
+                        '<?php echo PHPRACK_AJAX_TAG?>': call.fileName,
+                        '<?php echo PHPRACK_AJAX_TOKEN?>': call.divId
+                    },
+                    autoStart: call.autoStart
                 }
             );
 
-            // Add test to processing queue
-            taskQueue.add(test);
+            // Add test to processing queue if has autoStart enabled
+            if (call.autoStart) {
+                taskQueue.add(test);
+            }
         }
     }
 );
