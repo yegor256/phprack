@@ -49,6 +49,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
             return false;
         }
 
+        $this->_log("File '{$fileName}' (" . filesize($fileName) . ' bytes):');
         return true;
     }
 
