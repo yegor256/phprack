@@ -120,6 +120,8 @@ class phpRack_Package_Php extends phpRack_Package
                 $this->_log($output);
             }
         }
+        
+        $this->_log(count($iterator) . ' files checked');
         return $this;
     }
     
