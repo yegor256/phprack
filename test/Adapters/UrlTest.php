@@ -13,9 +13,8 @@ require_once 'AbstractTest.php';
  */
 require_once PHPRACK_PATH . '/Adapters/Url.php';
 
-class Adatpers_UrlTest extends AbstractTest
+class Adapters_UrlTest extends AbstractTest
 {
-
     public function testWeCanCreateUrlAndCheckItsContent()
     {
         $url = phpRack_Adapters_Url::factory('http://www.google.com');
@@ -30,5 +29,26 @@ class Adatpers_UrlTest extends AbstractTest
             $this->markTestIncomplete();
         }
     }
-    
+
+    public function testFactoryWithInvalidUrl()
+    {
+        try {
+            phpRack_Adapters_Url::factory('http://');
+            $this->fail('An expected exception has not been raised.');
+        } catch (Exception $e) {
+            $this->assertTrue($e instanceof Exception);
+        }
+    }
+
+    public function testFactoryWithoutHttpInUrl()
+    {
+        $urlAdapter = phpRack_Adapters_Url::factory('www.google.com');
+        $this->assertTrue($urlAdapter instanceof phpRack_Adapters_Url);
+    }
+
+    public function testFactoryWithPathAndQuery()
+    {
+        $urlAdapter = phpRack_Adapters_Url::factory('http://www.google.pl/webhp?hl=en');
+        $this->assertTrue($urlAdapter instanceof phpRack_Adapters_Url);
+    }
 }
