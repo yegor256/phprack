@@ -51,4 +51,17 @@ class Adapters_UrlTest extends AbstractTest
         $urlAdapter = phpRack_Adapters_Url::factory('http://www.google.pl/webhp?hl=en');
         $this->assertTrue($urlAdapter instanceof phpRack_Adapters_Url);
     }
+    
+    public function testFactoryWithInvalidOptions()
+    {
+        try {
+            $options = array(
+                'invalidOption' => false
+            );
+            phpRack_Adapters_Url::factory('http://www.google.com', $options);
+            $this->fail('An expected exception has not been raised.');
+        } catch (Exception $e) {
+            $this->assertTrue($e instanceof Exception);
+        }
+    }
 }

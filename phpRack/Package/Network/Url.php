@@ -35,6 +35,8 @@ class phpRack_Package_Network_Url extends phpRack_Package
      * Adapter used for cummunication with server
      *
      * @var phpRack_Adapters_Url
+     * @see url()
+     * @see regexp()
      */
     private $_adapter;
 
@@ -42,18 +44,22 @@ class phpRack_Package_Network_Url extends phpRack_Package
      * Contain url passed to url function, used in other methods of this class
      *
      * @var string
+     * @see url()
+     * @see regex()
      */
     private $_url;
 
     /**
      * Set URL and validate it
      *
+     * @param string URL
+     * @param array Options which will affect connection
      * @return $this
      * @throws Exception if URL is invalid
      */
-    public function url($url)
+    public function url($url, $options = array())
     {
-        $this->_adapter = phpRack_Adapters_Url::factory($url);
+        $this->_adapter = phpRack_Adapters_Url::factory($url, $options);
         $this->_url = $url;
         return $this;
     }
@@ -61,6 +67,7 @@ class phpRack_Package_Network_Url extends phpRack_Package
     /**
      * Make HTTP call and check that pattern exists in result
      *
+     * @param string Pattern to check
      * @return $this
      * @see url()
      * @throws Exception If this method is called before url()

@@ -47,22 +47,29 @@ class phpRack_Adapters_Url
     private $_port = 80;
 
     /**
-     * Connection options
+     * Connection options, can be overwritten by passing new values as array
+     * to constructor as second parameter
      *
      * @var array
+     * @see __construct()
+     * @see connect()
+     * @see getContent()
      */
     private $_options = array(
-        'connect_timeout' => 1,    // timeouts in seconds
-        'read_timeout'    => 5
+        'connectTimeout' => 2,    // timeouts in seconds
+        'readTimeout'    => 60
     );
 
     /**
      * Constructor
      *
      * @param string URL
+     * @param array Options
      * @return void
+     * @throws Exception if URL is not valid
+     * @throws Exception if some of passed options is not recognized
      */
-    public function __construct($url)
+    public function __construct($url, array $options = array())
     {
         // If url has not sheme defined - add it
         if (!preg_match('#^\w+://#', $url)) {
@@ -95,17 +102,26 @@ class phpRack_Adapters_Url
         if (isset($urlParts['port'])) {
             $this->_port = $urlParts['port'];
         }
+
+        // Overwrite default options
+        foreach ($options as $option => $value) {
+            if (!array_key_exists($option, $this->_options)) {
+                throw new Exception("Option '{$option}' is not recognized");
+            }
+            $this->_options[$option] = $value;
+        }
     }
 
     /**
      * Factory, to simplify calls
      *
      * @param string URL
+     * @param array Options
      * @return phpRack_Adapters_Url
      */
-    public static function factory($url)
+    public static function factory($url, array $options = array())
     {
-        return new self($url);
+        return new self($url, $options);
     }
 
     /**
@@ -127,7 +143,7 @@ class phpRack_Adapters_Url
                 $this->_port,
                 $errorNumber,
                 $errorString,
-                $this->_options['connect_timeout']
+                $this->_options['connectTimeout']
             );
         }
 
@@ -193,8 +209,10 @@ class phpRack_Adapters_Url
 
         $response = '';
 
-        stream_set_timeout($this->_socket, $this->_options['read_timeout']);
+        stream_set_timeout($this->_socket, $this->_options['readTimeout']);
 
+        // Key must be underscored because of array format
+        // returned by stream_get_meta_data() function
         $info = array('timed_out' => false);
         // Receive response
         while (!feof($this->_socket) && !$info['timed_out']) {
