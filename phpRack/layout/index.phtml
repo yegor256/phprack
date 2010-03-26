@@ -30,7 +30,14 @@
 
             <div id="d<?php echo ++$i?>" class="task">
                 <span class="label"><?php echo $test->getLabel() ?>:</span>
-                <span class="result"><?php if ($ajaxOptions['autoStart']):?>waiting...<?php else: ?>click to start...<?php endif; ?></span>
+                <span class="result"><?php
+                if ($ajaxOptions['autoStart']) {
+                    echo 'waiting...';
+                } else {
+                    echo 'click to start...';
+                }
+                // No enter before span to avoid slideToogle() problem in IE
+                ?></span>
                 <pre style="display:none;"></pre>
             </div>
                 <?php $jsCalls[$i] = array('divId'     => 'div#d' . $i,
