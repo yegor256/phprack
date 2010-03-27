@@ -106,6 +106,9 @@
             perClass="0"
             perMethod="0"
             />
+            
+        <!-- delete coverage database, since it's not necessary any more -->
+        <delete file="${coverage.db}" />
     </target>
     
     <target name="deploy" description="Deploy stable TGZ by FTP and other files">

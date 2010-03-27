@@ -51,4 +51,15 @@ class Adapters_UrlTest extends AbstractTest
         $urlAdapter = phpRack_Adapters_Url::factory('http://www.google.pl/webhp?hl=en');
         $this->assertTrue($urlAdapter instanceof phpRack_Adapters_Url);
     }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testFactoryWithInvalidOptions()
+    {
+        $options = array(
+            'invalidOption' => false
+        );
+        phpRack_Adapters_Url::factory('http://www.google.com', $options);
+    }
 }
