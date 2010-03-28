@@ -108,6 +108,7 @@ class phpRack_Package_Php extends phpRack_Package
             $lintCommand = 'env -i ' . $lintCommand;
         }
 
+        $valid = $invalid = 0;
         foreach ($iterator as $file) {
             $file = realpath($file->getPathname());
             $command = $lintCommand . ' ' . escapeshellarg($file) . ' 2>&1';
@@ -115,13 +116,22 @@ class phpRack_Package_Php extends phpRack_Package
 
             if (preg_match('#^No syntax errors detected#', $output)) {
                 $this->_success("File '{$file}' is valid");
+                $valid++;
             } else {
                 $this->_failure("File '{$file}' is NOT valid");
                 $this->_log($output);
+                $invalid++;
             }
         }
         
-        $this->_log(count($iterator) . ' files checked');
+        $this->_log(
+            sprintf(
+                '%d files checked, among them: %d valid and %d invalid',
+                $valid + $invalid,
+                $valid, 
+                $invalid
+            )
+        );
         return $this;
     }
     
