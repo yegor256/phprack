@@ -81,13 +81,12 @@ try {
 
     // Global layout is required, show the front web page of the report
     if (empty($_GET[PHPRACK_AJAX_TAG])) {
+        $view = new phpRack_View();
         // show login form, if the user is not authenticated yet
         if (!$runner->isAuthenticated()) {
-            $view = new phpRack_View();
             $view->assign(array('authResult' => $runner->getAuthResult()));
             throw new Exception($view->render('login.phtml'));
         }
-        $view = new phpRack_View(); 
         $view->assign(array('runner' => $runner)); 
         throw new Exception($view->render());
     }
