@@ -74,14 +74,6 @@ try {
      */
     require_once PHPRACK_PATH . '/View.php';
 
-    // show login form, if the user is not authenticated yet
-    if (!$runner->isAuthenticated()) {
-        require_once PHPRACK_PATH . '/View.php';
-        $view = new phpRack_View();
-        $view->assign(array('authResult' => $runner->getAuthResult()));
-        throw new Exception($view->render('login.phtml'));
-    }
-    
     // if it's CLI enviroment - just show a full test report
     if ($runner->isCliEnvironment()) {
         throw new Exception($runner->runSuite());
@@ -89,11 +81,23 @@ try {
 
     // Global layout is required, show the front web page of the report
     if (empty($_GET[PHPRACK_AJAX_TAG])) {
+        // show login form, if the user is not authenticated yet
+        if (!$runner->isAuthenticated()) {
+            require_once PHPRACK_PATH . '/View.php';
+            $view = new phpRack_View();
+            $view->assign(array('authResult' => $runner->getAuthResult()));
+            throw new Exception($view->render('login.phtml'));
+        }
         $view = new phpRack_View(); 
         $view->assign(array('runner' => $runner)); 
         throw new Exception($view->render());
     }
     
+    // show error message
+    if (!$runner->isAuthenticated()) {
+        throw new Exception("Authentication problem. You have to login first.");
+    }
+
     // Execute one individual test and return its result
     // in JSON format. We reach this point only in AJAX calls from
     // already rendered testing page.
