@@ -46,18 +46,23 @@ class phpRack_Runner
     
     /**
      * COOKIE name
+     *
      * @see isAuthenticated()
      */
     const COOKIE_NAME = 'phpRack_auth';
     
     /**
      * COOKIE lifetime in seconds
+     *
+     * We set to 30 days, which equals to 30 * 24 * 60 * 60 = 2592000
+     *
      * @see isAuthenticated()
      */
-    const COOKIE_LIFETIME = 384000;
+    const COOKIE_LIFETIME = 2592000;
     
     /**
      * Form param names
+     *
      * @see isAuthenticated()
      */
     const POST_LOGIN = 'login';
@@ -66,6 +71,9 @@ class phpRack_Runner
     /**
      * This is how you should name your test files, if you want
      * them to be found by the Runner
+     *
+     * @var string
+     * @see getTests()
      */
     const TEST_PATTERN = '/(\w+Test)\.php$/i';
     
@@ -235,6 +243,7 @@ class phpRack_Runner
      * We're running the tests in CLI environment?
      *
      * @return boolean
+     * @see isAuthenticated()
      */
     public function isCliEnvironment() 
     {
@@ -248,6 +257,7 @@ class phpRack_Runner
      * @return string
      * @throws Exception If directory is absent
      * @see $this->_options
+     * @see getTests()
      */
     public function getDir() 
     {
