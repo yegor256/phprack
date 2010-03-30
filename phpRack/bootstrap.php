@@ -83,7 +83,6 @@ try {
     if (empty($_GET[PHPRACK_AJAX_TAG])) {
         // show login form, if the user is not authenticated yet
         if (!$runner->isAuthenticated()) {
-            require_once PHPRACK_PATH . '/View.php';
             $view = new phpRack_View();
             $view->assign(array('authResult' => $runner->getAuthResult()));
             throw new Exception($view->render('login.phtml'));
