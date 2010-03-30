@@ -27,7 +27,7 @@
     <includepath classpath="${project.basedir}" />
     <includepath classpath="${project.basedir}/test/" />
 
-    <target name="main" depends="lint, phpcs, phpmd, test, zca" >
+    <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca" >
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
@@ -41,6 +41,15 @@
         </phplint>
     </target>
 
+    <!-- @todo #39 set it to haltonfailure and it should allow us to build the project -->
+    <target name="jslint" description="Validate syntax in all JS files" >
+        <jsllint haltonfailure="false">
+            <fileset dir="${project.basedir}">
+                <include name="**/*.js"/>
+            </fileset>
+        </jsllint>
+    </target>
+    
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
         <exec command="phpcs 
             -n
