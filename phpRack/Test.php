@@ -65,7 +65,8 @@ abstract class phpRack_Test
      * @see getAjaxOptions()
      */
     private $_ajaxOptions = array(
-        'autoStart' => true
+        'autoStart' => true, // start it when front is loaded
+        'reload' => false, // reload every X seconds, in AJAX
     );
     
     /**
@@ -245,17 +246,27 @@ abstract class phpRack_Test
     /**
      * Set ajax options
      *
+     * @param array List of options to set
      * @return void
+     * @see $this->_ajaxOptions
+     * @see getAjaxOptions()
      */
     protected function _setAjaxOptions($options)
     {
-        $this->_ajaxOptions = $options;
+        foreach ($options as $name=>$value) {
+            if (!array_key_exists($name, $this->_options)) {
+                throw new Exception("AJAX option '{$name}' is not valid");
+            }
+            $this->_ajaxOptions[$name] = $value;
+        }
     }
 
     /**
      * Get ajax options
      *
      * @return array
+     * @see $this->_ajaxOptions
+     * @see setAjaxOptions()
      */
     public function getAjaxOptions()
     {

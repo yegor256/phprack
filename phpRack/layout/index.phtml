@@ -49,7 +49,7 @@
                 $jsCalls[$i] = array(
                     'divId'     => 'div#d' . $i,
                     'fileName'  => $this->jsPath($test->getFileName()),
-                    'autoStart' => $ajaxOptions['autoStart'] ? true : false
+                    'autoStart' => !empty($ajaxOptions['autoStart']) ? true : false
                 );
                 ?>
             <?php endforeach; ?>
