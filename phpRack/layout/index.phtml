@@ -36,7 +36,7 @@
             <div id="d<?php echo ++$i?>" class="task">
                 <span class="label"><?php echo $test->getLabel() ?>:</span>
                 <span class="result"><?php
-                if ($ajaxOptions['autoStart']) {
+                if (!empty($ajaxOptions['autoStart'])) {
                     echo 'waiting...';
                 } else {
                     echo 'click to start...';
