@@ -214,6 +214,14 @@ class phpRack_Runner
             case array_key_exists(self::COOKIE_NAME, $_COOKIE):
                 list($login, $hash) = explode(':', $_COOKIE[self::COOKIE_NAME]);
                 break;
+                
+            // we expect authentication information to be sent via headers
+            // for example by Phing
+            case array_key_exists('PHP_AUTH_USER', $_SERVER) && 
+            array_key_exists('PHP_AUTH_PW', $_SERVER):
+                $login = $_SERVER['PHP_AUTH_USER'];
+                $hash = md5($_SERVER['PHP_AUTH_PW']);
+                break;
             
             // no authinfo, chances are that site is not protected
             default:
