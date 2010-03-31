@@ -5,17 +5,17 @@ $(
     function()
     {
         // List with DOM ids and test names
-        var calls = <?php echo json_encode($jsCalls) ?>
+        var calls = phpParams.calls;
 
         String.prototype.stripTags = function ()
         {
             return this.replace(/<[^>]*>/g, '');
-        }
+        };
 
         String.prototype.htmlspecialchars = function ()
         {
             return this.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        }
+        };
 
         // Our processing queue to control tests concurrency
         function phpRack_TaskQueue()
@@ -44,8 +44,8 @@ $(
                         that.activeThreadsCount++;
 
                         // Get next task from queue and run it
-                        task = that.queue.shift();
-                        if (task) {
+                        if (that.queue.length) {
+                            task = that.queue.shift();
                             // Set callback function on task, to know that we can execute next one
                             task.setOption('onFinish', that.onTaskFinish);
                             task.run();
@@ -57,7 +57,7 @@ $(
                 {
                     that.threadsCount = threadsCount;
                 }
-            }
+            };
 
             return that;
         }
@@ -81,7 +81,7 @@ $(
                     that.elapsedSeconds++;
 
                     // If callback function was passed to constructor as param, execute it
-                    if (that.options.onTick != null) {
+                    if (that.options.onTick !== null) {
                         that.options.onTick(that);
                     }
                 },
@@ -99,7 +99,7 @@ $(
                 stop: function()
                 {
                     // If timer was earlier started and is still active
-                    if (that.intervalId != null) {
+                    if (that.intervalId !== null) {
                         // Remove interval to stop calling tick() function every second
                         window.clearInterval(that.intervalId);
                     }
@@ -123,7 +123,8 @@ $(
                 {
                     return that.elapsedSeconds;
                 }
-            }
+            };
+
             that.__construct(options);
             return that;
         }
@@ -178,10 +179,10 @@ $(
                 _setStatus: function (success, message)
                 {
                     // Update result span with OK/FAILURE depending on success param
-                    if (success == true) {
-                        that.$result.html('<?php echo phpRack_Test::OK?>').addClass('success');
+                    if (success === true) {
+                        that.$result.html(phpParams.ok).addClass('success');
                     } else {
-                        that.$result.html('<?php echo phpRack_Test::FAILURE?>').addClass('failure');
+                        that.$result.html(phpParams.failure).addClass('failure');
                     }
 
                     // Fill message <pre></pre> with text returned from server
@@ -288,8 +289,8 @@ $(
                                 // If we have some problem with server (Internal error, 404, 301/302 redirection)
                                 if (XMLHttpRequest.status != 200) {
                                     // Create error message with headers
-                                    message = XMLHttpRequest.status + ' ' + XMLHttpRequest.statusText + "\n"
-                                              + XMLHttpRequest.responseText;
+                                    message = XMLHttpRequest.status + ' ' + XMLHttpRequest.statusText + "\n";
+                                    message += XMLHttpRequest.responseText;
                                 } else {
                                     // We received malformed JSON
                                     // (php script throwed some warning, unhandled exception, extra data, etc...)
@@ -305,7 +306,7 @@ $(
                         }
                     );
                 }
-            }
+            };
 
             that.__construct();
             return that;
@@ -321,14 +322,16 @@ $(
         for (var id in calls) {
             var call = calls[id];
             // Create test object
+
+            var data = {};
+            data[phpParams.ajaxTag] = call.fileName;
+            data[phpParams.ajaxToken] = call.divId;
+
             var test = new phpRack_Test(
                 {
                     id: call.divId,
-                    url: '<?php echo $_SERVER['REQUEST_URI']?>',
-                    data: {
-                        '<?php echo PHPRACK_AJAX_TAG?>': call.fileName,
-                        '<?php echo PHPRACK_AJAX_TOKEN?>': call.divId
-                    },
+                    url: phpParams.requestUri,
+                    data: data,
                     autoStart: call.autoStart
                 }
             );

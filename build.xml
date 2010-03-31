@@ -41,9 +41,8 @@
         </phplint>
     </target>
 
-    <!-- @todo #39 set it to haltonfailure and it should allow us to build the project -->
     <target name="jslint" description="Validate syntax in all JS files" >
-        <jsllint haltonfailure="false">
+        <jsllint haltonfailure="true">
             <fileset dir="${project.basedir}">
                 <include name="**/*.js"/>
             </fileset>
@@ -59,7 +58,7 @@
             --extensions='php,phtml' 
             ${project.basedir}" 
             escape="false"
-            checkreturn="true" 
+            checkreturn="true"
             passthru="true" />
     </target>
 
