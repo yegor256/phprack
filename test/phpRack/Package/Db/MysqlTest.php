@@ -54,6 +54,16 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
         unset($this->_package);
     }
 
+    protected function _getPackageWithValidConnect()
+    {
+        return $this->_package->connect(
+            self::VALID_HOST,
+            self::VALID_PORT,
+            self::VALID_USERNAME,
+            self::VALID_PASSWORD
+        );
+    }
+
     public function testConnect()
     {
         $this->_package->connect(
@@ -68,12 +78,7 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
     public function testDbExists()
     {
         try {
-            $this->_package->connect(
-                self::VALID_HOST,
-                self::VALID_PORT,
-                self::VALID_USERNAME,
-                self::VALID_PASSWORD
-            )
+            $this->_getPackageWithValidConnect()
                 ->dbExists(self::INVALID_DATABASE);
             $this->assertFalse($this->_result->wasSuccessful());
         } catch (Exception $e) {
@@ -95,12 +100,7 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
     public function testTableExists()
     {
         try {
-            $this->_package->connect(
-                self::VALID_HOST,
-                self::VALID_PORT,
-                self::VALID_USERNAME,
-                self::VALID_PASSWORD
-            )
+            $this->_getPackageWithValidConnect()
                 ->dbExists(self::VALID_DATABASE)
                 ->tableExists(self::INVALID_TABLE);
             $this->assertFalse($this->_result->wasSuccessful());
@@ -123,16 +123,50 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
     public function testTableExistsWithoutDbExists()
     {
         try {
-            $this->_package->connect(
-                self::VALID_HOST,
-                self::VALID_PORT,
-                self::VALID_USERNAME,
-                self::VALID_PASSWORD
-            )
+            $this->_getPackageWithValidConnect()
                 ->tableExists(self::INVALID_TABLE);
             $this->fail('An expected exception has not been raised.');
         } catch (Exception $e) {
             $this->assertTrue($e instanceof Exception);
         }
+    }
+
+    public function testQuery()
+    {
+        try {
+            $this->_getPackageWithValidConnect()
+                ->dbExists(self::VALID_DATABASE)
+                ->query('SELECT 1');
+            $this->assertTrue($this->_result->wasSuccessful());
+        } catch (Exception $e) {
+            $this->assertTrue($e instanceof Exception);
+            $this->markTestSkipped('Valid MySQL database was not found');
+        }
+    }
+
+    public function testQueryWithInvalidQuery()
+    {
+        try {
+            $this->_getPackageWithValidConnect()
+                ->dbExists(self::VALID_DATABASE)
+                ->query('NOTEXISTEDFUNCTION 1');
+            $this->assertTrue($this->_result->wasSuccessful());
+        } catch (Exception $e) {
+            $this->assertTrue($e instanceof Exception);
+            $this->markTestSkipped('Valid MySQL database was not found');
+        }
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testQueryWithoutConnect()
+    {
+        $this->_package->query('SELECT 1');
+    }
+
+    public function testCloseConnection()
+    {
+        $this->_package->closeConnection();
     }
 }
