@@ -110,7 +110,7 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
     /**
      * Check that table exists
      *
-     * @param Table name
+     * @param string Table name
      * @return $this
      * @see connect()
      * @throws Exception If this method is called before connect()
@@ -134,6 +134,29 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
         }
 
         return $this;
+    }
+
+    /**
+     * Execute query and return results
+     *
+     * @param string Query to execute
+     * @return $this
+     * @see connect()
+     * @throws Exception If this method is called before connect()
+     */
+    public function query($query)
+    {
+        if (!$this->_adapter->isConnected()) {
+            throw new Exception('You must call connect() method before');
+        }
+
+        try {
+            $result = $this->_adapter->query($query);
+            $this->_success('Query was executed successfully');
+            $this->_log($result);
+        } catch (Exception $e) {
+            $this->_failure($e->getMessage());
+        }
     }
 
     /**

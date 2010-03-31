@@ -254,7 +254,7 @@ abstract class phpRack_Test
     protected function _setAjaxOptions($options)
     {
         foreach ($options as $name=>$value) {
-            if (!array_key_exists($name, $this->_options)) {
+            if (!array_key_exists($name, $this->_ajaxOptions)) {
                 throw new Exception("AJAX option '{$name}' is not valid");
             }
             $this->_ajaxOptions[$name] = $value;
