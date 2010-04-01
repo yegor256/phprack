@@ -41,9 +41,8 @@
         </phplint>
     </target>
 
-    <!-- @todo #39 set it to haltonfailure and it should allow us to build the project -->
     <target name="jslint" description="Validate syntax in all JS files" >
-        <jsllint haltonfailure="false">
+        <jsllint haltonfailure="true">
             <fileset dir="${project.basedir}">
                 <include name="**/*.js"/>
             </fileset>
@@ -59,8 +58,9 @@
             --extensions='php,phtml' 
             ${project.basedir}" 
             escape="false"
-            checkreturn="true" 
-            passthru="true" />
+            checkreturn="true"
+            passthru="true"
+        />
     </target>
 
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
@@ -68,11 +68,11 @@
             ${project.basedir} 
             text
             codesize,unusedcode
-            --extensions='php,phtml'
-            "
+            --extensions='php,phtml'"
             escape="false"
             checkreturn="true" 
-            passthru="true" />
+            passthru="true"
+        />
     </target>
 
     <target name="zca" description="Zend Code Analyzer">
@@ -114,7 +114,7 @@
             perProject="80"
             perClass="0"
             perMethod="0"
-            />
+        />
             
         <!-- delete coverage database, since it's not necessary any more -->
         <delete file="${coverage.db}" />
