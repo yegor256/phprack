@@ -16,23 +16,23 @@ require_once PHPRACK_PATH . '/Package/Disc/File.php';
 class phpRack_Package_Disc_FileTest extends AbstractTest
 {
     /**
-    * Directory where we have sample files, will be set it in setUp() function
-    */
+     * Directory where we have sample files, will be set it in setUp() function
+     * @var string
+     */
     private $_testFilesDir;
 
     /**
-    * We will store here temp file name, which should be removed after test end
-    */
+     * We will store here temp file name, which should be removed after test end
+     * @var string
+     */
     private $_tmpFileName;
     
     /**
-     *
      * @var phpRack_Package_Disc_File
      */
     private $_package;
 
     /**
-     *
      * @var phpRack_Result
      */
     private $_result;
@@ -53,16 +53,6 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
             chmod($this->_tmpFileName, 0600); // Reset file permissions, for avoid permission denied on Windows
             unlink($this->_tmpFileName);
         }
-    }
-
-    protected function _removeLogLine($fileContent)
-    {
-        $pos = strpos($fileContent, "\n");
-        // If we have only log line
-        if ($pos === false || strlen($fileContent) == $pos + 1) {
-            return '';
-        }
-        return substr($fileContent, $pos + 1);
     }
 
     public function testCat()
@@ -226,5 +216,15 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
 
         $this->_package->isDir($this->_testFilesDir . '/5lines.txt');
         $this->assertFalse($this->_result->wasSuccessful());
+    }
+
+    protected function _removeLogLine($fileContent)
+    {
+        $pos = strpos($fileContent, "\n");
+        // If we have only log line
+        if ($pos === false || strlen($fileContent) == $pos + 1) {
+            return '';
+        }
+        return substr($fileContent, $pos + 1);
     }
 }

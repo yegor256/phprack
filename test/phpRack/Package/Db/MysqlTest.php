@@ -16,13 +16,11 @@ require_once PHPRACK_PATH . '/Package/Db/Mysql.php';
 class phpRack_Package_Db_MysqlTest extends AbstractTest
 {
     /**
-     *
      * @var phpRack_Package_Db_Mysql
      */
     private $_package;
 
     /**
-     *
      * @var phpRack_Result
      */
     private $_result;
