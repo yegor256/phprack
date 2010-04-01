@@ -61,6 +61,40 @@ class RunnerTest extends AbstractTest
         );
     }
     
+    public function testHeaderAuthenticationWorksProperly()
+    {
+        global $phpRackConfig;
+        if (array_key_exists('auth', $phpRackConfig)) {
+            $_SERVER['PHP_AUTH_USER'] = $phpRackConfig['auth']['username'];
+            $_SERVER['PHP_AUTH_PW']   = $phpRackConfig['auth']['password'];
+            $this->assertTrue(
+                $this->_runner->isAuthenticated(),
+                'Invalid auth using header'
+            );
+        } else {
+            $this->markTestSkipped(
+              'Password is not stored in clear text. Test cannot be performed.'
+            );
+        }
+    }
+    
+    public function testGetParamsAuthenticationWorksProperly()
+    {
+        global $phpRackConfig;
+        if (array_key_exists('auth', $phpRackConfig)) {
+            $_GET[Runner::GET_LOGIN] = $phpRackConfig['auth']['username'];
+            $_GET[Runner::GET_PWD]   = $phpRackConfig['auth']['password'];
+            $this->assertTrue(
+                $this->_runner->isAuthenticated(),
+                'Invalid auth using get parameters (Phing bridge)'
+            );
+        } else {
+            $this->markTestSkipped(
+              'Password is not stored in clear text. Test cannot be performed.'
+            );
+        }
+    }
+    
     public function testTestFilesAreCollectedCorrectly()
     {
         $tests = $this->_runner->getTests();
