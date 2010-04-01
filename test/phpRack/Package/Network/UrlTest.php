@@ -42,14 +42,12 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
         $this->_package->url('www.google.com');
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testUrlWithInvalidUrl()
     {
-        try {
-            $this->_package->url('http://');
-            $this->fail('An expected exception has not been raised.');
-        }  catch (Exception $e) {
-            $this->assertTrue($e instanceof Exception);
-        }
+        $this->_package->url('http://');
     }
 
     public function testRegex()
@@ -76,14 +74,12 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
         }
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testRegexWithoutUrlCall()
     {
-        try {
-            $this->_package->regex('/google\.com/');
-            $this->fail('An expected exception has not been raised.');
-        }  catch (Exception $e) {
-            $this->assertTrue($e instanceof Exception);
-        }
+        $this->_package->regex('/google\.com/');
     }
 
     public function testRegexWithNotExistedPattern()

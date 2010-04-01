@@ -30,14 +30,12 @@ class Adapters_UrlTest extends AbstractTest
         }
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testFactoryWithInvalidUrl()
     {
-        try {
-            phpRack_Adapters_Url::factory('http://');
-            $this->fail('An expected exception has not been raised.');
-        } catch (Exception $e) {
-            $this->assertTrue($e instanceof Exception);
-        }
+        phpRack_Adapters_Url::factory('http://');
     }
 
     public function testFactoryWithoutHttpInUrl()

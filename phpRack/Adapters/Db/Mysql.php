@@ -211,11 +211,30 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
     public function isDatabaseSelected()
     {
         $result = $this->query('SELECT DATABASE()');
-        if (trim($result) == '') {
+        if (trim($this->_removeColumnHeadersLine($result)) == '') {
             return false;
         } else {
             return true;
         }
+    }
+
+    /**
+     * Remove header line from query result, which is added by _formatResult()
+     * method. Sometimes we just need raw result without this extra line.
+     *
+     * @param string query result with header line
+     * @return string
+     * @see _formatResult()
+     * @see isDatabaseSelected()
+     */
+    private function _removeColumnHeadersLine($result)
+    {
+        $pos = strpos($result, "\n");
+        // If we have only headers line
+        if ($pos === false || strlen($result) == $pos + 1) {
+            return '';
+        }
+        return substr($result, $pos + 1);
     }
 
     /**

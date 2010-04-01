@@ -87,14 +87,12 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
         }
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testDbExistsWithoutConnect()
     {
-        try {
-            $this->_package->dbExists(self::VALID_DATABASE);
-            $this->fail('An expected exception has not been raised.');
-        } catch (Exception $e) {
-            $this->assertContains('connect()', $e->getMessage());
-        }
+        $this->_package->dbExists(self::VALID_DATABASE);
     }
 
     public function testTableExists()
@@ -110,25 +108,21 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
         }
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testTableExistsWithoutConnect()
     {
-        try {
-            $this->_package->tableExists(self::VALID_TABLE);
-            $this->fail('An expected exception has not been raised.');
-        } catch (Exception $e) {
-            $this->assertContains('connect()', $e->getMessage());
-        }
+        $this->_package->tableExists(self::VALID_TABLE);
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testTableExistsWithoutDbExists()
     {
-        try {
-            $this->_getPackageWithValidConnect()
-                ->tableExists(self::INVALID_TABLE);
-            $this->fail('An expected exception has not been raised.');
-        } catch (Exception $e) {
-            $this->assertTrue($e instanceof Exception);
-        }
+        $this->_getPackageWithValidConnect()
+            ->tableExists(self::INVALID_TABLE);
     }
 
     public function testQuery()
@@ -139,8 +133,7 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
                 ->query('SELECT 1');
             $this->assertTrue($this->_result->wasSuccessful());
         } catch (Exception $e) {
-            $this->assertTrue($e instanceof Exception);
-            $this->markTestSkipped('Valid MySQL database was not found');
+            $this->markTestSkipped($e->getMessage());
         }
     }
 
@@ -150,10 +143,9 @@ class phpRack_Package_Db_MysqlTest extends AbstractTest
             $this->_getPackageWithValidConnect()
                 ->dbExists(self::VALID_DATABASE)
                 ->query('NOTEXISTEDFUNCTION 1');
-            $this->assertTrue($this->_result->wasSuccessful());
+            $this->assertFalse($this->_result->wasSuccessful());
         } catch (Exception $e) {
-            $this->assertTrue($e instanceof Exception);
-            $this->markTestSkipped('Valid MySQL database was not found');
+            $this->markTestSkipped($e->getMessage());
         }
     }
 

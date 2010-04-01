@@ -44,47 +44,47 @@ class Adapters_Db_MysqlTest extends AbstractTest
         }
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testConnectWithNotExistedDb()
     {
-        try {
-            $this->_adapter->connect('jdbc:mysql://localhost:3306/notexists');
-            $this->fail('An expected exception has not been raised.');
-        } catch (Exception $e) {
-            $this->assertTrue($e instanceof Exception);
-        }
+        $this->_adapter->connect('jdbc:mysql://localhost:3306/notexists');
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testInvalidJdbcUrl()
     {
-        try {
-            $this->_adapter->connect('invalidjdbc');
-            $this->fail('An expected exception has not been raised.');
-        } catch (Exception $e) {
-            $this->assertContains('parse error', $e->getMessage());
-        }
+        $this->_adapter->connect('invalidjdbc');
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testQueryWithoutConnect()
     {
-        try {
-            $this->_adapter->query("SELECT 1");
-            $this->fail('An expected exception has not been raised.');
-        } catch (Exception $e) {
-            $this->assertContains('connect()', $e->getMessage());
-        }        
+        $this->_adapter->query("SELECT 1");
     }
 
     public function testIsDatabaseSelected()
     {
         try {
             $this->_adapter->connect('jdbc:mysql://localhost');
-            $this->assertFalse($this->_adapter->isDatabaseSelected());
-            $this->_adapter->query('USE `test`');
-            $this->assertTrue($this->_adapter->isDatabaseSelected());
         } catch (Exception $e) {
-            $this->assertTrue($e instanceof Exception);
-            $this->markTestSkipped('Valid MySQL server was not found');
+            $this->markTestSkipped($e->getMessage());
         }
+
+        $this->assertFalse($this->_adapter->isDatabaseSelected());
+
+        try {
+            $this->_adapter->query('USE `test`');
+        } catch (Exception $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+
+        $this->assertTrue($this->_adapter->isDatabaseSelected());
     }
 
     public function testIsConnected()
@@ -93,10 +93,10 @@ class Adapters_Db_MysqlTest extends AbstractTest
 
         try {
             $this->_adapter->connect('jdbc:mysql://localhost');
-            $this->assertTrue($this->_adapter->isConnected());
         } catch (Exception $e) {
-            $this->assertTrue($e instanceof Exception);
-            $this->markTestSkipped('Valid MySQL server was not found');
+            $this->markTestSkipped($e->getMessage());
         }
+
+        $this->assertTrue($this->_adapter->isConnected());
     }
 }
