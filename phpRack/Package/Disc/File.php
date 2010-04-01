@@ -41,7 +41,6 @@ class phpRack_Package_Disc_File extends phpRack_Package
      *
      * @param string File name to check
      * @return boolean True if file exists
-     * @todo #30 to enable logging
      */
     protected function _isFileExists($fileName)
     {
@@ -50,11 +49,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
             return false;
         }
 
-        /**
-         * would be nice to have this log here
-         * but unit tests are not ready for such a string
-         */
-        //$this->_log("File '{$fileName}' (" . filesize($fileName) . ' bytes):');
+        $this->_log("File '{$fileName}' (" . filesize($fileName) . ' bytes):');
         return true;
     }
 

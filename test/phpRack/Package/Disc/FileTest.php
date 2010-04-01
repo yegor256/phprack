@@ -16,23 +16,23 @@ require_once PHPRACK_PATH . '/Package/Disc/File.php';
 class phpRack_Package_Disc_FileTest extends AbstractTest
 {
     /**
-    * Directory where we have sample files, will be set it in setUp() function
-    */
+     * Directory where we have sample files, will be set it in setUp() function
+     * @var string
+     */
     private $_testFilesDir;
 
     /**
-    * We will store here temp file name, which should be removed after test end
-    */
+     * We will store here temp file name, which should be removed after test end
+     * @var string
+     */
     private $_tmpFileName;
     
     /**
-     *
      * @var phpRack_Package_Disc_File
      */
     private $_package;
 
     /**
-     *
      * @var phpRack_Result
      */
     private $_result;
@@ -54,7 +54,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
             unlink($this->_tmpFileName);
         }
     }
-    
+
     public function testCat()
     {
         $fileName = $this->_testFilesDir . '/5lines.txt';
@@ -63,7 +63,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
 
         // Check that we receive exactly what we want
         $fileContent = file_get_contents($fileName);
-        $this->assertEquals($fileContent, $this->_result->getLog());
+        $this->assertEquals($fileContent, $this->_removeLogLine($this->_result->getLog()));
     }
     
     public function testTail()
@@ -75,7 +75,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
 
         // Check that we receive exactly what we want
         $lines = implode("", array_slice(file($fileName), -$linesCountToRetrieve));
-        $this->assertEquals($lines, $this->_result->getLog());
+        $this->assertEquals($lines, $this->_removeLogLine($this->_result->getLog()));
     }
 
     public function testHead()
@@ -88,7 +88,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
 
         // Check that we receive exactly what we want
         $lines = implode("", array_slice(file($fileName), 0, $linesCountToRetrieve));
-        $this->assertEquals($lines, $this->_result->getLog());
+        $this->assertEquals($lines, $this->_removeLogLine($this->_result->getLog()));
     }
 
     public function testNotExistedFile()
@@ -118,7 +118,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
         $fileName = $this->_testFilesDir . '/empty.txt';
         $this->_package->cat($fileName);
         $this->assertTrue($this->_result->wasSuccessful());
-        $this->assertTrue('' === $this->_result->getLog());
+        $this->assertTrue('' === $this->_removeLogLine($this->_result->getLog()));
     }
 
     public function testHeadWithEmptyFile()
@@ -126,7 +126,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
         $fileName = $this->_testFilesDir . '/empty.txt';
         $this->_package->head($fileName, 10);
         $this->assertTrue($this->_result->wasSuccessful());
-        $this->assertTrue('' === $this->_result->getLog());
+        $this->assertTrue('' === $this->_removeLogLine($this->_result->getLog()));
     }
 
     public function testTailWithEmptyFile()
@@ -134,7 +134,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
         $fileName = $this->_testFilesDir . '/empty.txt';
         $this->_package->tail($fileName, 10);
         $this->assertTrue($this->_result->wasSuccessful());
-        $this->assertTrue('' === $this->_result->getLog());
+        $this->assertTrue('' === $this->_removeLogLine($this->_result->getLog()));
     }
 
     public function testHeadIfWeTryGetMoreLinesThanFileContain()
@@ -145,7 +145,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
         // We should receive full file content in this case
         $this->_package->head($fileName, 20);
         $this->assertTrue($this->_result->wasSuccessful());
-        $this->assertEquals($fileContent, $this->_result->getLog());
+        $this->assertEquals($fileContent, $this->_removeLogLine($this->_result->getLog()));
     }
 
     public function testTailIfWeTryGetMoreLinesThanFileContain()
@@ -156,7 +156,7 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
         // We should receive full file content in this case
         $this->_package->tail($fileName, 20);
         $this->assertTrue($this->_result->wasSuccessful());
-        $this->assertEquals($fileContent, $this->_result->getLog());
+        $this->assertEquals($fileContent, $this->_removeLogLine($this->_result->getLog()));
     }
 
     public function testRelativePaths()
@@ -216,5 +216,15 @@ class phpRack_Package_Disc_FileTest extends AbstractTest
 
         $this->_package->isDir($this->_testFilesDir . '/5lines.txt');
         $this->assertFalse($this->_result->wasSuccessful());
+    }
+
+    protected function _removeLogLine($fileContent)
+    {
+        $pos = strpos($fileContent, "\n");
+        // If we have only log line
+        if ($pos === false || strlen($fileContent) == $pos + 1) {
+            return '';
+        }
+        return substr($fileContent, $pos + 1);
     }
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC 
+<!DOCTYPE html PUBLIC
     "-//W3C//DTD XHTML 1.0 Strict//EN" 
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--
@@ -57,6 +57,17 @@
 
         <script type="text/javascript">
         //<![CDATA[
+
+            // array with server side params which will be used in javascript
+            var phpParams = {
+                calls: <?php echo json_encode($jsCalls) ?>,
+                ok: '<?php echo phpRack_Test::OK?>',
+                failure: '<?php echo phpRack_Test::FAILURE?>',
+                requestUri: '<?php echo $_SERVER['REQUEST_URI']?>',
+                ajaxTag: '<?php echo PHPRACK_AJAX_TAG?>',
+                ajaxToken: '<?php echo PHPRACK_AJAX_TOKEN?>',
+            };
+
             <?php include PHPRACK_PATH . '/layout/index.js' ?>
         //]]>
         </script>
