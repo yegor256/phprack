@@ -82,8 +82,8 @@ class RunnerTest extends AbstractTest
     {
         global $phpRackConfig;
         if (array_key_exists('auth', $phpRackConfig)) {
-            $_GET[Runner::GET_LOGIN] = $phpRackConfig['auth']['username'];
-            $_GET[Runner::GET_PWD]   = $phpRackConfig['auth']['password'];
+            $_GET[phpRack_Runner::GET_LOGIN] = $phpRackConfig['auth']['username'];
+            $_GET[phpRack_Runner::GET_PWD]   = $phpRackConfig['auth']['password'];
             $this->assertTrue(
                 $this->_runner->isAuthenticated(),
                 'Invalid auth using get parameters (Phing bridge)'
