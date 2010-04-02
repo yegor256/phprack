@@ -15,7 +15,7 @@ class ReloadTest extends phpRack_Test
         $time = date('H:i:s');
         $this->assert->fail("Current time: '{$time}'");
 
-        $this->_setAjaxOptions(
+        $this->setAjaxOptions(
             array(
                 'reload' => 5, // every 5 seconds, if possible
             )
