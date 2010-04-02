@@ -232,11 +232,7 @@ abstract class phpRack_Test
      *
      * @param array List of options to set
      * @return void
-     * @see $this->_ajaxOptions
-     * @see getAjaxOptions()
-     * @todo #28 I have changed setAjaxOptions visibility to public.
-     *           Maybe we should do it in other way, but we must have ability
-     *           to set ajaxOptions also in phpRack_Package
+     * @see phpRack_Package_Disc_File::tail()
      */
     public function setAjaxOptions($options)
     {
@@ -252,8 +248,8 @@ abstract class phpRack_Test
      * Get ajax options
      *
      * @return array
-     * @see $this->_ajaxOptions
-     * @see setAjaxOptions()
+     * @see phpRack_Runner::run()
+     * @see index.phtml
      */
     public function getAjaxOptions()
     {
