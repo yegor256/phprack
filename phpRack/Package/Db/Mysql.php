@@ -157,6 +157,54 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
         } catch (Exception $e) {
             $this->_failure($e->getMessage());
         }
+
+        return $this;
+    }
+
+    /**
+     * Show database schema
+     *
+     * @return $this
+     * @throws Exception If this method is called before connect()
+     * @throws Exception If this method is called before dbExists()
+     */
+    public function showSchema()
+    {
+        if (!$this->_adapter->isConnected()) {
+            throw new Exception('You must call connect() method before');
+        }
+
+        if (!$this->_adapter->isDatabaseSelected()) {
+            throw new Exception('You must call dbExists() method before');
+        }
+
+        try {
+            $queries = array('SHOW TABLES', 'SHOW TRIGGERS', 'SHOW PROCEDURE STATUS');
+            foreach ($queries as $query) {
+                $result = $this->_adapter->query($query);
+                $this->_success($query);
+                $this->_log($result);
+
+                if ($query == 'SHOW TABLES') {
+
+                    // foreach table show CREATE TABLE and number of rows it contains
+                    foreach (array_slice(explode("\n", $result), 1, -1) as $tableName) {
+                        $quotedTableName = addcslashes(trim($tableName), '`');
+                        $query = sprintf("SHOW CREATE TABLE `%s`", $quotedTableName);
+                        $result = $this->_adapter->query($query);
+                        $this->_log($result);
+
+                        $query = sprintf("SELECT COUNT(*) FROM `%s`", $quotedTableName);
+                        $result = $this->_adapter->query($query);
+                        $this->_log($result);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $this->_failure($e->getMessage());
+        }
+
+        return $this;
     }
 
     /**
