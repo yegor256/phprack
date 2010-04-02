@@ -210,18 +210,28 @@ $(
                         }
 
                         // Add last log output to our lines set
-                        $.each(message.split("\n"), function() {
-                            that.lines.push({
-                                'text' : this,
-                                'expireTime' : (new Date()).getTime()  + options.lineVisible * 1000
-                            });
-                        });
+                        $.each(
+                            message.split("\n"), 
+                            function()
+                            {
+                                that.lines.push(
+                                    {
+                                        'text' : this,
+                                        'expireTime' : (new Date()).getTime()  + options.lineVisible * 1000
+                                    }
+                                );
+                            }
+                        );
 
                         // Create message from visible lines
                         message = '';
-                        $.each(that.lines, function() {
-                            message += this.text + "\n";
-                        });
+                        $.each(
+                            that.lines, 
+                            function()
+                            {
+                                message += this.text + "\n";
+                            }
+                        );
                     }
 
                     // Fill message <pre></pre> with text returned from server
