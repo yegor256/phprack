@@ -70,6 +70,14 @@ class phpRack_Runner
     const POST_PWD = 'password';
     
     /**
+     * Param names for authenticating using GET
+     *
+     * @see isAuthenticated()
+     */
+    const GET_LOGIN = 'login';
+    const GET_PWD = 'password';
+    
+    /**
      * This is how you should name your test files, if you want
      * them to be found by the Runner
      *
@@ -204,6 +212,15 @@ class phpRack_Runner
                     time() + self::COOKIE_LIFETIME // cookie expiration date
                 );
                 break;
+            
+            // login/password are provided as GET params
+            // as it's only one-time Phing bridge,
+            // we don't store them anywhere
+            case array_key_exists(self::GET_LOGIN, $_GET) && 
+            array_key_exists(self::GET_PWD, $_GET):
+                $login = $_POST[self::GET_LOGIN];
+                $hash = md5($_POST[self::GET_PWD]);
+                break;
                 
             // this is CLI environment, not web -- we don't require any
             // authentication
@@ -214,6 +231,14 @@ class phpRack_Runner
             // need to parse it and validate
             case array_key_exists(self::COOKIE_NAME, $_COOKIE):
                 list($login, $hash) = explode(':', $_COOKIE[self::COOKIE_NAME]);
+                break;
+                
+            // we expect authentication information to be sent via headers
+            // for example by Phing
+            case array_key_exists('PHP_AUTH_USER', $_SERVER) && 
+            array_key_exists('PHP_AUTH_PW', $_SERVER):
+                $login = $_SERVER['PHP_AUTH_USER'];
+                $hash = md5($_SERVER['PHP_AUTH_PW']);
                 break;
             
             // no authinfo, chances are that site is not protected
