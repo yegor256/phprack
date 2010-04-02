@@ -28,6 +28,7 @@ require_once PHPRACK_PATH . '/Test.php';
  * One test assertion package
  *
  * @package Tests
+ * @see phpRack_Assertion::__call()
  */
 class phpRack_Package
 {
@@ -43,6 +44,8 @@ class phpRack_Package
      * Result collector
      *
      * @var phpRack_Result
+     * @see __construct()
+     * @see __get()
      */
     protected $_result;
     
@@ -60,6 +63,11 @@ class phpRack_Package
      *
      * @param phpRack_Result Result to use
      * @return void
+     * @see factory()
+     * @todo #28 why this method is PUBLIC if it is used only in factory(),
+     *      which is inside the class? looks like we abused this method in
+     *      unit tests and it should be made PROTECTED, and unit tests shall
+     *      be altered to use factory() instead of new()
      */
     public function __construct(phpRack_Result $result)
     {
@@ -93,6 +101,7 @@ class phpRack_Package
      * @param phpRack_Result Collector of log lines
      * @return phpRack_Package
      * @throws Exception
+     * @see phpRack_Assertion::__call()
      */
     public static function factory($name, phpRack_Result $result) 
     {
@@ -119,32 +128,24 @@ class phpRack_Package
     /**
      * Dispatcher of calls to packages
      *
+     * Here we create a sub-package, for example:
+     * 
+     * <code>
+     * // inside your instance of phpRack_Test:
+     * $this->assert->php->extensions->isLoaded('simplexml');
+     * </code>
+     *
+     * The call in the example will lead you to this method, and will call
+     * __get('extensions'). In return we will create an instance of
+     * phpRack_Package_Php_Extensions and return it.
+     *
      * @param string Name of the property to get
      * @return phpRack_Package
+     * @see PhpConfigurationTest::testPhpExtensionsExist ->extensions reaches this point
      */
     public function __get($name)
     {
-        return self::factory($this->getName() . '/' . $name, $this->_result);
-    }
-    
-    /**
-     * Get my name, like: "php/version"
-     *
-     * @return string
-     */
-    public function getName() 
-    {
-        $sectors = explode('_', get_class($this)); // e.g. "phpRack_Package_Php_Version"
-        return implode(
-            '/', 
-            array_slice(
-                array_map(
-                    create_function('$a', 'return strtolower($a[0]) . substr($a, 1);'),
-                    $sectors
-                ), 
-                2
-            )
-        );
+        return self::factory($this->_getName() . '/' . $name, $this->_result);
     }
     
     /**
@@ -176,10 +177,32 @@ class phpRack_Package
     }
     
     /**
+     * Get my name, like: "php/version"
+     *
+     * @return string
+     * @see __get()
+     */
+    protected function _getName() 
+    {
+        $sectors = explode('_', get_class($this)); // e.g. "phpRack_Package_Php_Version"
+        return implode(
+            '/', 
+            array_slice(
+                array_map(
+                    create_function('$a', 'return strtolower($a[0]) . substr($a, 1);'),
+                    $sectors
+                ), 
+                2
+            )
+        );
+    }
+    
+    /**
      * Call failed
      *
      * @param string String to log
      * @return void
+     * @see phpRack_Package_Php::lint() and many other methods
      */
     protected function _failure($log) 
     {
@@ -193,6 +216,7 @@ class phpRack_Package
      *
      * @param string String to log
      * @return void
+     * @see phpRack_Package_Php::lint() and many other methods
      */
     protected function _success($log) 
     {
@@ -205,6 +229,7 @@ class phpRack_Package
      *
      * @param string String to log
      * @return void
+     * @see phpRack_Package_Php::lint() and many other methods
      */
     protected function _log($log) 
     {

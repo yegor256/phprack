@@ -23,6 +23,7 @@ require_once PHPRACK_PATH . '/Test.php';
  * View in order to render test presentation page
  *
  * @package Tests
+ * @see bootstrap.php
  */
 class phpRack_View
 {
@@ -34,6 +35,7 @@ class phpRack_View
      * local class variables. It is implemented by {@link __get()}
      *
      * @var array
+     * @see __get()
      */
     protected $_injected = array();
 
@@ -41,6 +43,7 @@ class phpRack_View
      * Construct the class
      *
      * @return void
+     * @see bootstrap.php
      */
     public function __construct()
     {
@@ -65,8 +68,9 @@ class phpRack_View
      * Inject variables into class
      *
      * @param array Associative array of variables to inject, where keys are names
-     *              and values are real values to be used later in view script.
+     *      and values are real values to be used later in view script.
      * @return $this
+     * @see bootstrap.php
      */
     public function assign(array $injects) 
     {
@@ -81,6 +85,7 @@ class phpRack_View
      *
      * @param string Name of the script to render, inside "/layout"
      * @return HTML
+     * @see bootstrap.php
      */
     public function render($script = 'index.phtml')
     {
@@ -96,6 +101,7 @@ class phpRack_View
      * @param string Path of the file to be rendered in JavaScript
      * @return string
      * @see #13
+     * @see index.phtml
      */
     public function jsPath($path)
     {

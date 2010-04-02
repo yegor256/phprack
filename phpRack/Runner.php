@@ -40,6 +40,7 @@ require_once PHPRACK_PATH . '/Runner/AuthResult.php';
  * executed and logged.
  *
  * @package Tests
+ * @see bootstrap.php
  */
 class phpRack_Runner
 {
@@ -103,7 +104,7 @@ class phpRack_Runner
      * @param array Options to set to the class
      * @return void
      * @throws Exception If an option is invalid
-     * @see $this->_options
+     * @see bootstrap.php
      */
     public function __construct(array $options) 
     {
@@ -122,7 +123,7 @@ class phpRack_Runner
      * @param string Secret password of the user
      * @param boolean Defines whether second argument is password or it's hash
      * @return phpRack_Runner_AuthResult
-     * @see $this->_authResult
+     * @see bootstrap.php
      */
     public function authenticate($login, $password, $isHash = false)
     {
@@ -177,7 +178,7 @@ class phpRack_Runner
      * Checks whether user is authenticated before running any tests
      *
      * @return boolean
-     * @see $this->_authResult
+     * @see bootstrap.php
      */
     public function isAuthenticated() 
     {
@@ -228,7 +229,7 @@ class phpRack_Runner
      * Get current auth result, if it exists
      *
      * @return phpRack_Runner_AuthResult
-     * @see $this->_authResult
+     * @see boostrap.php
      * @throws Exception If the result is not set yet
      */
     public function getAuthResult() 
@@ -256,7 +257,6 @@ class phpRack_Runner
      *
      * @return string
      * @throws Exception If directory is absent
-     * @see $this->_options
      * @see getTests()
      */
     public function getDir() 
@@ -272,6 +272,7 @@ class phpRack_Runner
      * Get full list of tests, in array
      *
      * @return phpRack_Test[]
+     * @see index.phtml
      */
     public function getTests() 
     {
@@ -290,8 +291,7 @@ class phpRack_Runner
      * Run all tests and return a text report about their execution
      *
      * @return string
-     * @see $this->getTests()
-     * @see $this->run()
+     * @see boostrap.php
      */
     public function runSuite() 
     {
@@ -320,6 +320,7 @@ class phpRack_Runner
      * @param string Unique token to return back, if required
      * @return string JSON
      * @throws Exception
+     * @see bootstrap.php
      */
     public function run($fileName, $token = 'token') 
     {
