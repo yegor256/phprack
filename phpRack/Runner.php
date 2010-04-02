@@ -318,17 +318,19 @@ class phpRack_Runner
      *
      * @param string Test file name (absolute name of PHP file)
      * @param string Unique token to return back, if required
+     * @param array Associative array of options to be used for setAjaxOptions()
      * @return string JSON
      * @throws Exception
      * @see bootstrap.php
      */
-    public function run($fileName, $token = 'token') 
+    public function run($fileName, $token = 'token', $options = array()) 
     {
         if (!$this->isAuthenticated()) {
             //TODO: handle situation when login screen should appear
             throw new Exception("Authentication failed, please login first");
         }
         $test = phpRack_Test::factory($fileName, $this);
+        $test->setAjaxOptions($options);
         
         $result = $test->run();
         return json_encode(
