@@ -44,6 +44,16 @@ class phpRack_Result
      * @see getDuration()
      */
     protected $_started;
+
+    /**
+     * Test object which is owner of this result object,
+     * used for give ability to set ajax options from phpRack_Package
+     *
+     * @var phpRack_Test
+     * @see setTest()
+     * @see getTest()
+     */
+    protected $_test;
     
     /**
      * Construct the class
@@ -130,5 +140,24 @@ class phpRack_Result
         $this->_lines = array();
         $this->_started = microtime(true);
     }
-        
+
+    /**
+     * Get test which is owner of this result object
+     *
+     * @return phpRack_Test
+     */
+    public function getTest()
+    {
+        return $this->_test;
+    }
+
+    /**
+     * Set test which is owner of this result object
+     *
+     * @return void
+     */
+    public function setTest($test)
+    {
+        $this->_test = $test;
+    }
 }

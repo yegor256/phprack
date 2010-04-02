@@ -95,6 +95,16 @@ class phpRack_Package_Disc_File extends phpRack_Package
 
         // Read offset of end of file
         $offset = ftell($fp);
+
+        // set ajax option with file end offset for usage in next Ajax request
+        $test = $this->_result->getTest();
+        if ($test) {
+            $test->setAjaxOptions(
+                array(
+                    'data' => array('fileLastOffset' => $offset)
+                )
+            );
+        }
         $content = '';
 
         do {
@@ -119,6 +129,55 @@ class phpRack_Package_Disc_File extends phpRack_Package
 
         $this->_log($content);
         return $this;
+    }
+
+    /**
+     * Show last x lines from the file, and refresh it imediatelly
+     *
+     * @param string File name
+     * @param string How many lines to display?
+     * @param string How many seconds each line should be visible
+     * @return $this
+     * @todo #28 I think we should replace $_GET by some request object
+     */
+    public function tailf($fileName, $linesCount, $lineVisible)
+    {
+        $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
+        $test = $this->_result->getTest();
+        if ($test) {
+            $test->setAjaxOptions(
+                array(
+                    'reload' => 0.5, //500ms I think is okey for delay between requests, can be lower
+                    'lineVisible' => $lineVisible,
+                    'linesCount' => $linesCount,
+                    'attachOutput' => true
+                )
+            );
+        }
+
+        // if it is first request send all x last lines
+        if (!isset($_GET['fileLastOffset'])) {
+            $this->tail($fileName, $linesCount);
+        } else {
+            $fp = fopen($fileName, 'rb');
+            // get only new content since last time
+            $content = stream_get_contents($fp, -1, $_GET['fileLastOffset']);
+
+            // save current offset
+            $offset = ftell($fp);
+            fclose($fp);
+
+            $this->_log($content);
+
+            // set ajax option with new file end offset for usage in next Ajax request
+            if ($test) {
+                $test->setAjaxOptions(
+                    array(
+                        'data' => array('fileLastOffset' => $offset),
+                    )
+                );
+            }
+        }
     }
 
     /**

@@ -12,7 +12,7 @@ class PhpConfigurationIsValidTest extends PhpRack_Test
 {
     protected function _init()
     {
-        $this->_setAjaxOptions(
+        $this->setAjaxOptions(
             array(
                 'autoStart' => false, // true by default
             )

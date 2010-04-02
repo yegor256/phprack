@@ -61,12 +61,16 @@ abstract class phpRack_Test
      * Ajax options to control front page behavior
      *
      * @var array
-     * @see _setAjaxOptions()
+     * @see setAjaxOptions()
      * @see getAjaxOptions()
      */
     private $_ajaxOptions = array(
         'autoStart' => true, // start it when front is loaded
         'reload' => false, // reload every X seconds, in AJAX
+        'linesCount' => null, // how many lines should be displayed on browser side when we use tailf method
+        'lineVisible' => null, // how long these lines should be visible (in seconds)
+        'attachOutput' => false, // attach output to previous result log
+        'data' => array() // used for store data which should be returned in next ajax query
     );
     
     /**
@@ -81,18 +85,6 @@ abstract class phpRack_Test
         $this->_fileName = realpath($fileName);
         $this->_runner = $runner;
         $this->_init();
-    }
-
-    /**
-     * Allow child class to overwrite test default options, by overwritting this method
-     * If you want disable ajax auto start it is proper place for that
-     *
-     * @return void
-     * @see __construct()
-     */
-    protected function _init()
-    {
-
     }
     
     /**
@@ -165,6 +157,9 @@ abstract class phpRack_Test
     {
         // clean all previous results, if any
         $this->assert->getResult()->clean();
+
+        // set this test as result owner, to allow packages can set some ajax options
+        $this->assert->getResult()->setTest($this);
         
         // find all methods that start with "test" and call them
         $rc = new ReflectionClass($this);
@@ -231,17 +226,6 @@ abstract class phpRack_Test
     public function tearDown() 
     {
     }
-    
-    /**
-     * Log one message
-     *
-     * @param string The message
-     * @return void
-     */
-    protected function _log($message) 
-    {
-        $this->assert->getResult()->addLog($message);
-    }
 
     /**
      * Set ajax options
@@ -250,8 +234,11 @@ abstract class phpRack_Test
      * @return void
      * @see $this->_ajaxOptions
      * @see getAjaxOptions()
+     * @todo #28 I have changed setAjaxOptions visibility to public.
+     *           Maybe we should do it in other way, but we must have ability
+     *           to set ajaxOptions also in phpRack_Package
      */
-    protected function _setAjaxOptions($options)
+    public function setAjaxOptions($options)
     {
         foreach ($options as $name=>$value) {
             if (!array_key_exists($name, $this->_ajaxOptions)) {
@@ -272,5 +259,27 @@ abstract class phpRack_Test
     {
         return $this->_ajaxOptions;
     }
+
+    /**
+     * Allow child class to overwrite test default options, by overwritting this method
+     * If you want disable ajax auto start it is proper place for that
+     *
+     * @return void
+     * @see __construct()
+     */
+    protected function _init()
+    {
+
+    }
     
+    /**
+     * Log one message
+     *
+     * @param string The message
+     * @return void
+     */
+    protected function _log($message) 
+    {
+        $this->assert->getResult()->addLog($message);
+    }
 }
