@@ -1,5 +1,6 @@
 /**
  * @version $Id$
+ * @author netcoderpl@gmail.com
  */
 $(
     function()
@@ -188,7 +189,6 @@ $(
                     }
 
                     if (options && options.attachOutput) {
-
                         // Remove old execution time line
                         that.lines.pop();
 

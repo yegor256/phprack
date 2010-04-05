@@ -89,9 +89,12 @@ class phpRack_View
      */
     public function render($script = 'index.phtml')
     {
+        // two-step view, with layout
+        $this->assign(array('script' => $script));
+        
         ob_start();
         // workaround against ZCA static code analysis
-        eval("include PHPRACK_PATH . '/layout/{$script}';");
+        eval("include PHPRACK_PATH . '/layout/layout.phtml';");
         return ob_get_clean();
     }
 
