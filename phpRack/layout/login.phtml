@@ -1,7 +1,22 @@
 <!--
- * @version $Id: index.phtml 106 2010-03-17 18:05:39Z yegor256@yahoo.com $
+ *
+ * phpRack: Integration Testing Framework
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt. It is also available 
+ * through the world-wide-web at this URL: http://www.phprack.com/license
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@phprack.com so we can send you a copy immediately.
+ *
+ * @copyright Copyright (c) phpRack.com
+ * @version $Id: index.phtml 286 2010-04-05 13:46:54Z yegor256@yahoo.com $
+ * @author netcoderpl@gmail.com
+ * @category phpRack
 -->
+
 <p><?php echo $this->authResult->getMessage()?></p>
+
 <form method="post">
     <dd>login: <input name="<?php echo phpRack_Runner::POST_LOGIN?>" /></dd>
     <dd>password: <input name="<?php echo phpRack_Runner::POST_PWD?>" type="password" /></dd>
