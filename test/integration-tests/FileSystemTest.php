@@ -22,9 +22,11 @@ class FileSystemTest extends phpRack_Test
         $this->assert->disc->showDirectory(
             '.',
             array(
+                // exclude all files the match this regex
                 'exclude' => array(
                     '/\.svn\//'
                 ),
+                // show only two levels down
                 'maxDepth' => 2,
             )
         );
