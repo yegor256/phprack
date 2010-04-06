@@ -25,6 +25,7 @@ class MysqlTest extends phpRack_Test
         $this->assert->db->mysql
             ->connect($host, $port, $userName, $password) // we can connect
             ->dbExists($dbName) // DB exists
+            ->showSchema() // full schema is visible
             ->tableExists('user') // table "user" exists
             ->query('SELECT * FROM user LIMIT 5'); // query and return result
     }

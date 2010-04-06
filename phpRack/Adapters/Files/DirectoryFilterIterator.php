@@ -25,6 +25,14 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
 {
     
     /**
+     * Directory we're iterating
+     *
+     * @var string
+     * @see __construct()
+     */
+    protected $_dir;
+    
+    /**
      * Maximum depth to be visible
      *
      * @var integer
@@ -47,6 +55,24 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
     private $_extensionsPattern;
 
     /**
+     * Constructor, private, don't call it directly, instead use factory()
+     *
+     * @param string Path
+     * @return void
+     * @see factory()
+     */
+    public function __construct($dir)
+    {
+        parent::__construct(
+            new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($dir),
+                RecursiveIteratorIterator::SELF_FIRST
+            )
+        );
+        $this->_dir = $dir;
+    }
+
+    /**
      * Create new iterator from directory path
      *
      * @param string Path
@@ -54,12 +80,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
      */
     public static function factory($dir) 
     {
-        return new self(
-            new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($dir),
-                RecursiveIteratorIterator::SELF_FIRST
-            )
-        );
+        return new self($dir);
     }
 
     /**
@@ -124,9 +145,8 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
             return false;
         }
         
-        if ($this->_maxDepth) {
-            $dir = $this->getInnerIterator()->getInnerIterator()->getSubPath();
-            if (substr_count(substr($file, strlen($dir) + 1), '/') > $this->_maxDepth) {
+        if (!is_null($this->_maxDepth)) {
+            if (substr_count(substr($file, strlen($this->_dir) + 1), '/') > $this->_maxDepth) {
                 return false;
             }
         }

@@ -132,6 +132,47 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
     }
 
     /**
+     * Show database schema
+     *
+     * @return string Raw result from the server, in text
+     * @throws Exception If connect() method wasn't executed earlier
+     * @throws Exception If no database was selected as current
+     * @see phpRack_Package_Db_Mysql::showSchema()
+     */
+    public function showSchema()
+    {
+        if (!$this->isConnected()) {
+            throw new Exception('You must call connect() method before');
+        }
+
+        if (!$this->isDatabaseSelected()) {
+            throw new Exception('No database selected');
+        }
+
+        $response = '';
+        $queries = array('SHOW TABLES', 'SHOW TRIGGERS', 'SHOW PROCEDURE STATUS');
+        foreach ($queries as $query) {
+            $result = $this->query($query);
+            $response .= $result . "\n";
+
+            if ($query == 'SHOW TABLES') {
+
+                // foreach table show CREATE TABLE and number of rows it contains
+                foreach (array_slice(explode("\n", $result), 1, -1) as $tableName) {
+                    $quotedTableName = addcslashes(trim($tableName), '`');
+                    $query = sprintf("SHOW CREATE TABLE `%s`", $quotedTableName);
+                    $response .= $this->query($query) . "\n";
+
+                    $query = sprintf("SELECT COUNT(*) FROM `%s`", $quotedTableName);
+                    $response .= $this->query($query) . "\n";
+                }
+            }
+        }
+
+        return $response;
+    }
+
+    /**
      * Format SQL query result with spaces for better readability
      *
      * @param resource returned from mysql_query()
