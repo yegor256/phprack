@@ -85,7 +85,6 @@ class phpRack_Adapters_File
      *
      * @param string File name, as it is provided (raw form)
      * @return string
-     * @todo #5 we should extensively unit-test this method
      */
     protected function _convertFileName($fileName) 
     {

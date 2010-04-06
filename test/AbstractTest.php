@@ -23,6 +23,32 @@ require_once 'PHPUnit/Framework/TestCase.php';
 
 abstract class AbstractTest extends PHPUnit_Framework_TestCase
 {
+    protected $_runner;
+
+    /**
+     * @todo #28 Please write how should look correct method of object creation here
+     *           and example for child unit test classes.
+     *
+     *           We must specify some integration test path if we want create test object.
+     *           What path should be here, because we just need phpRack_Test object,
+     *           but we don't use methods which are defined in it like(testFileContent(), testFile())?
+     */
+    protected function setUp()
+    {
+        global $phpRackConfig;
+        /**
+         * @see phpRack_Runner
+         */
+        require_once PHPRACK_PATH . '/Runner.php';
+        $this->_runner = new phpRack_Runner($phpRackConfig);
+
+        /*
+        $testPath = PHPRACK_PATH . '/../test/integration-tests/Disc/FileTest.php';
+        $this->_test = phpRack_Test::factory($testPath, $this->_runner);
+        $this->_assert = $this->_test->assert;
+        $this->_result = $this->_assert->getResult();
+        */
+    }
     
     /**
      * Log one message in testing

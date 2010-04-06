@@ -100,6 +100,10 @@ try {
     // in JSON format. We reach this point only in AJAX calls from
     // already rendered testing page.
     $options = $_GET;
+    // '_' param is automatically added by jQuery with current time in miliseconds,
+    // when we call $.ajax function with cache = false. We unset it to have
+    // no exception in phpRack_Test::setAjaxOptions()
+    unset($options['_']);
     $fileName = $options[PHPRACK_AJAX_TAG];
     unset($options[PHPRACK_AJAX_TAG]);
     $token = $options[PHPRACK_AJAX_TOKEN];
