@@ -97,14 +97,12 @@ class phpRack_Package_Disc_File extends phpRack_Package
         $offset = ftell($fp);
 
         // set ajax option with file end offset for usage in next Ajax request
-        $test = $this->_result->getTest();
-        if ($test) {
-            $test->setAjaxOptions(
-                array(
-                    'data' => array('fileLastOffset' => $offset)
-                )
-            );
-        }
+        $this->_result->getTest()->setAjaxOptions(
+            array(
+                'data' => array('fileLastOffset' => $offset)
+            )
+        );
+        
         $content = '';
 
         do {
@@ -144,19 +142,16 @@ class phpRack_Package_Disc_File extends phpRack_Package
     {
         $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
         $test = $this->_result->getTest();
-        if ($test) {
-            $test->setAjaxOptions(
-                array(
-                    'reload' => 0.5, //500ms I think is okey for delay between requests, can be lower
-                    'lineVisible' => $lineVisible,
-                    'linesCount' => $linesCount,
-                    'attachOutput' => true
-                )
-            );
-            $options = $test->getAjaxOptions();
-        } else {
-            $options = array();
-        }
+        
+        $test->setAjaxOptions(
+            array(
+                'reload' => 0.5, //500ms I think is okey for delay between requests, can be lower
+                'lineVisible' => $lineVisible,
+                'linesCount' => $linesCount,
+                'attachOutput' => true
+            )
+        );
+        $options = $test->getAjaxOptions();
 
         // if it is first request send all x last lines
         if (!isset($options['fileLastOffset'])) {
@@ -175,13 +170,11 @@ class phpRack_Package_Disc_File extends phpRack_Package
         $this->_log($content);
 
         // set ajax option with new file end offset for usage in next Ajax request
-        if ($test) {
-            $test->setAjaxOptions(
-                array(
-                    'data' => array('fileLastOffset' => $offset),
-                )
-            );
-        }
+        $test->setAjaxOptions(
+            array(
+                'data' => array('fileLastOffset' => $offset),
+            )
+        );
     }
 
     /**

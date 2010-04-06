@@ -31,6 +31,7 @@ class Adapters_Db_MysqlTest extends AbstractTest
     protected function tearDown()
     {
         unset($this->_adapter);
+        parent::tearDown();
     }
 
     public function testWeCanConnectToDb()

@@ -73,12 +73,14 @@ class phpRack_Assertion
      * @param phpRack_Test Test that is using this assertion
      * @return phpRack_Assertion
      * @see phpRack_Test::__get()
+     * @todo #28 I think we should avoid global status here. It break unit tests.
      */
     public static function factory($name, phpRack_Test $test) 
     {
-        if (!isset(self::$_assertions[$name])) {
+        // @see #28
+        //if (!isset(self::$_assertions[$name])) {
             self::$_assertions[$name] = new self($test);
-        }
+        //}
         return self::$_assertions[$name];
     }
     

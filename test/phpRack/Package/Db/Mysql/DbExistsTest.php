@@ -4,6 +4,11 @@
  */
 
 /**
+ * @see AbstractTest
+ */
+require_once 'AbstractTest.php';
+
+/**
  * @see phpRack_Package_Db_Mysql_AbstractTest
  */
 require_once PHPRACK_PATH . '/../test/phpRack/Package/Db/Mysql/AbstractTest.php';
