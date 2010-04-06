@@ -25,6 +25,7 @@ class FileSystemTest extends phpRack_Test
                 'exclude' => array(
                     '/\.svn\//'
                 ),
+                'maxDepth' => 2,
             )
         );
     }

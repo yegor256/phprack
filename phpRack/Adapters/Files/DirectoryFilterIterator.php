@@ -19,10 +19,19 @@
  *
  * @package Adapters
  * @subpackage Files
+ * @see phpRack_Package_Disc::showDirectory()
  */
 class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
 {
     
+    /**
+     * Maximum depth to be visible
+     *
+     * @var integer
+     * @see setMaxDepth()
+     */
+    private $_maxDepth = null;
+
     /**
      * Regular expression patterns used to determine what files should be ignored
      *
@@ -57,7 +66,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
      * Set which extensions will be used as whitelist
      *
      * @param string|array Comma separated list of extensions, or list of them
-     * @return void
+     * @return $this
      */
     public function setExtensions($extensions)
     {
@@ -71,13 +80,14 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
         }
 
         $this->_extensionsPattern = '#(\.' . implode('|', $extensions). '$)#';
+        return $this;
     }
 
     /**
      * Set pattern which will be used as blacklist
      *
      * @param string|array Regular expression pattern, or list of them
-     * @return void
+     * @return $this
      */
     public function setExclude($excludePatterns)
     {
@@ -85,6 +95,19 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
             $excludePatterns = array($excludePatterns);
         }
         $this->_excludePatterns = $excludePatterns;
+        return $this;
+    }
+    
+    /**
+     * Set maximum directory depth
+     *
+     * @param integer Maximum depth
+     * @return $this
+     */
+    public function setMaxDepth($maxDepth) 
+    {
+        $this->_maxDepth = $maxDepth;
+        return $this;
     }
 
     /**
@@ -99,6 +122,13 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
         // Ignore "dots files" which appear in some systems
         if (($file == '.') || ($file == '..')) {
             return false;
+        }
+        
+        if ($this->_maxDepth) {
+            $dir = $this->getInnerIterator()->getInnerIterator()->getSubPath();
+            if (substr_count(substr($file, strlen($dir) + 1), '/') > $this->_maxDepth) {
+                return false;
+            }
         }
 
         // Ignore files which don't match extensionsPattern
