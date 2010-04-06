@@ -40,6 +40,7 @@ require_once PHPRACK_PATH . '/Runner/AuthResult.php';
  * executed and logged.
  *
  * @package Tests
+ * @see bootstrap.php
  */
 class phpRack_Runner
 {
@@ -67,6 +68,14 @@ class phpRack_Runner
      */
     const POST_LOGIN = 'login';
     const POST_PWD = 'password';
+    
+    /**
+     * Param names for authenticating using GET
+     *
+     * @see isAuthenticated()
+     */
+    const GET_LOGIN = 'login';
+    const GET_PWD = 'password';
     
     /**
      * This is how you should name your test files, if you want
@@ -103,7 +112,7 @@ class phpRack_Runner
      * @param array Options to set to the class
      * @return void
      * @throws Exception If an option is invalid
-     * @see $this->_options
+     * @see bootstrap.php
      */
     public function __construct(array $options) 
     {
@@ -122,7 +131,7 @@ class phpRack_Runner
      * @param string Secret password of the user
      * @param boolean Defines whether second argument is password or it's hash
      * @return phpRack_Runner_AuthResult
-     * @see $this->_authResult
+     * @see bootstrap.php
      */
     public function authenticate($login, $password, $isHash = false)
     {
@@ -177,7 +186,7 @@ class phpRack_Runner
      * Checks whether user is authenticated before running any tests
      *
      * @return boolean
-     * @see $this->_authResult
+     * @see bootstrap.php
      */
     public function isAuthenticated() 
     {
@@ -203,6 +212,15 @@ class phpRack_Runner
                     time() + self::COOKIE_LIFETIME // cookie expiration date
                 );
                 break;
+            
+            // login/password are provided as GET params
+            // as it's only one-time Phing bridge,
+            // we don't store them anywhere
+            case array_key_exists(self::GET_LOGIN, $_GET) && 
+            array_key_exists(self::GET_PWD, $_GET):
+                $login = $_POST[self::GET_LOGIN];
+                $hash = md5($_POST[self::GET_PWD]);
+                break;
                 
             // this is CLI environment, not web -- we don't require any
             // authentication
@@ -213,6 +231,14 @@ class phpRack_Runner
             // need to parse it and validate
             case array_key_exists(self::COOKIE_NAME, $_COOKIE):
                 list($login, $hash) = explode(':', $_COOKIE[self::COOKIE_NAME]);
+                break;
+                
+            // we expect authentication information to be sent via headers
+            // for example by Phing
+            case array_key_exists('PHP_AUTH_USER', $_SERVER) && 
+            array_key_exists('PHP_AUTH_PW', $_SERVER):
+                $login = $_SERVER['PHP_AUTH_USER'];
+                $hash = md5($_SERVER['PHP_AUTH_PW']);
                 break;
             
             // no authinfo, chances are that site is not protected
@@ -228,7 +254,7 @@ class phpRack_Runner
      * Get current auth result, if it exists
      *
      * @return phpRack_Runner_AuthResult
-     * @see $this->_authResult
+     * @see boostrap.php
      * @throws Exception If the result is not set yet
      */
     public function getAuthResult() 
@@ -256,7 +282,6 @@ class phpRack_Runner
      *
      * @return string
      * @throws Exception If directory is absent
-     * @see $this->_options
      * @see getTests()
      */
     public function getDir() 
@@ -272,6 +297,7 @@ class phpRack_Runner
      * Get full list of tests, in array
      *
      * @return phpRack_Test[]
+     * @see index.phtml
      */
     public function getTests() 
     {
@@ -290,8 +316,7 @@ class phpRack_Runner
      * Run all tests and return a text report about their execution
      *
      * @return string
-     * @see $this->getTests()
-     * @see $this->run()
+     * @see boostrap.php
      */
     public function runSuite() 
     {
@@ -318,16 +343,19 @@ class phpRack_Runner
      *
      * @param string Test file name (absolute name of PHP file)
      * @param string Unique token to return back, if required
+     * @param array Associative array of options to be used for setAjaxOptions()
      * @return string JSON
      * @throws Exception
+     * @see bootstrap.php
      */
-    public function run($fileName, $token = 'token') 
+    public function run($fileName, $token = 'token', $options = array()) 
     {
         if (!$this->isAuthenticated()) {
             //TODO: handle situation when login screen should appear
             throw new Exception("Authentication failed, please login first");
         }
         $test = phpRack_Test::factory($fileName, $this);
+        $test->setAjaxOptions($options);
         
         $result = $test->run();
         return json_encode(

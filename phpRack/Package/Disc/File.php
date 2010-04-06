@@ -138,7 +138,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * @param string How many lines to display?
      * @param string How many seconds each line should be visible
      * @return $this
-     * @todo #28 I think we should replace $_GET by some request object
+     * @see phpRack_Runner::run()
      */
     public function tailf($fileName, $linesCount, $lineVisible)
     {
@@ -153,30 +153,34 @@ class phpRack_Package_Disc_File extends phpRack_Package
                     'attachOutput' => true
                 )
             );
+            $options = $test->getAjaxOptions();
+        } else {
+            $options = array();
         }
 
         // if it is first request send all x last lines
-        if (!isset($_GET['fileLastOffset'])) {
+        if (!isset($options['fileLastOffset'])) {
             $this->tail($fileName, $linesCount);
-        } else {
-            $fp = fopen($fileName, 'rb');
-            // get only new content since last time
-            $content = stream_get_contents($fp, -1, $_GET['fileLastOffset']);
+            return;
+        }
 
-            // save current offset
-            $offset = ftell($fp);
-            fclose($fp);
+        $fp = fopen($fileName, 'rb');
+        // get only new content since last time
+        $content = stream_get_contents($fp, -1, $options['fileLastOffset']);
 
-            $this->_log($content);
+        // save current offset
+        $offset = ftell($fp);
+        fclose($fp);
 
-            // set ajax option with new file end offset for usage in next Ajax request
-            if ($test) {
-                $test->setAjaxOptions(
-                    array(
-                        'data' => array('fileLastOffset' => $offset),
-                    )
-                );
-            }
+        $this->_log($content);
+
+        // set ajax option with new file end offset for usage in next Ajax request
+        if ($test) {
+            $test->setAjaxOptions(
+                array(
+                    'data' => array('fileLastOffset' => $offset),
+                )
+            );
         }
     }
 

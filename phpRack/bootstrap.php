@@ -99,7 +99,12 @@ try {
     // Execute one individual test and return its result
     // in JSON format. We reach this point only in AJAX calls from
     // already rendered testing page.
-    throw new Exception($runner->run($_GET[PHPRACK_AJAX_TAG], $_GET[PHPRACK_AJAX_TOKEN]));
+    $options = $_GET;
+    $fileName = $options[PHPRACK_AJAX_TAG];
+    unset($options[PHPRACK_AJAX_TAG]);
+    $token = $options[PHPRACK_AJAX_TOKEN];
+    unset($options[PHPRACK_AJAX_TOKEN]);
+    throw new Exception($runner->run($fileName, $token, $options));
 
 } catch (Exception $e) {
     echo $e->getMessage();

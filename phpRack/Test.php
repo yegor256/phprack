@@ -122,7 +122,7 @@ abstract class phpRack_Test
     public final function __get($name) 
     {
         if ($name == 'assert') {
-            return phpRack_Assertion::factory(__FILE__);
+            return phpRack_Assertion::factory(__FILE__, $this);
         }
         throw new Exception("Property '{$name}' not found in " . get_class($this));
     }
@@ -152,15 +152,13 @@ abstract class phpRack_Test
      * Run the test and return result
      *
      * @return phpRack_Result
+     * @see phpRack_Runner::run()
      */
     public final function run() 
     {
         // clean all previous results, if any
         $this->assert->getResult()->clean();
 
-        // set this test as result owner, to allow packages can set some ajax options
-        $this->assert->getResult()->setTest($this);
-        
         // find all methods that start with "test" and call them
         $rc = new ReflectionClass($this);
         foreach ($rc->getMethods() as $method) {
@@ -232,17 +230,16 @@ abstract class phpRack_Test
      *
      * @param array List of options to set
      * @return void
-     * @see $this->_ajaxOptions
-     * @see getAjaxOptions()
-     * @todo #28 I have changed setAjaxOptions visibility to public.
-     *           Maybe we should do it in other way, but we must have ability
-     *           to set ajaxOptions also in phpRack_Package
+     * @see phpRack_Package_Disc_File::tail()
+     * @see #28 we should resolve this problem wtih "_" ajax option
      */
     public function setAjaxOptions($options)
     {
         foreach ($options as $name=>$value) {
             if (!array_key_exists($name, $this->_ajaxOptions)) {
-                throw new Exception("AJAX option '{$name}' is not valid");
+                // throw new Exception("AJAX option '{$name}' is not valid");
+                // @see #28
+                continue;
             }
             $this->_ajaxOptions[$name] = $value;
         }
@@ -252,8 +249,8 @@ abstract class phpRack_Test
      * Get ajax options
      *
      * @return array
-     * @see $this->_ajaxOptions
-     * @see setAjaxOptions()
+     * @see phpRack_Runner::run()
+     * @see index.phtml
      */
     public function getAjaxOptions()
     {
