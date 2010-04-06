@@ -140,7 +140,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * @return $this
      * @see phpRack_Runner::run()
      */
-    public function tailf($fileName, $linesCount, $lineVisible)
+    public function tailf($fileName, $linesCount, $lineVisible = 5)
     {
         $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
         $test = $this->_result->getTest();

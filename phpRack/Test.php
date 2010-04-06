@@ -70,7 +70,8 @@ abstract class phpRack_Test
         'linesCount' => null, // how many lines should be displayed on browser side when we use tailf method
         'lineVisible' => null, // how long these lines should be visible (in seconds)
         'attachOutput' => false, // attach output to previous result log
-        'data' => array() // used for store data which should be returned in next ajax query
+        'data' => array(), // used for store data which should be returned in next ajax query
+        'fileLastOffset' => null // used for control offset to read in phpRack_Package_Disc_File::tailf()
     );
     
     /**
@@ -231,14 +232,12 @@ abstract class phpRack_Test
      * @param array List of options to set
      * @return void
      * @see phpRack_Package_Disc_File::tail()
-     * @see #28 we should resolve this problem wtih "_" ajax option
      */
     public function setAjaxOptions($options)
     {
         foreach ($options as $name=>$value) {
             if (!array_key_exists($name, $this->_ajaxOptions)) {
-                // throw new Exception("AJAX option '{$name}' is not valid");
-                // @see #28
+                throw new Exception("AJAX option '{$name}' is not valid");
                 continue;
             }
             $this->_ajaxOptions[$name] = $value;
