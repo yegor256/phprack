@@ -231,12 +231,15 @@ abstract class phpRack_Test
      * @param array List of options to set
      * @return void
      * @see phpRack_Package_Disc_File::tail()
+     * @see #28 we should resolve this problem wtih "_" ajax option
      */
     public function setAjaxOptions($options)
     {
         foreach ($options as $name=>$value) {
             if (!array_key_exists($name, $this->_ajaxOptions)) {
-                throw new Exception("AJAX option '{$name}' is not valid");
+                // throw new Exception("AJAX option '{$name}' is not valid");
+                // @see #28
+                continue;
             }
             $this->_ajaxOptions[$name] = $value;
         }

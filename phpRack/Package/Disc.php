@@ -53,6 +53,9 @@ class phpRack_Package_Disc extends phpRack_Package
             $iterator->setExclude($options['exclude']);
         }
         
+        if (array_key_exists('maxDepth', $options)) {
+            $iterator->setMaxDepth($options['maxDepth']);
+        }
         $this->_log(
             implode(
                 "\n", 
@@ -69,6 +72,7 @@ class phpRack_Package_Disc extends phpRack_Package
      * @param Iterator List of files
      * @param string Parent directory name, absolute
      * @return void
+     * @see showDirectory()
      */
     protected function _convertDirectoriesToLines(Iterator $iterator, $dir) 
     {
