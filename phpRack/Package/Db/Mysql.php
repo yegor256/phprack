@@ -157,6 +157,33 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
         } catch (Exception $e) {
             $this->_failure($e->getMessage());
         }
+
+        return $this;
+    }
+
+    /**
+     * Show database schema
+     *
+     * @return $this
+     * @throws Exception If this method is called before connect()
+     * @throws Exception If this method is called before dbExists()
+     * @throws Exception If something wrong happen during getting database schema
+     */
+    public function showSchema()
+    {
+        if (!$this->_adapter->isConnected()) {
+            throw new Exception('You must call connect() method before');
+        }
+
+        if (!$this->_adapter->isDatabaseSelected()) {
+            throw new Exception('You must call dbExists() method before');
+        }
+
+        $result = $this->_adapter->showSchema();
+        $this->_success('Database schema');
+        $this->_log($result);
+
+        return $this;
     }
 
     /**
