@@ -99,4 +99,37 @@ class Adapters_Db_MysqlTest extends AbstractTest
 
         $this->assertTrue($this->_adapter->isConnected());
     }
+
+
+    public function testSchema()
+    {
+        try {
+            $this->_adapter->connect('jdbc:mysql://localhost/test');
+            $this->_adapter->showSchema();
+        } catch (Exception $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testSchemaWithoutConnect()
+    {
+        $this->_adapter->showSchema();
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testSchemaWithoutDatabaseSelect()
+    {
+        try {
+            $this->_adapter->connect('jdbc:mysql://localhost');
+        } catch (Exception $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+
+        $this->_adapter->showSchema();
+    }
 }
