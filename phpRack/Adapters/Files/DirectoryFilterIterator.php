@@ -124,7 +124,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
             return false;
         }
         
-        if ($this->_maxDepth) {
+        if (!is_null($this->_maxDepth)) {
             $dir = $this->getInnerIterator()->getInnerIterator()->getSubPath();
             if (substr_count(substr($file, strlen($dir) + 1), '/') > $this->_maxDepth) {
                 return false;
