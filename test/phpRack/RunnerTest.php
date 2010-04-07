@@ -30,6 +30,13 @@ class RunnerTest extends AbstractTest
     {
         parent::setUp();
         global $phpRackConfig;
+        $authArray = array(
+            'auth' => array(
+                'username' => uniqid(),
+                'password' => uniqid()
+            )
+        );
+        $phpRackConfig = array_merge($authArray, $phpRackConfig);
         $this->_runner = new phpRack_Runner($phpRackConfig);
     }
     
@@ -73,7 +80,7 @@ class RunnerTest extends AbstractTest
             );
         } else {
             $this->markTestSkipped(
-              'Password is not stored in clear text. Test cannot be performed.'
+              'Password not stored in clear text. Test cannot be performed.'
             );
         }
     }
@@ -90,7 +97,7 @@ class RunnerTest extends AbstractTest
             );
         } else {
             $this->markTestSkipped(
-              'Password is not stored in clear text. Test cannot be performed.'
+              'Password not stored in clear text. Test cannot be performed.'
             );
         }
     }
