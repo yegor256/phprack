@@ -29,7 +29,6 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
     {
         parent::setUp();
         $this->_result = $this->_test->assert->getResult();
-        $this->_result->clean();
         $this->_package = $this->_test->assert->network->url;
     }
 
