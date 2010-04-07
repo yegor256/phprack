@@ -34,13 +34,6 @@ class phpRack_Package
 {
     
     /**
-     * Static instances of packages
-     *
-     * @var phpRack_Package
-     */
-    protected static $_packages = array();
-    
-    /**
      * Result collector
      *
      * @var phpRack_Result
@@ -60,6 +53,15 @@ class phpRack_Package
     
     /**
      * Construct the class
+     *
+     * The method is PROTECTED in order to avoid direct instantiation of
+     * packages outside our factory method {@link factory()}. Some packages
+     * may override the method, that's why it is protected, not private. For
+     * example {@link phpRack_Package_Db_Mysql}.
+     *
+     * phpRack_Result passed here as parameter is used as a holder of test
+     * results. This package will ADD new results to this holder, instead of
+     * creating new one. This holder is passed from {@link phpRack_Test}, normally.
      *
      * @param phpRack_Result Result to use
      * @return void
@@ -91,15 +93,19 @@ class phpRack_Package
     }
 
     /**
-     * Create new assertion
+     * Create new package
+     *
+     * The method is called factory, but this is not really a static factory. This method
+     * just simplifies the instantiation of phpRack_Package and encapsulates private
+     * constructor. Some time ago we had a static factory here, but then removed it. The 
+     * organization of methods stay like before (factory + private constructor). Maybe in
+     * the future we might decide to introduce static factory again.
      *
      * @param string Name of the package, like "php/version"
      * @param phpRack_Result Collector of log lines
      * @return phpRack_Package
      * @throws Exception
      * @see phpRack_Assertion::__call()
-     * @todo #28 I think we should avoid global status here. It break unit tests.
-     *           I have disabled it, but maybe you have other idea?
      */
     public static function factory($name, phpRack_Result $result) 
     {
@@ -117,11 +123,7 @@ class phpRack_Package
         // workaround against ZCA static code analysis
         eval('require_once $packageFile;');
 
-        // @see #28
-        //if (!isset(self::$_packages[$className])) {
-            self::$_packages[$className] = new $className($result);
-        //}
-        return self::$_packages[$className];
+        return new $className($result);
     }
     
     /**

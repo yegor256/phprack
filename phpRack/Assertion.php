@@ -39,14 +39,6 @@ class phpRack_Assertion
 {
     
     /**
-     * Static instances of assertions
-     *
-     * @var string
-     * @see factory()
-     */
-    protected static $_assertions = array();
-    
-    /**
      * Result collector
      *
      * @var phpRack_Result
@@ -69,19 +61,19 @@ class phpRack_Assertion
     /**
      * Create new assertion
      *
-     * @param string Absolute name of PHP file with test
+     * There is a combination of static factory() method and a private
+     * constructor. However we don't have any static factory here, just an
+     * incapsulation of constructor. Some time ago we had a static factory,
+     * but then removed it. Maybe in the future we might get back to this
+     * design approach.
+     *
      * @param phpRack_Test Test that is using this assertion
      * @return phpRack_Assertion
      * @see phpRack_Test::__get()
-     * @todo #28 I think we should avoid global status here. It break unit tests.
      */
-    public static function factory($name, phpRack_Test $test) 
+    public static function factory(phpRack_Test $test) 
     {
-        // @see #28
-        //if (!isset(self::$_assertions[$name])) {
-            self::$_assertions[$name] = new self($test);
-        //}
-        return self::$_assertions[$name];
+        return new self($test);
     }
     
     /**

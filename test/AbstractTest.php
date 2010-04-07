@@ -15,15 +15,20 @@ $phpRackConfig = array(
     'dir' => dirname(__FILE__) . '/integration-tests',
 );
 
-// These variables are normally set in bootstrap.php
-// but here we should set them explicitly, for tests only
+/**
+ * These variables are normally set in bootstrap.php
+ * but here we should set them explicitly, for tests only
+ */
 $_SERVER['REQUEST_URI'] = 'no-URL-it-is-testing.com';
 define('PHPRACK_AJAX_TAG', 'testing-tag');
 define('PHPRACK_AJAX_TOKEN', 'testing-token');
 
-// Added to don't have error if tests are executed in different order
-// and PHPRACK_VERSION is required but doesn't defined @see layout.phtml
-define('PHPRACK_VERSION', '0.1dev');
+/**
+ * Added to avoid an error if tests are executed in different order
+ * and PHPRACK_VERSION is required but doesn't defined 
+ * @see layout.phtml
+ */
+define('PHPRACK_VERSION', '0.1test');
 
 /**
  * @see PHPUnit_Framework_TestCase
@@ -35,12 +40,14 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
     /**
      * @var phpRack_Runner
      * @see setUp()
+     * @see tearDown()
      */
     protected $_runner;
 
     /**
      * @var phpRack_Test
      * @see setUp()
+     * @see tearDown()
      */
     protected $_test;
 
@@ -67,7 +74,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
      * above in PHP snippet.
      * 
      * @see PHPUnit_Framework_TestCase::run()
-     * @see boot
+     * @see tearDown()
      */
     protected function setUp()
     {
@@ -91,10 +98,10 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Unit test bootstrapper, called by PHPUnit_Framework_TestCase
+     * Unit test finalizer, called by PHPUnit_Framework_TestCase
      *
      * @see PHPUnit_Framework_TestCase::run()
-     * @see boot
+     * @see setUp()
      */
     protected function tearDown()
     {
