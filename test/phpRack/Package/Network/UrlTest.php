@@ -28,8 +28,9 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
     protected function setUp()
     {
         parent::setUp();
-        $this->_result = new phpRack_Result();
-        $this->_package = new phpRack_Package_Network_Url($this->_result);
+        $this->_result = $this->_test->assert->getResult();
+        $this->_result->clean();
+        $this->_package = $this->_test->assert->network->url;
     }
 
     public function testUrl()

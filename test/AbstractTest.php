@@ -21,6 +21,10 @@ $_SERVER['REQUEST_URI'] = 'no-URL-it-is-testing.com';
 define('PHPRACK_AJAX_TAG', 'testing-tag');
 define('PHPRACK_AJAX_TOKEN', 'testing-token');
 
+// Added to don't have error if tests are executed in different order
+// and PHPRACK_VERSION is required but doesn't defined @see layout.phtml
+define('PHPRACK_VERSION', '0.1dev');
+
 /**
  * @see PHPUnit_Framework_TestCase
  */
@@ -84,6 +88,18 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
             PHPRACK_PATH . '/../test/integration-tests/CustomTest.php',
             $this->_runner
         );
+    }
+
+    /**
+     * Unit test bootstrapper, called by PHPUnit_Framework_TestCase
+     *
+     * @see PHPUnit_Framework_TestCase::run()
+     * @see boot
+     */
+    protected function tearDown()
+    {
+        unset($this->_test);
+        unset($this->_runner);
     }
     
     /**

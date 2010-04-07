@@ -4,6 +4,11 @@
  */
 
 /**
+ * @see AbstractTest
+ */
+require_once 'AbstractTest.php';
+
+/**
  * @see phpRack_Package_Disc_File_AbstractTest
  */
 require_once PHPRACK_PATH . '/../test/phpRack/Package/Disc/File/AbstractTest.php';
@@ -48,17 +53,13 @@ class phpRack_Package_Disc_File_TailfTest extends phpRack_Package_Disc_File_Abst
         $this->assertFalse($this->_result->wasSuccessful());
     }
 
-    /**
-     * @todo 28 Uncomment it when we will have _test object available here
-     */
     public function testTailfWithOffset()
     {
-        $this->markTestIncomplete();
-        /*
-        $this->_test->setAjaxOptions(array('fileLastOffset' => 10));
+        $this->_test->setAjaxOptions(array('fileLastOffset' => 0));
         $fileName = $this->_testFilesDir . '/5lines.txt';
+        $fileContent = file_get_contents($fileName);
         $this->_package->tailf($fileName, 2, 5);
         $this->assertTrue($this->_result->wasSuccessful());
-        */
+        $this->assertEquals($fileContent, $this->_result->getLog());
     }
 }

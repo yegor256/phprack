@@ -69,16 +69,8 @@ class phpRack_Result
      * @param phpRack_Test Test, which pushes results here
      * @return void
      * @see phpRack_Assertion::__construct()
-     * @todo #28 we should disable this NULL option for the parameter and 
-     *      make sure that this constructor is NOT called from anywhere
-     *      except phpRack_Assertion::__construct(). Now this constructor
-     *      is extensively used in almost every unit test, which is an invalid
-     *      approach. We should create packages only in unit tests, and the
-     *      package created should take care about RESULT object inside it.
-     *      Thus, in AbstractTest::setUp() we should create an instance of
-     *      phpRack_Test and all unit tests should be able to use this instance.
      */
-    public function __construct(phpRack_Test $test = null)
+    public function __construct(phpRack_Test $test)
     {
         $this->_test = $test;
         $this->clean();

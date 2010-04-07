@@ -119,11 +119,16 @@ abstract class phpRack_Test
      * @param string Name of the property to get
      * @return mixed
      * @throws Exception If nothing found
+     * @todo #28 We should not every time call assertion factory.
+     *           Additionally inside it we should disable global state because in other case
+     *           @see phpRack_Test::setAjaxOptions() can't simulate $_GET and we need it for
+     *           for some tests @see phpRack_Package_Disc_File_TailfTest::testTailfWithOffset()
      */
     public final function __get($name) 
     {
         if ($name == 'assert') {
-            return phpRack_Assertion::factory(__FILE__, $this);
+            $this->assert = phpRack_Assertion::factory(__FILE__, $this);
+            return $this->assert;
         }
         throw new Exception("Property '{$name}' not found in " . get_class($this));
     }

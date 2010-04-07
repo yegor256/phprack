@@ -64,12 +64,8 @@ class phpRack_Package
      * @param phpRack_Result Result to use
      * @return void
      * @see factory()
-     * @todo #28 why this method is PUBLIC if it is used only in factory(),
-     *      which is inside the class? looks like we abused this method in
-     *      unit tests and it should be made PROTECTED, and unit tests shall
-     *      be altered to use factory() instead of new()
      */
-    public function __construct(phpRack_Result $result)
+    protected function __construct(phpRack_Result $result)
     {
         $this->_result = $result;
     }
@@ -102,6 +98,8 @@ class phpRack_Package
      * @return phpRack_Package
      * @throws Exception
      * @see phpRack_Assertion::__call()
+     * @todo #28 I think we should avoid global status here. It break unit tests.
+     *           I have disabled it, but maybe you have other idea?
      */
     public static function factory($name, phpRack_Result $result) 
     {
@@ -118,10 +116,11 @@ class phpRack_Package
         
         // workaround against ZCA static code analysis
         eval('require_once $packageFile;');
-        
-        if (!isset(self::$_packages[$className])) {
+
+        // @see #28
+        //if (!isset(self::$_packages[$className])) {
             self::$_packages[$className] = new $className($result);
-        }
+        //}
         return self::$_packages[$className];
     }
     
