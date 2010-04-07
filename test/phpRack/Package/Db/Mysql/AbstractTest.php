@@ -17,11 +17,13 @@ abstract class phpRack_Package_Db_Mysql_AbstractTest extends AbstractTest
 {
     /**
      * @var phpRack_Package_Db_Mysql
+     * @see setUp()
      */
     protected $_package;
 
     /**
      * @var phpRack_Result
+     * @see setUp()
      */
     protected $_result;
 
@@ -40,11 +42,17 @@ abstract class phpRack_Package_Db_Mysql_AbstractTest extends AbstractTest
     const VALID_DATABASE = 'test';
     const VALID_TABLE = 'test';
 
+    /**
+     * @todo #28 to remove obsolete cleaning of test result
+     */
     protected function setUp()
     {
         parent::setUp();
         $this->_result = $this->_test->assert->getResult();
-        $this->_result->clean();
+        // this cleaning is NOT necessary since Result and Assertion are always new,
+        // created in setUp(). we don't have any static factory there and every time
+        // create them from scratch. thus, you don't need to clean result here.
+        // $this->_result->clean();
         $this->_package = $this->_test->assert->db->mysql;
     }
 
