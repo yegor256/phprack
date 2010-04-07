@@ -37,7 +37,6 @@ class phpRack_Package_Php_LintTest extends AbstractTest
     {
         parent::setUp();
         $this->_result = $this->_test->assert->getResult();
-        $this->_result->clean();
         $this->_package = $this->_test->assert->php;
         $this->_testFilesDir = dirname(__FILE__) . '/_files';
     }

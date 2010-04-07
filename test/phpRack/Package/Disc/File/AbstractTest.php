@@ -41,7 +41,6 @@ abstract class phpRack_Package_Disc_File_AbstractTest extends AbstractTest
     {
         parent::setUp();
         $this->_result = $this->_test->assert->getResult();
-        $this->_result->clean();
         $this->_package = $this->_test->assert->disc->file;
         $this->_testFilesDir = PHPRACK_PATH . '/../test/phpRack/Package/Disc/_files';
     }
