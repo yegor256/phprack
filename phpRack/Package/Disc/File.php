@@ -49,7 +49,11 @@ class phpRack_Package_Disc_File extends phpRack_Package
             return false;
         }
 
-        $this->_log("File '{$fileName}' (" . filesize($fileName) . ' bytes):');
+        $this->_log(
+            "File '{$fileName}' (" . filesize($fileName) 
+            . ' bytes, modified on ' 
+            . date('d/m/y h:i:s') . '):'
+        );
         return true;
     }
 
