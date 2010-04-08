@@ -56,17 +56,30 @@ abstract class phpRack_Test
      * @var phpRack_Runner
      */
     protected $_runner;
+    
+    /**
+     * Assertion to use
+     *
+     * @var phpRack_Assertion
+     * @see __get()
+     */
+    protected $_assertion = null;
 
     /**
      * Ajax options to control front page behavior
      *
      * @var array
-     * @see _setAjaxOptions()
+     * @see setAjaxOptions()
      * @see getAjaxOptions()
      */
     private $_ajaxOptions = array(
         'autoStart' => true, // start it when front is loaded
         'reload' => false, // reload every X seconds, in AJAX
+        'linesCount' => null, // how many lines should be displayed on browser side when we use tailf method
+        'secVisible' => null, // how long these lines should be visible (in seconds)
+        'attachOutput' => false, // attach output to previous result log
+        'data' => array(), // used for store data which should be returned in next ajax query
+        'fileLastOffset' => null // used for control offset to read in phpRack_Package_Disc_File::tailf()
     );
     
     /**
@@ -81,18 +94,6 @@ abstract class phpRack_Test
         $this->_fileName = realpath($fileName);
         $this->_runner = $runner;
         $this->_init();
-    }
-
-    /**
-     * Allow child class to overwrite test default options, by overwritting this method
-     * If you want disable ajax auto start it is proper place for that
-     *
-     * @return void
-     * @see __construct()
-     */
-    protected function _init()
-    {
-
     }
     
     /**
@@ -130,7 +131,10 @@ abstract class phpRack_Test
     public final function __get($name) 
     {
         if ($name == 'assert') {
-            return phpRack_Assertion::factory(__FILE__);
+            if (!isset($this->_assertion)) {
+                $this->_assertion = phpRack_Assertion::factory($this);
+            }
+            return $this->_assertion;
         }
         throw new Exception("Property '{$name}' not found in " . get_class($this));
     }
@@ -160,12 +164,13 @@ abstract class phpRack_Test
      * Run the test and return result
      *
      * @return phpRack_Result
+     * @see phpRack_Runner::run()
      */
     public final function run() 
     {
         // clean all previous results, if any
         $this->assert->getResult()->clean();
-        
+
         // find all methods that start with "test" and call them
         $rc = new ReflectionClass($this);
         foreach ($rc->getMethods() as $method) {
@@ -231,6 +236,48 @@ abstract class phpRack_Test
     public function tearDown() 
     {
     }
+
+    /**
+     * Set ajax options
+     *
+     * @param array List of options to set
+     * @return void
+     * @see phpRack_Package_Disc_File::tail()
+     */
+    public function setAjaxOptions($options)
+    {
+        foreach ($options as $name=>$value) {
+            if (!array_key_exists($name, $this->_ajaxOptions)) {
+                throw new Exception("AJAX option '{$name}' is not valid");
+                continue;
+            }
+            $this->_ajaxOptions[$name] = $value;
+        }
+    }
+
+    /**
+     * Get ajax options
+     *
+     * @return array
+     * @see phpRack_Runner::run()
+     * @see index.phtml
+     */
+    public function getAjaxOptions()
+    {
+        return $this->_ajaxOptions;
+    }
+
+    /**
+     * Allow child class to overwrite test default options, by overwritting this method
+     * If you want disable ajax auto start it is proper place for that
+     *
+     * @return void
+     * @see __construct()
+     */
+    protected function _init()
+    {
+
+    }
     
     /**
      * Log one message
@@ -242,35 +289,4 @@ abstract class phpRack_Test
     {
         $this->assert->getResult()->addLog($message);
     }
-
-    /**
-     * Set ajax options
-     *
-     * @param array List of options to set
-     * @return void
-     * @see $this->_ajaxOptions
-     * @see getAjaxOptions()
-     */
-    protected function _setAjaxOptions($options)
-    {
-        foreach ($options as $name=>$value) {
-            if (!array_key_exists($name, $this->_ajaxOptions)) {
-                throw new Exception("AJAX option '{$name}' is not valid");
-            }
-            $this->_ajaxOptions[$name] = $value;
-        }
-    }
-
-    /**
-     * Get ajax options
-     *
-     * @return array
-     * @see $this->_ajaxOptions
-     * @see setAjaxOptions()
-     */
-    public function getAjaxOptions()
-    {
-        return $this->_ajaxOptions;
-    }
-    
 }

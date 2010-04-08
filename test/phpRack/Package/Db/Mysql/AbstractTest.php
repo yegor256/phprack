@@ -17,11 +17,13 @@ abstract class phpRack_Package_Db_Mysql_AbstractTest extends AbstractTest
 {
     /**
      * @var phpRack_Package_Db_Mysql
+     * @see setUp()
      */
     protected $_package;
 
     /**
      * @var phpRack_Result
+     * @see setUp()
      */
     protected $_result;
 
@@ -43,13 +45,14 @@ abstract class phpRack_Package_Db_Mysql_AbstractTest extends AbstractTest
     protected function setUp()
     {
         parent::setUp();
-        $this->_result = new phpRack_Result();
-        $this->_package = new phpRack_Package_Db_Mysql($this->_result);
+        $this->_result = $this->_test->assert->getResult();
+        $this->_package = $this->_test->assert->db->mysql;
     }
 
     protected function tearDown()
     {
         unset($this->_package);
+        parent::tearDown();
     }
 
     protected function _getPackageWithValidConnect()

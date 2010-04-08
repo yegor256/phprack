@@ -28,8 +28,8 @@ class phpRack_Package_Network_PortsTest extends AbstractTest
     protected function setUp()
     {
         parent::setUp();
-        $this->_result = new phpRack_Result();
-        $this->_package = new phpRack_Package_Network_Ports($this->_result);
+        $this->_result = $this->_test->assert->getResult();
+        $this->_package = $this->_test->assert->network->ports;
     }
 
     public function testIsOpen()

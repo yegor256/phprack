@@ -25,49 +25,55 @@ require_once PHPRACK_PATH . '/Package.php';
 require_once PHPRACK_PATH . '/Result.php';
 
 /**
+ * @see phpRack_Test
+ */
+require_once PHPRACK_PATH . '/Test.php';
+
+/**
  * One single test assertion
  *
  * @package Tests
+ * @see phpRack_Test::__get()
  */
 class phpRack_Assertion
 {
     
     /**
-     * Static instances of assertions
-     *
-     * @var string
-     */
-    protected static $_assertions = array();
-    
-    /**
      * Result collector
      *
      * @var phpRack_Result
+     * @see __construct()
      */
     protected $_result;
     
     /**
      * Construct the class
      *
+     * @param phpRack_Test Test, which pushes results here
      * @return void
+     * @see phpRack_Test::__get()
      */
-    public function __construct()
+    private function __construct(phpRack_Test $test)
     {
-        $this->_result = new phpRack_Result();
+        $this->_result = new phpRack_Result($test);
     }
 
     /**
      * Create new assertion
      *
-     * @param string Absolute name of PHP file with test
+     * There is a combination of static factory() method and a private
+     * constructor. However we don't have any static factory here, just an
+     * incapsulation of constructor. Some time ago we had a static factory,
+     * but then removed it. Maybe in the future we might get back to this
+     * design approach.
+     *
+     * @param phpRack_Test Test that is using this assertion
      * @return phpRack_Assertion
+     * @see phpRack_Test::__get()
      */
-    public static function factory($test) 
+    public static function factory(phpRack_Test $test) 
     {
-        if (!isset(self::$_assertions[$test])) {
-            self::$_assertions[$test] = new self();
-        }
-        return self::$_assertions[$test];
+        return new self($test);
     }
     
     /**
@@ -75,6 +81,7 @@ class phpRack_Assertion
      *
      * @param string Name of the package to get
      * @return phpRack_Package
+     * @see phpRack_Test::_log() and many other methods inside Integration Tests
      */
     public function __get($name) 
     {
@@ -84,9 +91,21 @@ class phpRack_Assertion
     /**
      * Call method, any one
      *
+     * This magic method will be called when you're using any assertion and 
+     * some method inside it, for example:
+     * 
+     * <code>
+     * // inside your instance of phpRack_Test:
+     * $this->assert->php->extensions->isLoaded('simplexml');
+     * </code>
+     *
+     * The call in the example will lead you to this method, and will call
+     * __call('simplexml', array()).
+     *
      * @param string Name of the method to call
      * @param array Arguments to pass
      * @return mixed
+     * @see PhpConfigurationTest::testPhpExtensionsExist isLoaded() reaches this point
      */
     public function __call($name, array $args) 
     {
@@ -103,6 +122,7 @@ class phpRack_Assertion
      * Get instance of result collector
      *
      * @return phpRack_Result
+     * @see phpRack_Test::_log() and many other methods inside Integration Tests
      */
     public function getResult() 
     {

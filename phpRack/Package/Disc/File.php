@@ -32,9 +32,14 @@ require_once PHPRACK_PATH . '/Adapters/File.php';
 class phpRack_Package_Disc_File extends phpRack_Package
 {
     /**
-    * Buffer used is tail function to read blocks from file end
-    */
+     * Buffer used is tail function to read blocks from file end
+     */
     const READ_BUFFER_SIZE = 1024;
+    
+    /**
+     * Default number of lines to show
+     */
+    const LINES_TO_SHOW = 25;
 
     /**
      * Check that file exists
@@ -49,7 +54,11 @@ class phpRack_Package_Disc_File extends phpRack_Package
             return false;
         }
 
-        $this->_log("File '{$fileName}' (" . filesize($fileName) . ' bytes):');
+        $this->_log(
+            "File '{$fileName}' (" . filesize($fileName) 
+            . ' bytes, modified on ' 
+            . date('d-M-y h:i:s') . '):'
+        );
         return true;
     }
 
@@ -80,7 +89,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * @param string How many lines to display?
      * @return $this
      */
-    public function tail($fileName, $linesCount)
+    public function tail($fileName, $linesCount = self::LINES_TO_SHOW)
     {
         $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
 
@@ -95,6 +104,14 @@ class phpRack_Package_Disc_File extends phpRack_Package
 
         // Read offset of end of file
         $offset = ftell($fp);
+
+        // set ajax option with file end offset for usage in next Ajax request
+        $this->_result->getTest()->setAjaxOptions(
+            array(
+                'data' => array('fileLastOffset' => $offset)
+            )
+        );
+        
         $content = '';
 
         do {
@@ -122,13 +139,61 @@ class phpRack_Package_Disc_File extends phpRack_Package
     }
 
     /**
+     * Show last x lines from the file, and refresh it imediatelly
+     *
+     * @param string File name
+     * @param string How many lines to display?
+     * @param string How many seconds each line should be visible
+     * @return $this
+     * @see phpRack_Runner::run()
+     */
+    public function tailf($fileName, $linesCount = self::LINES_TO_SHOW, $secVisible = 5)
+    {
+        $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
+        $test = $this->_result->getTest();
+        
+        $test->setAjaxOptions(
+            array(
+                'reload' => 0.5, //500ms I think is okey for delay between requests, can be lower
+                'secVisible' => $secVisible,
+                'linesCount' => $linesCount,
+                'attachOutput' => true
+            )
+        );
+        $options = $test->getAjaxOptions();
+
+        // if it is first request send all x last lines
+        if (!isset($options['fileLastOffset'])) {
+            $this->tail($fileName, $linesCount);
+            return;
+        }
+
+        $fp = fopen($fileName, 'rb');
+        // get only new content since last time
+        $content = stream_get_contents($fp, -1, $options['fileLastOffset']);
+
+        // save current offset
+        $offset = ftell($fp);
+        fclose($fp);
+
+        $this->_log($content);
+
+        // set ajax option with new file end offset for usage in next Ajax request
+        $test->setAjaxOptions(
+            array(
+                'data' => array('fileLastOffset' => $offset),
+            )
+        );
+    }
+
+    /**
      * Show first x lines from the file
      *
      * @param string File name
      * @param string How many lines to display?
      * @return $this
      */
-    public function head($fileName, $linesCount)
+    public function head($fileName, $linesCount = self::LINES_TO_SHOW)
     {
         $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
 

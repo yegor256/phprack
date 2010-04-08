@@ -28,21 +28,17 @@ require_once PHPRACK_PATH . '/Test.php';
  * One test assertion package
  *
  * @package Tests
+ * @see phpRack_Assertion::__call()
  */
 class phpRack_Package
 {
     
     /**
-     * Static instances of packages
-     *
-     * @var phpRack_Package
-     */
-    protected static $_packages = array();
-    
-    /**
      * Result collector
      *
      * @var phpRack_Result
+     * @see __construct()
+     * @see __get()
      */
     protected $_result;
     
@@ -58,10 +54,20 @@ class phpRack_Package
     /**
      * Construct the class
      *
+     * The method is PROTECTED in order to avoid direct instantiation of
+     * packages outside our factory method {@link factory()}. Some packages
+     * may override the method, that's why it is protected, not private. For
+     * example {@link phpRack_Package_Db_Mysql}.
+     *
+     * phpRack_Result passed here as parameter is used as a holder of test
+     * results. This package will ADD new results to this holder, instead of
+     * creating new one. This holder is passed from {@link phpRack_Test}, normally.
+     *
      * @param phpRack_Result Result to use
      * @return void
+     * @see factory()
      */
-    public function __construct(phpRack_Result $result)
+    protected function __construct(phpRack_Result $result)
     {
         $this->_result = $result;
     }
@@ -87,12 +93,19 @@ class phpRack_Package
     }
 
     /**
-     * Create new assertion
+     * Create new package
+     *
+     * The method is called factory, but this is not really a static factory. This method
+     * just simplifies the instantiation of phpRack_Package and encapsulates private
+     * constructor. Some time ago we had a static factory here, but then removed it. The 
+     * organization of methods stay like before (factory + private constructor). Maybe in
+     * the future we might decide to introduce static factory again.
      *
      * @param string Name of the package, like "php/version"
      * @param phpRack_Result Collector of log lines
      * @return phpRack_Package
      * @throws Exception
+     * @see phpRack_Assertion::__call()
      */
     public static function factory($name, phpRack_Result $result) 
     {
@@ -109,42 +122,31 @@ class phpRack_Package
         
         // workaround against ZCA static code analysis
         eval('require_once $packageFile;');
-        
-        if (!isset(self::$_packages[$className])) {
-            self::$_packages[$className] = new $className($result);
-        }
-        return self::$_packages[$className];
+
+        return new $className($result);
     }
     
     /**
      * Dispatcher of calls to packages
      *
+     * Here we create a sub-package, for example:
+     * 
+     * <code>
+     * // inside your instance of phpRack_Test:
+     * $this->assert->php->extensions->isLoaded('simplexml');
+     * </code>
+     *
+     * The call in the example will lead you to this method, and will call
+     * __get('extensions'). In return we will create an instance of
+     * phpRack_Package_Php_Extensions and return it.
+     *
      * @param string Name of the property to get
      * @return phpRack_Package
+     * @see PhpConfigurationTest::testPhpExtensionsExist ->extensions reaches this point
      */
     public function __get($name)
     {
-        return self::factory($this->getName() . '/' . $name, $this->_result);
-    }
-    
-    /**
-     * Get my name, like: "php/version"
-     *
-     * @return string
-     */
-    public function getName() 
-    {
-        $sectors = explode('_', get_class($this)); // e.g. "phpRack_Package_Php_Version"
-        return implode(
-            '/', 
-            array_slice(
-                array_map(
-                    create_function('$a', 'return strtolower($a[0]) . substr($a, 1);'),
-                    $sectors
-                ), 
-                2
-            )
-        );
+        return self::factory($this->_getName() . '/' . $name, $this->_result);
     }
     
     /**
@@ -176,10 +178,32 @@ class phpRack_Package
     }
     
     /**
+     * Get my name, like: "php/version"
+     *
+     * @return string
+     * @see __get()
+     */
+    protected function _getName() 
+    {
+        $sectors = explode('_', get_class($this)); // e.g. "phpRack_Package_Php_Version"
+        return implode(
+            '/', 
+            array_slice(
+                array_map(
+                    create_function('$a', 'return strtolower($a[0]) . substr($a, 1);'),
+                    $sectors
+                ), 
+                2
+            )
+        );
+    }
+    
+    /**
      * Call failed
      *
      * @param string String to log
      * @return void
+     * @see phpRack_Package_Php::lint() and many other methods
      */
     protected function _failure($log) 
     {
@@ -193,6 +217,7 @@ class phpRack_Package
      *
      * @param string String to log
      * @return void
+     * @see phpRack_Package_Php::lint() and many other methods
      */
     protected function _success($log) 
     {
@@ -205,6 +230,7 @@ class phpRack_Package
      *
      * @param string String to log
      * @return void
+     * @see phpRack_Package_Php::lint() and many other methods
      */
     protected function _log($log) 
     {

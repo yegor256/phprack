@@ -40,8 +40,8 @@ abstract class phpRack_Package_Disc_File_AbstractTest extends AbstractTest
     protected function setUp()
     {
         parent::setUp();
-        $this->_result = new phpRack_Result();
-        $this->_package = new phpRack_Package_Disc_File($this->_result);
+        $this->_result = $this->_test->assert->getResult();
+        $this->_package = $this->_test->assert->disc->file;
         $this->_testFilesDir = PHPRACK_PATH . '/../test/phpRack/Package/Disc/_files';
     }
     
@@ -53,6 +53,7 @@ abstract class phpRack_Package_Disc_File_AbstractTest extends AbstractTest
             chmod($this->_tmpFileName, 0600); // Reset file permissions, for avoid permission denied on Windows
             unlink($this->_tmpFileName);
         }
+        parent::tearDown();
     }
 
     protected function _removeLogLine($fileContent)

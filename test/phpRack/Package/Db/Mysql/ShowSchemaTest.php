@@ -13,15 +13,14 @@ require_once 'AbstractTest.php';
  */
 require_once PHPRACK_PATH . '/../test/phpRack/Package/Db/Mysql/AbstractTest.php';
 
-class phpRack_Package_Db_Mysql_TableExistsTest extends phpRack_Package_Db_Mysql_AbstractTest
+class phpRack_Package_Db_Mysql_ShowSchemaTest extends phpRack_Package_Db_Mysql_AbstractTest
 {
-    public function testTableExists()
+    public function testShowSchema()
     {
         try {
             $this->_getPackageWithValidConnect()
                 ->dbExists(self::VALID_DATABASE)
-                ->tableExists(self::INVALID_TABLE);
-            $this->assertFalse($this->_result->wasSuccessful());
+                ->showSchema();
         } catch (Exception $e) {
             $this->assertTrue($e instanceof Exception);
             $this->markTestSkipped('Valid MySQL database was not found');
@@ -31,17 +30,17 @@ class phpRack_Package_Db_Mysql_TableExistsTest extends phpRack_Package_Db_Mysql_
     /**
      * @expectedException Exception
      */
-    public function testTableExistsWithoutConnect()
+    public function testShowSchemaWithoutConnect()
     {
-        $this->_package->tableExists(self::VALID_TABLE);
+        $this->_package->showSchema();
     }
 
     /**
      * @expectedException Exception
      */
-    public function testTableExistsWithoutDbExists()
+    public function testShowSchemaWithoutDbExists()
     {
         $this->_getPackageWithValidConnect()
-            ->tableExists(self::INVALID_TABLE);
+            ->showSchema();
     }
 }

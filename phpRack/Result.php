@@ -15,9 +15,15 @@
  */
 
 /**
+ * @see phpRack_Test
+ */
+require_once PHPRACK_PATH . '/Test.php';
+
+/**
  * Result of a test execution
  *
  * @package Tests
+ * @see phpRack_Assertion::__construct()
  */
 class phpRack_Result
 {
@@ -26,6 +32,7 @@ class phpRack_Result
      * Log lines
      *
      * @var string
+     * @see getLog()
      */
     protected $_lines;
     
@@ -33,6 +40,7 @@ class phpRack_Result
      * Total result is SUCCESS?
      *
      * @var boolean
+     * @see wasSuccessful()
      */
     protected $_success;
     
@@ -44,14 +52,27 @@ class phpRack_Result
      * @see getDuration()
      */
     protected $_started;
+
+    /**
+     * Test object which is owner of this result object,
+     * used for give ability to set ajax options from phpRack_Package
+     *
+     * @var phpRack_Test
+     * @see setTest()
+     * @see getTest()
+     */
+    protected $_test;
     
     /**
      * Construct the class
      *
+     * @param phpRack_Test Test, which pushes results here
      * @return void
+     * @see phpRack_Assertion::__construct()
      */
-    public function __construct()
+    public function __construct(phpRack_Test $test)
     {
+        $this->_test = $test;
         $this->clean();
     }
     
@@ -59,6 +80,7 @@ class phpRack_Result
      * Set total result to FAILURE
      *
      * @return void
+     * @see phpRack_Package::_failure()
      */
     public function fail() 
     {
@@ -69,6 +91,7 @@ class phpRack_Result
      * Was the test successful?
      *
      * @return boolean
+     * @see phpRack_Runner::runSuite()
      */
     public function wasSuccessful() 
     {
@@ -79,6 +102,7 @@ class phpRack_Result
      * Get full log of the result
      *
      * @return string
+     * @see phpRack_Runner::run()
      */
     public function getLog() 
     {
@@ -89,6 +113,7 @@ class phpRack_Result
      * Get log of assertions only, without any other messages
      *
      * @return string
+     * @see phpRack_Runner::runSuite()
      */
     public function getPureLog() 
     {
@@ -100,7 +125,6 @@ class phpRack_Result
      *
      * @return void
      * @see phpRack_Runner::runSuite()
-     * @see clean()
      */
     public function getDuration() 
     {
@@ -112,6 +136,7 @@ class phpRack_Result
      *
      * @param string Log line to add
      * @return $this
+     * @see phpRack_Package::_log()
      */
     public function addLog($line) 
     {
@@ -123,6 +148,7 @@ class phpRack_Result
      * Clean log
      *
      * @return void
+     * @see phpRack_Test::run()
      */
     public function clean() 
     {
@@ -130,5 +156,15 @@ class phpRack_Result
         $this->_lines = array();
         $this->_started = microtime(true);
     }
-        
+
+    /**
+     * Get test which is owner of this result object
+     *
+     * @return phpRack_Test
+     * @see phpRack_Package_Disc_File::tail()
+     */
+    public function getTest()
+    {
+        return $this->_test;
+    }
 }

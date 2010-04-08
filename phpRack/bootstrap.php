@@ -99,7 +99,16 @@ try {
     // Execute one individual test and return its result
     // in JSON format. We reach this point only in AJAX calls from
     // already rendered testing page.
-    throw new Exception($runner->run($_GET[PHPRACK_AJAX_TAG], $_GET[PHPRACK_AJAX_TOKEN]));
+    $options = $_GET;
+    // '_' param is automatically added by jQuery with current time in miliseconds,
+    // when we call $.ajax function with cache = false. We unset it to have
+    // no exception in phpRack_Test::setAjaxOptions()
+    unset($options['_']);
+    $fileName = $options[PHPRACK_AJAX_TAG];
+    unset($options[PHPRACK_AJAX_TAG]);
+    $token = $options[PHPRACK_AJAX_TOKEN];
+    unset($options[PHPRACK_AJAX_TOKEN]);
+    throw new Exception($runner->run($fileName, $token, $options));
 
 } catch (Exception $e) {
     echo $e->getMessage();

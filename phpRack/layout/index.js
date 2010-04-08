@@ -1,6 +1,19 @@
 /**
+ * phpRack: Integration Testing Framework
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt. It is also available 
+ * through the world-wide-web at this URL: http://www.phprack.com/license
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@phprack.com so we can send you a copy immediately.
+ *
+ * @copyright Copyright (c) phpRack.com
  * @version $Id$
+ * @author netcoderpl@gmail.com
+ * @category phpRack
  */
+
 $(
     function()
     {
@@ -145,6 +158,8 @@ $(
                 $message: $this.find('pre'),
                 displayTimer: false,
                 timeoutId: null,
+                // log lines buffer, used for control which lines should be still visible
+                lines: [],
                 // Constructor
                 __construct: function()
                 {
@@ -176,13 +191,59 @@ $(
                 {
                     that.$message.slideToggle();
                 },
-                _setStatus: function (success, message)
+                _setStatus: function (success, message, options)
                 {
                     // Update result span with OK/FAILURE depending on success param
                     if (success === true) {
                         that.$result.html(phpParams.ok).addClass('success');
                     } else {
                         that.$result.html(phpParams.failure).addClass('failure');
+                    }
+
+                    if (options && options.attachOutput) {
+                        // Remove old execution time line
+                        that.lines.pop();
+
+                        // Remove empty line old execution time line
+                        if (that.lines.length && that.lines[that.lines.length - 1].text === '') {
+                            that.lines.pop();
+                        }
+
+                        // Remove lines after visibility expire time
+                        while (that.lines.length > options.linesCount &&
+                               that.lines[0].expireTime < (new Date()).getTime()) {
+                            that.lines.shift();
+                        }
+
+                        // If new content begine with \n remove,
+                        // because during lines joining we add this char
+                        if (message.length && message[0] == "\n") {
+                            message = message.substr(1);
+                        }
+
+                        // Add last log output to our lines set
+                        $.each(
+                            message.split("\n"), 
+                            function()
+                            {
+                                that.lines.push(
+                                    {
+                                        'text' : this,
+                                        'expireTime' : (new Date()).getTime()  + options.secVisible * 1000
+                                    }
+                                );
+                            }
+                        );
+
+                        // Create message from visible lines
+                        message = '';
+                        $.each(
+                            that.lines, 
+                            function()
+                            {
+                                message += this.text + "\n";
+                            }
+                        );
                     }
 
                     // Fill message <pre></pre> with text returned from server
@@ -272,10 +333,14 @@ $(
                                 // If server returned no empty response
                                 if (json) {
                                     // Set status to OK with log message
-                                    that._setStatus(json.success, json.log);
+                                    that._setStatus(json.success, json.log, json.options);
                                     if (json.options) {
                                         if (json.options.reload) {
                                             that._setReloadTimeout(json.options.reload);
+                                        }
+                                        // Add request params which will need be send in next query
+                                        if (json.options.data) {
+                                            $.extend(that.options.data, json.options.data);
                                         }
                                     }
                                 } else {
