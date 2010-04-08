@@ -229,7 +229,7 @@ $(
                                 that.lines.push(
                                     {
                                         'text' : this,
-                                        'expireTime' : (new Date()).getTime()  + options.lineVisible * 1000
+                                        'expireTime' : (new Date()).getTime()  + options.secVisible * 1000
                                     }
                                 );
                             }

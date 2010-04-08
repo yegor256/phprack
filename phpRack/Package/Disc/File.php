@@ -147,7 +147,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * @return $this
      * @see phpRack_Runner::run()
      */
-    public function tailf($fileName, $linesCount = self::LINES_TO_SHOW, $lineVisible = 5)
+    public function tailf($fileName, $linesCount = self::LINES_TO_SHOW, $secVisible = 5)
     {
         $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
         $test = $this->_result->getTest();
@@ -155,7 +155,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         $test->setAjaxOptions(
             array(
                 'reload' => 0.5, //500ms I think is okey for delay between requests, can be lower
-                'lineVisible' => $lineVisible,
+                'secVisible' => $secVisible,
                 'linesCount' => $linesCount,
                 'attachOutput' => true
             )
