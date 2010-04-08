@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -37,7 +37,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * @see connect()
      */
     private $_linkId;
-    
+
     /**
      * Connect to the server
      *
@@ -92,7 +92,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
             }
         }
     }
-    
+
     /**
      * Execute SQL query on the server
      *
@@ -170,6 +170,22 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         }
 
         return $response;
+    }
+
+    /**
+     * Show connections and their status
+     *
+     * @return string Raw result from the server, in text
+     * @throws Exception If connect() method wasn't executed earlier
+     * @see phpRack_Package_Db_Mysql::showConnections()
+     */
+    public function showConnections()
+    {
+        if (!$this->isConnected()) {
+            throw new Exception('You must call connect() method before');
+        }
+
+        return $this->query('SHOW FULL PROCESSLIST');
     }
 
     /**
