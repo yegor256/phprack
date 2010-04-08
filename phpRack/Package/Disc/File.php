@@ -32,9 +32,14 @@ require_once PHPRACK_PATH . '/Adapters/File.php';
 class phpRack_Package_Disc_File extends phpRack_Package
 {
     /**
-    * Buffer used is tail function to read blocks from file end
-    */
+     * Buffer used is tail function to read blocks from file end
+     */
     const READ_BUFFER_SIZE = 1024;
+    
+    /**
+     * Default number of lines to show
+     */
+    const LINES_TO_SHOW = 25;
 
     /**
      * Check that file exists
@@ -84,7 +89,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * @param string How many lines to display?
      * @return $this
      */
-    public function tail($fileName, $linesCount)
+    public function tail($fileName, $linesCount = self::LINES_TO_SHOW)
     {
         $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
 
@@ -142,7 +147,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * @return $this
      * @see phpRack_Runner::run()
      */
-    public function tailf($fileName, $linesCount = 25, $lineVisible = 5)
+    public function tailf($fileName, $linesCount = self::LINES_TO_SHOW, $lineVisible = 5)
     {
         $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
         $test = $this->_result->getTest();
@@ -188,7 +193,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * @param string How many lines to display?
      * @return $this
      */
-    public function head($fileName, $linesCount)
+    public function head($fileName, $linesCount = self::LINES_TO_SHOW)
     {
         $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
 
