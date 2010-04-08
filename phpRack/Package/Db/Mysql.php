@@ -200,7 +200,7 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
 
         $answer = $this->_adapter->query('SHOW GRANTS FOR CURRENT_USER');
 
-        if (strpos($answer, 'GRANT PROCESS') === false) {
+        if (!preg_match('~GRANT (PROCESS|ALL)~', $answer)) {
             $this->_failure('To run this query you should have permissions');
 
             return $this;
