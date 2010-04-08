@@ -17,7 +17,7 @@ class Adapters_Db_MysqlTest extends AbstractTest
 {
     /**
      * MySQL adapter
-     * 
+     *
      * @var phpRack_Adapters_Db_Mysql
      */
     private $_adapter;
@@ -101,7 +101,6 @@ class Adapters_Db_MysqlTest extends AbstractTest
         $this->assertTrue($this->_adapter->isConnected());
     }
 
-
     public function testSchema()
     {
         try {
@@ -110,6 +109,24 @@ class Adapters_Db_MysqlTest extends AbstractTest
         } catch (Exception $e) {
             $this->markTestSkipped($e->getMessage());
         }
+    }
+
+    public function testShowConnections()
+    {
+        try {
+            $this->_adapter->connect('jdbc:mysql://localhost');
+            $this->_adapter->showConnections();
+        } catch (Exception $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testShowConnectionsWithoutConnect()
+    {
+        $this->_adapter->showConnections();
     }
 
     /**

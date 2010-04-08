@@ -29,4 +29,19 @@ class MysqlTest extends phpRack_Test
             ->tableExists('user') // table "user" exists
             ->query('SELECT * FROM user LIMIT 5'); // query and return result
     }
+
+    /**
+     * see phpRack_Package_Db_Mysql
+     */
+    public function testDatabaseConnections()
+    {
+        $host     = 'localhost';
+        $port     = '3306';
+        $userName = 'fazend_phprack';
+        $password = 'J8k9Lmn6Hg2Fg';
+
+        $this->assert->db->mysql
+             ->connect($host, $port, $userName, $password) // we connect
+             ->showConnections(); // full list of currently open connections
+    }
 }
