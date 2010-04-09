@@ -34,48 +34,23 @@ class Adapters_PearTest extends AbstractTest
         parent::tearDown();
     }
 
-    public function isPackageExists()
-    {
-        try {
-            $this->_adapter->isPackageExists('PEAR');
-        } catch (Exception $e) {
-            $this->markTestIncomplete($e->getMessage());
-        }
-    }
-
     public function testGetPackageName()
     {
         try {
-            $this->_adapter->isPackageExists('PEAR');
-            $this->_adapter->getPackageName();
+            $package = $this->_adapter->getPackage('PEAR');
+            $this->assertEquals('PEAR', $package->getName());
         } catch (Exception $e) {
             $this->markTestIncomplete($e->getMessage());
         }
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testGetPackageNameWithoutIsPackageExists()
-    {
-        $this->_adapter->getPackageName();
     }
 
     public function testGetPackageVersion()
     {
         try {
-            $this->_adapter->isPackageExists('PEAR');
-            $this->_adapter->getPackageVersion();
+            $package = $this->_adapter->getPackage('PEAR');
+            $package->getVersion();
         } catch (Exception $e) {
             $this->markTestIncomplete($e->getMessage());
         }
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testGetPackageVersionWithoutIsPackageExists()
-    {
-        $this->_adapter->getPackageVersion();
     }
 }
