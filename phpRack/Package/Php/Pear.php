@@ -73,7 +73,7 @@ class phpRack_Package_Php_Pear extends phpRack_Package
         try {
             $this->_package = $this->_pear->getPackage($name);
             if (is_null($this->_package)) {
-                $this->_failure("PEAR '{$name}' package does NOT exist: {$e->getMessage()}");
+                $this->_failure("PEAR '{$name}' package does NOT exist");
             } else {
                 $this->_success("PEAR '{$name}' package exists, ver.{$this->_package->getVersion()}");
             }
