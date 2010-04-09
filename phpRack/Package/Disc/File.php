@@ -165,16 +165,31 @@ class phpRack_Package_Disc_File extends phpRack_Package
         // if it is first request send all x last lines
         if (!isset($options['fileLastOffset'])) {
             $this->tail($fileName, $linesCount);
-            return;
+            return $this;
         }
 
-        $fp = fopen($fileName, 'rb');
+        $fp = @fopen($fileName, 'rb');
+        if (!$fp) {
+            $this->_failure("Failed to fopen('{$fileName}')");
+            return $this;
+        }
         // get only new content since last time
         $content = stream_get_contents($fp, -1, $options['fileLastOffset']);
+        if ($content === false) {
+            $this->_failure("Failed to stream_get_contents({$fp}/'{$fileName}', -1, {$options['fileLastOffset']})");
+            return $this;
+        }
 
         // save current offset
         $offset = ftell($fp);
-        fclose($fp);
+        if ($offset === false) {
+            $this->_failure("Failed to ftell({$fp}/'{$fileName}')");
+            return $this;
+        }
+        if (fclose($fp) === false) {
+            $this->_failure("Failed to fclose({$fp}/'{$fileName}')");
+            return $this;
+        }
 
         $this->_log($content);
 
@@ -184,6 +199,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
                 'data' => array('fileLastOffset' => $offset),
             )
         );
+        return $this;
     }
 
     /**
