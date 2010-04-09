@@ -333,7 +333,7 @@ $(
                                 // If server returned no empty response
                                 if (json) {
                                     // Set status to OK with log message
-                                    that._setStatus(json.success, json.log, json.options);
+                                    that._setStatus(json.success, json.log.htmlspecialchars(), json.options);
                                     if (json.options) {
                                         if (json.options.reload) {
                                             that._setReloadTimeout(json.options.reload);
