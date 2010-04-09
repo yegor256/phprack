@@ -14,6 +14,7 @@ class PearTest extends phpRack_Test
     {
         $this->assert->php->pear
             ->package('HTTP_Client') // package exists
-            ->atLeast('1.2.1'); // at least this version is present
+            ->atLeast('1.2.1') // at least this version is present
+            ->package('PEAR'); // just existence to check
     }
 }
