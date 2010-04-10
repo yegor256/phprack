@@ -95,7 +95,7 @@ class phpRack_View
         ob_start();
         // workaround against ZCA static code analysis
         eval("include PHPRACK_PATH . '/layout/layout.phtml';");
-        return ob_get_clean();
+        return $this->compressedHtml(ob_get_clean());
     }
 
     /**
@@ -112,10 +112,23 @@ class phpRack_View
     }
     
     /**
+     * Compress HTML content
+     *
+     * @param string HTML content, before compression
+     * @return string HTML content, compressed
+     * @todo we should remove COMMENTS from XML here, I don't know how, so far...
+     */
+    public function compressedHtml($html) 
+    {
+        $xml = simplexml_load_string($html);
+        return $xml->asXML();
+    }
+    
+    /**
      * Return a compressed version of CSS
      *
      * @param string Relative path of CSS script, inside /layout dir
-     * @return string
+     * @return string CSS content compressed
      */
     public function compressedCss($css) 
     {
