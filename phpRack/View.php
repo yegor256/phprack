@@ -111,4 +111,27 @@ class phpRack_View
         return addcslashes($path, "\\'");
     }
     
+    /**
+     * Return a compressed version of CSS
+     *
+     * @param string Relative path of CSS script, inside /layout dir
+     * @return string
+     */
+    public function compressedCss($css) 
+    {
+        $content = file_get_contents(PHPRACK_PATH . '/layout/' . $css);
+        $replacers = array(
+            '/[\n\r\t]+/' => ' ', // remove duplicated white spaces
+            '/\s+/' => ' ', // convert multiple spaces to single
+            '/\s+([\,\:\{\}])/' => '${1}', // compress leading white spaces
+            '/([\,\;\:\{\}])\s+/' => '${1}', // compress trailing white spaces
+            '/\/\*.*?\*\//' => '', // kill comments at all
+        );
+        return preg_replace(
+            array_keys($replacers), 
+            $replacers,
+            $content
+        );
+    }
+    
 }
