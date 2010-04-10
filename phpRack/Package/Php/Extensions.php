@@ -28,6 +28,17 @@ class phpRack_Package_Php_Extensions extends phpRack_Package
 {
 
     /**
+     * Show full list of loaded extensions
+     *
+     * @return $this
+     */
+    public function showAll() 
+    {
+        $list = get_loaded_extensions();
+        $this->_log('PHP extensions loaded: ' . implode(', ', $list));
+    }
+
+    /**
      * Given extension is loaded?
      *
      * @param string Name of the extension to check
