@@ -36,6 +36,7 @@ class phpRack_Package_Php_Extensions extends phpRack_Package
     {
         $list = get_loaded_extensions();
         $this->_log('PHP extensions loaded: ' . implode(', ', $list));
+        return $this;
     }
 
     /**
