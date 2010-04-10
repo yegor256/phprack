@@ -117,6 +117,11 @@ class phpRack_View
      * @param string HTML content, before compression
      * @return string HTML content, compressed
      * @todo we should remove COMMENTS from XML here, I don't know how, so far...
+     *      The method used in compressedCss() is not suitable here, since
+     *      we will damage the content of <script>, <style>, <pre>, and <textarea>
+     *      tags. Thus, I think that we should use DOM+XPath in order to go through
+     *      the XML document and remove all comments. Than we should get the
+     *      string version of the document from the container.
      */
     public function compressedHtml($html) 
     {
