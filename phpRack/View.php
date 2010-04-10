@@ -22,6 +22,20 @@ require_once PHPRACK_PATH . '/Test.php';
 /**
  * View in order to render test presentation page
  *
+ * This class is used as a view component in our simple MVC pattern, where
+ * model is {@link phpRack_Runner}, view is {@link phpRack_View} and controller is a simple
+ * script in {@link bootstrap.php}. An instance of this class is accepting
+ * variables and a script name in order to render it, for example:
+ *
+ * <code>
+ * $view = new phpRack_View();
+ * $view->assign(array('name' => 'My Name To Render'));
+ * $html = $view->render('index.phtml');
+ * </code>
+ *
+ * In this example, you can access "name" inside "index.phtml" like this:
+ * $this->name.
+ *
  * @package Tests
  * @see bootstrap.php
  */
@@ -38,16 +52,6 @@ class phpRack_View
      * @see __get()
      */
     protected $_injected = array();
-
-    /**
-     * Construct the class
-     *
-     * @return void
-     * @see bootstrap.php
-     */
-    public function __construct()
-    {
-    }
 
     /**
      * Getter dispatcher, used inside view script
