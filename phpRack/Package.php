@@ -27,6 +27,20 @@ require_once PHPRACK_PATH . '/Test.php';
 /**
  * One test assertion package
  *
+ * The package is used from your custom integration test, through the instance
+ * of {@link phpRack_Assertion} class, which is available like this:
+ *
+ * <code>
+ * class MyTest extends phpRack_Test {
+ *   public function testPhpVersion() {
+ *     $this->assert->php->version->atLeast('5.2');
+ *   }
+ * }
+ * </code>
+ *
+ * In this example package {@link phpRack_Package_Php_Version} will be instantiated
+ * and returned. Later, method atLeast() will be called in this package.
+ *
  * @package Tests
  * @see phpRack_Assertion::__call()
  */

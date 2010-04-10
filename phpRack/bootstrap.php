@@ -14,9 +14,18 @@
  * @category phpRack
  */
 
-// Here we define a error handler in order to catch all possible
-// PHP errors and show them online, no matter what server settings
-// exist for error handling...
+/**
+ * To make sure that we're reporting ALL errors, and display them
+ * all, no matter what are the settings of the server php.ini
+ */
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+
+/**
+ * Here we define a error handler in order to catch all possible
+ * PHP errors and show them online, no matter what server settings
+ * exist for error handling...
+ */
 set_error_handler(
     create_function(
         '$errno, $errstr, $errfile, $errline',
@@ -36,10 +45,12 @@ set_error_handler(
 );
 
 try {
-    // This variable ($phpRackConfig) shall be declared and filled with
-    // values in your phprack.php file, which calls this bootstraper. For
-    // complete reference on this variable see:
-    // http://trac.fazend.com/phpRack/wiki/Bootstrap
+    /**
+     * This variable ($phpRackConfig) shall be declared and filled with
+     * values in your phprack.php file, which calls this bootstraper. For
+     * complete reference on this variable see:
+     * @see http://trac.fazend.com/phpRack/wiki/Bootstrap
+     */
     global $phpRackConfig;
     if (!isset($phpRackConfig)) {
         throw new Exception('Invalid configuration: $phpRackConfig is missed');
@@ -96,14 +107,20 @@ try {
         throw new Exception("Authentication problem. You have to login first.");
     }
 
-    // Execute one individual test and return its result
-    // in JSON format. We reach this point only in AJAX calls from
-    // already rendered testing page.
+    /**
+     * Execute one individual test and return its result
+     * in JSON format. We reach this point only in AJAX calls from
+     * already rendered testing page.
+     */
     $options = $_GET;
-    // '_' param is automatically added by jQuery with current time in miliseconds,
-    // when we call $.ajax function with cache = false. We unset it to have
-    // no exception in phpRack_Test::setAjaxOptions()
+    
+    /** 
+     * '_' param is automatically added by jQuery with current time in miliseconds,
+     * when we call $.ajax function with cache = false. We unset it to have
+     * no exception in phpRack_Test::setAjaxOptions()
+     */
     unset($options['_']);
+    
     $fileName = $options[PHPRACK_AJAX_TAG];
     unset($options[PHPRACK_AJAX_TAG]);
     $token = $options[PHPRACK_AJAX_TOKEN];
