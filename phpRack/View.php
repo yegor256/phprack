@@ -125,8 +125,9 @@ class phpRack_View
      */
     public function compressedHtml($html) 
     {
-        $xml = simplexml_load_string($html);
-        return $xml->asXML();
+        return $html;
+        // $xml = simplexml_load_string($html);
+        // return $xml->asXML();
     }
     
     /**
