@@ -19,6 +19,7 @@
  * and our script is still opened
  *
  * @package Adapters
+ * @author netcoderpl@gmail.com
  */
 class phpRack_Adapters_ConnectionMonitor
 {
@@ -69,7 +70,7 @@ class phpRack_Adapters_ConnectionMonitor
      *
      * @return void
      */
-    public function checkIsConnectionAlive()
+    public function ping()
     {
         if ($this->_lastCheckTime === null
             || $this->_lastCheckTime + $this->_checkInterval < time()

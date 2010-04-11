@@ -23,6 +23,7 @@ require_once PHPRACK_PATH . '/Adapters/ConnectionMonitor.php';
  * Shell command adapter used to execute external commands and programs
  *
  * @package Adapters
+ * @author netcoderpl@gmail.com
  */
 class phpRack_Adapters_Shell_Command
 {
@@ -160,8 +161,7 @@ class phpRack_Adapters_Shell_Command
             }
 
             // check client connection is still opened
-            phpRack_Adapters_ConnectionMonitor::getInstance()
-                ->checkIsConnectionAlive();
+            phpRack_Adapters_ConnectionMonitor::getInstance()->ping();
 
             // read data from pipes and attach them to output
             foreach ($readPipes as $pipe) {

@@ -47,7 +47,12 @@ class phpRack_Package_Shell extends phpRack_Package
      */
     public function exec($cmd, $regex = null) 
     {
-        $result = shell_exec($cmd);
+        /**
+         * @see phpRack_Adapters_Shell_Command
+         */
+        require_once PHPRACK_PATH . '/Adapters/Shell/Command.php';
+        $result = phpRack_Adapters_Shell_Command::factory($cmd)->run();
+        
         $this->_log('$ ' . $cmd);
         $this->_log($result);
         if (!is_null($regex)) {

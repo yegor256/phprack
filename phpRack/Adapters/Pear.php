@@ -37,7 +37,12 @@ class phpRack_Adapters_Pear
     public function getPackage($name)
     {
         $command = 'pear info ' . escapeshellarg($name);
-        $result = shell_exec($command);
+        /**
+         * @see phpRack_Adapters_Shell_Command
+         */
+        require_once PHPRACK_PATH . '/Adapters/Shell/Command.php';
+        $result = phpRack_Adapters_Shell_Command::factory($command)->run();
+        
         if (!$result) {
             throw new Exception('PEAR is not installed properly');
         }
