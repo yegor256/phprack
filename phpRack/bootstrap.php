@@ -125,6 +125,8 @@ try {
     unset($options[PHPRACK_AJAX_TAG]);
     $token = $options[PHPRACK_AJAX_TOKEN];
     unset($options[PHPRACK_AJAX_TOKEN]);
+
+    header('Content-Type: application/json');
     throw new Exception($runner->run($fileName, $token, $options));
 
 } catch (Exception $e) {
