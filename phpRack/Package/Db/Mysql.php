@@ -152,7 +152,6 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
 
         try {
             $result = $this->_adapter->query($query);
-            $this->_success('Query was executed successfully');
             $this->_log($result);
         } catch (Exception $e) {
             $this->_failure($e->getMessage());
@@ -180,7 +179,6 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
         }
 
         $result = $this->_adapter->showSchema();
-        $this->_success('Database schema');
         $this->_log($result);
 
         return $this;
@@ -200,12 +198,11 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
 
         $answer = $this->_adapter->query('SHOW GRANTS FOR CURRENT_USER');
         if (!preg_match('~GRANT (PROCESS|ALL)~', $answer)) {
-            $this->_failure('To run this query you should have permissions');
+            $this->_failure('MySQL user does not have GRANT PROCESS|ALL permissions');
             return $this;
         }
 
         $result = $this->_adapter->showConnections();
-        $this->_success('Connections');
         $this->_log($result);
         return $this;
     }
