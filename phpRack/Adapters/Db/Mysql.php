@@ -155,11 +155,11 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
             $response .= sprintf(
                 "'%s' returns:\n%s\n",
                 $query,
-                $this->query($query)
+                $result = $this->query($query)
             );
 
             if ($query == 'SHOW TABLES') {
-                // foreach table show CREATE TABLE and number of rows it contains
+                // foreach table show CREATE TABLE
                 foreach (array_slice(explode("\n", $result), 1, -1) as $tableName) {
                     $response .= sprintf(
                         "'%s' returns:\n%s\n",
