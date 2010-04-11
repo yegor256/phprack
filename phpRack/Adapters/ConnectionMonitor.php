@@ -27,7 +27,7 @@ class phpRack_Adapters_ConnectionMonitor
      * Connection status last checked time
      *
      * @var int
-     * @see checkIsConnectionAlive()
+     * @see ping()
      */
     private $_lastCheckTime = null;
 
@@ -35,7 +35,7 @@ class phpRack_Adapters_ConnectionMonitor
      * Connection status checking interval
      *
      * @var int
-     * @see checkIsConnectionAlive()
+     * @see ping()
      */
     private $_checkInterval = 1; // 1 second
 
