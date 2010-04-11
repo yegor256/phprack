@@ -50,7 +50,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
     protected function _isFileExists($fileName)
     {
         if (!file_exists($fileName)) {
-            $this->_failure("File {$fileName} is not found");
+            $this->_failure("File '{$fileName}' is not found");
             return false;
         }
 
