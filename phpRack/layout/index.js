@@ -160,6 +160,9 @@ $(
                 timeoutId: null,
                 // log lines buffer, used for control which lines should be still visible
                 lines: [],
+                // XMLHttpRequest object returned from $.ajax query,
+                // give ability to abort connections
+                xmlHttpRequest: null,
                 // Constructor
                 __construct: function()
                 {
@@ -189,6 +192,9 @@ $(
                 },
                 onResultClick: function()
                 {
+                    if (that.isRunning) {
+                        that.xmlHttpRequest.abort();
+                    }
                     that.$message.slideToggle();
                 },
                 _setStatus: function (success, message, options)
@@ -253,10 +259,6 @@ $(
                     that.isRunning = false;
                     that.timer.stop();
 
-                    // Remove earlier added handler to don't have duplicate
-                    that.$result.unbind('click', that.onResultClick);
-                    that.$result.bind('click', that.onResultClick);
-
                     // If we have registered callback function after test finish, execute it
                     if (that.options.onFinish) {
                         that.options.onFinish();
@@ -313,11 +315,15 @@ $(
                     that.isRunning = true;
                     that.$result.html('running...');
 
+                    // Remove earlier added handler to don't have duplicate
+                    that.$result.unbind('click', that.onResultClick);
+                    that.$result.bind('click', that.onResultClick);
+
                     // Remove added classes, because test can be executed many times
                     that.$result.removeClass('success failure');
 
                     // Make ajax query to server
-                    $.ajax(
+                    that.xmlHttpRequest = $.ajax(
                         {
                             url: that.options.url,
                             data: that.options.data,

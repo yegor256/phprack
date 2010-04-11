@@ -112,7 +112,12 @@ class phpRack_Package_Php extends phpRack_Package
         foreach ($iterator as $file) {
             $file = realpath($file->getPathname());
             $command = $lintCommand . ' ' . escapeshellarg($file) . ' 2>&1';
-            $output = shell_exec($command);
+
+            /**
+             * @see phpRack_Adapters_Shell_Command
+             */
+            require_once PHPRACK_PATH . '/Adapters/Shell/Command.php';
+            $output = phpRack_Adapters_Shell_Command::factory($command)->run();
 
             if (preg_match('#^No syntax errors detected#', $output)) {
                 $this->_success("File '{$file}' is valid");
