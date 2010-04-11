@@ -77,8 +77,12 @@ class phpRack_Package_Disc_File extends phpRack_Package
             return $this;
         }
 
-        $this->_log(file_get_contents($fileName));
-            
+        $content = file_get_contents($fileName);
+        if ($content === false) {
+            $this->_failure("Failed file_get_contents('{$fileName}')");
+            return $this;
+        }
+        $this->_log($content);
         return $this;
     }
 
