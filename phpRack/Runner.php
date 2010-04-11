@@ -362,7 +362,7 @@ class phpRack_Runner
         return json_encode(
             array(
                 'success' => $result->wasSuccessful(),
-                'log' => $log ? $log : '', // in order to avoid NULL objects sent to JS
+                'log' => is_string($log) ? $log : 'invalid log object',
                 PHPRACK_AJAX_TOKEN => $token,
                 'options' => $test->getAjaxOptions()
             )
