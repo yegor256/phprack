@@ -152,23 +152,23 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         $response = '';
         $queries = array('SHOW TABLES', 'SHOW TRIGGERS', 'SHOW PROCEDURE STATUS');
         foreach ($queries as $query) {
-            $result = $this->query($query);
-            $response .= $result . "\n";
+            $response .= sprintf(
+                "'%s' returns:\n%s\n",
+                $query,
+                $this->query($query)
+            );
 
             if ($query == 'SHOW TABLES') {
-
                 // foreach table show CREATE TABLE and number of rows it contains
                 foreach (array_slice(explode("\n", $result), 1, -1) as $tableName) {
-                    $quotedTableName = addcslashes(trim($tableName), '`');
-                    $query = sprintf("SHOW CREATE TABLE `%s`", $quotedTableName);
-                    $response .= $this->query($query) . "\n";
-
-                    $query = sprintf("SELECT COUNT(*) FROM `%s`", $quotedTableName);
-                    $response .= $this->query($query) . "\n";
+                    $response .= sprintf(
+                        "'%s' returns:\n%s\n",
+                        sprintf("SHOW CREATE TABLE `%s`", addcslashes(trim($tableName), '`')),
+                        $this->query($query)
+                    );
                 }
             }
         }
-
         return $response;
     }
 
