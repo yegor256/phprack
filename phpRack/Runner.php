@@ -358,11 +358,10 @@ class phpRack_Runner
         $test->setAjaxOptions($options);
         
         $result = $test->run();
-        $log = $result->getLog();
         return json_encode(
             array(
                 'success' => $result->wasSuccessful(),
-                'log' => is_string($log) ? $log : 'invalid log object',
+                'log' => utf8_encode($result->getLog()),
                 PHPRACK_AJAX_TOKEN => $token,
                 'options' => $test->getAjaxOptions()
             )
