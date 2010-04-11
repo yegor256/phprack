@@ -36,7 +36,7 @@ class phpRack_Package_Shell extends phpRack_Package
      * <code>
      * class MyTest extends phpRack_Test {
      *   public function testAuthorship() {
-     *     $this->assert->shell->exec('who am i', '/apache/');
+     *     $this->assert->shell->exec('whoami', '/apache/');
      *   }
      * }
      * </code>
