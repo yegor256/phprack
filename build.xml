@@ -171,7 +171,7 @@
 		<ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
 			dir="./public">
 			<fileset dir="${project.basedir}/phprack.com">
-				<include name="**"/>
+				<include name="**/*"/>
 				<exclude name=".svn/**" />
 			</fileset>
 		</ftpdeploy>
