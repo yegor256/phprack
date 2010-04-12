@@ -41,6 +41,34 @@ class phpRack_Package_Php extends phpRack_Package
 {
     
     /**
+     * Check php.ini param with expected value
+     *
+     * Good example:
+     *
+     * <code>
+     * class MyTest extends phpRack_Test {
+     *   public fuction testPhpIni() {
+     *     $this->assert->php->ini('short_open_tag');
+     *   }
+     * }
+     * </code>
+     *
+     * @param string Name of param to check
+     * @param mixed Expected value
+     * @return $this
+     */
+    public function ini($param, $expected = true) 
+    {
+        $value = ini_get($param);
+        if ($value != $expected) {
+            $this->_failure("php.ini '{$param}' is set to '{$value}', while '{$expected}' expected");
+        } else {
+            $this->_log("php.ini '{$param}' is set to '{$value}', it's OK");
+        }
+        return $this;
+    }
+    
+    /**
      * Show phpinfo() in proper format
      *
      * @return $this
