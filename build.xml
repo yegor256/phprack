@@ -167,6 +167,7 @@
 			</fileset>
 		</ftpdeploy>
 
+		<echo message="uploading phprack.com web files" />
 		<ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
 			dir="./public">
 			<fileset dir="${project.basedir}/phprack.com">
