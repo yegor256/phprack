@@ -43,13 +43,24 @@ require_once PHPRACK_PATH . '/Adapters/Db/Abstract.php';
  */
 class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
 {
+
     /**
      * Current mysql connection link identifier
      *
      * @var int Result of mysql_connect()
      * @see connect()
      */
-    private $_linkId;
+    private $_connection;
+
+    /**
+     * Destructor automatically close opened connection
+     *
+     * @return void
+     */
+    public function __destruct()
+    {
+        $this->closeConnection();
+    }
 
     /**
      * Connect to the server
@@ -91,16 +102,16 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         }
 
         // Try to connect with MySQL server
-        $this->_linkId = @mysql_connect($server, $username, $password);
+        $this->_connection = @mysql_connect($server, $username, $password);
 
-        if (!$this->_linkId) {
+        if (!$this->_connection) {
             throw new Exception("Can't connect to MySQL server: '{$server}'");
         }
 
         // Check whether database was set in JDBC URL
         if (!empty($jdbcUrlParts['database'])) {
             // Try to set this database as current
-            if (!@mysql_select_db($jdbcUrlParts['database'], $this->_linkId)) {
+            if (!@mysql_select_db($jdbcUrlParts['database'], $this->_connection)) {
                 throw new Exception("Can't select database '{$jdbcUrlParts['database']}'");
             }
         }
@@ -116,11 +127,11 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      */
     public function query($sql)
     {
-        if (!$this->_linkId) {
+        if (!$this->_connection) {
             throw new Exception('connect() method should be called before');
         }
 
-        $result = mysql_query($sql, $this->_linkId);
+        $result = mysql_query($sql, $this->_connection);
 
         // INSERT, UPDATE, DELETE, DROP, USE etc type queries
         // on success return just true
@@ -150,6 +161,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * @return string Raw result from the server, in text
      * @throws Exception If connect() method wasn't executed earlier
      * @throws Exception If no database was selected as current
+     * @throws Exception Passed from query()
      * @see phpRack_Package_Db_Mysql::showSchema()
      */
     public function showSchema()
@@ -159,7 +171,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         }
 
         if (!$this->isDatabaseSelected()) {
-            throw new Exception('No database selected');
+            throw new Exception('No database selected yet');
         }
 
         $response = '';
@@ -168,7 +180,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
             $response .= sprintf(
                 "'%s' returns:\n%s\n",
                 $query,
-                $result = $this->query($query)
+                $result = $this->query($query) // Exception is possible here
             );
 
             if ($query == 'SHOW TABLES') {
@@ -177,7 +189,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
                     $response .= sprintf(
                         "'%s' returns:\n%s\n",
                         sprintf("SHOW CREATE TABLE `%s`", addcslashes(trim($tableName), '`')),
-                        $this->query($query)
+                        $this->query($query) // Exception is possible
                     );
                 }
             }
@@ -199,6 +211,49 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         }
 
         return $this->query('SHOW FULL PROCESSLIST');
+    }
+
+    /**
+     * Return true if adapter is connected with database
+     *
+     * @return boolean
+     * @see $this->_connection
+     */
+    public function isConnected()
+    {
+        if ($this->_connection) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Return true if some database was selected for use
+     *
+     * @return boolean
+     */
+    public function isDatabaseSelected()
+    {
+        $result = $this->query('SELECT DATABASE()');
+        if (trim($this->_removeColumnHeadersLine($result)) == '') {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Close connection to database, if was earlier opened
+     *
+     * @return void
+     */
+    public function closeConnection()
+    {
+        if (is_resource($this->_connection)) {
+            mysql_close($this->_connection);
+            $this->_connection = null;
+        }
     }
 
     /**
@@ -259,36 +314,6 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
     }
 
     /**
-     * Return true if adapter is connected with database
-     *
-     * @return boolean
-     * @see $this->_linkId
-     */
-    public function isConnected()
-    {
-        if ($this->_linkId) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Return true if some database was selected for use
-     *
-     * @return boolean
-     */
-    public function isDatabaseSelected()
-    {
-        $result = $this->query('SELECT DATABASE()');
-        if (trim($this->_removeColumnHeadersLine($result)) == '') {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * Remove header line from query result, which is added by _formatResult()
      * method. Sometimes we just need raw result without this extra line.
      *
@@ -307,26 +332,4 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         return substr($result, $pos + 1);
     }
 
-    /**
-     * Close connection to database, if was earlier opened
-     *
-     * @return void
-     */
-    public function closeConnection()
-    {
-        if (is_resource($this->_linkId)) {
-            mysql_close($this->_linkId);
-            $this->_linkId = null;
-        }
-    }
-
-    /**
-     * Destructor automatically close opened connection
-     *
-     * @return void
-     */
-    public function __destruct()
-    {
-        $this->closeConnection();
-    }
 }
