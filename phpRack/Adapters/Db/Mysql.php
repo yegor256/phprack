@@ -186,9 +186,10 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
             if ($query == 'SHOW TABLES') {
                 // foreach table show CREATE TABLE
                 foreach (array_slice(explode("\n", $result), 1, -1) as $tableName) {
+                    $query = sprintf("SHOW CREATE TABLE `%s`", addcslashes(trim($tableName), '`'));
                     $response .= sprintf(
                         "'%s' returns:\n%s\n",
-                        sprintf("SHOW CREATE TABLE `%s`", addcslashes(trim($tableName), '`')),
+                        $query,
                         $this->query($query) // Exception is possible
                     );
                 }
