@@ -65,7 +65,6 @@ class phpRack_Adapters_Shell_Command
      */
     const PIPE_STD_IN  = 0;
     const PIPE_STD_OUT = 1;
-    const PIPE_STD_ERR = 2;
 
     /**
      * Shell command constructor
@@ -107,7 +106,7 @@ class phpRack_Adapters_Shell_Command
 
         $pipes = array();
         // execute command and get its proccess resource
-        $this->_process = proc_open($this->_command . ' 2>&1', $descriptors, $pipes, getcwd());
+        $this->_process = proc_open($this->_command, $descriptors, $pipes, getcwd());
 
         // if there was some problems with command execution
         if (!is_resource($this->_process)) {
