@@ -176,6 +176,8 @@ $(
                 // XMLHttpRequest object returned from $.ajax query,
                 // give ability to abort connections
                 xmlHttpRequest: null,
+                // test execution time after which abort is possible
+                abortWaitTime: 10,
                 // Constructor
                 __construct: function()
                 {
@@ -206,9 +208,12 @@ $(
                 onResultClick: function()
                 {
                     if (that.isRunning) {
-                        that.xmlHttpRequest.abort();
+                        if (that.timer.getElapsedSeconds() >= that.abortWaitTime) {
+                            that.xmlHttpRequest.abort();
+                        }
+                    } else {
+                        that.$message.slideToggle();
                     }
-                    that.$message.slideToggle();
                 },
                 _setStatus: function (success, message, options)
                 {
@@ -286,14 +291,21 @@ $(
                 // Callback function which will be called every seconds from phpRack_Timer
                 onTimerTick: function()
                 {
+                    var elapsedSeconds = that.timer.getElapsedSeconds();
                     // If test is executed above 5s, set flag to display timer
-                    if (that.timer.getElapsedSeconds() > 5) {
+                    if (elapsedSeconds > 5) {
                         that.displayTimer = true;
                     }
 
                     // Check that should display timer (User click or time execution > 5s)
                     if (that.displayTimer) {
-                        that.$result.html('running (' + that.timer.getFormattedTime() + ')...');
+                        var message = 'running (' + that.timer.getFormattedTime();
+                        if (elapsedSeconds >= that.abortWaitTime) {
+                            message += ', click to stop';
+                        }
+                        message += ')...';
+
+                        that.$result.html(message);
                     }
                 },
                 _setReloadTimeout: function(seconds)
