@@ -106,7 +106,7 @@ class phpRack_Package_Php_Pear extends phpRack_Package
     public function atLeast($requiredVersion)
     {
         if (is_null($this->_package)) {
-            $this->_failure("Package is absent, can't compare versions");
+            $this->_failure("PEAR package is absent, can't compare versions");
             return $this;
         }
 
@@ -134,7 +134,7 @@ class phpRack_Package_Php_Pear extends phpRack_Package
         try {
             $packages = $this->_pear->getAllPackages();
 
-            $this->_success("Installed pear packages");
+            $this->_success("Installed PEAR packages:");
             foreach ($packages as $package) {
                 $this->_log($package->getRawInfo());
             }
