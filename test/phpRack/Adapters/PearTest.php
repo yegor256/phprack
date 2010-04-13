@@ -40,7 +40,7 @@ class Adapters_PearTest extends AbstractTest
             $package = $this->_adapter->getPackage('PEAR');
             $this->assertEquals('PEAR', $package->getName());
         } catch (Exception $e) {
-            $this->markTestIncomplete($e->getMessage());
+            $this->markTestSkipped($e->getMessage());
         }
     }
 
@@ -50,7 +50,26 @@ class Adapters_PearTest extends AbstractTest
             $package = $this->_adapter->getPackage('PEAR');
             $package->getVersion();
         } catch (Exception $e) {
-            $this->markTestIncomplete($e->getMessage());
+            $this->markTestSkipped($e->getMessage());
+        }
+    }
+
+    public function testGetAllPackages()
+    {
+        try {
+            $this->_adapter->getAllPackages();
+        } catch (Exception $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+    }
+
+    public function testGetPackageRawInfo()
+    {
+        try {
+            $package = $this->_adapter->getPackage('PEAR');
+            $package->getRawInfo();
+        } catch (Exception $e) {
+            $this->markTestSkipped($e->getMessage());
         }
     }
 }

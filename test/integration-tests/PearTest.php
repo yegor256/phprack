@@ -17,4 +17,10 @@ class PearTest extends phpRack_Test
             ->atLeast('1.2.1') // at least this version is present
             ->package('PEAR'); // just existence to check
     }
+
+    public function testShowPearPackages()
+    {
+        $this->assert->php->pear
+            ->showList(); // show full list of installed packages
+    }
 }

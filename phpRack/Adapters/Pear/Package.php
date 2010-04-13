@@ -35,7 +35,7 @@
 class phpRack_Adapters_Pear_Package
 {
     /**
-     * Last checked package name
+     * Package name
      *
      * @var string
      * @see __construct()
@@ -44,14 +44,38 @@ class phpRack_Adapters_Pear_Package
     private $_name;
 
     /**
+     * Raw package info returned from "pear info $packageName" command
+     *
+     * @var string
+     * @see __construct()
+     * @see getName()
+     * @see getVersion()
+     */
+    private $_rawInfo;
+
+    /**
      * Construct the class
      *
      * @param string Name of the package
+     * @throws Exception if PEAR is not installed properly
      * @return void
      */
     public function __construct($name)
     {
         $this->_name = $name;
+
+        $command = 'pear info ' . escapeshellarg($this->_name);
+        /**
+         * @see phpRack_Adapters_Shell_Command
+         */
+        require_once PHPRACK_PATH . '/Adapters/Shell/Command.php';
+        $result = phpRack_Adapters_Shell_Command::factory($command)->run();
+
+        if (!$result) {
+            throw new Exception('PEAR is not installed properly');
+        }
+
+        $this->_rawInfo = $result;
     }
 
     /**
@@ -68,26 +92,26 @@ class phpRack_Adapters_Pear_Package
      * Check whether Package exists
      *
      * @return boolean
-     * @throws Exception If PEAR is not installed properly
+     * @throws Exception If package has invalid version number
      * @see phpRack_Package_Pear::package()
      */
     public function getVersion()
     {
-        $command = 'pear info ' . escapeshellarg($this->_name);
-        /**
-         * @see phpRack_Adapters_Shell_Command
-         */
-        require_once PHPRACK_PATH . '/Adapters/Shell/Command.php';
-        $result = phpRack_Adapters_Shell_Command::factory($command)->run();
-
-        if (!$result) {
-            throw new Exception('PEAR is not installed properly');
-        }
-
         $matches = array();
-        if (!preg_match('/^Release Version\s+(\S+)/m', $result, $matches)) {
+        if (!preg_match('/^Release Version\s+(\S+)/m', $this->_rawInfo, $matches)) {
             throw new Exception('Invalid version for the package');
         }
         return $matches[1];
+    }
+
+    /**
+     * Get package raw info
+     *
+     * @return string
+     * @see phpRack_Package_Pear::package()
+     */
+    public function getRawInfo()
+    {
+        return $this->_rawInfo;
     }
 }

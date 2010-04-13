@@ -122,5 +122,26 @@ class phpRack_Package_Php_Pear extends phpRack_Package
         }
         return $this;
     }
+
+    /**
+     * Show full list of installed packages
+     *
+     * @return $this
+     * @see PearTest::testShowPearPackages()
+     */
+    public function showList()
+    {
+        try {
+            $packages = $this->_pear->getAllPackages();
+
+            $this->_success("Installed pear packages");
+            foreach ($packages as $package) {
+                $this->_log($package->getRawInfo());
+            }
+        } catch (Exception $e) {
+            $this->_failure("PEAR problem: {$e->getMessage()}");
+        }
+        return $this;
+    }
     
 }
