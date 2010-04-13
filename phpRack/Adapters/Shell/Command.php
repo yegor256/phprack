@@ -103,12 +103,11 @@ class phpRack_Adapters_Shell_Command
         $descriptors = array(
             self::PIPE_STD_IN  => array('pipe', 'r'), // child process stdin
             self::PIPE_STD_OUT => array('pipe', 'w'), // child process stdout
-            self::PIPE_STD_ERR => array('pipe', 'w')  // child process stderr
         );
 
         $pipes = array();
         // execute command and get its proccess resource
-        $this->_process = proc_open($this->_command, $descriptors, $pipes, getcwd());
+        $this->_process = proc_open($this->_command . ' 2>&1', $descriptors, $pipes, getcwd());
 
         // if there was some problems with command execution
         if (!is_resource($this->_process)) {
@@ -184,7 +183,6 @@ class phpRack_Adapters_Shell_Command
 
         // close pipes to avoid deadlock during proc_close()
         fclose($pipes[self::PIPE_STD_OUT]);
-        fclose($pipes[self::PIPE_STD_ERR]);
 
         // close proccess and cleanup
         proc_close($this->_process);
