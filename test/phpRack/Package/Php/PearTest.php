@@ -47,4 +47,9 @@ class phpRack_Package_Php_PearTest extends AbstractTest
     {
         $this->_package->atLeast('1.0');
     }
+
+    public function testShowList()
+    {
+        $this->_package->showList();
+    }
 }
