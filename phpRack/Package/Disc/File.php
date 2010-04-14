@@ -55,27 +55,6 @@ class phpRack_Package_Disc_File extends phpRack_Package
     const LINES_TO_SHOW = 25;
 
     /**
-     * Check that file exists
-     *
-     * @param string File name to check
-     * @return boolean True if file exists
-     */
-    protected function _isFileExists($fileName)
-    {
-        if (!file_exists($fileName)) {
-            $this->_failure("File '{$fileName}' is not found");
-            return false;
-        }
-
-        $this->_log(
-            "File '{$fileName}' (" . filesize($fileName) 
-            . ' bytes, modified on ' 
-            . date('d-M-y h:i:s') . '):'
-        );
-        return true;
-    }
-
-    /**
      * Show the content of the file
      *
      * @param string File name to display
@@ -324,5 +303,49 @@ class phpRack_Package_Disc_File extends phpRack_Package
             $this->_failure("File '{$fileName}' is not a directory");
         }
         return $this;
+    }
+    
+    /**
+     * Check that file exists
+     *
+     * @param string File name to check
+     * @return boolean True if file exists
+     */
+    protected function _isFileExists($fileName)
+    {
+        if (!file_exists($fileName)) {
+            $this->_failure("File '{$fileName}' is not found");
+            return false;
+        }
+
+        $this->_log(
+            "File '{$fileName}' (" . filesize($fileName) 
+            . ' bytes, modified on ' 
+            . $this->_modifiedOn(filemtime($fileName)) . '):'
+        );
+        return true;
+    }
+
+    /**
+     * Show when this file was modified
+     *
+     * @param integer Time/date when this file was modifed, result of filemtime()
+     * @return string
+     * @see _isFileExists()
+     */
+    protected function _modifiedOn($time) 
+    {
+        $mins = round((time() - $time)/60, 1);
+        if ($mins < 1) {
+            $age = round($mins * 60) . 'sec';
+        } elseif ($mins < 60) {
+            $age = $mins . 'min';
+        } elseif ($mins < 24 * 60) {
+            $age = round($mins/60) . 'hrs';
+        } else {
+            $age = round($mins/(60*24)) . 'days';
+        }
+        
+        return date('d-M-y h:i:s', $time) . ', ' . $age . ' ago';
     }
 }
