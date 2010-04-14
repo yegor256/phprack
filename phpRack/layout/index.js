@@ -40,7 +40,7 @@ $(
 
         String.prototype.htmlspecialchars = function ()
         {
-            return this.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return this.replace(/[<]/g, '&lt;').replace(/[>]/g, '&gt;');
         };
 
         // Our processing queue to control tests concurrency
@@ -270,7 +270,7 @@ $(
                         );
                     }
 
-                    // Fill message <pre></pre> with text returned from server
+                    // Fill message pre tag with text returned from server
                     that.$message.html(message);
 
                     // Stop timer and update its state to user can repeat test
