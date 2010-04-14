@@ -231,8 +231,8 @@ class phpRack_Runner
             // we don't store them anywhere
             case array_key_exists(self::GET_LOGIN, $_GET) && 
             array_key_exists(self::GET_PWD, $_GET):
-                $login = $_POST[self::GET_LOGIN];
-                $hash = md5($_POST[self::GET_PWD]);
+                $login = $_GET[self::GET_LOGIN];
+                $hash = md5($_GET[self::GET_PWD]);
                 break;
                 
             // this is CLI environment, not web -- we don't require any

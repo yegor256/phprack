@@ -64,35 +64,55 @@ class RunnerTest extends AbstractTest
     public function testHeaderAuthenticationWorksProperly()
     {
         global $phpRackConfig;
-        if (array_key_exists('auth', $phpRackConfig)) {
-            $_SERVER['PHP_AUTH_USER'] = $phpRackConfig['auth']['username'];
-            $_SERVER['PHP_AUTH_PW']   = $phpRackConfig['auth']['password'];
-            $this->assertTrue(
-                $this->_runner->isAuthenticated(),
-                'Invalid auth using header'
-            );
-        } else {
-            $this->markTestSkipped(
-                'Password is not stored in clear text. Test cannot be performed.'
-            );
+        $authArray = array(
+            'auth' => array(
+                'username' => uniqid(),
+                'password' => uniqid()
+            )
+        );
+        // Injecting values into config
+        $authArray = array_merge($phpRackConfig, $authArray);
+        
+        // Removing htaccess authentication in case it is set
+        if (array_key_exists('htpasswd', $authArray)) {
+            unset($authArray['htpasswd']);
         }
+        
+        // Creating instance of Runner to test it with our config
+        $runner = new phpRack_Runner($authArray);
+        $_SERVER['PHP_AUTH_USER'] = $authArray['auth']['username'];
+        $_SERVER['PHP_AUTH_PW']   = $authArray['auth']['password'];
+        $this->assertTrue(
+            $runner->isAuthenticated(),
+            'Invalid auth using header'
+        );
     }
     
     public function testGetParamsAuthenticationWorksProperly()
     {
         global $phpRackConfig;
-        if (array_key_exists('auth', $phpRackConfig)) {
-            $_GET[phpRack_Runner::GET_LOGIN] = $phpRackConfig['auth']['username'];
-            $_GET[phpRack_Runner::GET_PWD]   = $phpRackConfig['auth']['password'];
-            $this->assertTrue(
-                $this->_runner->isAuthenticated(),
-                'Invalid auth using get parameters (Phing bridge)'
-            );
-        } else {
-            $this->markTestSkipped(
-                'Password is not stored in clear text. Test cannot be performed.'
-            );
+        $authArray = array(
+            'auth' => array(
+                'username' => uniqid(),
+                'password' => uniqid()
+            )
+        );
+        // Injecting values into config
+        $authArray = array_merge($phpRackConfig, $authArray);
+        
+        // Removing htaccess authentication in case it is set
+        if (array_key_exists('htpasswd', $authArray)) {
+            unset($authArray['htpasswd']);
         }
+        
+        // Creating instance of Runner to test it with our config
+        $runner = new phpRack_Runner($authArray);
+        $_GET[phpRack_Runner::GET_LOGIN] = $authArray['auth']['username'];
+        $_GET[phpRack_Runner::GET_PWD]   = $authArray['auth']['password'];
+        $this->assertTrue(
+            $runner->isAuthenticated(),
+            'Invalid auth using get parameters (Phing bridge)'
+        );
     }
     
     public function testTestFilesAreCollectedCorrectly()
