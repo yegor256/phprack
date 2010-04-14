@@ -105,13 +105,8 @@ class phpRack_Adapters_Shell_Command
         );
 
         $pipes = array();
-        /**
-         * Execute command and get its proccess resource. We start with empty
-         * env to avoid fork problems and server overloading when PHP CLI is
-         * executed from other PHP instance on some servers. This execution
-         * method is equal to execute shell command with env -i as prefix.
-         */
-        $this->_process = proc_open($this->_command, $descriptors, $pipes, getcwd(), array());
+        // execute command and get its proccess resource
+        $this->_process = proc_open($this->_command, $descriptors, $pipes, getcwd());
 
         // if there was some problems with command execution
         if (!is_resource($this->_process)) {

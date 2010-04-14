@@ -18,10 +18,14 @@ class LongTest extends phpRack_Test
          */
         require_once PHPRACK_PATH . '/Adapters/ConnectionMonitor.php';
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             sleep(1);
             phpRack_Adapters_ConnectionMonitor::getInstance()->ping();
         }
+
+        $this->assert
+            ->isTrue(true)
+            ->onSuccess('Long test: always true');
     }
 
 }
