@@ -9,6 +9,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
  *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
@@ -152,7 +165,6 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
 
         try {
             $result = $this->_adapter->query($query);
-            $this->_success('Query was executed successfully');
             $this->_log($result);
         } catch (Exception $e) {
             $this->_failure($e->getMessage());
@@ -180,7 +192,6 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
         }
 
         $result = $this->_adapter->showSchema();
-        $this->_success('Database schema');
         $this->_log($result);
 
         return $this;
@@ -200,12 +211,11 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
 
         $answer = $this->_adapter->query('SHOW GRANTS FOR CURRENT_USER');
         if (!preg_match('~GRANT (PROCESS|ALL)~', $answer)) {
-            $this->_failure('To run this query you should have permissions');
+            $this->_failure('MySQL user does not have GRANT PROCESS|ALL permissions');
             return $this;
         }
 
         $result = $this->_adapter->showConnections();
-        $this->_success('Connections');
         $this->_log($result);
         return $this;
     }

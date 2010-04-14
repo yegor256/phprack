@@ -9,6 +9,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
  *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
@@ -42,27 +55,6 @@ class phpRack_Package_Disc_File extends phpRack_Package
     const LINES_TO_SHOW = 25;
 
     /**
-     * Check that file exists
-     *
-     * @param string File name to check
-     * @return boolean True if file exists
-     */
-    protected function _isFileExists($fileName)
-    {
-        if (!file_exists($fileName)) {
-            $this->_failure("File {$fileName} is not found");
-            return false;
-        }
-
-        $this->_log(
-            "File '{$fileName}' (" . filesize($fileName) 
-            . ' bytes, modified on ' 
-            . date('d-M-y h:i:s') . '):'
-        );
-        return true;
-    }
-
-    /**
      * Show the content of the file
      *
      * @param string File name to display
@@ -77,8 +69,12 @@ class phpRack_Package_Disc_File extends phpRack_Package
             return $this;
         }
 
-        $this->_log(file_get_contents($fileName));
-            
+        $content = file_get_contents($fileName);
+        if ($content === false) {
+            $this->_failure("Failed file_get_contents('{$fileName}')");
+            return $this;
+        }
+        $this->_log($content);
         return $this;
     }
 
@@ -165,16 +161,31 @@ class phpRack_Package_Disc_File extends phpRack_Package
         // if it is first request send all x last lines
         if (!isset($options['fileLastOffset'])) {
             $this->tail($fileName, $linesCount);
-            return;
+            return $this;
         }
 
-        $fp = fopen($fileName, 'rb');
+        $fp = @fopen($fileName, 'rb');
+        if (!$fp) {
+            $this->_failure("Failed to fopen('{$fileName}')");
+            return $this;
+        }
         // get only new content since last time
         $content = stream_get_contents($fp, -1, $options['fileLastOffset']);
+        if ($content === false) {
+            $this->_failure("Failed to stream_get_contents({$fp}/'{$fileName}', -1, {$options['fileLastOffset']})");
+            return $this;
+        }
 
         // save current offset
         $offset = ftell($fp);
-        fclose($fp);
+        if ($offset === false) {
+            $this->_failure("Failed to ftell({$fp}/'{$fileName}')");
+            return $this;
+        }
+        if (fclose($fp) === false) {
+            $this->_failure("Failed to fclose({$fp}/'{$fileName}')");
+            return $this;
+        }
 
         $this->_log($content);
 
@@ -184,6 +195,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
                 'data' => array('fileLastOffset' => $offset),
             )
         );
+        return $this;
     }
 
     /**
@@ -291,5 +303,49 @@ class phpRack_Package_Disc_File extends phpRack_Package
             $this->_failure("File '{$fileName}' is not a directory");
         }
         return $this;
+    }
+    
+    /**
+     * Check that file exists
+     *
+     * @param string File name to check
+     * @return boolean True if file exists
+     */
+    protected function _isFileExists($fileName)
+    {
+        if (!file_exists($fileName)) {
+            $this->_failure("File '{$fileName}' is not found");
+            return false;
+        }
+
+        $this->_log(
+            "File '{$fileName}' (" . filesize($fileName) 
+            . ' bytes, modified on ' 
+            . $this->_modifiedOn(filemtime($fileName)) . '):'
+        );
+        return true;
+    }
+
+    /**
+     * Show when this file was modified
+     *
+     * @param integer Time/date when this file was modifed, result of filemtime()
+     * @return string
+     * @see _isFileExists()
+     */
+    protected function _modifiedOn($time) 
+    {
+        $mins = round((time() - $time)/60, 1);
+        if ($mins < 1) {
+            $age = round($mins * 60) . 'sec';
+        } elseif ($mins < 60) {
+            $age = $mins . 'min';
+        } elseif ($mins < 24 * 60) {
+            $age = round($mins/60) . 'hrs';
+        } else {
+            $age = round($mins/(60*24)) . 'days';
+        }
+        
+        return date('d-M-y h:i:s', $time) . ', ' . $age . ' ago';
     }
 }

@@ -9,14 +9,36 @@
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
  *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
  */
 
-// Here we define a error handler in order to catch all possible
-// PHP errors and show them online, no matter what server settings
-// exist for error handling...
+/**
+ * To make sure that we're reporting ALL errors, and display them
+ * all, no matter what are the settings of the server php.ini
+ */
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+
+/**
+ * Here we define a error handler in order to catch all possible
+ * PHP errors and show them online, no matter what server settings
+ * exist for error handling...
+ */
 set_error_handler(
     create_function(
         '$errno, $errstr, $errfile, $errline',
@@ -36,10 +58,12 @@ set_error_handler(
 );
 
 try {
-    // This variable ($phpRackConfig) shall be declared and filled with
-    // values in your phprack.php file, which calls this bootstraper. For
-    // complete reference on this variable see:
-    // http://trac.fazend.com/phpRack/wiki/Bootstrap
+    /**
+     * This variable ($phpRackConfig) shall be declared and filled with
+     * values in your phprack.php file, which calls this bootstraper. For
+     * complete reference on this variable see:
+     * @see http://trac.fazend.com/phpRack/wiki/Bootstrap
+     */
     global $phpRackConfig;
     if (!isset($phpRackConfig)) {
         throw new Exception('Invalid configuration: $phpRackConfig is missed');
@@ -96,18 +120,26 @@ try {
         throw new Exception("Authentication problem. You have to login first.");
     }
 
-    // Execute one individual test and return its result
-    // in JSON format. We reach this point only in AJAX calls from
-    // already rendered testing page.
+    /**
+     * Execute one individual test and return its result
+     * in JSON format. We reach this point only in AJAX calls from
+     * already rendered testing page.
+     */
     $options = $_GET;
-    // '_' param is automatically added by jQuery with current time in miliseconds,
-    // when we call $.ajax function with cache = false. We unset it to have
-    // no exception in phpRack_Test::setAjaxOptions()
+    
+    /** 
+     * '_' param is automatically added by jQuery with current time in miliseconds,
+     * when we call $.ajax function with cache = false. We unset it to have
+     * no exception in phpRack_Test::setAjaxOptions()
+     */
     unset($options['_']);
+    
     $fileName = $options[PHPRACK_AJAX_TAG];
     unset($options[PHPRACK_AJAX_TAG]);
     $token = $options[PHPRACK_AJAX_TOKEN];
     unset($options[PHPRACK_AJAX_TOKEN]);
+
+    header('Content-Type: application/json');
     throw new Exception($runner->run($fileName, $token, $options));
 
 } catch (Exception $e) {

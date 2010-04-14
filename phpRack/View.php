@@ -9,6 +9,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
  *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
@@ -21,6 +34,20 @@ require_once PHPRACK_PATH . '/Test.php';
 
 /**
  * View in order to render test presentation page
+ *
+ * This class is used as a view component in our simple MVC pattern, where
+ * model is {@link phpRack_Runner}, view is {@link phpRack_View} and controller is a simple
+ * script in {@link bootstrap.php}. An instance of this class is accepting
+ * variables and a script name in order to render it, for example:
+ *
+ * <code>
+ * $view = new phpRack_View();
+ * $view->assign(array('name' => 'My Name To Render'));
+ * $html = $view->render('index.phtml');
+ * </code>
+ *
+ * In this example, you can access "name" inside "index.phtml" like this:
+ * $this->name.
  *
  * @package Tests
  * @see bootstrap.php
@@ -38,16 +65,6 @@ class phpRack_View
      * @see __get()
      */
     protected $_injected = array();
-
-    /**
-     * Construct the class
-     *
-     * @return void
-     * @see bootstrap.php
-     */
-    public function __construct()
-    {
-    }
 
     /**
      * Getter dispatcher, used inside view script
@@ -95,7 +112,7 @@ class phpRack_View
         ob_start();
         // workaround against ZCA static code analysis
         eval("include PHPRACK_PATH . '/layout/layout.phtml';");
-        return ob_get_clean();
+        return $this->compressedHtml(ob_get_clean());
     }
 
     /**
@@ -109,6 +126,51 @@ class phpRack_View
     public function jsPath($path)
     {
         return addcslashes($path, "\\'");
+    }
+    
+    /**
+     * Compress HTML content
+     *
+     * @param string HTML content, before compression
+     * @return string HTML content, compressed
+     */
+    public function compressedHtml($html)
+    {
+        $dom = new DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = false;
+        $dom->loadXml($html);
+
+        $xpath = new DOMXPath($dom);
+        $comments = $xpath->query('//comment()');
+        foreach ($comments as $comment) {
+            $comment->parentNode->removeChild($comment);
+        }
+
+        return $dom->saveXml();
+    }
+    
+    /**
+     * Return a compressed version of CSS
+     *
+     * @param string Relative path of CSS script, inside /layout dir
+     * @return string CSS content compressed
+     */
+    public function compressedCss($css) 
+    {
+        $content = file_get_contents(PHPRACK_PATH . '/layout/' . $css);
+        $replacers = array(
+            '/[\n\r\t]+/' => ' ', // remove duplicated white spaces
+            '/\s+/' => ' ', // convert multiple spaces to single
+            '/\s+([\,\:\{\}])/' => '${1}', // compress leading white spaces
+            '/([\,\;\:\{\}])\s+/' => '${1}', // compress trailing white spaces
+            '/\/\*.*?\*\//' => '', // kill comments at all
+        );
+        return preg_replace(
+            array_keys($replacers), 
+            $replacers,
+            $content
+        );
     }
     
 }

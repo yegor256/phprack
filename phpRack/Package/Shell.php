@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -23,7 +23,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @copyright Copyright (c) phpRack.com
- * @version $Id$
+ * @version $Id: Db.php 169 2010-03-23 07:04:08Z yegor256@yahoo.com $
  * @category phpRack
  */
 
@@ -33,28 +33,46 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * PHP-version related assertions
+ * Assertions related to SHELL
  *
  * @package Tests
  */
-class phpRack_Package_Php_Version extends phpRack_Package
+class phpRack_Package_Shell extends phpRack_Package
 {
 
     /**
-     * Current version is newer than given one?
+     * Execute a command and tries to find a regex inside it's result
      *
-     * @param string Version name
+     * Use it like this, to make sure that PHP scripts are started
+     * by "apache" user:
+     *
+     * <code>
+     * class MyTest extends phpRack_Test {
+     *   public function testAuthorship() {
+     *     $this->assert->shell->exec('whoami', '/apache/');
+     *   }
+     * }
+     * </code>
+     *
+     * @param string Command to run
+     * @param string Regular exception
      * @return $this
-     * @see http://www.php.net/manual/en/function.version-compare.php
      */
-    public function atLeast($version) 
+    public function exec($cmd, $regex = null) 
     {
-        if (version_compare(phpversion(), $version) >= 0) {
-            $this->_success('PHP version is ' . phpversion() . ", newer or equal to {$version}");
-        } else {
-            $this->_failure('PHP version is ' . phpversion() . ", older than {$version}");
-        }
-        return $this;
-    }
+        /**
+         * @see phpRack_Adapters_Shell_Command
+         */
+        require_once PHPRACK_PATH . '/Adapters/Shell/Command.php';
+        $result = phpRack_Adapters_Shell_Command::factory($cmd)->run();
         
+        $this->_log('$ ' . $cmd);
+        $this->_log($result);
+        if (!is_null($regex)) {
+            if (!preg_match($regex, $cmd)) {
+                $this->_failure("Result of '{$cmd}' doesn't match regular expression '{$regex}': '{$result}'");
+            }
+        }
+    }
+
 }

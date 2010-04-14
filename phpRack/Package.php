@@ -9,6 +9,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
  *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
@@ -26,6 +39,20 @@ require_once PHPRACK_PATH . '/Test.php';
 
 /**
  * One test assertion package
+ *
+ * The package is used from your custom integration test, through the instance
+ * of {@link phpRack_Assertion} class, which is available like this:
+ *
+ * <code>
+ * class MyTest extends phpRack_Test {
+ *   public function testPhpVersion() {
+ *     $this->assert->php->version->atLeast('5.2');
+ *   }
+ * }
+ * </code>
+ *
+ * In this example package {@link phpRack_Package_Php_Version} will be instantiated
+ * and returned. Later, method atLeast() will be called in this package.
  *
  * @package Tests
  * @see phpRack_Assertion::__call()

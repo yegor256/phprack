@@ -8,6 +8,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
  *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @author netcoderpl@gmail.com
@@ -27,7 +40,7 @@ $(
 
         String.prototype.htmlspecialchars = function ()
         {
-            return this.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return this.replace(/[<]/g, '&lt;').replace(/[>]/g, '&gt;');
         };
 
         // Our processing queue to control tests concurrency
@@ -160,6 +173,11 @@ $(
                 timeoutId: null,
                 // log lines buffer, used for control which lines should be still visible
                 lines: [],
+                // XMLHttpRequest object returned from $.ajax query,
+                // give ability to abort connections
+                xmlHttpRequest: null,
+                // test execution time after which abort is possible
+                abortWaitTime: 10,
                 // Constructor
                 __construct: function()
                 {
@@ -189,7 +207,13 @@ $(
                 },
                 onResultClick: function()
                 {
-                    that.$message.slideToggle();
+                    if (that.isRunning) {
+                        if (that.timer.getElapsedSeconds() >= that.abortWaitTime) {
+                            that.xmlHttpRequest.abort();
+                        }
+                    } else {
+                        that.$message.slideToggle();
+                    }
                 },
                 _setStatus: function (success, message, options)
                 {
@@ -246,16 +270,12 @@ $(
                         );
                     }
 
-                    // Fill message <pre></pre> with text returned from server
+                    // Fill message pre tag with text returned from server
                     that.$message.html(message);
 
                     // Stop timer and update its state to user can repeat test
                     that.isRunning = false;
                     that.timer.stop();
-
-                    // Remove earlier added handler to don't have duplicate
-                    that.$result.unbind('click', that.onResultClick);
-                    that.$result.bind('click', that.onResultClick);
 
                     // If we have registered callback function after test finish, execute it
                     if (that.options.onFinish) {
@@ -271,14 +291,21 @@ $(
                 // Callback function which will be called every seconds from phpRack_Timer
                 onTimerTick: function()
                 {
+                    var elapsedSeconds = that.timer.getElapsedSeconds();
                     // If test is executed above 5s, set flag to display timer
-                    if (that.timer.getElapsedSeconds() > 5) {
+                    if (elapsedSeconds > 5) {
                         that.displayTimer = true;
                     }
 
                     // Check that should display timer (User click or time execution > 5s)
                     if (that.displayTimer) {
-                        that.$result.html('running (' + that.timer.getFormattedTime() + ')...');
+                        var message = 'running (' + that.timer.getFormattedTime();
+                        if (elapsedSeconds >= that.abortWaitTime) {
+                            message += ', click to stop';
+                        }
+                        message += ')...';
+
+                        that.$result.html(message);
                     }
                 },
                 _setReloadTimeout: function(seconds)
@@ -313,11 +340,15 @@ $(
                     that.isRunning = true;
                     that.$result.html('running...');
 
+                    // Remove earlier added handler to don't have duplicate
+                    that.$result.unbind('click', that.onResultClick);
+                    that.$result.bind('click', that.onResultClick);
+
                     // Remove added classes, because test can be executed many times
                     that.$result.removeClass('success failure');
 
                     // Make ajax query to server
-                    $.ajax(
+                    that.xmlHttpRequest = $.ajax(
                         {
                             url: that.options.url,
                             data: that.options.data,
@@ -333,7 +364,7 @@ $(
                                 // If server returned no empty response
                                 if (json) {
                                     // Set status to OK with log message
-                                    that._setStatus(json.success, json.log, json.options);
+                                    that._setStatus(json.success, json.log.htmlspecialchars(), json.options);
                                     if (json.options) {
                                         if (json.options.reload) {
                                             that._setReloadTimeout(json.options.reload);
