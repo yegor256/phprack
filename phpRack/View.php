@@ -142,11 +142,31 @@ class phpRack_View
         $dom->loadXml($html);
 
         $xpath = new DOMXPath($dom);
+        $xpath->registerNamespace('xhtml', 'http://www.w3.org/1999/xhtml');
         $comments = $xpath->query('//comment()');
         foreach ($comments as $comment) {
             $comment->parentNode->removeChild($comment);
         }
 
+        $replacers = array(
+            '/\/\*.*?\*\//s' => '', // remove multi line comments
+            '/\/\/.*\r?\n\s*/' => '', // remove single line comments
+            '/\s*\r?\n\s*/' => '', // remove lines end with leading/trailing spaces
+            '/\s+/' => ' ', // convert multiple spaces to single
+        );
+
+        $scripts = $xpath->query('//xhtml:script');
+        foreach ($scripts as $script) {
+            foreach ($script->childNodes as $childNode) {
+                if ($childNode->nodeType == XML_CDATA_SECTION_NODE) {
+                    $childNode->nodeValue = "\n" . preg_replace(
+                        array_keys($replacers),
+                        $replacers,
+                        $childNode->nodeValue
+                    );
+                }
+            }
+        }
         return $dom->saveXml();
     }
     
@@ -167,7 +187,7 @@ class phpRack_View
             '/\/\*.*?\*\//' => '', // kill comments at all
         );
         return preg_replace(
-            array_keys($replacers), 
+            array_keys($replacers),
             $replacers,
             $content
         );
