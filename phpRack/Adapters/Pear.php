@@ -70,11 +70,6 @@ class phpRack_Adapters_Pear
     {
         $packages = array();
         $command = 'pear list -a';
-
-        // If we are not on Windows, add environment ignoring, to prevent many PHP script forks
-        if (!in_array(PHP_OS, array('WIN32', 'WINNT'))) {
-            $command = 'env -i ' . $command;
-        }
         /**
          * @see phpRack_Adapters_Shell_Command
          */

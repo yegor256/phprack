@@ -106,7 +106,7 @@ class phpRack_Adapters_Shell_Command
 
         $pipes = array();
         // execute command and get its proccess resource
-        $this->_process = proc_open($this->_command, $descriptors, $pipes, getcwd());
+        $this->_process = proc_open($this->_command, $descriptors, $pipes, getcwd(), $this->_getEnv());
 
         // if there was some problems with command execution
         if (!is_resource($this->_process)) {
@@ -212,5 +212,22 @@ class phpRack_Adapters_Shell_Command
         if ($processStatus['running']) {
             proc_terminate($this->_process, 9);
         }
+    }
+
+    /**
+     * Get env which should be passed to proc_open()
+     *
+     * @return array|null
+     * @see run()
+     */
+    protected function _getEnv()
+    {
+        // on Windows or when $_ENV was unset use current process environment
+        if (substr(PHP_OS, 0, 3) == 'WIN' || !isset($_ENV)) {
+            return null;
+        }
+
+        // we must remove SCRIPT_FILENAME to avoid script forking problem on some servers
+        return array_diff_key($_ENV, array('SCRIPT_FILENAME' => ''));
     }
 }
