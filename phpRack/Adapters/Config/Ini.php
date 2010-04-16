@@ -35,6 +35,16 @@ require_once PHPRACK_PATH . '/Adapters/Config.php';
 /**
  * Config adapter used for store test configuration loaded from INI file
  *
+ * You can use it like this:
+ *
+ * <code>
+ * // app.ini:
+ * // [production]
+ * // params.db.username = 'test'
+ * $ini = new phpRack_Adapters_Config_Ini('app.ini', 'production');
+ * assert($ini->params->db->username == 'test');
+ * </code>
+ *
  * @package Adapters
  */
 class phpRack_Adapters_Config_Ini extends phpRack_Adapters_Config
@@ -56,7 +66,7 @@ class phpRack_Adapters_Config_Ini extends phpRack_Adapters_Config
         // one section to return
         if ($sectionName) {
             if (!array_key_exists($sectionName, $sections)) {
-                throw new Exception("Section '{$sectionName}' not exists in INI file '{$filename}'");
+                throw new Exception("Section '{$sectionName}' doesn't exist in INI file '{$filename}'");
             }
             $dataArray = $this->_sectionToArray($sections[$sectionName]);
         } else {
@@ -100,7 +110,7 @@ class phpRack_Adapters_Config_Ini extends phpRack_Adapters_Config
     protected function _loadSectionsFromIniFile($filename)
     {
         if (!file_exists($filename)) {
-            throw new Exception("INI file '{$filename}' not exists");
+            throw new Exception("INI file '{$filename}' doesn't exist");
         }
         $sections = array();
         $iniFileSections = parse_ini_file($filename, true);
@@ -113,7 +123,6 @@ class phpRack_Adapters_Config_Ini extends phpRack_Adapters_Config
             // if section have parent
             if (isset($nameParts[1])) {
                 $parentSectionName = trim($nameParts[1]);
-
                 // merge current section values, with parent values
                 $data = array_merge(
                     $sections[$parentSectionName],

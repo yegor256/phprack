@@ -32,6 +32,19 @@
  * Config adapter used for store tests configuration and provide object
  * oriented access methods
  *
+ * You can use it like this:
+ *
+ * <code>
+ * $config = new phpRack_Adapters_Config(
+ *   array(
+ *     'alpha' => array(
+ *       'beta' => 123,
+ *     )
+ *   )
+ * );
+ * assert($config->alpha->beta == 123);
+ * </code>
+ *
  * @package Adapters
  */
 class phpRack_Adapters_Config
@@ -40,6 +53,7 @@ class phpRack_Adapters_Config
      * Contains array of configuration data
      *
      * @var array
+     * @see __construct()
      */
     protected $_data;
 
@@ -73,7 +87,7 @@ class phpRack_Adapters_Config
     public function __get($name)
     {
         if (!array_key_exists($name, $this->_data)) {
-            throw new Exception("Config option '{$name}' not exists");
+            throw new Exception("Config option '{$name}' doesn't exist");
         }
         return $this->_data[$name];
     }
