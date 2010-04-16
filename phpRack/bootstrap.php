@@ -103,6 +103,11 @@ try {
         throw new Exception($runner->runSuite());
     }
 
+    // check whether SSL connection is mandatory?
+    if (!$runner->isEnoughSecurityLevel()) {
+        throw new Exception('You must use SSL protol to run test suite');
+    }
+
     // Global layout is required, show the front web page of the report
     if (empty($_GET[PHPRACK_AJAX_TAG])) {
         $view = new phpRack_View();
@@ -114,7 +119,7 @@ try {
         $view->assign(array('runner' => $runner)); 
         throw new Exception($view->render());
     }
-    
+
     // show error message
     if (!$runner->isAuthenticated()) {
         throw new Exception("Authentication problem. You have to login first.");

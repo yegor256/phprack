@@ -284,10 +284,25 @@ class phpRack_Runner
      * @return boolean
      * @see isAuthenticated()
      */
-    public function isCliEnvironment() 
+    public function isCliEnvironment()
     {
         global $_SERVER;
         return empty($_SERVER['DOCUMENT_ROOT']);
+    }
+
+    /**
+     * Check whether client connection has enough security level?
+     *
+     * @return boolean
+     * @see bootstrap.php
+     */
+    public function isEnoughSecurityLevel()
+    {
+        global $_SERVER;
+        if (empty($this->_options['auth']['onlySSL'])) {
+            return true;
+        }
+        return !empty($_SERVER['HTTPS']);
     }
     
     /**
