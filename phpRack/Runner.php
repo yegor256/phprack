@@ -109,6 +109,8 @@ class phpRack_Runner
         'dir' => null,
         'auth' => null,
         'htpasswd' => null,
+        'smtp' => null,
+        'notify' => null
     );
     
     /**
@@ -354,7 +356,7 @@ class phpRack_Runner
         foreach ($tests as $test) {
             $result = $test->run();
             $report .= sprintf(
-                "%s\n%s: %s, %0.3fsec\n",
+                "%s\n\n%s: %s, %0.3fsec\n",
                 $result->getPureLog(),
                 $test->getLabel(),
                 $result->wasSuccessful() ? phpRack_Test::OK : phpRack_Test::FAILURE,
@@ -363,6 +365,20 @@ class phpRack_Runner
             $success &= $result->wasSuccessful();
         }
         $report .= "PHPRACK SUITE: " . ($success ? phpRack_Test::OK : phpRack_Test::FAILURE) . "\n";
+
+        if (!empty($this->_options['notify']) && !$success) {
+            require PHPRACK_PATH . '/Mail.php';
+
+            $mail = new phpRack_Mail($this->_options);
+            $mail->setSubject('phpRack summary');
+            $mail->setBody($report);
+            $mail->setTo($this->_options['notify']);
+            #try {
+                $mail->send();
+            #} catch(Exception $e) {
+                //
+            #}
+        }
         return $report;
     }
     
