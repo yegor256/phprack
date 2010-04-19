@@ -23,7 +23,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @copyright Copyright (c) phpRack.com
- * @version $Id: Runner.php 411 2010-04-16 06:19:32Z yegor256@yahoo.com $
+ * @version $Id$
  * @category phpRack
  */
 
@@ -41,7 +41,7 @@ class phpRack_Mail
     private $_body;
     private $_to;
     private $_response;
-    private $_subject = 'phpRack привет';
+    private $_subject = 'phpRack';
     private $_connection;
 
     public function __construct(array $options)
@@ -65,10 +65,7 @@ class phpRack_Mail
             $protocol = 'tls';
         }
         $addr = $protocol.'://'.$this->_options['smtp']['host'].':'.$port;
-        $this->_connection = stream_socket_client($addr, $a, $b, 10);
-        
-        stream_set_timeout($this->_connection, 50);
-
+        $this->_connection = stream_socket_client($addr);
         return is_resource($this->_connection);
     }
 
