@@ -38,12 +38,18 @@ ini_set('display_errors', true);
  * Here we define a error handler in order to catch all possible
  * PHP errors and show them online, no matter what server settings
  * exist for error handling...
+ *
+ * Warnings will be IGNORED if statement that caused the error
+ * was prepended by the @ error-control operator. This behavior
+ * is important for functions like mysql_connect(), fsockopen()
+ * to avoid warnings displaying, because when we use them we
+ * implement own error detection mechanism.
  */
 set_error_handler(
     create_function(
         '$errno, $errstr, $errfile, $errline',
         '
-        if (in_array($errno, array(E_WARNING))) {
+        if (in_array($errno, array(E_WARNING)) && error_reporting() == 0) {
             return;
         }
         echo sprintf(
