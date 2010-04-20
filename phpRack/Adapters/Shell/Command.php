@@ -106,7 +106,7 @@ class phpRack_Adapters_Shell_Command
      *           command. Recently we have added PEAR support, which internally
      *           execute PHP script, so problem returned.
      *
-     *           Direct reason of this error is $_SERVER['SCRIPT_NAME']
+     *           Direct reason of this error is $_ENV['SCRIPT_FILENAME']
      *           variable. When we unset it and pass modified env to
      *           proc_open(). It works on Windows XP, Ubuntu Linux and solve
      *           problem on phprack.com server.
