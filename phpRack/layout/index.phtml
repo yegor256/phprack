@@ -37,7 +37,7 @@
         <?php $ajaxOptions = $test->getAjaxOptions();?>
 
         <div id="d<?php echo ++$i?>" class="task">
-            <span class="label" title="click to re-start"><?php echo $test->getLabel() ?>:</span>&nbsp;
+            <span class="label" title="click to re-start"><?php echo $test->getLabel() ?>:</span>&#160;
             <span class="result" title="click to see the log"><?php
             if (!empty($ajaxOptions['autoStart'])) {
                 echo 'waiting...';
