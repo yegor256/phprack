@@ -144,11 +144,6 @@ class phpRack_Package_Php extends phpRack_Package
 
         $lintCommand = 'php -l';
 
-        // If we are not on Windows, add environment ignoring, to prevent many PHP script forks
-        if (!in_array(PHP_OS, array('WIN32', 'WINNT'))) {
-            $lintCommand = 'env -i ' . $lintCommand;
-        }
-
         $valid = $invalid = 0;
         foreach ($iterator as $file) {
             $file = realpath($file->getPathname());

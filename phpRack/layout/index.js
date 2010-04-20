@@ -390,7 +390,11 @@ $(
                                 } else {
                                     // We received malformed JSON
                                     // (php script throwed some warning, unhandled exception, extra data, etc...)
-                                    message = errorThrown;
+                                    if (typeof errorThrown == 'object') {
+                                        message = errorThrown.toString();
+                                    } else {
+                                        message = errorThrown;
+                                    }
                                 }
 
                                 // Use word wrap for this messages type
