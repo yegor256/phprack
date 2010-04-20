@@ -33,6 +33,11 @@
 require_once PHPRACK_PATH . '/Test.php';
 
 /**
+ * @see phpRack_Suite
+ */
+require_once PHPRACK_PATH . '/Suite.php';
+
+/**
  * @see phpRack_Runner_AuthResult
  */
 require_once PHPRACK_PATH . '/Runner/AuthResult.php';
@@ -98,6 +103,15 @@ class phpRack_Runner
      * @see getTests()
      */
     const TEST_PATTERN = '/(\w+Test)\.php$/i';
+
+    /**
+     * This is how you should name your suite files, if you want
+     * them to be found by the Runner
+     *
+     * @var string
+     * @see getTests()
+     */
+    const SUITE_PATTERN = '/(\w+Suite)\.php$/i';
     
     /**
      * List of options, which are changeable
@@ -326,16 +340,25 @@ class phpRack_Runner
      *
      * @return phpRack_Test[]
      * @see index.phtml
+     * @todo #48 Where phpRack_Suite-s should be placed to be automatically
+     *           loaded? Same path like we have for phpRack_Test-s?
      */
     public function getTests() 
     {
         $tests = array();
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getDir())) as $file) {
-            if (!preg_match(self::TEST_PATTERN, $file->getFilename())) {
-                continue;
+            switch (true) {
+                case preg_match(self::TEST_PATTERN, $file->getFilename()):
+                    $tests[] = phpRack_Test::factory(strval($file), $this);
+                    break;
+
+                case preg_match(self::SUITE_PATTERN, $file->getFilename()):
+                    $suite = phpRack_Suite::factory(strval($file), $this);
+                    foreach ($suite->getTests() as $test) {
+                        $tests[] = $test;
+                    }
+                    break;
             }
-                
-            $tests[] = phpRack_Test::factory(strval($file), $this);
         }
         return $tests;
     }
