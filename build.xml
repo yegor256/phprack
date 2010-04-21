@@ -177,6 +177,13 @@
 				<exclude name=".svn/**" />
 			</fileset>
 		</ftpdeploy>
+		<echo message="uploading logo.png to the server..." />
+		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
+			dir="./public" clearfirst="true" port="${ftp.port}">
+			<fileset dir="${project.basedir}/phpRack/layout">
+				<include name="logo.png"/>
+			</fileset>
+		</ftpdeploy>
 	</target>
 
 </project>
