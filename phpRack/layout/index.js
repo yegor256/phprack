@@ -2,7 +2,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -42,6 +42,29 @@ $(
         {
             return this.replace(/[<]/g, '&lt;').replace(/[>]/g, '&gt;');
         };
+
+        var that = {
+            focus: true,
+            init: function()
+            {
+                $(window).blur(that.onBlur);
+                $(window).focus(that.onFocus);
+            },
+            onBlur: function()
+            {
+                that.focus = false;
+            },
+            onFocus: function()
+            {
+                that.focus = true;
+            },
+            hasFocus: function()
+            {
+                return that.focus;
+            }
+        };
+        phpRack_Window = that;
+        phpRack_Window.init();
 
         // Our processing queue to control tests concurrency
         function phpRack_TaskQueue()
@@ -247,7 +270,7 @@ $(
 
                         // Add last log output to our lines set
                         $.each(
-                            message.split("\n"), 
+                            message.split("\n"),
                             function()
                             {
                                 that.lines.push(
@@ -262,7 +285,7 @@ $(
                         // Create message from visible lines
                         message = '';
                         $.each(
-                            that.lines, 
+                            that.lines,
                             function()
                             {
                                 message += this.text + "\n";
@@ -311,8 +334,20 @@ $(
                 _setReloadTimeout: function(seconds)
                 {
                     that._removeReloadTimeout();
-                    var delay = seconds * 1000; // in miliseconds
-                    that.timeoutId = window.setTimeout(that.run, delay);
+
+                    // if window has focus
+                    if (phpRack_Window.hasFocus()) {
+                        var delay = seconds * 1000; // in miliseconds
+                        // execute run() method with passed reload timeout
+                        that.timeoutId = window.setTimeout(that.run, delay);
+                    } else {
+                        // if window has no focus, try again in 1 second
+                        var sleepFunction = function()
+                        {
+                            that._setReloadTimeout(seconds);
+                        };
+                        window.setTimeout(sleepFunction, 1000);
+                    }
                 },
                 _removeReloadTimeout: function()
                 {
