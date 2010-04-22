@@ -5,7 +5,7 @@
  **/
 abstract class phpRack_Mail_Transport_Abstract
 {
-    private $_options = array();
+    protected $_options = array();
 
     protected $_body;
 

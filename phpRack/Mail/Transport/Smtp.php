@@ -1,5 +1,5 @@
 <?php
-require PHPRACK_PATH . '/Mail/Transport/Abstract.php';
+require_once PHPRACK_PATH . '/Mail/Transport/Abstract.php';
 
 class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
 {
