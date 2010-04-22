@@ -133,6 +133,7 @@ class phpRack_View
      *
      * @param string HTML content, before compression
      * @return string HTML content, compressed
+     * @todo #53 the problem still exists on PHP 5.2.13
      */
     public function compressedHtml($html)
     {
@@ -167,7 +168,9 @@ class phpRack_View
                 }
             }
         }
-        return $dom->saveXml();
+        // @todo #53 disable this line once the problem is solved
+        return $html;
+        // return $dom->saveXml();
     }
     
     /**
