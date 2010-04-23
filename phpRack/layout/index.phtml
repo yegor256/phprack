@@ -50,9 +50,10 @@
         </div>
         <?php 
         $jsCalls[$i] = array(
-            'divId'     => 'div#d' . $i,
-            'fileName'  => $this->jsPath($test->getFileName()),
-            'autoStart' => !empty($ajaxOptions['autoStart']) ? true : false
+            'divId'              => 'div#d' . $i,
+            'fileName'           => $this->jsPath($test->getFileName()),
+            'autoStart'          => !empty($ajaxOptions['autoStart']) ? true : false,
+            'pauseWhenFocusLost' => !empty($ajaxOptions['pauseWhenFocusLost']) ? true : false,
         );
         ?>
     <?php endforeach; ?>
