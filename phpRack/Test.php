@@ -92,7 +92,8 @@ abstract class phpRack_Test
         'secVisible' => null, // how long these lines should be visible (in seconds)
         'attachOutput' => false, // attach output to previous result log
         'data' => array(), // used for store data which should be returned in next ajax query
-        'fileLastOffset' => null // used for control offset to read in phpRack_Package_Disc_File::tailf()
+        'fileLastOffset' => null, // used for control offset to read in phpRack_Package_Disc_File::tailf()
+        'pauseWhenFocusLost' => true // stop ajax requests when window lost focus
     );
     
     /**

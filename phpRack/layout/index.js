@@ -220,7 +220,7 @@ $(
                     );
 
                     // Attach one time event to "click to start..." text
-                    if (!options.autoStart) {
+                    if (!that.options.autoStart) {
                         that.$result.one('click', that.run);
                     }
                 },
@@ -336,7 +336,7 @@ $(
                     that._removeReloadTimeout();
 
                     // if window has focus
-                    if (phpRack_Window.hasFocus()) {
+                    if (phpRack_Window.hasFocus() || !that.options.pauseWhenFocusLost) {
                         var delay = seconds * 1000; // in miliseconds
                         // execute run() method with passed reload timeout
                         that.timeoutId = window.setTimeout(that.run, delay);
@@ -467,7 +467,8 @@ $(
                     id: call.divId,
                     url: phpParams.requestUri,
                     data: data,
-                    autoStart: call.autoStart
+                    autoStart: call.autoStart,
+                    pauseWhenFocusLost: call.pauseWhenFocusLost
                 }
             );
 
