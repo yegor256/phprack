@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available
+ * with this package in the file LICENSE.txt. It is also available 
  * through the world-wide-web at this URL: http://www.phprack.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -27,35 +27,29 @@
  * @category phpRack
  */
 
-
 /**
- * CPU adapter used to get details about available processor
+ * Abstract CPU adapter
  *
  * @package Adapters
+ * @subpackage Cpu
  */
-class phpRack_Adapters_Cpu
+abstract class phpRack_Adapters_Cpu_Abstract
 {
     /**
-     * CPU adapter factory return adapter depending on operating system
+     * Get CPU BogoMips
      *
-     * @return phpRack_Adapters_Cpu_Abstract
+     * @return float
+     * @throws Exception If unable to get BogoMips
+     * @see phpRack_Package_Cpu_Performance::atLeast()
      */
-    public static function factory()
-    {
-        if (substr(PHP_OS, 0, 3) === 'WIN') {
-            /**
-             * @see phpRack_Adapters_Cpu_Windows
-             */
-            require_once PHPRACK_PATH . '/Adapters/Cpu/Windows.php';
+    abstract public function getBogoMips();
 
-            return new phpRack_Adapters_Cpu_Windows();
-        } else {
-            /**
-             * @see phpRack_Adapters_Cpu_Linux
-             */
-            require_once PHPRACK_PATH . '/Adapters/Cpu/Linux.php';
-
-            return new phpRack_Adapters_Cpu_Linux();
-        }
-    }
+    /**
+     * Get CPU frequency in MHz
+     *
+     * @return float
+     * @throws Exception If can't get cpu frequency
+     * @see getBogoMips()
+     */
+    abstract public function getCpuFrequency();
 }

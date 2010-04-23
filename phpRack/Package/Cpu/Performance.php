@@ -54,7 +54,7 @@ class phpRack_Package_Cpu_Performance extends phpRack_Package
         require_once PHPRACK_PATH . '/Adapters/Cpu.php';
 
         try {
-            $cpu = new phpRack_Adapters_Cpu();
+            $cpu = phpRack_Adapters_Cpu::factory();
             $currentBogoMips = $cpu->getBogoMips();
             if ($currentBogoMips >= $bogoMips) {
                 $this->_success("CPU if fast enough with '{$currentBogoMips}' BogoMips");
