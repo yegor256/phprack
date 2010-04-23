@@ -140,22 +140,6 @@
         <!-- get FTP properties from file -->
         <property file="./build.properties" />
         
-        <tar destfile="${build.tgz}" compression="gzip">
-            <fileset dir="${project.basedir}">
-                <include name="phpRack/**" />
-                <include name="LICENSE.txt" />
-                <exclude name=".svn/**" />
-            </fileset>
-        </tar>
-		<echo message="uploading ${package.name}.tgz to the server..." />
-		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
-			dir="./public" clearfirst="true" port="${ftp.port}">
-			<fileset dir="${project.basedir}/build">
-				<include name="${package.name}.tgz"/>
-			</fileset>
-		</ftpdeploy>
-      	<delete file="${build.tgz}" />
-      
 		<echo message="uploading PHP code to the server..." />
 		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
 		    clearfirst="true" port="${ftp.port}">
@@ -169,21 +153,28 @@
 			</fileset>
 		</ftpdeploy>
 
-		<echo message="uploading phprack.com web files" />
+        <tar destfile="${build.tgz}" compression="gzip">
+            <fileset dir="${project.basedir}">
+                <include name="phpRack/**" />
+                <include name="LICENSE.txt" />
+                <exclude name=".svn/**" />
+            </fileset>
+        </tar>
+		<echo message="uploading ${package.name}.tgz to the server..." />
 		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
 			dir="./public" clearfirst="true" port="${ftp.port}">
+			<fileset dir="${project.basedir}/build">
+				<include name="${package.name}.tgz"/>
+			</fileset>
 			<fileset dir="${project.basedir}/phprack.com">
 				<include name="**/*"/>
 				<exclude name=".svn/**" />
 			</fileset>
-		</ftpdeploy>
-		<echo message="uploading logo.png to the server..." />
-		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
-			dir="./public" clearfirst="true" port="${ftp.port}">
 			<fileset dir="${project.basedir}/phpRack/layout">
 				<include name="logo.png"/>
 			</fileset>
 		</ftpdeploy>
+      	<delete file="${build.tgz}" />
 	</target>
 
 </project>
