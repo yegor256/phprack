@@ -1,15 +1,22 @@
 <?php
-require PHPRACK_PATH . '/Mail/Transport/Smtp.php';
+require_once PHPRACK_PATH . '/Mail/Transport/Smtp.php';
 
-require PHPRACK_PATH . '/Mail/Transport/Sendmail.php';
+require_once PHPRACK_PATH . '/Mail/Transport/Sendmail.php';
 
 class phpRack_Mail
 {
+    /**
+     * Constructor closed by default
+     */
     private function __construct()
     {
-        /* closing */
     }
 
+    /**
+     * Factory method to run sendmail or smtp. Depends on options
+     * @param array $params
+     * @return object
+     */
     public static function factory(array $params)
     {
         if (is_array($params['smtp']) && count($params['smtp'])) {

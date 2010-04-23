@@ -3,12 +3,30 @@ require_once PHPRACK_PATH . '/Mail/Transport/Abstract.php';
 
 class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
 {
-    private $_response;
+    /**
+     * Response from server to debug
+     * @var array
+     */
+    protected $_response;
 
-    private $_connected = false;
+    /**
+     * Connection status
+     * @var bool
+     */
+    protected $_connected = false;
 
-    private $_connection;
+    /**
+     * Our connection entry poing
+     * @var resource
+     */
+    protected $_connection;
 
+    /**
+     * Constructor for smtp protocol.
+     * Creation of address to connect to.
+     * @param array $options
+     * @return void
+     */
     public function __construct(array $options)
     {
         parent::__construct($options);
@@ -33,8 +51,10 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
     }
 
     /**
-    * @todo: add check for STARTTLS
-    */
+     *
+     * @todo #32 add check for STARTTLS
+     * @return void
+     */
     public function send()
     {
         if (!$this->_connected) {
@@ -74,14 +94,17 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
         return true;
     }
 
-    private function _sendHeaders()
+    /**
+     * @return void
+     */
+    protected function _sendHeaders()
     {
         $this->_query('From: <' . $this->_from . '>');
         $this->_query('To: <' . $this->_to[0] . '>');
         unset($this->_to[0]);
         if (count($this->_to)) {
             /**
-             * @todo: i think this must be Bcc, not Cc
+             * @todo #32 i think this must be Bcc, not Cc
              */
             $this->_query('Cc: <' . implode('>,<', $this->_to) . '>');
         }
@@ -95,9 +118,10 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
     }
 
     /**
-     * @todo: move this method to phpRack_Mail_Transport_Abstract
+     * @todo #32 move this method to phpRack_Mail_Transport_Abstract
+     * @var string $msg
      */
-    private function _query($msg)
+    protected function _query($msg)
     {
         if (!fwrite($this->_connection, $msg . "\r\n")) {
             throw new Exception('Can\'t write to a socket');
@@ -106,9 +130,11 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
     }
 
     /**
-     * @todo: move this method to phpRack_Mail_Transport_Abstract
+     * @todo #32 move this method to phpRack_Mail_Transport_Abstract
+     * @var int|array $code
+     * @var int $timeout (Default: 300)
      */
-    private function _mustBe($code, $timeout = 300)
+    protected function _mustBe($code, $timeout = 300)
     {
         if (!is_array($code)) {
             $code = array($code);
@@ -131,7 +157,10 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
         }
         return $this;
     }
-
+    
+    /**
+     * Destructor
+     */
     public function __destruct()
     {
         if ($this->_connected) {

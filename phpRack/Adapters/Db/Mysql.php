@@ -211,6 +211,11 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
             throw new Exception('You must call connect() method before');
         }
 
+        $answer = $this->query('SHOW GRANTS FOR CURRENT_USER');
+        if (!preg_match('~GRANT (PROCESS|ALL)~', $answer)) {
+            return false;
+        }
+        
         return $this->query('SHOW FULL PROCESSLIST');
     }
 

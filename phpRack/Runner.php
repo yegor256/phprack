@@ -363,12 +363,11 @@ class phpRack_Runner
                 $result->getDuration()
             );
             $success &= $result->wasSuccessful();
-            break;###
         }
         $report .= "PHPRACK SUITE: " . ($success ? phpRack_Test::OK : phpRack_Test::FAILURE) . "\n";
 
-        if (!empty($this->_options['notify']) && !$success) {
-            require PHPRACK_PATH . '/Mail.php';
+        #if (!empty($this->_options['notify']) && !$success) {
+            require_once PHPRACK_PATH . '/Mail.php';
 
             $mail = phpRack_Mail::factory($this->_options);
             $mail->setSubject('phpRack summary');
@@ -379,7 +378,7 @@ class phpRack_Runner
             #} catch(Exception $e) {
                 //
             #}
-        }
+        #}
         return $report;
     }
 
