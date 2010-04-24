@@ -29,45 +29,29 @@
 
 
 /**
- * CPU adapter used to get details about available processor
+ * OS adapter used to get information where script is executed
  *
  * @package Adapters
  */
-class phpRack_Adapters_Cpu
+class phpRack_Adapters_Os
 {
     /**
-     * CPU adapter factory return adapter depending on operating system
-     *
-     * @return phpRack_Adapters_Cpu_Abstract
-     * @see For MacOS I think we should use system_profiler shell command.
-     *      After that we can parse it output in similar way like we do it for
-     *      Windows or Linux
-     * @todo #17 How about Mac OS? There is no /proc directory in Mac OS
+     * System constants used for simplify comparisions
      */
-    public static function factory()
+    const WINDOWS = 'Windows';
+    const LINUX = 'Linux';
+
+    /**
+     * Recognize OS and return its name as string (Windows, Linux, etc)
+     *
+     * @return string
+     * @todo #17 We need to add MacOS recognition here
+     */
+    public static function get()
     {
-        /**
-         * @see phpRack_Adapters_Os
-         */
-        require_once PHPRACK_PATH . '/Adapters/Os.php';
-
-        switch (phpRack_Adapters_Os::get()) {
-            case phpRack_Adapters_Os::WINDOWS:
-                /**
-                 * @see phpRack_Adapters_Cpu_Windows
-                 */
-                require_once PHPRACK_PATH . '/Adapters/Cpu/Windows.php';
-
-                return new phpRack_Adapters_Cpu_Windows();
-                break;
-
-            default:
-                /**
-                 * @see phpRack_Adapters_Cpu_Linux
-                 */
-                require_once PHPRACK_PATH . '/Adapters/Cpu/Linux.php';
-
-                return new phpRack_Adapters_Cpu_Linux();
+        if (substr(PHP_OS, 0, 3) === 'WIN') {
+            return self::WINDOWS;
         }
+        return self::LINUX;
     }
 }
