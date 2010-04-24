@@ -39,6 +39,10 @@ class phpRack_Adapters_Cpu
      * CPU adapter factory return adapter depending on operating system
      *
      * @return phpRack_Adapters_Cpu_Abstract
+     * @todo #17 How about Mac OS? There is no /proc directory in Mac OS
+     * @todo #17 I think that it would be much better to introduce phpRack_Adapters_Os
+     *      which would return the ID of the Operating System. Something like:
+     *      phpRack_Adapters_Os::get() -> "Windows" or "Linux" or "Mac", etc.
      */
     public static function factory()
     {
