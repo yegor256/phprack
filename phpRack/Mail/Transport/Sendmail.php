@@ -1,10 +1,16 @@
 <?php
 require_once PHPRACK_PATH . '/Mail/Transport/Abstract.php';
 
+/**
+ * Sendmail
+ *
+ * @see phpRack_Mail_Transport_Abstract
+ */
 class phpRack_Mail_Transport_Sendmail extends phpRack_Mail_Transport_Abstract
 {
     /**
      * Sending mail
+     *
      * @return bool
      */
     public function send()
@@ -16,10 +22,11 @@ class phpRack_Mail_Transport_Sendmail extends phpRack_Mail_Transport_Abstract
             $this->_getHeaders()
         );
     }
-    
+
     /**
      * Builds headers for the mail function
-     * @return string
+     *
+     * @return string Plain list of headers
      */
     private function _getHeaders()
     {

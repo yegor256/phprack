@@ -1,30 +1,43 @@
 <?php
 require_once PHPRACK_PATH . '/Mail/Transport/Abstract.php';
 
+/**
+ * SMTP
+ *
+ * @see phpRack_Mail_Transport_Abstract
+ */
 class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
 {
     /**
      * Response from server to debug
+     *
      * @var array
+     * @see _mustBe()
      */
     protected $_response;
 
     /**
      * Connection status
+     *
      * @var bool
+     * @see __construct()
+     * @see __destruct()
      */
     protected $_connected = false;
 
     /**
      * Our connection entry poing
+     *
      * @var resource
+     * @see __construct()
      */
     protected $_connection;
 
     /**
      * Constructor for smtp protocol.
      * Creation of address to connect to.
-     * @param array $options
+     *
+     * @param array List of parameters
      * @return void
      */
     public function __construct(array $options)
@@ -51,9 +64,12 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
     }
 
     /**
+     * Sending mail
      *
      * @todo #32 add check for STARTTLS
-     * @return void
+     * @see _query()
+     * @see _mustBe()
+     * @see _sendHeaders()
      */
     public function send()
     {
@@ -95,7 +111,11 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
     }
 
     /**
-     * @return void
+     * Sending headers
+     *
+     * @see _query()
+     * @see _getEncodedSubject()
+     * @see _getEncodedBody()
      */
     protected function _sendHeaders()
     {
@@ -119,6 +139,7 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
 
     /**
      * @todo #32 move this method to phpRack_Mail_Transport_Abstract
+     *
      * @var string $msg
      */
     protected function _query($msg)
@@ -131,6 +152,7 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
 
     /**
      * @todo #32 move this method to phpRack_Mail_Transport_Abstract
+     *
      * @var int|array $code
      * @var int $timeout (Default: 300)
      */
@@ -157,7 +179,7 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
         }
         return $this;
     }
-    
+
     /**
      * Destructor
      */

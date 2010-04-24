@@ -9,13 +9,15 @@ class phpRack_Mail
      * Constructor closed by default
      */
     private function __construct()
-    {
-    }
+    {}
 
     /**
      * Factory method to run sendmail or smtp. Depends on options
-     * @param array $params
-     * @return object
+     *
+     * @param array List of parameters
+     * @return phpRack_Mail
+     * @see phpRack_Mail_Transport_Smtp
+     * @see phpRack_Mail_Transport_Sendmail
      */
     public static function factory(array $params)
     {
