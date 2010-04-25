@@ -29,36 +29,55 @@
 
 
 /**
- * CPU adapter used to get details about available processor
+ * OS adapter used to get information where script is executed
  *
  * @package Adapters
  */
-class phpRack_Adapters_Cpu
+class phpRack_Adapters_Os
 {
     /**
-     * CPU adapter factory return adapter depending on operating system
-     *
-     * @return phpRack_Adapters_Cpu_Abstract
-     * @throws Exception If OS is not supported
-     * @see For MacOS I think we should use system_profiler shell command.
-     *      After that we can parse it output in similar way like we do it for
-     *      Windows or Linux
-     * @todo #17 How about Mac OS? There is no /proc directory in Mac OS
+     * System constants used for simplify comparisions
      */
-    public static function factory()
+    const WINDOWS = 'Windows';
+    const LINUX = 'Linux';
+    const DARWIN = 'Darwin';
+
+    /**
+     * Recognize OS and return its name as string (Windows, Linux, etc)
+     *
+     * @return string
+     * @see phpRack_Adapters_Cpu::factory()
+     * @see #17 I don't like the way we manage DEFAULT here. Not all systems are Linux,
+     *      if we don't know them. Would be much better to detect LINUX only, and throw
+     *      an Exception if some other system is found, which is unknown for us.
+     */
+    public static function get()
     {
-        /**
-         * @see phpRack_Adapters_Os
-         */
-        require_once PHPRACK_PATH . '/Adapters/Os.php';
-        $os = phpRack_Adapters_Os::get();
-        $classFile = PHPRACK_PATH . '/Adapters/Cpu/' . ucfirst($os) . '.php';
-        
-        if (!file_exists($classFile)) {
-            throw new Exception("OS '{$os}' is not supported yet");
+        switch (true) {
+            /* windows */
+            case (substr(PHP_OS, 0, 3) === 'WIN'):
+                return self::WINDOWS;
+                
+            /* Mac OS and Mac OS X */
+            case (substr(PHP_OS, 0, 6) === 'Darwin'):
+                return self::DARWIN;
+                
+            /* all other systems */
+            default:
+                return self::LINUX;
         }
-        eval ('require_once $classFile;'); // for ZCA validation
-        $className = 'phpRack_Adapters_Cpu_' . ucfirst($os);
-        return new $className();
+    }
+    
+    /**
+     * Is it *NIX system?
+     *
+     * Everything which is NOT windows is Unix. Very rough assumption, but this
+     * is enough for now.
+     *
+     * @return boolean
+     */
+    public static function isUnix() 
+    {
+        return (self::get() != self::WINDOWS);
     }
 }

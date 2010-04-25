@@ -112,12 +112,15 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
     /**
      * Log one message in testing
      *
-     * @param string Message to log
+     * @param string|Exception Message to log
      * @return void
      */
     protected function _log($message) 
     {
-        echo $message;
+        if ($message instanceof Exception) {
+            $message = get_class($message) . ': ' . $message->getMessage();
+        }
+        echo $message . "\n";
     }
     
 }

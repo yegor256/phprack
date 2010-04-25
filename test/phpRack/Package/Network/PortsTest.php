@@ -38,7 +38,7 @@ class phpRack_Package_Network_PortsTest extends AbstractTest
             $this->_package->isOpen(80, 'google.com');
             $this->assertTrue($this->_result->wasSuccessful());
         } catch (Exception $e) {
-            $this->_log(get_class($e) . ': ' . $e->getMessage());
+            $this->_log($e);
             $this->markTestIncomplete();
         }
 

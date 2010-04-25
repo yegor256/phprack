@@ -32,6 +32,7 @@
  *
  * @package Adapters
  * @subpackage Cpu
+ * @see phpRack_Adapters_Cpu::factory()
  */
 abstract class phpRack_Adapters_Cpu_Abstract
 {

@@ -25,7 +25,7 @@ class Adapters_UrlTest extends AbstractTest
         try {
             $url->getContent();
         } catch (Exception $e) {
-            $this->_log(get_class($e) . ': ' . $e->getMessage());
+            $this->_log($e);
             $this->markTestIncomplete();
         }
     }

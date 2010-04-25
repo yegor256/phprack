@@ -41,7 +41,7 @@ class Adapters_Db_MysqlTest extends AbstractTest
             $this->_adapter->query('SELECT 1');
         } catch (Exception $e) {
             // ignore it
-            $this->_log(get_class($e) . ': ' . $e->getMessage());
+            $this->_log($e);
         }
     }
 

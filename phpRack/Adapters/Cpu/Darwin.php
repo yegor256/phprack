@@ -23,7 +23,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @copyright Copyright (c) phpRack.com
- * @version $Id$
+ * @version $Id: Linux.php 447 2010-04-24 03:59:09Z yegor256@yahoo.com $
  * @category phpRack
  */
 
@@ -33,12 +33,13 @@
 require_once PHPRACK_PATH . '/Adapters/Cpu/Abstract.php';
 
 /**
- * Linux CPU Adapter
+ * Darwin CPU Adapter (Mac OS)
  *
  * @package Adapters
  * @subpackage Cpu
+ * @todo #17 Should be implemented
  */
-class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
+class phpRack_Adapters_Cpu_Darwin extends phpRack_Adapters_Cpu_Abstract
 {
     /**
      * Get CPU BogoMips
@@ -47,21 +48,11 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
      * @throws Exception If unable to get BogoMips
      * @see phpRack_Package_Cpu_Performance::atLeast()
      * @see phpRack_Adapters_Cpu_Abstract::getBogoMips()
+     * @todo #17 Should be implemented
      */
     public function getBogoMips()
     {
-        $matches = array();
-        // on Linux parse ouput of "cat /proc/cpuinfo" command
-        if (
-            !preg_match(
-                '/^bogomips\s*:\s*(.*)/m',
-                $this->_getCpuInfoData(), // Exception is possible here
-                $matches
-            )
-        ) {
-            throw new Exception("Unable to find bogomips value in cpuinfo");
-        }
-        return floatval($matches[1]);
+        throw new Exception('Darwin::getBogoMips() not implemented yet');
     }
 
     /**
@@ -71,40 +62,10 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
      * @throws Exception If can't get cpu frequency
      * @see getBogoMips()
      * @see phpRack_Adapters_Cpu_Abstract::getCpuFrequency()
+     * @todo #17 Should be implemented
      */
     public function getCpuFrequency()
     {
-        // on Linux parse ouput of "cat /proc/cpuinfo" command
-        $matches = array();
-        if (
-            !preg_match(
-                '/^cpu MHz\s*:\s*(.*)/m',
-                $this->_getCpuInfoData(), // Exception is possible here
-                $matches
-            )
-        ) {
-            throw new Exception('Unable to find CPU MHz value in cpuinfo');
-        }
-        return floatval($matches[1]);
-    }
-
-    /**
-     * Get result of "cat /proc/cpuinfo" shell command execution
-     *
-     * @return string
-     * @throws Exception If unable to execute shell command
-     * @see getBogoMips()
-     * @see getCpuFrequency()
-     */
-    private function _getCpuInfoData()
-    {
-        $command = 'cat /proc/cpuinfo';
-        /**
-         * @see phpRack_Adapters_Shell_Command
-         */
-        require_once PHPRACK_PATH . '/Adapters/Shell/Command.php';
-        // Exception is possible here
-        $result = phpRack_Adapters_Shell_Command::factory($command)->run();
-        return $result;
+        throw new Exception('Darwin::getCpuFrequency() not implemented yet');
     }
 }

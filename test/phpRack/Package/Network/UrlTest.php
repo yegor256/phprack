@@ -57,7 +57,7 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
                 ->regex('/google\.com/');
             $this->assertTrue($this->_result->wasSuccessful());
         }  catch (Exception $e) {
-            $this->_log(get_class($e) . ': ' . $e->getMessage());
+            $this->_log($e);
             $this->markTestIncomplete();
         }
     }
@@ -69,7 +69,7 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
                 ->regex('google.com');
             $this->assertTrue($this->_result->wasSuccessful());
         }  catch (Exception $e) {
-            $this->_log(get_class($e) . ': ' . $e->getMessage());
+            $this->_log($e);
             $this->markTestIncomplete();
         }
     }
