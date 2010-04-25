@@ -57,11 +57,11 @@ class phpRack_Package_Cpu_Performance extends phpRack_Package
             $cpu = phpRack_Adapters_Cpu::factory();
             $currentBogoMips = $cpu->getBogoMips();
             if ($currentBogoMips >= $bogoMips) {
-                $this->_success("CPU if fast enough with '{$currentBogoMips}' BogoMips");
+                $this->_success("CPU is fast enough with '{$currentBogoMips}' BogoMips");
             } else {
                 $this->_failure(
                     "CPU is too slow. " .
-                    "It has only '{$currentBogoMips}' BogoMips, but required is '{$bogoMips}'"
+                    "It has only '{$currentBogoMips}' BogoMips, but '{$bogoMips}' is required"
                 );
             }
         } catch (Exception $e) {
