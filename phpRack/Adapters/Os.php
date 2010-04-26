@@ -47,9 +47,7 @@ class phpRack_Adapters_Os
      *
      * @return string
      * @see phpRack_Adapters_Cpu::factory()
-     * @see #17 I don't like the way we manage DEFAULT here. Not all systems are Linux,
-     *      if we don't know them. Would be much better to detect LINUX only, and throw
-     *      an Exception if some other system is found, which is unknown for us.
+     * @throws Exception if operating system can't be recognized
      */
     public static function get()
     {
@@ -61,10 +59,14 @@ class phpRack_Adapters_Os
             /* Mac OS and Mac OS X */
             case (substr(PHP_OS, 0, 6) === 'Darwin'):
                 return self::DARWIN;
+
+            /* Linux */
+            case (substr(PHP_OS, 0, 5) === 'Linux'):
+                return self::LINUX;
                 
             /* all other systems */
             default:
-                return self::LINUX;
+                throw new Exception('Unknown operating system');
         }
     }
     
