@@ -230,12 +230,14 @@ $(
                 },
                 onResultClick: function()
                 {
-                    if (that.isRunning) {
-                        if (that.timer.getElapsedSeconds() >= that.abortWaitTime) {
-                            that.xmlHttpRequest.abort();
-                        }
+                    // if test is running above that.abortWaitTime seconds abort it
+                    if (that.isRunning && that.timer.getElapsedSeconds() >= that.abortWaitTime) {
+                        that.xmlHttpRequest.abort();
                     } else {
-                        that.$message.slideToggle();
+                        // if test is finished, or running below than that.abortWaitTime seconds
+                        if (that.$message.html()) {
+                            that.$message.slideToggle();
+                        }
                     }
                 },
                 _setStatus: function (success, message, options)
@@ -245,6 +247,10 @@ $(
                         that.$result.html(phpParams.ok).addClass('success');
                     } else {
                         that.$result.html(phpParams.failure).addClass('failure');
+                    }
+
+                    if (options && options.reload) {
+                        that.$result.html(that.$result.html() + '?');
                     }
 
                     if (options && options.attachOutput) {
@@ -335,8 +341,9 @@ $(
                 {
                     that._removeReloadTimeout();
 
-                    // if window has focus
-                    if (phpRack_Window.hasFocus() || !that.options.pauseWhenFocusLost) {
+                    // if window has focus, and result message is expanded
+                    if ((phpRack_Window.hasFocus() || !that.options.pauseWhenFocusLost) &&
+                         that.$message.is(":visible")) {
                         var delay = seconds * 1000; // in miliseconds
                         // execute run() method with passed reload timeout
                         that.timeoutId = window.setTimeout(that.run, delay);

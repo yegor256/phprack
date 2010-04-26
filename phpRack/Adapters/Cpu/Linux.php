@@ -46,6 +46,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
      * @return float
      * @throws Exception If unable to get BogoMips
      * @see phpRack_Package_Cpu_Performance::atLeast()
+     * @see phpRack_Adapters_Cpu_Abstract::getBogoMips()
      */
     public function getBogoMips()
     {
@@ -69,6 +70,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
      * @return float
      * @throws Exception If can't get cpu frequency
      * @see getBogoMips()
+     * @see phpRack_Adapters_Cpu_Abstract::getCpuFrequency()
      */
     public function getCpuFrequency()
     {

@@ -39,6 +39,7 @@ class phpRack_Adapters_Cpu
      * CPU adapter factory return adapter depending on operating system
      *
      * @return phpRack_Adapters_Cpu_Abstract
+     * @throws Exception If OS is not supported
      * @see For MacOS I think we should use system_profiler shell command.
      *      After that we can parse it output in similar way like we do it for
      *      Windows or Linux
@@ -50,24 +51,14 @@ class phpRack_Adapters_Cpu
          * @see phpRack_Adapters_Os
          */
         require_once PHPRACK_PATH . '/Adapters/Os.php';
-
-        switch (phpRack_Adapters_Os::get()) {
-            case phpRack_Adapters_Os::WINDOWS:
-                /**
-                 * @see phpRack_Adapters_Cpu_Windows
-                 */
-                require_once PHPRACK_PATH . '/Adapters/Cpu/Windows.php';
-
-                return new phpRack_Adapters_Cpu_Windows();
-                break;
-
-            default:
-                /**
-                 * @see phpRack_Adapters_Cpu_Linux
-                 */
-                require_once PHPRACK_PATH . '/Adapters/Cpu/Linux.php';
-
-                return new phpRack_Adapters_Cpu_Linux();
+        $os = phpRack_Adapters_Os::get();
+        $classFile = PHPRACK_PATH . '/Adapters/Cpu/' . ucfirst($os) . '.php';
+        
+        if (!file_exists($classFile)) {
+            throw new Exception("OS '{$os}' is not supported yet");
         }
+        eval ('require_once $classFile;'); // for ZCA validation
+        $className = 'phpRack_Adapters_Cpu_' . ucfirst($os);
+        return new $className();
     }
 }

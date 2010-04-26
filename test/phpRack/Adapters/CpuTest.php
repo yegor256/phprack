@@ -39,6 +39,7 @@ class Adapters_CpuTest extends AbstractTest
         try {
             $bogoMips = $this->_adapter->getBogoMips();
         } catch (Exception $e) {
+            $this->_log($e);
             $this->markTestSkipped($e->getMessage());
         }
         $this->assertTrue(is_float($bogoMips));
@@ -49,6 +50,7 @@ class Adapters_CpuTest extends AbstractTest
         try {
             $frequency = $this->_adapter->getCpuFrequency();
         } catch (Exception $e) {
+            $this->_log($e);
             $this->markTestSkipped($e->getMessage());
         }
         $this->assertTrue(is_float($frequency));

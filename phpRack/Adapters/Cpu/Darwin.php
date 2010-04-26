@@ -23,61 +23,49 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @copyright Copyright (c) phpRack.com
- * @version $Id$
+ * @version $Id: Linux.php 447 2010-04-24 03:59:09Z yegor256@yahoo.com $
  * @category phpRack
  */
 
+/**
+ * @see phpRack_Adapters_Cpu_Abstract
+ */
+require_once PHPRACK_PATH . '/Adapters/Cpu/Abstract.php';
 
 /**
- * OS adapter used to get information where script is executed
+ * Darwin CPU Adapter (Mac OS)
  *
  * @package Adapters
+ * @subpackage Cpu
+ * @todo #17 Should be implemented
  */
-class phpRack_Adapters_Os
+class phpRack_Adapters_Cpu_Darwin extends phpRack_Adapters_Cpu_Abstract
 {
     /**
-     * System constants used for simplify comparisions
+     * Get CPU BogoMips
+     *
+     * @return float
+     * @throws Exception If unable to get BogoMips
+     * @see phpRack_Package_Cpu_Performance::atLeast()
+     * @see phpRack_Adapters_Cpu_Abstract::getBogoMips()
+     * @todo #17 Should be implemented
      */
-    const WINDOWS = 'Windows';
-    const LINUX = 'Linux';
-    const DARWIN = 'Darwin';
+    public function getBogoMips()
+    {
+        throw new Exception('Darwin::getBogoMips() not implemented yet');
+    }
 
     /**
-     * Recognize OS and return its name as string (Windows, Linux, etc)
+     * Get CPU frequency in MHz
      *
-     * @return string
-     * @see phpRack_Adapters_Cpu::factory()
-     * @see #17 I don't like the way we manage DEFAULT here. Not all systems are Linux,
-     *      if we don't know them. Would be much better to detect LINUX only, and throw
-     *      an Exception if some other system is found, which is unknown for us.
+     * @return float
+     * @throws Exception If can't get cpu frequency
+     * @see getBogoMips()
+     * @see phpRack_Adapters_Cpu_Abstract::getCpuFrequency()
+     * @todo #17 Should be implemented
      */
-    public static function get()
+    public function getCpuFrequency()
     {
-        switch (true) {
-            /* windows */
-            case (substr(PHP_OS, 0, 3) === 'WIN'):
-                return self::WINDOWS;
-                
-            /* Mac OS and Mac OS X */
-            case (substr(PHP_OS, 0, 6) === 'Darwin'):
-                return self::DARWIN;
-                
-            /* all other systems */
-            default:
-                return self::LINUX;
-        }
-    }
-    
-    /**
-     * Is it *NIX system?
-     *
-     * Everything which is NOT windows is Unix. Very rough assumption, but this
-     * is enough for now.
-     *
-     * @return boolean
-     */
-    public static function isUnix() 
-    {
-        return (self::get() != self::WINDOWS);
+        throw new Exception('Darwin::getCpuFrequency() not implemented yet');
     }
 }
