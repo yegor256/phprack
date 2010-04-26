@@ -1,15 +1,46 @@
 <?php
-require_once PHPRACK_PATH . '/Mail/Transport/Abstract.php';
+/**
+ * phpRack: Integration Testing Framework
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt. It is also available
+ * through the world-wide-web at this URL: http://www.phprack.com/license
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@phprack.com so we can send you a copy immediately.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @copyright Copyright (c) phpRack.com
+ * @version $Id$
+ * @category phpRack
+ */
 
 /**
- * SMTP
+ * @see phpRack_Adapters_Mail_Transport_Abstract
+ */
+require_once PHPRACK_PATH . '/Adapters/Mail/Transport/Abstract.php';
+
+/**
+ * Smtp implementation of phpRack mail
  *
  * @see phpRack_Mail_Transport_Abstract
  */
-class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
+class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transport_Abstract
 {
     /**
-     * Response from server to debug
+     * Response list from server to debug
      *
      * @var array
      * @see _mustBe()
@@ -26,16 +57,17 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
     protected $_connected = false;
 
     /**
-     * Our connection entry poing
+     * Connection entry point
      *
      * @var resource
      * @see __construct()
+     * @see _query()
      */
     protected $_connection;
 
     /**
-     * Constructor for smtp protocol.
-     * Creation of address to connect to.
+     * Constructor for the smtp protocol.
+     * Creates address to connect to
      *
      * @param array List of parameters
      * @return void
@@ -64,12 +96,13 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
     }
 
     /**
-     * Sending mail
+     * Prepares and sending mail.
      *
      * @todo #32 add check for STARTTLS
      * @see _query()
      * @see _mustBe()
      * @see _sendHeaders()
+     * @throws Exception if connection doesn't established
      */
     public function send()
     {
@@ -111,11 +144,13 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
     }
 
     /**
-     * Sending headers
+     * Sends server queries to complete mail
      *
      * @see _query()
      * @see _getEncodedSubject()
      * @see _getEncodedBody()
+     * @todo #32 i think CC must be Bcc in this part
+     * @return void
      */
     protected function _sendHeaders()
     {
@@ -123,9 +158,6 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
         $this->_query('To: <' . $this->_to[0] . '>');
         unset($this->_to[0]);
         if (count($this->_to)) {
-            /**
-             * @todo #32 i think this must be Bcc, not Cc
-             */
             $this->_query('Cc: <' . implode('>,<', $this->_to) . '>');
         }
 
@@ -138,9 +170,12 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
     }
 
     /**
-     * @todo #32 move this method to phpRack_Mail_Transport_Abstract
+     * Writes data to the connetion (stream)
      *
+     * @todo #32 move this method to phpRack_Adapters_Mail_Transport_Abstract
      * @var string $msg
+     * @return phpRack_Adapters_Mail_Transport_Smtp
+     * @throws Exception if can't write to the stream
      */
     protected function _query($msg)
     {
@@ -151,10 +186,15 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
     }
 
     /**
-     * @todo #32 move this method to phpRack_Mail_Transport_Abstract
+     * Reads stream. Moves caret and checks for a code or codes.
+     * Second parameter used as time limit for read stream
      *
+     * @todo #32 move this method to phpRack_Adapters_Mail_Transport_Abstract
      * @var int|array $code
      * @var int $timeout (Default: 300)
+     * @throws Exception if can't change stream timeout
+     * @throws Exception if wrong answer from the server
+     * @return phpRack_Adapters_Mail_Transport_Smtp
      */
     protected function _mustBe($code, $timeout = 300)
     {
@@ -181,7 +221,10 @@ class phpRack_Mail_Transport_Smtp extends phpRack_Mail_Transport_Abstract
     }
 
     /**
-     * Destructor
+     * Destructor.
+     * Closes connection if needed
+     *
+     * @return void
      */
     public function __destruct()
     {
