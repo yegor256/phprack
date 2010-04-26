@@ -230,12 +230,14 @@ $(
                 },
                 onResultClick: function()
                 {
-                    if (that.isRunning) {
-                        if (that.timer.getElapsedSeconds() >= that.abortWaitTime) {
-                            that.xmlHttpRequest.abort();
-                        }
+                    // if test is running above that.abortWaitTime seconds abort it
+                    if (that.isRunning && that.timer.getElapsedSeconds() >= that.abortWaitTime) {
+                        that.xmlHttpRequest.abort();
                     } else {
-                        that.$message.slideToggle();
+                        // if test is finished, or running below than that.abortWaitTime seconds
+                        if (that.$message.html()) {
+                            that.$message.slideToggle();
+                        }
                     }
                 },
                 _setStatus: function (success, message, options)
