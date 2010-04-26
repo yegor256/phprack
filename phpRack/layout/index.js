@@ -249,6 +249,10 @@ $(
                         that.$result.html(phpParams.failure).addClass('failure');
                     }
 
+                    if (options && options.reload) {
+                        that.$result.html(that.$result.html() + '?');
+                    }
+
                     if (options && options.attachOutput) {
                         // Remove old execution time line
                         that.lines.pop();
@@ -337,8 +341,9 @@ $(
                 {
                     that._removeReloadTimeout();
 
-                    // if window has focus
-                    if (phpRack_Window.hasFocus() || !that.options.pauseWhenFocusLost) {
+                    // if window has focus, and result message is expanded
+                    if ((phpRack_Window.hasFocus() || !that.options.pauseWhenFocusLost) &&
+                         that.$message.is(":visible")) {
                         var delay = seconds * 1000; // in miliseconds
                         // execute run() method with passed reload timeout
                         that.timeoutId = window.setTimeout(that.run, delay);
