@@ -150,10 +150,10 @@ class phpRack_View
         }
 
         $replacers = array(
-            '/\/\*.*?\*\//s' => '', // remove multi line comments
+            '/\/\*.*?\*\//s'   => '', // remove multi line comments
             '/\/\/.*\r?\n\s*/' => '', // remove single line comments
-            '/\s*\r?\n\s*/' => '', // remove lines end with leading/trailing spaces
-            '/\s+/' => ' ', // convert multiple spaces to single
+            '/\s*\r?\n\s*/'    => '', // remove lines end with leading/trailing spaces
+            '/\s+/'            => ' ', // convert multiple spaces to single
         );
 
         $scripts = $xpath->query('//xhtml:script');
@@ -183,11 +183,11 @@ class phpRack_View
     {
         $content = file_get_contents(PHPRACK_PATH . '/layout/' . $css);
         $replacers = array(
-            '/[\n\r\t]+/' => ' ', // remove duplicated white spaces
-            '/\s+/' => ' ', // convert multiple spaces to single
-            '/\s+([\,\:\{\}])/' => '${1}', // compress leading white spaces
+            '/[\n\r\t]+/'         => ' ', // remove duplicated white spaces
+            '/\s+/'               => ' ', // convert multiple spaces to single
+            '/\s+([\,\:\{\}])/'   => '${1}', // compress leading white spaces
             '/([\,\;\:\{\}])\s+/' => '${1}', // compress trailing white spaces
-            '/\/\*.*?\*\//' => '', // kill comments at all
+            '/\/\*.*?\*\//'       => '', // kill comments at all
         );
         return preg_replace(
             array_keys($replacers),
