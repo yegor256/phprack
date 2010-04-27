@@ -113,6 +113,18 @@ try {
     if (!$runner->isEnoughSecurityLevel()) {
         throw new Exception('You must use SSL protol to run test suite');
     }
+    
+    /**
+     * Using this tag in GET URL we can get a summary report
+     * in plain text format.
+     */
+    if (array_key_exists('suite', $_GET)) {
+        header('Content-Type: text/plain');
+        if (!$runner->isAuthenticated()) {
+            throw new Exception('Access denied');
+        }
+        throw new Exception($runner->runSuite());
+    }
 
     // Global layout is required, show the front web page of the report
     if (empty($_GET[PHPRACK_AJAX_TAG])) {
