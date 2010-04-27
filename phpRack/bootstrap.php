@@ -72,7 +72,7 @@ try {
      */
     global $phpRackConfig;
     if (!isset($phpRackConfig)) {
-        throw new Exception('Invalid configuration: $phpRackConfig is missed');
+        throw new Exception('Invalid configuration: global $phpRackConfig is missed');
     }
     
     if (!defined('PHPRACK_VERSION')) {
@@ -111,7 +111,7 @@ try {
 
     // check whether SSL connection is mandatory?
     if (!$runner->isEnoughSecurityLevel()) {
-        throw new Exception('You must use SSL protol to run test suite');
+        throw new Exception('You must use SSL protocol to run integration tests');
     }
     
     /**
