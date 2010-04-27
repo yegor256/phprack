@@ -123,6 +123,7 @@ try {
             throw new Exception($view->render('login.phtml'));
         }
         $view->assign(array('runner' => $runner)); 
+        header('Content-Type: application/xhtml+xml');
         throw new Exception($view->render());
     }
 
