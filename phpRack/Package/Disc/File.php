@@ -327,9 +327,12 @@ class phpRack_Package_Disc_File extends phpRack_Package
         }
 
         $this->_log(
-            "File '{$fileName}' (" . filesize($fileName) 
-            . ' bytes, modified on ' 
-            . $this->_modifiedOn(filemtime($fileName)) . '):'
+            sprintf(
+                "File '%s' (%d bytes, modified on %s):",
+                realpath($fileName),
+                filesize($fileName),
+                $this->_modifiedOn(filemtime($fileName))
+            )
         );
         return true;
     }
