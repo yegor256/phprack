@@ -117,11 +117,29 @@ abstract class phpRack_Adapters_Mail_Transport_Abstract
      */
     public function setTo($mails)
     {
-        if (!is_array($mails)) {
-            $this->_to = array($mails);
-        }
-        $this->_to = $mails;
+        $this->_to = (!is_array($mails)) ? array($mails) : $mails;
         return $this;
+    }
+
+    /**
+     * Checks if we are ready to build mail
+     *
+     * @return bool
+     * @see phpRack_Adapters_Mail_Transport_Sendmail->send()
+     * @see phpRack_Adapters_Mail_Transport_Smtp->send()
+     * @throws Exception if To not defined
+     * @throws Exception if Body not defined
+     */
+    protected function _validateBeforeSend()
+    {
+        if (!count($this->_to)) {
+            throw new Exception('Recipients are not specified');
+        }
+
+        if ($this->_body == '') {
+            throw new Exception('Body is not specified');
+        }
+        return true;
     }
 
     /**

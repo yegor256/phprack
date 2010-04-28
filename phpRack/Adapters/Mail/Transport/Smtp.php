@@ -44,6 +44,7 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
      *
      * @var array
      * @see _mustBe()
+     * @todo #32 Unused variable, for future use?
      */
     protected $_response;
 
@@ -51,7 +52,7 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
      * Connection status
      *
      * @var bool
-     * @see __construct()
+     * @see _connect()
      * @see __destruct()
      */
     protected $_connected = false;
@@ -60,10 +61,18 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
      * Connection entry point
      *
      * @var resource
-     * @see __construct()
+     * @see _connect()
      * @see _query()
      */
     protected $_connection;
+
+    /**
+     * Connection address for the stream
+     *
+     * @var string
+     * @see _connect();
+     */
+    protected $_address;
 
     /**
      * Constructor for the smtp protocol.
@@ -91,8 +100,7 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
             $protocol = 'tls';
         }
 
-        $this->_connection = stream_socket_client($protocol . '://' . $host . ':' . $port);
-        $this->_connected = is_resource($this->_connection);
+        $this->_address = $protocol . '://' . $host . ':' . $port;
     }
 
     /**
@@ -102,11 +110,14 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
      * @see _query()
      * @see _mustBe()
      * @see _sendHeaders()
+     * @see _validateBeforeSend()
      * @throws Exception if connection doesn't established
      */
     public function send()
     {
-        if (!$this->_connected) {
+        $this->_validateBeforeSend();
+
+        if (!$this->_connect()) {
             throw new Exception('Can\'t connect to the mail server');
         }
 
@@ -141,6 +152,17 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
             ->_mustBe(221, 600);
 
         return true;
+    }
+
+    /**
+     * Connects to the stream and returns connection status
+     *
+     * @return bool
+     */
+    protected function _connect()
+    {
+        $this->_connection = stream_socket_client($this->_address);
+        return ($this->_connected = is_resource($this->_connection));
     }
 
     /**
@@ -201,11 +223,13 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
         if (!is_array($code)) {
             $code = array($code);
         }
-        $msg = $cmd = '';
-        $error = true;
+        
         if (!stream_set_timeout($this->_connection, $timeout)) {
             throw new Exception('Can\'t change stream timeout');
         }
+
+        $error = true;
+        $msg = $cmd = '';
         do {
             $this->_response[] = $data = fgets($this->_connection, 1024);
             sscanf($data, '%d%s', $cmd, $msg);
@@ -215,7 +239,7 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
         } while (strpos($msg, '-') === 0);
 
         if ($error) {
-            throw new Exception('Wrong answer from the server');
+            throw new Exception('Wrong answer from the server: ' . $data);
         }
         return $this;
     }

@@ -64,9 +64,11 @@ class phpRack_Adapters_Mail
      */
     public static function factory(array $params)
     {
-        if (is_array($params['smtp']) && count($params['smtp'])) {
-            return new phpRack_Mail_Transport_Smtp($params);
+        if (isset($params['smtp'])
+            && is_array($params['smtp'])
+            && count($params['smtp'])) {
+            return new phpRack_Adapters_Mail_Transport_Smtp($params);
         }
-        return new phpRack_Mail_Transport_Sendmail($params);
+        return new phpRack_Adapters_Mail_Transport_Sendmail($params);
     }
 }

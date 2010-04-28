@@ -366,19 +366,19 @@ class phpRack_Runner
         }
         $report .= "PHPRACK SUITE: " . ($success ? phpRack_Test::OK : phpRack_Test::FAILURE) . "\n";
 
-        #if (!empty($this->_options['notify']) && !$success) {
-            require_once PHPRACK_PATH . '/Mail.php';
+        if (!empty($this->_options['notify']) && !$success) {
+            require_once PHPRACK_PATH . '/Adapters/Mail.php';
 
-            $mail = phpRack_Mail::factory($this->_options);
+            $mail = phpRack_Adapters_Mail::factory($this->_options);
             $mail->setSubject('phpRack summary');
             $mail->setBody($report);
             $mail->setTo($this->_options['notify']);
-            #try {
+            try {
                 $mail->send();
-            #} catch(Exception $e) {
-                //
-            #}
-        #}
+            } catch(Exception $e) {
+                // Something to control this situation
+            }
+        }
         return $report;
     }
 

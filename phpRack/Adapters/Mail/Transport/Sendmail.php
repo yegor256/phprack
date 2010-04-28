@@ -47,9 +47,11 @@ class phpRack_Adapters_Mail_Transport_Sendmail extends phpRack_Adapters_Mail_Tra
      * @see _getEncodedSubject()
      * @see _getEncodedBody()
      * @see _getHeaders()
+     * @see _validateBeforeSend()
      */
     public function send()
     {
+        $this->_validateBeforeSend();
         return mail(
             $this->_to[0],
             $this->_getEncodedSubject(),
