@@ -28,16 +28,16 @@
  */
 
 /**
- * @see phpRack_Adapters_Mail_Transport_Abstract
+ * @see phpRack_Adapters_Notifier_Mail_Abstract
  */
-require_once PHPRACK_PATH . '/Adapters/Mail/Transport/Abstract.php';
+require_once PHPRACK_PATH . '/Adapters/Notifier/Mail/Abstract.php';
 
 /**
  * Smtp implementation of phpRack mail
  *
- * @see phpRack_Mail_Transport_Abstract
+ * @see phpRack_Notifier_Mail_Abstract
  */
-class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transport_Abstract
+class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail_Abstract
 {
     /**
      * Response list from server to debug
@@ -86,17 +86,17 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
         parent::__construct($options);
 
         $host = '127.0.0.1';
-        if (!empty($this->_options['smtp']['host'])) {
-            $host = $this->_options['smtp']['host'];
+        if (!empty($this->_options['host'])) {
+            $host = $this->_options['host'];
         }
 
         $port = 25;
-        if (!empty($this->_options['smtp']['port'])) {
-            $port = (int)$this->_options['smtp']['port'];
+        if (!empty($this->_options['port'])) {
+            $port = (int)$this->_options['port'];
         }
 
         $protocol = 'tcp';
-        if (!empty($this->_options['smtp']['tls'])) {
+        if (!empty($this->_options['tls'])) {
             $protocol = 'tls';
         }
 
@@ -107,10 +107,6 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
      * Prepares and sending mail.
      *
      * @todo #32 add check for STARTTLS
-     * @see _query()
-     * @see _mustBe()
-     * @see _sendHeaders()
-     * @see _validateBeforeSend()
      * @throws Exception if connection doesn't established
      */
     public function send()
@@ -118,7 +114,7 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
         $this->_validateBeforeSend();
 
         if (!$this->_connect()) {
-            throw new Exception('Can\'t connect to the mail server');
+            throw new Exception("Can't connect to the mail server");
         }
 
         // Hello server
@@ -129,9 +125,9 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
         // Auth info
         $this->_query('AUTH LOGIN')
             ->_mustBe(334);
-        $this->_query(base64_encode($this->_options['smtp']['username']))
+        $this->_query(base64_encode($this->_options['username']))
             ->_mustBe(334);
-        $this->_query(base64_encode($this->_options['smtp']['password']))
+        $this->_query(base64_encode($this->_options['password']))
             ->_mustBe(235);
 
         // Basic set
@@ -169,8 +165,6 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
      * Sends server queries to complete mail
      *
      * @see _query()
-     * @see _getEncodedSubject()
-     * @see _getEncodedBody()
      * @todo #32 i think CC must be Bcc in this part
      * @return void
      */
@@ -194,15 +188,15 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
     /**
      * Writes data to the connetion (stream)
      *
-     * @todo #32 move this method to phpRack_Adapters_Mail_Transport_Abstract
+     * @todo #32 move this method to phpRack_Adapters_Notifier_Mail_Abstract
      * @var string $msg
-     * @return phpRack_Adapters_Mail_Transport_Smtp
+     * @return phpRack_Adapters_Notifier_Mail_Smtp
      * @throws Exception if can't write to the stream
      */
     protected function _query($msg)
     {
         if (!fwrite($this->_connection, $msg . "\r\n")) {
-            throw new Exception('Can\'t write to a socket');
+            throw new Exception("Can't write to a socket");
         }
         return $this;
     }
@@ -211,12 +205,12 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
      * Reads stream. Moves caret and checks for a code or codes.
      * Second parameter used as time limit for read stream
      *
-     * @todo #32 move this method to phpRack_Adapters_Mail_Transport_Abstract
+     * @todo #32 move this method to phpRack_Adapters_Notifier_Mail_Abstract
      * @var int|array $code
      * @var int $timeout (Default: 300)
      * @throws Exception if can't change stream timeout
      * @throws Exception if wrong answer from the server
-     * @return phpRack_Adapters_Mail_Transport_Smtp
+     * @return phpRack_Adapters_Notifier_Mail_Smtp
      */
     protected function _mustBe($code, $timeout = 300)
     {
@@ -225,7 +219,7 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
         }
         
         if (!stream_set_timeout($this->_connection, $timeout)) {
-            throw new Exception('Can\'t change stream timeout');
+            throw new Exception("Can't change stream timeout");
         }
 
         $error = true;

@@ -106,11 +106,10 @@ class phpRack_Runner
      * @see __construct()
      */
     protected $_options = array(
-        'dir' => null,
-        'auth' => null,
+        'dir'      => null,
+        'auth'     => null,
         'htpasswd' => null,
-        'smtp' => null,
-        'notify' => null
+        'notify'   => null,
     );
 
     /**
@@ -419,21 +418,21 @@ class phpRack_Runner
     protected function _notifyAboutFailure($report) 
     {
         // no notification required
-        if (!array_key_exists('notify', $this->_options)) {
+        if (empty($this->_options['notify'])) {
             return;
         }
         
         if (!is_array($this->_options['notify'])) {
-            throw new Exception("Parameter 'notify' should be an array");
+            throw new Exception("Parameter 'notify' should be an array, '{$this->_options['notify']}' given");
         }
         
         if (array_key_exists('email', $this->_options['notify'])) {
             /**
-             * @see phpRack_Adapters_Mail
+             * @see phpRack_Adapters_Notifier_Mail
              */
-            require_once PHPRACK_PATH . '/Adapters/Mail.php';
+            require_once PHPRACK_PATH . '/Adapters/Notifier/Mail.php';
 
-            $mail = phpRack_Adapters_Mail::factory($this->_options['notify']['email']['transport']);
+            $mail = phpRack_Adapters_Notifier_Mail::factory($this->_options['notify']['email']['transport']);
             $mail->setSubject('phpRack Suite Failure');
             $mail->setBody($report);
             /**

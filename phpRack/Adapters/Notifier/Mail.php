@@ -32,7 +32,7 @@
  *
  * @package Adapters
  */
-class phpRack_Adapters_Mail
+class phpRack_Adapters_Notifier_Mail
 {
     /**
      * Closed by default (as private method)
@@ -52,24 +52,25 @@ class phpRack_Adapters_Mail
      * 
      * Depends on options specified.
      *
-     * @see phpRack_Adapters_Mail_Transport_Smtp
-     * @see phpRack_Adapters_Mail_Transport_Sendmail
+     * @see phpRack_Adapters_Notifier_Mail_Smtp
+     * @see phpRack_Adapters_Notifier_Mail_Sendmail
      * @param array List of parameters
      * @return phpRack_Adapters_Mail
      * @throws Exception
      */
-    public static function factory(array $params)
+    public static function factory(array $params = array())
     {
         if (!array_key_exists('class', $params)) {
-            throw new Exception("Class of transport is not specified");
+            $transport = 'Sendmail';
+        } else {
+            $transport = ucfirst(strtolower($params['class']));
         }
         
         /**
-         * @see phpRack_Adapters_Mail_Transport_Abstract
+         * @see phpRack_Adapters_Notifier_Mail_Abstract
          */
-        $transport = ucfirst(strtolower($params['class']));
-        eval('require_once PHPRACK_PATH . "/Adapters/Mail/Transport/{$transport}.php";');
-        $transportClass = 'phpRack_Adapters_Mail_Transport_' . $transport;
+        eval('require_once PHPRACK_PATH . "/Adapters/Notifier/Mail/{$transport}.php";');
+        $transportClass = 'phpRack_Adapters_Notifier_Mail_' . $transport;
         return new $transportClass($params);
     }
 }

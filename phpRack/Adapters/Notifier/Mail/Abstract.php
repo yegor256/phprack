@@ -28,11 +28,11 @@
  */
 
 /**
- * Abstract class for the phpRack_Adapters_Transport
+ * Abstract class for the phpRack_Adapters_Notifier_Mail_*
  *
  * @package Adapters
  */
-abstract class phpRack_Adapters_Mail_Transport_Abstract
+abstract class phpRack_Adapters_Notifier_Mail_Abstract
 {
     /**
      * Our array with list of options
@@ -77,8 +77,9 @@ abstract class phpRack_Adapters_Mail_Transport_Abstract
      * Constructor
      *
      * @param array List of parameters
+     * @return void
      */
-    public function __construct(array $options)
+    public function __construct(array $options = array())
     {
         $this->_options = $options;
     }
@@ -123,8 +124,8 @@ abstract class phpRack_Adapters_Mail_Transport_Abstract
      * Checks if we are ready to build mail
      *
      * @return bool
-     * @see phpRack_Adapters_Mail_Transport_Sendmail->send()
-     * @see phpRack_Adapters_Mail_Transport_Smtp->send()
+     * @see phpRack_Adapters_Notifier_Mail_Sendmail->send()
+     * @see phpRack_Adapters_Notifier_Mail_Smtp->send()
      * @throws Exception if To not defined
      * @throws Exception if Body not defined
      */
@@ -133,8 +134,7 @@ abstract class phpRack_Adapters_Mail_Transport_Abstract
         if (!count($this->_to)) {
             throw new Exception('Recipients are not specified');
         }
-
-        if ($this->_body == '') {
+        if (empty($this->_body)) {
             throw new Exception('Body is not specified');
         }
         return true;
