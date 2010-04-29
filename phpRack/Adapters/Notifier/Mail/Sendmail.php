@@ -66,11 +66,8 @@ class phpRack_Adapters_Notifier_Mail_Sendmail extends phpRack_Adapters_Notifier_
     private function _getHeaders()
     {
         $headers = array();
-        $count = count($this->_to);
-        if ($count > 1) {
-            for ($i=1; $i<$count; $i++) {
-                $headers['Cc'] = $this->_to[$i];
-            }
+        if (count($this->_to) > 1) {
+            $headers['Cc'] = implode(', ', array_slice($this->_to, 1));
         }
         $headers['From'] = $this->_from;
         $headers['MIME-Version'] = '1.0';

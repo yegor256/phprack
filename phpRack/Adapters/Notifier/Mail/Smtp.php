@@ -76,6 +76,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
 
     /**
      * Constructor for the smtp protocol.
+     * 
      * Creates address to connect to
      *
      * @param array List of parameters
@@ -203,6 +204,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
 
     /**
      * Reads stream. Moves caret and checks for a code or codes.
+     * 
      * Second parameter used as time limit for read stream
      *
      * @todo #32 move this method to phpRack_Adapters_Notifier_Mail_Abstract
@@ -240,6 +242,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
 
     /**
      * Destructor.
+     * 
      * Closes connection if needed
      *
      * @return void
