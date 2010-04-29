@@ -186,7 +186,7 @@ class phpRack_Package_Php extends phpRack_Package
         
         $this->_log(
             sprintf(
-                '%d files checked, among them: %d valid and %d invalid',
+                '%d files LINT-checked, among them: %d valid and %d invalid',
                 $valid + $invalid,
                 $valid, 
                 $invalid
