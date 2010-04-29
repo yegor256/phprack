@@ -106,11 +106,10 @@ class phpRack_Runner
      * @see __construct()
      */
     protected $_options = array(
-        'dir' => null,
-        'auth' => null,
+        'dir'      => null,
+        'auth'     => null,
         'htpasswd' => null,
-        'smtp' => null,
-        'notify' => null
+        'notify'   => null,
     );
 
     /**
@@ -366,19 +365,11 @@ class phpRack_Runner
         }
         $report .= "PHPRACK SUITE: " . ($success ? phpRack_Test::OK : phpRack_Test::FAILURE) . "\n";
 
-        if (!empty($this->_options['notify']) && !$success) {
-            require_once PHPRACK_PATH . '/Adapters/Mail.php';
-
-            $mail = phpRack_Adapters_Mail::factory($this->_options);
-            $mail->setSubject('phpRack summary');
-            $mail->setBody($report);
-            $mail->setTo($this->_options['notify']);
-            try {
-                $mail->send();
-            } catch(Exception $e) {
-                // Something to control this situation
-            }
+        // notify about suite failure
+        if (!$success) {
+            $this->_notifyAboutFailure($report);
         }
+
         return $report;
     }
 
@@ -410,6 +401,55 @@ class phpRack_Runner
                 'options' => $test->getAjaxOptions()
             )
         );
+    }
+
+    /**
+     * Notify admin about suite failure
+     *
+     * @param string Full suite text report
+     * @return void
+     * @see runSuite()
+     * @throws Exception
+     * @todo Now we work only with one notifier, which is in class phpRack_Mail. Later
+     * we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we 
+     * should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
+     * notifiers there.
+     */
+    protected function _notifyAboutFailure($report) 
+    {
+        // no notification required
+        if (empty($this->_options['notify'])) {
+            return;
+        }
+        
+        if (!is_array($this->_options['notify'])) {
+            throw new Exception("Parameter 'notify' should be an array, '{$this->_options['notify']}' given");
+        }
+        
+        if (array_key_exists('email', $this->_options['notify'])) {
+            /**
+             * @see phpRack_Adapters_Notifier_Mail
+             */
+            require_once PHPRACK_PATH . '/Adapters/Notifier/Mail.php';
+
+            $mail = phpRack_Adapters_Notifier_Mail::factory($this->_options['notify']['email']['transport']);
+            $mail->setSubject('phpRack Suite Failure');
+            $mail->setBody($report);
+            /**
+             * @todo Only one recipient is supported now
+             */
+            $mail->setTo($this->_options['notify']['email']['recipients']);
+            try {
+                $mail->send();
+            } catch(Exception $e) {
+                assert($e instanceof Exception);
+                /**
+                 * @todo #32 What shall we do when we can't send an email to admin? Good
+                 * question and I don't have an answer yet... For now we just swallow the
+                 * exception.
+                 */
+            }
+        }
     }
 
     /**

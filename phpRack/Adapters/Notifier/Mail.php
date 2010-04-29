@@ -28,47 +28,49 @@
  */
 
 /**
- * @see phpRack_Adapters_Mail_Transport_Smtp
- */
-require_once PHPRACK_PATH . '/Adapters/Mail/Transport/Smtp.php';
-
-/**
- * @see phpRack_Adapters_Mail_Transport_Sendmail
- */
-require_once PHPRACK_PATH . '/Adapters/Mail/Transport/Sendmail.php';
-
-/**
  * Mail adapter used for mailing phpRack reports
  *
  * @package Adapters
  */
-class phpRack_Adapters_Mail
+class phpRack_Adapters_Notifier_Mail
 {
     /**
-     * Closed by default.
-     * This class should be used only as factory.
+     * Closed by default (as private method)
+     * 
+     * This class should be used only from factory.
+     * 
+     * @return void
+     * @see factory()
      */
     private function __construct()
     {
-
+        // nothing to do here, intentionally empty
     }
 
     /**
      * Factory method to get one of Sendmail or Smtp class.
+     * 
      * Depends on options specified.
      *
-     * @see phpRack_Adapters_Mail_Transport_Smtp
-     * @see phpRack_Adapters_Mail_Transport_Sendmail
+     * @see phpRack_Adapters_Notifier_Mail_Smtp
+     * @see phpRack_Adapters_Notifier_Mail_Sendmail
      * @param array List of parameters
      * @return phpRack_Adapters_Mail
+     * @throws Exception
      */
-    public static function factory(array $params)
+    public static function factory(array $params = array())
     {
-        if (isset($params['smtp'])
-            && is_array($params['smtp'])
-            && count($params['smtp'])) {
-            return new phpRack_Adapters_Mail_Transport_Smtp($params);
+        if (!array_key_exists('class', $params)) {
+            $transport = 'Sendmail';
+        } else {
+            $transport = ucfirst(strtolower($params['class']));
         }
-        return new phpRack_Adapters_Mail_Transport_Sendmail($params);
+        
+        /**
+         * @see phpRack_Adapters_Notifier_Mail_Abstract
+         */
+        eval('require_once PHPRACK_PATH . "/Adapters/Notifier/Mail/{$transport}.php";');
+        $transportClass = 'phpRack_Adapters_Notifier_Mail_' . $transport;
+        return new $transportClass($params);
     }
 }
