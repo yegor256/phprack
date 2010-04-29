@@ -184,6 +184,10 @@ class phpRack_Package_Php extends phpRack_Package
             }
         }
         
+        // notify phpRack about success in the test
+        if (!$invalid) {
+            $this->_success("{$valid} files are LINT-valid");
+        }
         $this->_log(
             sprintf(
                 '%d files LINT-checked, among them: %d valid and %d invalid',
