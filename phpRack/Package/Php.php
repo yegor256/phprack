@@ -116,6 +116,23 @@ class phpRack_Package_Php extends phpRack_Package
     /**
      * Check files in directory have correct php syntax
      *
+     * Possible options are:
+     *
+     * <code>
+     * class MyTest extends phpRack_Test {
+     *   public function testCodeValidity() {
+     *     $this->assert->php->lint(
+     *       '/home/myproject/php', // path to PHP files
+     *       array(
+     *         'extensions' => 'php,phtml', // comma-separated list of extensions to parse
+     *         'exclude' => array('/\.svn/'), // list of RegExps to exclude
+     *         'verbose' => true, // show detailed log, with one file per line
+     *       )
+     *     );
+     *   }
+     * }
+     * </code>
+     *
      * @param string Directory path to check
      * @param array List of options
      * @return $this
@@ -156,10 +173,12 @@ class phpRack_Package_Php extends phpRack_Package
             $output = phpRack_Adapters_Shell_Command::factory($command)->run();
 
             if (preg_match('#^No syntax errors detected#', $output)) {
-                $this->_success("File '{$file}' is valid");
+                if (!empty($options['verbose'])) {
+                    $this->_success("File '{$file}' is valid");
+                }
                 $valid++;
             } else {
-                $this->_failure("File '{$file}' is NOT valid");
+                $this->_failure("File '{$file}' is NOT valid:");
                 $this->_log($output);
                 $invalid++;
             }
