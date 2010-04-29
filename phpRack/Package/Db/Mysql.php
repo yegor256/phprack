@@ -209,13 +209,11 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
             throw new Exception('You must call connect() method before');
         }
 
-        $answer = $this->_adapter->query('SHOW GRANTS FOR CURRENT_USER');
-        if (!preg_match('~GRANT (PROCESS|ALL)~', $answer)) {
-            $this->_failure('MySQL user does not have GRANT PROCESS|ALL permissions');
-            return $this;
-        }
-
         $result = $this->_adapter->showConnections();
+        if ($result === false) {
+            $this->_failure('MySQL user does not have GRANT PROCESS|ALL permissions');
+        }
+        
         $this->_log($result);
         return $this;
     }
