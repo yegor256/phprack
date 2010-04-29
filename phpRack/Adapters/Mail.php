@@ -28,16 +28,6 @@
  */
 
 /**
- * @see phpRack_Adapters_Mail_Transport_Smtp
- */
-require_once PHPRACK_PATH . '/Adapters/Mail/Transport/Smtp.php';
-
-/**
- * @see phpRack_Adapters_Mail_Transport_Sendmail
- */
-require_once PHPRACK_PATH . '/Adapters/Mail/Transport/Sendmail.php';
-
-/**
  * Mail adapter used for mailing phpRack reports
  *
  * @package Adapters
@@ -45,30 +35,41 @@ require_once PHPRACK_PATH . '/Adapters/Mail/Transport/Sendmail.php';
 class phpRack_Adapters_Mail
 {
     /**
-     * Closed by default.
-     * This class should be used only as factory.
+     * Closed by default (as private method)
+     * 
+     * This class should be used only from factory.
+     * 
+     * @return void
+     * @see factory()
      */
     private function __construct()
     {
-
+        // nothing to do here, intentionally empty
     }
 
     /**
      * Factory method to get one of Sendmail or Smtp class.
+     * 
      * Depends on options specified.
      *
      * @see phpRack_Adapters_Mail_Transport_Smtp
      * @see phpRack_Adapters_Mail_Transport_Sendmail
      * @param array List of parameters
      * @return phpRack_Adapters_Mail
+     * @throws Exception
      */
     public static function factory(array $params)
     {
-        if (isset($params['smtp'])
-            && is_array($params['smtp'])
-            && count($params['smtp'])) {
-            return new phpRack_Adapters_Mail_Transport_Smtp($params);
+        if (!array_key_exists('class', $params)) {
+            throw new Exception("Class of transport is not specified");
         }
-        return new phpRack_Adapters_Mail_Transport_Sendmail($params);
+        
+        /**
+         * @see phpRack_Adapters_Mail_Transport_Abstract
+         */
+        $transport = ucfirst(strtolower($params['class']));
+        eval('require_once PHPRACK_PATH . "/Adapters/Mail/Transport/{$transport}.php";');
+        $transportClass = 'phpRack_Adapters_Mail_Transport_' . $transport;
+        return new $transportClass($params);
     }
 }

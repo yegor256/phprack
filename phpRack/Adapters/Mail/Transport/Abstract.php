@@ -30,10 +30,8 @@
 /**
  * Abstract class for the phpRack_Adapters_Transport
  *
- * @todo #32 add correct phpRack_Mail_Transport_Abstract class
- *      move this class to phpRack_Mail_Abstract or something like this
  * @package Adapters
- **/
+ */
 abstract class phpRack_Adapters_Mail_Transport_Abstract
 {
     /**
