@@ -350,7 +350,12 @@ class phpRack_Runner
     public function runSuite()
     {
         $tests = $this->getTests();
-        $report = '';
+        $report = sprintf(
+            "phpRack v%s suite report, on %s\nPHPRACK_PATH: %s\n",
+            date('m/d/y h:i:s'),
+            PHPRACK_VERSION,
+            PHPRACK_PATH
+        );
         $success = true;
         $duration = 0;
         foreach ($tests as $test) {
@@ -425,9 +430,9 @@ class phpRack_Runner
      * @see runSuite()
      * @throws Exception
      * @todo Now we work only with one notifier, which is in class phpRack_Mail. Later
-     * we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we 
-     * should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
-     * notifiers there.
+     *      we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we 
+     *      should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
+     *      notifiers there.
      */
     protected function _notifyAboutFailure($report) 
     {
