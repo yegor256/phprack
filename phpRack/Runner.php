@@ -373,7 +373,15 @@ class phpRack_Runner
 
         // notify about suite failure
         if (!$success) {
-            $this->_notifyAboutFailure($report);
+            try {
+                $this->_notifyAboutFailure($report);
+            } catch (Exception $e) {
+                $report .= sprintf(
+                    "Failed to notify admin (%s): '%s'\n",
+                    get_class($e),
+                    $e->getMessage()
+                );
+            }
         }
 
         return $report;
