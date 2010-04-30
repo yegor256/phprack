@@ -328,9 +328,9 @@ $(
 
                     // Check that should display timer (User click or time execution > 5s)
                     if (that.displayTimer) {
-                        var message = 'running (' + that.timer.getFormattedTime();
+                        var message = 'running&nbsp;(' + that.timer.getFormattedTime();
                         if (elapsedSeconds >= that.abortWaitTime) {
-                            message += ', click to stop';
+                            message += ',&nbsp;click to stop';
                         }
                         message += ')...';
 
