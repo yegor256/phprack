@@ -213,8 +213,24 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
         if ($result === false) {
             $this->_failure('MySQL user does not have GRANT PROCESS|ALL permissions');
         }
-        
+
         $this->_log($result);
+        return $this;
+    }
+
+    /**
+     * Show server info
+     *
+     * @return $this
+     * @throws Exception If this method is called before connect()
+     */
+    public function showServerInfo()
+    {
+        if (!$this->_adapter->isConnected()) {
+            throw new Exception('You must call connect() method before');
+        }
+
+        $this->_log($this->_adapter->showServerInfo());
         return $this;
     }
 
