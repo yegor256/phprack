@@ -40,15 +40,6 @@ require_once PHPRACK_PATH . '/Adapters/Notifier/Mail/Abstract.php';
 class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail_Abstract
 {
     /**
-     * Response list from server to debug
-     *
-     * @var array
-     * @see _mustBe()
-     * @todo #32 Unused variable, for future use?
-     */
-    protected $_response;
-
-    /**
      * Connection status
      *
      * @var bool
@@ -82,7 +73,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
      * @param array List of parameters
      * @return void
      */
-    public function __construct(array $options)
+    public function __construct(array $options = array())
     {
         parent::__construct($options);
 
@@ -105,9 +96,10 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
     }
 
     /**
-     * Prepares and sending mail.
+     * Prepares and sends an mail
      *
      * @todo #32 add check for STARTTLS
+     * @todo #32 Why don't we use fluent interface for _query() and _mustBe()?
      * @throws Exception if connection doesn't established
      */
     public function send()
@@ -155,6 +147,8 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
      * Connects to the stream and returns connection status
      *
      * @return bool
+     * @todo #32 This design is not valid. We should NOT return a result of function
+     * as boolean, instead we should throw an exception if connection was not performed.
      */
     protected function _connect()
     {
@@ -166,8 +160,8 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
      * Sends server queries to complete mail
      *
      * @see _query()
-     * @todo #32 i think CC must be Bcc in this part
      * @return void
+     * @todo #32 We should use fluent interface for _query()
      */
     protected function _sendHeaders()
     {
@@ -189,14 +183,13 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
     /**
      * Writes data to the connetion (stream)
      *
-     * @todo #32 move this method to phpRack_Adapters_Notifier_Mail_Abstract
-     * @var string $msg
-     * @return phpRack_Adapters_Notifier_Mail_Smtp
+     * @var string Message to send to SMTP server
+     * @return $this
      * @throws Exception if can't write to the stream
      */
     protected function _query($msg)
     {
-        if (!fwrite($this->_connection, $msg . "\r\n")) {
+        if (@fwrite($this->_connection, $msg . "\r\n") === false) {
             throw new Exception("Can't write to a socket");
         }
         return $this;
@@ -207,12 +200,12 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
      * 
      * Second parameter used as time limit for read stream
      *
-     * @todo #32 move this method to phpRack_Adapters_Notifier_Mail_Abstract
      * @var int|array $code
-     * @var int $timeout (Default: 300)
+     * @var int Timeout (Default: 300)
      * @throws Exception if can't change stream timeout
      * @throws Exception if wrong answer from the server
-     * @return phpRack_Adapters_Notifier_Mail_Smtp
+     * @return $this
+     * @todo #32 We should validate the result of fgets(), now we ignore possible errors
      */
     protected function _mustBe($code, $timeout = 300)
     {
@@ -220,14 +213,14 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
             $code = array($code);
         }
         
-        if (!stream_set_timeout($this->_connection, $timeout)) {
+        if (@stream_set_timeout($this->_connection, $timeout) === false) {
             throw new Exception("Can't change stream timeout");
         }
 
         $error = true;
         $msg = $cmd = '';
         do {
-            $this->_response[] = $data = fgets($this->_connection, 1024);
+            $data = fgets($this->_connection, 1024);
             sscanf($data, '%d%s', $cmd, $msg);
             if (in_array($cmd, $code)) {
                 $error = false;
@@ -235,7 +228,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
         } while (strpos($msg, '-') === 0);
 
         if ($error) {
-            throw new Exception('Wrong answer from the server: ' . $data);
+            throw new Exception("Wrong answer from the server: '{$data}'");
         }
         return $this;
     }
@@ -246,6 +239,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
      * Closes connection if needed
      *
      * @return void
+     * @todo #32 We shall detect possible error in fclose()
      */
     public function __destruct()
     {

@@ -45,6 +45,7 @@ class phpRack_Adapters_Notifier_Mail_Sendmail extends phpRack_Adapters_Notifier_
      * Function returns result of the operation
      *
      * @return bool
+     * @link http://php.net/manual/en/function.mail.php
      */
     public function send()
     {

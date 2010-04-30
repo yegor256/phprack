@@ -35,9 +35,9 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
     }
 
     /**
-     * @dataProvider testPublicFuncProvider
+     * @dataProvider testPublicFunctionsProvider
      */
-    public function testPublicFunc($a, $b)
+    public function testPublicFunctionsWork($a, $b)
     {
         $result = $this->_adapter->{$a}($b);
         $this->assertTrue(
@@ -45,20 +45,20 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
         );
     }
 
-    public function testPublicFuncProvider()
+    public function testPublicFunctionsProvider()
     {
         return array(
             array('setTo', 'test1@example.com'),
             array('setTo', 'test2@example.com'),
-            array('setBody', 'helloWorld'),
-            array('setSubject', 'helloEarth'),
+            array('setBody', 'hello, World!'),
+            array('setSubject', 'hello, Earth!'),
         );
     }
 
     public function testSend()
     {
         $this->_adapter->setTo('test3@example.com');
-        $this->_adapter->setBody('Test');
+        $this->_adapter->setBody('This is test');
         $this->assertTrue($this->_adapter->send());
     }
 

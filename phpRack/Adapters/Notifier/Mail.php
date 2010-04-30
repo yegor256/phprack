@@ -35,22 +35,10 @@
 class phpRack_Adapters_Notifier_Mail
 {
     /**
-     * Closed by default (as private method)
+     * Factory method to get one of Sendmail or Smtp class instances.
      * 
-     * This class should be used only from factory.
-     * 
-     * @return void
-     * @see factory()
-     */
-    private function __construct()
-    {
-        // nothing to do here, intentionally empty
-    }
-
-    /**
-     * Factory method to get one of Sendmail or Smtp class.
-     * 
-     * Depends on options specified.
+     * Depends on options specified. Available options depend on transport
+     * you choose.
      *
      * @see phpRack_Adapters_Notifier_Mail_Smtp
      * @see phpRack_Adapters_Notifier_Mail_Sendmail
@@ -58,18 +46,17 @@ class phpRack_Adapters_Notifier_Mail
      * @return phpRack_Adapters_Mail
      * @throws Exception
      */
-    public static function factory(array $params = array())
+    public static function factory($class = 'sendmail', array $params = array())
     {
-        if (!array_key_exists('class', $params)) {
-            $transport = 'Sendmail';
-        } else {
-            $transport = ucfirst(strtolower($params['class']));
-        }
-        
+        $transport = ucfirst(strtolower($class));
         /**
          * @see phpRack_Adapters_Notifier_Mail_Abstract
          */
-        eval('require_once PHPRACK_PATH . "/Adapters/Notifier/Mail/{$transport}.php";');
+        $classFile = PHPRACK_PATH . "/Adapters/Notifier/Mail/{$transport}.php";
+        if (!file_exists($classFile)) {
+            throw new Exception("Transport {$transport} is absent");
+        }
+        eval("require_once '{$classFile}';"); // for ZCA validation
         $transportClass = 'phpRack_Adapters_Notifier_Mail_' . $transport;
         return new $transportClass($params);
     }

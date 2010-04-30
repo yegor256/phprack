@@ -16,23 +16,23 @@ require_once PHPRACK_PATH . '/Adapters/Notifier/Mail/Smtp.php';
 class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
 {
     /**
-     * @dataProvider testPublicFuncProvider
+     * @dataProvider testPublicFunctionsProvider
      */
-    public function testPublicFunc($a, $b)
+    public function testPublicFunctionsWork($a, $b)
     {
-        $adapter = new phpRack_Adapters_Notifier_Mail_Smtp(array('class' => 'smtp'));
+        $adapter = new phpRack_Adapters_Notifier_Mail_Smtp();
         $result = $adapter->{$a}($b);
         $this->assertTrue(
             $result instanceof phpRack_Adapters_Notifier_Mail_Smtp
         );
     }
 
-    public function testPublicFuncProvider()
+    public function testPublicFunctionsProvider()
     {
         return array(
             array('setTo', 'test1@example.com'),
-            array('setBody', 'helloWorld'),
-            array('setSubject', 'helloEarth'),
+            array('setBody', 'hello, World!'),
+            array('setSubject', 'hello, Earth!'),
         );
     }
 
@@ -44,7 +44,6 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
          * functionality
          */
         $a = array(
-            'class'    => 'smtp',
             'tls'      => true,
             'host'     => 'smtp.gmail.com',
             'port'     => 465,
@@ -72,7 +71,7 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
      */
     public function testSendWithoutToException()
     {
-        $adapter = new phpRack_Adapters_Notifier_Mail_Smtp(array('class' => 'smtp'));
+        $adapter = new phpRack_Adapters_Notifier_Mail_Smtp();
         $adapter->setBody('Test');
         $adapter->send();
     }
@@ -82,7 +81,7 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
      */
     public function testSendWithoutBodyException()
     {
-        $adapter = new phpRack_Adapters_Notifier_Mail_Smtp(array('class' => 'smtp'));
+        $adapter = new phpRack_Adapters_Notifier_Mail_Smtp();
         $adapter->setTo('test6@example.com');
         $adapter->send();
     }

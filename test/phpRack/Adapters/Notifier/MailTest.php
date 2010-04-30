@@ -17,14 +17,15 @@ class Adapters_Notifier_MailTest extends AbstractTest
 {
     public function testMailFactorySmtp()
     {
-        $options = array(
-            'class'    => 'smtp',
-            'username' => 'john',
-            'port'     => 25,
-            'host'     => 'smtp.gmail.com',
-            'password' => 'dkhfZ34'
+        $mail = phpRack_Adapters_Notifier_Mail::factory(
+            'smtp',
+            array(
+                'username' => 'john',
+                'port'     => 25,
+                'host'     => 'smtp.gmail.com',
+                'password' => 'dkhfZ34'
+            )
         );
-        $mail = phpRack_Adapters_Notifier_Mail::factory($options);
         $this->assertTrue($mail instanceof phpRack_Adapters_Notifier_Mail_Smtp);
     }
 

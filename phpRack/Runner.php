@@ -432,7 +432,14 @@ class phpRack_Runner
              */
             require_once PHPRACK_PATH . '/Adapters/Notifier/Mail.php';
 
-            $mail = phpRack_Adapters_Notifier_Mail::factory($this->_options['notify']['email']['transport']);
+            $transport = $this->_options['notify']['email']['transport'];
+            if (!empty($transport['class'])) {
+                $class = $transport['class'];
+                unset($transport['class']);
+            } else {
+                $class = 'sendmail';
+            }
+            $mail = phpRack_Adapters_Notifier_Mail::factory($class, $transport);
             $mail->setSubject('phpRack Suite Failure');
             $mail->setBody($report);
             /**
