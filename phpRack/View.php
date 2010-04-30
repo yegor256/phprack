@@ -133,7 +133,6 @@ class phpRack_View
      *
      * @param string HTML content, before compression
      * @return string HTML content, compressed
-     * @todo #53 the problem still exists on PHP 5.2.13
      */
     public function compressedHtml($html)
     {
