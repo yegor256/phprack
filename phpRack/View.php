@@ -168,9 +168,8 @@ class phpRack_View
                 }
             }
         }
-        // @todo #53 disable this line once the problem is solved
-        return $html;
-        // return $dom->saveXml();
+        // fix output due to libxml2 bug described in #53
+        return preg_replace('/<!\[CDATA\[\s*(\/\/)?\]\]>/', '', $dom->saveXml());
     }
     
     /**
