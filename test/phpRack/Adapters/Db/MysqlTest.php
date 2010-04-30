@@ -129,6 +129,24 @@ class Adapters_Db_MysqlTest extends AbstractTest
         $this->_adapter->showConnections();
     }
 
+    public function testShowServerInfo()
+    {
+        try {
+            $this->_adapter->connect('jdbc:mysql://localhost');
+            $this->_adapter->showServerInfo();
+        } catch (Exception $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testShowServerInfoWithoutConnect()
+    {
+        $this->_adapter->showServerInfo();
+    }
+
     /**
      * @expectedException Exception
      */

@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -33,6 +33,9 @@
  */
 error_reporting(E_ALL);
 ini_set('display_errors', true);
+ini_set('error_prepend_string', '');
+ini_set('error_append_string', '');
+ini_set('html_errors', 'Off');
 
 /**
  * Here we define a error handler in order to catch all possible
@@ -74,7 +77,7 @@ try {
     if (!isset($phpRackConfig)) {
         throw new Exception('Invalid configuration: global $phpRackConfig is missed');
     }
-    
+
     if (!defined('PHPRACK_VERSION')) {
         // we use svn:keywords here in order to get the revision number of phpRack
         $revision = intval(substr('$Rev$', 6));
@@ -98,7 +101,7 @@ try {
      */
     require_once PHPRACK_PATH . '/Runner.php';
     $runner = new phpRack_Runner($phpRackConfig);
-    
+
     /**
      * @see phpRack_View
      */
@@ -113,7 +116,7 @@ try {
     if (!$runner->isEnoughSecurityLevel()) {
         throw new Exception('You must use SSL protocol to run integration tests');
     }
-    
+
     /**
      * Using this tag in GET URL we can get a summary report
      * in plain text format.
@@ -134,7 +137,7 @@ try {
             $view->assign(array('authResult' => $runner->getAuthResult()));
             throw new Exception($view->render('login.phtml'));
         }
-        $view->assign(array('runner' => $runner)); 
+        $view->assign(array('runner' => $runner));
         /**
          * @todo #57 this line leads to the problem explained in the ticket,
          * on some servers, not everywhere. I don't know what is the reason, that's
@@ -155,14 +158,14 @@ try {
      * already rendered testing page.
      */
     $options = $_GET;
-    
-    /** 
+
+    /**
      * '_' param is automatically added by jQuery with current time in miliseconds,
      * when we call $.ajax function with cache = false. We unset it to have
      * no exception in phpRack_Test::setAjaxOptions()
      */
     unset($options['_']);
-    
+
     $fileName = $options[PHPRACK_AJAX_TAG];
     unset($options[PHPRACK_AJAX_TAG]);
     $token = $options[PHPRACK_AJAX_TOKEN];
