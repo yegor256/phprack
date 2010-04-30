@@ -351,9 +351,9 @@ class phpRack_Runner
     {
         $tests = $this->getTests();
         $report = sprintf(
-            "phpRack v%s suite report, on %s\nPHPRACK_PATH: %s\n\n",
-            date('d-M-y H:i:s'),
+            "\nphpRack v%s\nSuite report, on %s\nPHPRACK_PATH: %s\n\n",
             PHPRACK_VERSION,
+            date('d-M-y H:i:s'),
             PHPRACK_PATH
         );
         $success = true;
