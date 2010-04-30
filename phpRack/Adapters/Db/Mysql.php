@@ -238,7 +238,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
             );
             $dbUsers = explode("\n", rtrim($dbUsers, "\n"));
             $dbUsers = array_map('trim', $dbUsers);
-            for ($i=1;$i<count($dbUsers);$i++) {
+            for ($i=1; $i<count($dbUsers); $i++) {
                  $priv = $this->query("SHOW GRANTS FOR '{$dbUsers[$i]}'");
                  $out .= preg_replace('~GRANT (.+?) TO.*~', '\1', trim($priv));
                  $out .= "\n\n";
@@ -250,7 +250,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         $dbList = explode("\n", rtrim($dbList, "\n"));
         if (count($dbList) > 2) {
             $dbList = array_map('trim', $dbList);
-            for ($i=2;$i<count($dbList);$i++) {
+            for ($i=2; $i<count($dbList); $i++) {
                 $out .= "Database: {$dbList[$i]}\n";
                 $out .= $this->query(
                     "SELECT COUNT(TABLE_NAME) AS 'Count Of Tables',

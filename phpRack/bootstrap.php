@@ -35,7 +35,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', true);
 ini_set('error_prepend_string', '');
 ini_set('error_append_string', '');
-ini_set('html_errors', 'Off');
+ini_set('html_errors', false);
 
 /**
  * Here we define a error handler in order to catch all possible
