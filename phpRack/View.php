@@ -154,6 +154,7 @@ class phpRack_View
             '/\/\/.*\r?\n\s*/' => '', // remove single line comments
             '/\s*\r?\n\s*/'    => '', // remove lines end with leading/trailing spaces
             '/\s+/'            => ' ', // convert multiple spaces to single
+            '/\s?([\(\)\,\;=\'\"\-\+:\*&])\s?/' => '${1}', // compress unnecessary spaces
         );
 
         $scripts = $xpath->query('//xhtml:script');
