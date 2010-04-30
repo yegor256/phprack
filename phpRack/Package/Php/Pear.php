@@ -134,7 +134,7 @@ class phpRack_Package_Php_Pear extends phpRack_Package
         try {
             $packages = $this->_pear->getAllPackages();
 
-            $this->_success("Installed PEAR packages:");
+            $this->_log("Installed PEAR packages:");
             foreach ($packages as $package) {
                 $this->_log($package->getRawInfo());
             }
