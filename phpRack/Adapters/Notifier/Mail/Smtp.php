@@ -36,6 +36,17 @@ require_once PHPRACK_PATH . '/Adapters/Notifier/Mail/Abstract.php';
  * Smtp implementation of phpRack mail
  *
  * @see phpRack_Notifier_Mail_Abstract
+ * @todo #32 We should protocol everything that happens between us and SMTP
+ *      server by means of some internal method _log(), that will keep a full
+ *      log of interaction inside the class. Also, this method shall accept
+ *      second boolean param, that will tell it whether to throw an exception
+ *      or not. It will work like this, inside _query():
+ *          $this->_log($msg, false);
+ *      and like this, inside _mustBe():
+ *          $this->_log('ivalid response', true);
+ *      Thus, exception thrown from this class will contain a full log of
+ *      of interation with SMTP server and will help admins to understand the
+ *      problem.
  */
 class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail_Abstract
 {
