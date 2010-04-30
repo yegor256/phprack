@@ -357,6 +357,6 @@ class phpRack_Package_Disc_File extends phpRack_Package
             $age = round($mins/(60*24)) . 'days';
         }
         
-        return date('d-M-y h:i:s', $time) . ', ' . $age . ' ago';
+        return date('d-M-y H:i:s', $time) . ', ' . $age . ' ago';
     }
 }

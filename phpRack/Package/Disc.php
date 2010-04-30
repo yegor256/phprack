@@ -98,7 +98,7 @@ class phpRack_Package_Disc extends phpRack_Package
             
             if ($file->isFile()) {
                 $attribs[] = $file->getSize() . ' bytes';
-                $attribs[] = date('m/d/y h:i:s', $file->getMTime());
+                $attribs[] = date('d-M-y H:i:s', $file->getMTime());
                 $attribs[] = sprintf('0x%o', $file->getPerms());
             }
             
