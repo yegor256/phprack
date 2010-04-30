@@ -460,16 +460,7 @@ class phpRack_Runner
              * @todo Only one recipient is supported now
              */
             $mail->setTo($this->_options['notify']['email']['recipients']);
-            try {
-                $mail->send();
-            } catch(Exception $e) {
-                assert($e instanceof Exception);
-                /**
-                 * @todo #32 What shall we do when we can't send an email to admin? Good
-                 * question and I don't have an answer yet... For now we just swallow the
-                 * exception.
-                 */
-            }
+            $mail->send();
         }
     }
 
