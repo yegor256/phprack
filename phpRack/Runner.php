@@ -355,7 +355,7 @@ class phpRack_Runner
         foreach ($tests as $test) {
             $result = $test->run();
             $report .= sprintf(
-                "%s\n\n%s: %s, %0.3fsec\n",
+                "%s\n%s: %s, %0.3fsec\n\n",
                 $result->getPureLog(),
                 $test->getLabel(),
                 $result->wasSuccessful() ? phpRack_Test::OK : phpRack_Test::FAILURE,
