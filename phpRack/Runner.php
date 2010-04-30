@@ -352,6 +352,7 @@ class phpRack_Runner
         $tests = $this->getTests();
         $report = '';
         $success = true;
+        $duration = 0;
         foreach ($tests as $test) {
             $result = $test->run();
             $report .= sprintf(
@@ -362,8 +363,13 @@ class phpRack_Runner
                 $result->getDuration()
             );
             $success &= $result->wasSuccessful();
+            $duration += $result->getDuration();
         }
-        $report .= "PHPRACK SUITE: " . ($success ? phpRack_Test::OK : phpRack_Test::FAILURE) . "\n";
+        $report .= sprintf(
+            "PHPRACK SUITE: %s, %0.2fmin\n",
+            $success ? phpRack_Test::OK : phpRack_Test::FAILURE,
+            $duration / 60
+        );
 
         // notify about suite failure
         if (!$success) {
