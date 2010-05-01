@@ -215,8 +215,61 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         if (!preg_match('~GRANT (PROCESS|ALL)~', $answer)) {
             return false;
         }
-        
+
         return $this->query('SHOW FULL PROCESSLIST');
+    }
+
+    /**
+     * Show server info
+     *
+     * @return string Raw result from the server, in text
+     * @throws Exception If connect() method wasn't executed earlier
+     * @see phpRack_Package_Db_Mysql::showServerInfo()
+     */
+    public function showServerInfo()
+    {
+        $out = '';
+
+        // Users privileges. We must check grants for it
+        $privileges = $this->query('SHOW GRANTS FOR CURRENT_USER');
+        if (preg_match('~GRANT (ALL|SELECT ON (`mysql`|\*)\.\*)~', $privileges)) {
+            $dbUsers = $this->query(
+                'SELECT CONCAT(User, "\'@\'", Host) FROM `mysql`.`user`'
+            );
+            $dbUsers = explode("\n", rtrim($dbUsers, "\n"));
+            $dbUsers = array_map('trim', $dbUsers);
+            for ($i=1; $i<count($dbUsers); $i++) {
+                 $priv = $this->query("SHOW GRANTS FOR '{$dbUsers[$i]}'");
+                 $out .= preg_replace('~GRANT (.+?) TO.*~', '\1', trim($priv));
+                 $out .= "\n\n";
+            }
+        }
+
+        // Table stats. We do not need to check privileges here
+        $dbList = $this->query('SHOW DATABASES');
+        $dbList = explode("\n", rtrim($dbList, "\n"));
+        if (count($dbList) > 2) {
+            $dbList = array_map('trim', $dbList);
+            for ($i=2; $i<count($dbList); $i++) {
+                $out .= "Database: {$dbList[$i]}\n";
+                $out .= $this->query(
+                    "SELECT COUNT(TABLE_NAME) AS 'Count Of Tables',
+                        SUM(TABLE_ROWS) AS 'Count Of Rows',
+                        SUM(DATA_LENGTH) AS 'Size Of Data',
+                        SUM(INDEX_LENGTH) AS 'Index Size'
+                        FROM `information_schema`.`TABLES`
+                        WHERE TABLE_SCHEMA = '{$dbList[$i]}'"
+                );
+               $out .= "\n";
+            }
+        }
+
+        // Mysql version. We do not need to check privileges here
+        $out .= $this->query("SHOW VARIABLES LIKE 'version'") . "\n";
+
+        // Mysql variables. We do not need to check privileges here
+        $out .= $this->query('SHOW GLOBAL VARIABLES') . "\n";
+        return $out;
     }
 
     /**

@@ -1,9 +1,5 @@
-<?php echo "<?xml version=\"1.0\"?>\n" ?>
-<!DOCTYPE html PUBLIC
-    "-//W3C//DTD XHTML 1.0 Strict//EN" 
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<!--
- *
+<?php
+/**
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
@@ -27,33 +23,50 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @copyright Copyright (c) phpRack.com
- * @version $Id: index.phtml 286 2010-04-05 13:46:54Z yegor256@yahoo.com $
- * @author netcoderpl@gmail.com
+ * @version $Id$
  * @category phpRack
--->
+ */
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
-        <style type="text/css"><?php echo $this->compressedCss('index.css') ?></style>
-        <title>phpRack Testing Report</title>
-    </head>
+/**
+ * @see phpRack_Package
+ */
+require_once PHPRACK_PATH . '/Package.php';
 
-    <body>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+/**
+ * CPU Performance check
+ *
+ * @package Tests
+ */
+class phpRack_Package_Cpu_Performance extends phpRack_Package
+{
+    /**
+     * Check whether server CPU has least this BogoMips
+     *
+     * @param float required BogoMips
+     * @return $this
+     * @see PerformanceTest::testServerIsFast()
+     */
+    public function atLeast($bogoMips)
+    {
+        /**
+         * @see phpRack_Adapters_Cpu
+         */
+        require_once PHPRACK_PATH . '/Adapters/Cpu.php';
 
-        <div id='logo'>
-            <a href='http://www.phprack.com'><img
-                src='data:image/png;base64,<?php
-                    echo base64_encode(
-                        file_get_contents(PHPRACK_PATH . '/layout/logo.png')
-                    )
-                ?>'
-                alt='phpRack' /></a>
-            <span>v<?php echo PHPRACK_VERSION?></span>
-        </div>
-
-        <!-- script content, ZCA-friendly include -->
-        <?php eval("include PHPRACK_PATH . '/layout/{$this->script}';")?>
-    </body>
-</html>
+        try {
+            $cpu = phpRack_Adapters_Cpu::factory();
+            $currentBogoMips = $cpu->getBogoMips();
+            if ($currentBogoMips >= $bogoMips) {
+                $this->_success("CPU is fast enough with '{$currentBogoMips}' BogoMips");
+            } else {
+                $this->_failure(
+                    "CPU is too slow. " .
+                    "It has only '{$currentBogoMips}' BogoMips, but '{$bogoMips}' is required"
+                );
+            }
+        } catch (Exception $e) {
+            $this->_failure("CPU problem: {$e->getMessage()}");
+        }
+        return $this;
+    }
+}

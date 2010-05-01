@@ -116,6 +116,23 @@ class phpRack_Package_Php extends phpRack_Package
     /**
      * Check files in directory have correct php syntax
      *
+     * Possible options are:
+     *
+     * <code>
+     * class MyTest extends phpRack_Test {
+     *   public function testCodeValidity() {
+     *     $this->assert->php->lint(
+     *       '/home/myproject/php', // path to PHP files
+     *       array(
+     *         'extensions' => 'php,phtml', // comma-separated list of extensions to parse
+     *         'exclude' => array('/\.svn/'), // list of RegExps to exclude
+     *         'verbose' => true, // show detailed log, with one file per line
+     *       )
+     *     );
+     *   }
+     * }
+     * </code>
+     *
      * @param string Directory path to check
      * @param array List of options
      * @return $this
@@ -144,11 +161,6 @@ class phpRack_Package_Php extends phpRack_Package
 
         $lintCommand = 'php -l';
 
-        // If we are not on Windows, add environment ignoring, to prevent many PHP script forks
-        if (!in_array(PHP_OS, array('WIN32', 'WINNT'))) {
-            $lintCommand = 'env -i ' . $lintCommand;
-        }
-
         $valid = $invalid = 0;
         foreach ($iterator as $file) {
             $file = realpath($file->getPathname());
@@ -161,18 +173,24 @@ class phpRack_Package_Php extends phpRack_Package
             $output = phpRack_Adapters_Shell_Command::factory($command)->run();
 
             if (preg_match('#^No syntax errors detected#', $output)) {
-                $this->_success("File '{$file}' is valid");
+                if (!empty($options['verbose'])) {
+                    $this->_success("File '{$file}' is valid");
+                }
                 $valid++;
             } else {
-                $this->_failure("File '{$file}' is NOT valid");
+                $this->_failure("File '{$file}' is NOT valid:");
                 $this->_log($output);
                 $invalid++;
             }
         }
         
+        // notify phpRack about success in the test
+        if (!$invalid) {
+            $this->_success("{$valid} files are LINT-valid");
+        }
         $this->_log(
             sprintf(
-                '%d files checked, among them: %d valid and %d invalid',
+                '%d files LINT-checked, among them: %d valid and %d invalid',
                 $valid + $invalid,
                 $valid, 
                 $invalid

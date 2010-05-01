@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available
+ * with this package in the file LICENSE.txt. It is also available 
  * through the world-wide-web at this URL: http://www.phprack.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -28,12 +28,29 @@
  */
 
 /**
- * Abstract class for phpRack_Adapters_Mail
+ * Abstract CPU adapter
  *
- * @todo #32 implement this class
  * @package Adapters
+ * @subpackage Cpu
+ * @see phpRack_Adapters_Cpu::factory()
  */
-class phpRack_Adapters_Mail_Abstract
+abstract class phpRack_Adapters_Cpu_Abstract
 {
+    /**
+     * Get CPU BogoMips
+     *
+     * @return float
+     * @throws Exception If unable to get BogoMips
+     * @see phpRack_Package_Cpu_Performance::atLeast()
+     */
+    abstract public function getBogoMips();
 
+    /**
+     * Get CPU frequency in MHz
+     *
+     * @return float
+     * @throws Exception If can't get cpu frequency
+     * @see getBogoMips()
+     */
+    abstract public function getCpuFrequency();
 }

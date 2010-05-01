@@ -27,60 +27,59 @@
  * @category phpRack
  */
 
-/**
- * @see phpRack_Adapters_Mail_Transport_Abstract
- */
-require_once PHPRACK_PATH . '/Adapters/Mail/Transport/Abstract.php';
 
 /**
- * Sendmail implementation of phpRack mail
+ * OS adapter used to get information where script is executed
  *
- * @see phpRack_Mail_Transport_Abstract
+ * @package Adapters
  */
-class phpRack_Adapters_Mail_Transport_Sendmail extends phpRack_Adapters_Mail_Transport_Abstract
+class phpRack_Adapters_Os
 {
     /**
-     * Preparing and sending mail.
-     * Function returns result of the operation
-     *
-     * @return bool
-     * @see _getEncodedSubject()
-     * @see _getEncodedBody()
-     * @see _getHeaders()
-     * @see _validateBeforeSend()
+     * System constants used for simplify comparisions
      */
-    public function send()
-    {
-        $this->_validateBeforeSend();
-        return mail(
-            $this->_to[0],
-            $this->_getEncodedSubject(),
-            $this->_getEncodedBody(),
-            $this->_getHeaders()
-        );
-    }
+    const WINDOWS = 'Windows';
+    const LINUX = 'Linux';
+    const DARWIN = 'Darwin';
 
     /**
-     * Function builds headers for mail
+     * Recognize OS and return its name as string (Windows, Linux, etc)
      *
-     * @return string Plain list with headers
-     * @see send()
+     * @return string
+     * @see phpRack_Adapters_Cpu::factory()
+     * @throws Exception if operating system can't be recognized
      */
-    private function _getHeaders()
+    public static function get()
     {
-        $headers = '';
+        switch (true) {
+            /* windows */
+            case (substr(PHP_OS, 0, 3) === 'WIN'):
+                return self::WINDOWS;
+                
+            /* Mac OS and Mac OS X */
+            case (substr(PHP_OS, 0, 6) === 'Darwin'):
+                return self::DARWIN;
 
-        $count = count($this->_to);
-        if ($count > 1) {
-            for ($i=1;$i<$count;$i++) {
-                $headers .= 'Cc: ' . $this->_to[$i] . "\r\n";
-            }
+            /* Linux */
+            case (substr(PHP_OS, 0, 5) === 'Linux'):
+                return self::LINUX;
+                
+            /* all other systems */
+            default:
+                throw new Exception('Unknown operating system');
         }
-
-        $headers .= 'From: ' . $this->_from . "\r\n";
-        $headers .= 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-Type: text/plain; charset=UTF-8' . "\r\n";
-        $headers .= 'Content-transfer-encoding: base64' . "\r\n";
-        return $headers;
+    }
+    
+    /**
+     * Is it *NIX system?
+     *
+     * Everything which is NOT windows is Unix. Very rough assumption, but this
+     * is enough for now.
+     *
+     * @return boolean
+     */
+    public static function isUnix() 
+    {
+        return (self::get() != self::WINDOWS);
     }
 }

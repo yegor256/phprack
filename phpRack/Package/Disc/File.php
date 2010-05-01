@@ -158,8 +158,16 @@ class phpRack_Package_Disc_File extends phpRack_Package
         );
         $options = $test->getAjaxOptions();
 
-        // if it is first request send all x last lines
-        if (!isset($options['fileLastOffset'])) {
+        clearstatcache();
+        // get current file size
+        $fileSize = @filesize($fileName);
+        if ($fileSize === false) {
+            $this->_failure("Failed to filesize('{$fileName}')");
+            return $this;
+        }
+
+        // if it is first request or file was truncated, send all x last lines
+        if (!isset($options['fileLastOffset']) || $fileSize < $options['fileLastOffset']) {
             $this->tail($fileName, $linesCount);
             return $this;
         }
@@ -170,19 +178,19 @@ class phpRack_Package_Disc_File extends phpRack_Package
             return $this;
         }
         // get only new content since last time
-        $content = stream_get_contents($fp, -1, $options['fileLastOffset']);
+        $content = @stream_get_contents($fp, -1, $options['fileLastOffset']);
         if ($content === false) {
             $this->_failure("Failed to stream_get_contents({$fp}/'{$fileName}', -1, {$options['fileLastOffset']})");
             return $this;
         }
 
         // save current offset
-        $offset = ftell($fp);
+        $offset = @ftell($fp);
         if ($offset === false) {
             $this->_failure("Failed to ftell({$fp}/'{$fileName}')");
             return $this;
         }
-        if (fclose($fp) === false) {
+        if (@fclose($fp) === false) {
             $this->_failure("Failed to fclose({$fp}/'{$fileName}')");
             return $this;
         }
@@ -319,9 +327,12 @@ class phpRack_Package_Disc_File extends phpRack_Package
         }
 
         $this->_log(
-            "File '{$fileName}' (" . filesize($fileName) 
-            . ' bytes, modified on ' 
-            . $this->_modifiedOn(filemtime($fileName)) . '):'
+            sprintf(
+                "File '%s' (%d bytes, modified on %s):",
+                realpath($fileName),
+                filesize($fileName),
+                $this->_modifiedOn(filemtime($fileName))
+            )
         );
         return true;
     }
@@ -333,7 +344,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * @return string
      * @see _isFileExists()
      */
-    protected function _modifiedOn($time) 
+    protected function _modifiedOn($time)
     {
         $mins = round((time() - $time)/60, 1);
         if ($mins < 1) {
@@ -346,6 +357,6 @@ class phpRack_Package_Disc_File extends phpRack_Package
             $age = round($mins/(60*24)) . 'days';
         }
         
-        return date('d-M-y h:i:s', $time) . ', ' . $age . ' ago';
+        return date('d-M-y H:i:s', $time) . ', ' . $age . ' ago';
     }
 }

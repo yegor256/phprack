@@ -9,24 +9,23 @@
 require_once 'AbstractTest.php';
 
 /**
- * @see phpRack_Adapters_Mail_Transport_Sendmail
+ * @see phpRack_Adapters_Notifier_Mail_Sendmail
  */
-require_once PHPRACK_PATH . '/Adapters/Mail/Transport/Sendmail.php';
+require_once PHPRACK_PATH . '/Adapters/Notifier/Mail/Sendmail.php';
 
-class Adapters_Mail_Abstract_SendmailTest extends AbstractTest
+class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
 {
     /**
      * Sendmail adapter
      *
-     * @var Adapters_Mail_Abstract_Sendmail
+     * @var Adapters_Notifier_Mail_Sendmail
      */
     protected $_adapter;
     
     protected function setUp()
     {
         parent::setUp();
-        $a = array();
-        $this->_adapter = new phpRack_Adapters_Mail_Transport_Sendmail($a);
+        $this->_adapter = new phpRack_Adapters_Notifier_Mail_Sendmail();
     }
 
     protected function tearDown()
@@ -36,30 +35,30 @@ class Adapters_Mail_Abstract_SendmailTest extends AbstractTest
     }
 
     /**
-     * @dataProvider testPublicFuncProvider
+     * @dataProvider testPublicFunctionsProvider
      */
-    public function testPublicFunc($a, $b)
+    public function testPublicFunctionsWork($a, $b)
     {
         $result = $this->_adapter->{$a}($b);
         $this->assertTrue(
-            $result instanceof phpRack_Adapters_Mail_Transport_Sendmail
+            $result instanceof phpRack_Adapters_Notifier_Mail_Sendmail
         );
     }
 
-    public function testPublicFuncProvider()
+    public function testPublicFunctionsProvider()
     {
         return array(
-            array('setTo', 'ww@ww.ru'),
-            array('setTo', array('ww@ww.com', 'zz@zz.com')),
-            array('setBody', 'helloWorld'),
-            array('setSubject', 'helloEarth'),
+            array('setTo', 'test1@example.com'),
+            array('setTo', 'test2@example.com'),
+            array('setBody', 'hello, World!'),
+            array('setSubject', 'hello, Earth!'),
         );
     }
 
     public function testSend()
     {
-        $this->_adapter->setTo('sldksfI483dsr@mailinator2.com');
-        $this->_adapter->setBody('Test');
+        $this->_adapter->setTo('test3@example.com');
+        $this->_adapter->setBody('This is test');
         $this->assertTrue($this->_adapter->send());
     }
 
@@ -77,7 +76,7 @@ class Adapters_Mail_Abstract_SendmailTest extends AbstractTest
      */
     public function testSendWithoutBodyException()
     {
-        $this->_adapter->setTo('sldksfI483dsr@mailinator2.com');
+        $this->_adapter->setTo('test5@example.com');
         $this->_adapter->send();
     }
 }

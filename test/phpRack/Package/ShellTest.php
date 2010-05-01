@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: LintTest.php 309 2010-04-07 08:56:34Z yegor256@yahoo.com $
+ * @version $Id$
  */
 
 /**

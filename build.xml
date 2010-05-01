@@ -134,29 +134,15 @@
     </target>
     
     <target name="deploy" description="Deploy stable TGZ by FTP and other files">
-        <property name="build.tgz" value="${project.basedir}/build/phpRack-stable.tgz" />
+        <property name="package.name" value="phpRack-stable" />
+        <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz" />
 
         <!-- get FTP properties from file -->
         <property file="./build.properties" />
         
-        <tar destfile="${build.tgz}" compression="gzip">
-            <fileset dir="${project.basedir}">
-                <include name="phpRack/**" />
-                <include name="LICENSE.txt" />
-                <exclude name=".svn/**" />
-            </fileset>
-        </tar>
-		<echo message="uploading .tgz to the server..." />
-		<ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
-			dir="./public">
-			<fileset dir="${project.basedir}/build">
-				<include name="phpRack-stable.tgz"/>
-			</fileset>
-		</ftpdeploy>
-      	<delete file="${build.tgz}" />
-      
 		<echo message="uploading PHP code to the server..." />
-		<ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}">
+		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
+		    clearfirst="true" port="${ftp.port}">
 			<fileset dir="${project.basedir}">
 				<include name="phpRack/**"/>
 				<exclude name=".svn/**" />
@@ -167,14 +153,28 @@
 			</fileset>
 		</ftpdeploy>
 
-		<echo message="uploading phprack.com web files" />
-		<ftpdeploy host="phprack.com" username="${ftp.username}" password="${ftp.password}"
-			dir="./public">
+        <tar destfile="${build.tgz}" compression="gzip">
+            <fileset dir="${project.basedir}">
+                <include name="phpRack/**" />
+                <include name="LICENSE.txt" />
+                <exclude name=".svn/**" />
+            </fileset>
+        </tar>
+		<echo message="uploading ${package.name}.tgz to the server..." />
+		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
+			dir="./public" clearfirst="true" port="${ftp.port}">
+			<fileset dir="${project.basedir}/build">
+				<include name="${package.name}.tgz"/>
+			</fileset>
 			<fileset dir="${project.basedir}/phprack.com">
 				<include name="**/*"/>
 				<exclude name=".svn/**" />
 			</fileset>
+			<fileset dir="${project.basedir}/phpRack/layout">
+				<include name="logo.png"/>
+			</fileset>
 		</ftpdeploy>
+      	<delete file="${build.tgz}" />
 	</target>
 
 </project>

@@ -28,26 +28,28 @@
  */
 
 /**
- * @see phpRack_Adapters_Mail_Transport_Abstract
+ * @see phpRack_Adapters_Notifier_Mail_Abstract
  */
-require_once PHPRACK_PATH . '/Adapters/Mail/Transport/Abstract.php';
+require_once PHPRACK_PATH . '/Adapters/Notifier/Mail/Abstract.php';
 
 /**
  * Smtp implementation of phpRack mail
  *
- * @see phpRack_Mail_Transport_Abstract
+ * @see phpRack_Notifier_Mail_Abstract
+ * @todo #32 We should protocol everything that happens between us and SMTP
+ *      server by means of some internal method _log(), that will keep a full
+ *      log of interaction inside the class. Also, this method shall accept
+ *      second boolean param, that will tell it whether to throw an exception
+ *      or not. It will work like this, inside _query():
+ *          $this->_log($msg, false);
+ *      and like this, inside _mustBe():
+ *          $this->_log('ivalid response', true);
+ *      Thus, exception thrown from this class will contain a full log of
+ *      of interation with SMTP server and will help admins to understand the
+ *      problem.
  */
-class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transport_Abstract
+class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail_Abstract
 {
-    /**
-     * Response list from server to debug
-     *
-     * @var array
-     * @see _mustBe()
-     * @todo #32 Unused variable, for future use?
-     */
-    protected $_response;
-
     /**
      * Connection status
      *
@@ -76,27 +78,28 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
 
     /**
      * Constructor for the smtp protocol.
+     * 
      * Creates address to connect to
      *
      * @param array List of parameters
      * @return void
      */
-    public function __construct(array $options)
+    public function __construct(array $options = array())
     {
         parent::__construct($options);
 
         $host = '127.0.0.1';
-        if (!empty($this->_options['smtp']['host'])) {
-            $host = $this->_options['smtp']['host'];
+        if (!empty($this->_options['host'])) {
+            $host = $this->_options['host'];
         }
 
         $port = 25;
-        if (!empty($this->_options['smtp']['port'])) {
-            $port = (int)$this->_options['smtp']['port'];
+        if (!empty($this->_options['port'])) {
+            $port = (int)$this->_options['port'];
         }
 
         $protocol = 'tcp';
-        if (!empty($this->_options['smtp']['tls'])) {
+        if (!empty($this->_options['tls'])) {
             $protocol = 'tls';
         }
 
@@ -104,13 +107,10 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
     }
 
     /**
-     * Prepares and sending mail.
+     * Prepares and sends an mail
      *
      * @todo #32 add check for STARTTLS
-     * @see _query()
-     * @see _mustBe()
-     * @see _sendHeaders()
-     * @see _validateBeforeSend()
+     * @todo #32 Why don't we use fluent interface for _query() and _mustBe()?
      * @throws Exception if connection doesn't established
      */
     public function send()
@@ -118,7 +118,7 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
         $this->_validateBeforeSend();
 
         if (!$this->_connect()) {
-            throw new Exception('Can\'t connect to the mail server');
+            throw new Exception("Can't connect to the mail server");
         }
 
         // Hello server
@@ -129,9 +129,9 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
         // Auth info
         $this->_query('AUTH LOGIN')
             ->_mustBe(334);
-        $this->_query(base64_encode($this->_options['smtp']['username']))
+        $this->_query(base64_encode($this->_options['username']))
             ->_mustBe(334);
-        $this->_query(base64_encode($this->_options['smtp']['password']))
+        $this->_query(base64_encode($this->_options['password']))
             ->_mustBe(235);
 
         // Basic set
@@ -158,6 +158,8 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
      * Connects to the stream and returns connection status
      *
      * @return bool
+     * @todo #32 This design is not valid. We should NOT return a result of function
+     * as boolean, instead we should throw an exception if connection was not performed.
      */
     protected function _connect()
     {
@@ -169,10 +171,8 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
      * Sends server queries to complete mail
      *
      * @see _query()
-     * @see _getEncodedSubject()
-     * @see _getEncodedBody()
-     * @todo #32 i think CC must be Bcc in this part
      * @return void
+     * @todo #32 We should use fluent interface for _query()
      */
     protected function _sendHeaders()
     {
@@ -194,29 +194,29 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
     /**
      * Writes data to the connetion (stream)
      *
-     * @todo #32 move this method to phpRack_Adapters_Mail_Transport_Abstract
-     * @var string $msg
-     * @return phpRack_Adapters_Mail_Transport_Smtp
+     * @var string Message to send to SMTP server
+     * @return $this
      * @throws Exception if can't write to the stream
      */
     protected function _query($msg)
     {
-        if (!fwrite($this->_connection, $msg . "\r\n")) {
-            throw new Exception('Can\'t write to a socket');
+        if (@fwrite($this->_connection, $msg . "\r\n") === false) {
+            throw new Exception("Can't write to a socket");
         }
         return $this;
     }
 
     /**
      * Reads stream. Moves caret and checks for a code or codes.
+     * 
      * Second parameter used as time limit for read stream
      *
-     * @todo #32 move this method to phpRack_Adapters_Mail_Transport_Abstract
      * @var int|array $code
-     * @var int $timeout (Default: 300)
+     * @var int Timeout (Default: 300)
      * @throws Exception if can't change stream timeout
      * @throws Exception if wrong answer from the server
-     * @return phpRack_Adapters_Mail_Transport_Smtp
+     * @return $this
+     * @todo #32 We should validate the result of fgets(), now we ignore possible errors
      */
     protected function _mustBe($code, $timeout = 300)
     {
@@ -224,14 +224,14 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
             $code = array($code);
         }
         
-        if (!stream_set_timeout($this->_connection, $timeout)) {
-            throw new Exception('Can\'t change stream timeout');
+        if (@stream_set_timeout($this->_connection, $timeout) === false) {
+            throw new Exception("Can't change stream timeout");
         }
 
         $error = true;
         $msg = $cmd = '';
         do {
-            $this->_response[] = $data = fgets($this->_connection, 1024);
+            $data = fgets($this->_connection, 1024);
             sscanf($data, '%d%s', $cmd, $msg);
             if (in_array($cmd, $code)) {
                 $error = false;
@@ -239,16 +239,18 @@ class phpRack_Adapters_Mail_Transport_Smtp extends phpRack_Adapters_Mail_Transpo
         } while (strpos($msg, '-') === 0);
 
         if ($error) {
-            throw new Exception('Wrong answer from the server: ' . $data);
+            throw new Exception("Wrong answer from the server: '{$data}'");
         }
         return $this;
     }
 
     /**
      * Destructor.
+     * 
      * Closes connection if needed
      *
      * @return void
+     * @todo #32 We shall detect possible error in fclose()
      */
     public function __destruct()
     {

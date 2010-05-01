@@ -106,11 +106,10 @@ class phpRack_Runner
      * @see __construct()
      */
     protected $_options = array(
-        'dir' => null,
-        'auth' => null,
+        'dir'      => null,
+        'auth'     => null,
         'htpasswd' => null,
-        'smtp' => null,
-        'notify' => null
+        'notify'   => null,
     );
 
     /**
@@ -351,34 +350,45 @@ class phpRack_Runner
     public function runSuite()
     {
         $tests = $this->getTests();
-        $report = '';
+        $report = sprintf(
+            "\nphpRack v%s\nSuite report, on %s\nPHPRACK_PATH: %s\n\n",
+            PHPRACK_VERSION,
+            date('d-M-y H:i:s'),
+            PHPRACK_PATH
+        );
         $success = true;
+        $duration = 0;
         foreach ($tests as $test) {
             $result = $test->run();
             $report .= sprintf(
-                "%s\n\n%s: %s, %0.3fsec\n",
+                "%s\n%s: %s, %0.3fsec\n\n",
                 $result->getPureLog(),
                 $test->getLabel(),
                 $result->wasSuccessful() ? phpRack_Test::OK : phpRack_Test::FAILURE,
                 $result->getDuration()
             );
             $success &= $result->wasSuccessful();
+            $duration += $result->getDuration();
         }
-        $report .= "PHPRACK SUITE: " . ($success ? phpRack_Test::OK : phpRack_Test::FAILURE) . "\n";
+        $report .= sprintf(
+            "PHPRACK SUITE: %s, %0.2fmin\n",
+            $success ? phpRack_Test::OK : phpRack_Test::FAILURE,
+            $duration / 60
+        );
 
-        if (!empty($this->_options['notify']) && !$success) {
-            require_once PHPRACK_PATH . '/Adapters/Mail.php';
-
-            $mail = phpRack_Adapters_Mail::factory($this->_options);
-            $mail->setSubject('phpRack summary');
-            $mail->setBody($report);
-            $mail->setTo($this->_options['notify']);
+        // notify about suite failure
+        if (!$success) {
             try {
-                $mail->send();
-            } catch(Exception $e) {
-                // Something to control this situation
+                $this->_notifyAboutFailure($report);
+            } catch (Exception $e) {
+                $report .= sprintf(
+                    "Failed to notify admin (%s): '%s'\n",
+                    get_class($e),
+                    $e->getMessage()
+                );
             }
         }
+
         return $report;
     }
 
@@ -410,6 +420,53 @@ class phpRack_Runner
                 'options' => $test->getAjaxOptions()
             )
         );
+    }
+
+    /**
+     * Notify admin about suite failure
+     *
+     * @param string Full suite text report
+     * @return void
+     * @see runSuite()
+     * @throws Exception
+     * @todo Now we work only with one notifier, which is in class phpRack_Mail. Later
+     *      we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we 
+     *      should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
+     *      notifiers there.
+     */
+    protected function _notifyAboutFailure($report) 
+    {
+        // no notification required
+        if (empty($this->_options['notify'])) {
+            return;
+        }
+        
+        if (!is_array($this->_options['notify'])) {
+            throw new Exception("Parameter 'notify' should be an array, '{$this->_options['notify']}' given");
+        }
+        
+        if (array_key_exists('email', $this->_options['notify'])) {
+            /**
+             * @see phpRack_Adapters_Notifier_Mail
+             */
+            require_once PHPRACK_PATH . '/Adapters/Notifier/Mail.php';
+
+            $transport = $this->_options['notify']['email']['transport'];
+            if (!empty($transport['class'])) {
+                $class = $transport['class'];
+                unset($transport['class']);
+            } else {
+                $class = 'sendmail';
+            }
+            $mail = phpRack_Adapters_Notifier_Mail::factory($class, $transport);
+            $mail->setSubject('phpRack Suite Failure');
+            $mail->setBody($report);
+            /**
+             * @todo Only one recipient is supported now
+             */
+            $mail->setTo($this->_options['notify']['email']['recipients']);
+            $mail->send();
+        }
     }
 
     /**
