@@ -175,5 +175,7 @@ try {
     throw new Exception($runner->run($fileName, $token, $options));
 
 } catch (Exception $e) {
-    echo $e->getMessage();
+    $content = $e->getMessage();
+    header('Content-Length: ' . strlen($content));
+    echo $content;
 }
