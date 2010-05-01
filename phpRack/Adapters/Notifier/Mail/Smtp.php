@@ -36,29 +36,10 @@ require_once PHPRACK_PATH . '/Adapters/Notifier/Mail/Abstract.php';
  * Smtp implementation of phpRack mail
  *
  * @see phpRack_Notifier_Mail_Abstract
- * @todo #32 We should protocol everything that happens between us and SMTP
- *      server by means of some internal method _log(), that will keep a full
- *      log of interaction inside the class. Also, this method shall accept
- *      second boolean param, that will tell it whether to throw an exception
- *      or not. It will work like this, inside _query():
- *          $this->_log($msg, false);
- *      and like this, inside _mustBe():
- *          $this->_log('ivalid response', true);
- *      Thus, exception thrown from this class will contain a full log of
- *      of interation with SMTP server and will help admins to understand the
- *      problem.
  */
-class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail_Abstract
+class phpRack_Adapters_Notifier_Mail_Smtp
+    extends phpRack_Adapters_Notifier_Mail_Abstract
 {
-    /**
-     * Connection status
-     *
-     * @var bool
-     * @see _connect()
-     * @see __destruct()
-     */
-    protected $_connected = false;
-
     /**
      * Connection entry point
      *
@@ -67,6 +48,15 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
      * @see _query()
      */
     protected $_connection;
+
+    /**
+     * Stores debug information
+     *
+     * @var array
+     * @see _log()
+     *
+     */
+    protected $_log = array();
 
     /**
      * Connection address for the stream
@@ -78,7 +68,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
 
     /**
      * Constructor for the smtp protocol.
-     * 
+     *
      * Creates address to connect to
      *
      * @param array List of parameters
@@ -109,86 +99,87 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
     /**
      * Prepares and sends an mail
      *
-     * @todo #32 add check for STARTTLS
-     * @todo #32 Why don't we use fluent interface for _query() and _mustBe()?
      * @throws Exception if connection doesn't established
+     * @return void
      */
     public function send()
     {
+        // Validating data
         $this->_validateBeforeSend();
 
-        if (!$this->_connect()) {
-            throw new Exception("Can't connect to the mail server");
-        }
+        // Connecting
+        $this->_connect();
 
         // Hello server
-        $this->_query('EHLO ' . php_uname('n'))
-            ->_mustBe(220)
-            ->_mustBe(250);
+        $this->_query('EHLO ' . php_uname('n'))->_mustBe(220)->_mustBe(250);
+
+        // If we must use STARTTLS
+        if (strpos($this->getLog(), 'STARTTLS') !== false) {
+            $this->_query('STARTTLS')->_mustBe(220, 180);
+            if (!@stream_socket_enable_crypto($this->_connection, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+                throw new Exception("Can't apply TLS encryption");
+            }
+            // Hello once again
+            $this->_query('EHLO ' . php_uname('n'))->_mustBe(250);
+        }
 
         // Auth info
-        $this->_query('AUTH LOGIN')
-            ->_mustBe(334);
-        $this->_query(base64_encode($this->_options['username']))
-            ->_mustBe(334);
-        $this->_query(base64_encode($this->_options['password']))
-            ->_mustBe(235);
+        $this->_query('AUTH LOGIN')->_mustBe(334)
+            ->_query(base64_encode($this->_options['username']))->_mustBe(334)
+            ->_query(base64_encode($this->_options['password']))->_mustBe(235);
 
         // Basic set
-        $this->_query('MAIL FROM:<' . $this->_from . '>')
-            ->_mustBe(250);
-        $this->_query('RCPT TO:<' . $this->_to[0] . '>')
-            ->_mustBe(250);
-        $this->_query('DATA')
-            ->_mustBe(354);
+        $this->_query('MAIL FROM:<' . $this->_from . '>')->_mustBe(250)
+            ->_query('RCPT TO:<' . $this->_to[0] . '>')->_mustBe(250)
+            ->_query('DATA')->_mustBe(354);
 
         // Mail headers
-        $this->_sendHeaders();
+        $toList = $this->_to;
+
+        $this->_query('From: <' . $this->_from . '>')
+            ->_query('To: <' . array_shift($toList) . '>');
+
+        if (count($toList)) {
+            $this->_query('Cc: <' . implode('>,<', $toList) . '>');
+        }
+
+        $this->_query('Subject: ' . $this->_getEncodedSubject())
+            ->_query('MIME-Version: 1.0')
+            ->_query('Content-Type: text/plain; charset=UTF-8')
+            ->_query('Content-transfer-encoding: base64')
+            ->_query("\r\n")
+            ->_query($this->_getEncodedBody());
 
         // Closing data part and sending
-        $this->_query('.')
-            ->_mustBe(250, 600);
-        $this->_query('QUIT')
-            ->_mustBe(221, 600);
+        $this->_query('.')->_mustBe(250, 600)
+            ->_query('QUIT')->_mustBe(221, 600);
+    }
 
-        return true;
+    /**
+     * Returns information about queries
+     * and response in plain format
+     *
+     * @return string
+     */
+    public function getLog()
+    {
+        return implode("\n", $this->_log);
     }
 
     /**
      * Connects to the stream and returns connection status
      *
-     * @return bool
-     * @todo #32 This design is not valid. We should NOT return a result of function
-     * as boolean, instead we should throw an exception if connection was not performed.
+     * @return void
+     * @throws Exception if can't connect to the mail server
      */
     protected function _connect()
     {
-        $this->_connection = stream_socket_client($this->_address);
-        return ($this->_connected = is_resource($this->_connection));
-    }
-
-    /**
-     * Sends server queries to complete mail
-     *
-     * @see _query()
-     * @return void
-     * @todo #32 We should use fluent interface for _query()
-     */
-    protected function _sendHeaders()
-    {
-        $this->_query('From: <' . $this->_from . '>');
-        $this->_query('To: <' . $this->_to[0] . '>');
-        unset($this->_to[0]);
-        if (count($this->_to)) {
-            $this->_query('Cc: <' . implode('>,<', $this->_to) . '>');
+        $this->_connection = @stream_socket_client($this->_address);
+        if ($this->_connection === false) {
+            throw new Exception(
+                "Can't connect to the mail server: {$this->_address}"
+            );
         }
-
-        $this->_query('Subject: ' . $this->_getEncodedSubject());
-        $this->_query('MIME-Version: 1.0');
-        $this->_query('Content-Type: text/plain; charset=UTF-8');
-        $this->_query('Content-transfer-encoding: base64');
-        $this->_query("\r\n");
-        $this->_query($this->_getEncodedBody());
     }
 
     /**
@@ -203,59 +194,82 @@ class phpRack_Adapters_Notifier_Mail_Smtp extends phpRack_Adapters_Notifier_Mail
         if (@fwrite($this->_connection, $msg . "\r\n") === false) {
             throw new Exception("Can't write to a socket");
         }
+        $this->_log($msg, false);
         return $this;
     }
 
     /**
      * Reads stream. Moves caret and checks for a code or codes.
-     * 
+     *
      * Second parameter used as time limit for read stream
      *
      * @var int|array $code
      * @var int Timeout (Default: 300)
      * @throws Exception if can't change stream timeout
-     * @throws Exception if wrong answer from the server
+     * @throws Exception if can't read from the socket
+     * @see _log()
      * @return $this
-     * @todo #32 We should validate the result of fgets(), now we ignore possible errors
      */
     protected function _mustBe($code, $timeout = 300)
     {
         if (!is_array($code)) {
             $code = array($code);
         }
-        
-        if (@stream_set_timeout($this->_connection, $timeout) === false) {
+
+        if (!@stream_set_timeout($this->_connection, $timeout)) {
             throw new Exception("Can't change stream timeout");
         }
 
-        $error = true;
-        $msg = $cmd = '';
+        $hasError = true;
+        $log = $msg = $cmd = '';
         do {
-            $data = fgets($this->_connection, 1024);
+            $log .= $data = @fgets($this->_connection, 1024);
+            if ($data === false) {
+                throw new Exception("Can't read from the socket");
+            }
             sscanf($data, '%d%s', $cmd, $msg);
             if (in_array($cmd, $code)) {
-                $error = false;
+                $hasError = false;
             }
         } while (strpos($msg, '-') === 0);
 
-        if ($error) {
-            throw new Exception("Wrong answer from the server: '{$data}'");
-        }
+        $this->_log($log, $hasError);
         return $this;
     }
 
     /**
+     * Logs information about queries
+     * and response to debug
+     *
+     * @see _mustBe()
+     * @see _query()
+     * @param string $msg
+     * @param bool $throwError
+     * @throws Exception if $throwError eq. true
+     * @return void
+     */
+    protected function _log($msg, $throwError = false)
+    {
+        $this->_log[] = $msg;
+        if ($throwError) {
+            throw new Exception($msg);
+        }
+    }
+
+    /**
      * Destructor.
-     * 
+     *
      * Closes connection if needed
      *
+     * @throws Exception if can't close connection
      * @return void
-     * @todo #32 We shall detect possible error in fclose()
      */
     public function __destruct()
     {
-        if ($this->_connected) {
-            fclose($this->_connection);
+        if (is_resource($this->_connection)) {
+            if (@fclose($this->_connection) === false) {
+                throw new Exception("Can't close connection");
+            }
         }
     }
 }
