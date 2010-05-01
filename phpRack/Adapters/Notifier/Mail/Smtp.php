@@ -54,7 +54,6 @@ class phpRack_Adapters_Notifier_Mail_Smtp
      *
      * @var array
      * @see _log()
-     *
      */
     protected $_log = array();
 
@@ -114,10 +113,10 @@ class phpRack_Adapters_Notifier_Mail_Smtp
         $this->_query('EHLO ' . php_uname('n'))->_mustBe(220)->_mustBe(250);
 
         // If we must use STARTTLS
-        if (strpos($this->getLog(), 'STARTTLS') !== false) {
+        if (strpos($this->_getLog(), 'STARTTLS') !== false) {
             $this->_query('STARTTLS')->_mustBe(220, 180);
             if (!@stream_socket_enable_crypto($this->_connection, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
-                throw new Exception("Can't apply TLS encryption");
+                $this->_log("Can't apply TLS encryption", true);
             }
             // Hello once again
             $this->_query('EHLO ' . php_uname('n'))->_mustBe(250);
@@ -156,17 +155,6 @@ class phpRack_Adapters_Notifier_Mail_Smtp
     }
 
     /**
-     * Returns information about queries
-     * and response in plain format
-     *
-     * @return string
-     */
-    public function getLog()
-    {
-        return implode("\n", $this->_log);
-    }
-
-    /**
      * Connects to the stream and returns connection status
      *
      * @return void
@@ -176,9 +164,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
     {
         $this->_connection = @stream_socket_client($this->_address);
         if ($this->_connection === false) {
-            throw new Exception(
-                "Can't connect to the mail server: {$this->_address}"
-            );
+            $this->_log("Can't connect to the mail server: {$this->_address}", true);
         }
     }
 
@@ -192,7 +178,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
     protected function _query($msg)
     {
         if (@fwrite($this->_connection, $msg . "\r\n") === false) {
-            throw new Exception("Can't write to a socket");
+            $this->_log("Can't write to a socket", true);
         }
         $this->_log($msg, false);
         return $this;
@@ -217,7 +203,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
         }
 
         if (!@stream_set_timeout($this->_connection, $timeout)) {
-            throw new Exception("Can't change stream timeout");
+            $this->_log("Can't change stream timeout", true);
         }
 
         $hasError = true;
@@ -225,7 +211,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
         do {
             $log .= $data = @fgets($this->_connection, 1024);
             if ($data === false) {
-                throw new Exception("Can't read from the socket");
+                $this->_log("Can't read from the socket", true);
             }
             sscanf($data, '%d%s', $cmd, $msg);
             if (in_array($cmd, $code)) {
@@ -252,8 +238,18 @@ class phpRack_Adapters_Notifier_Mail_Smtp
     {
         $this->_log[] = $msg;
         if ($throwError) {
-            throw new Exception($msg);
+            throw new Exception($this->_getLog());
         }
+    }
+
+    /**
+     * Returns information about queries and response in plain format
+     *
+     * @return string
+     */
+    protected function _getLog()
+    {
+        return implode("\n", $this->_log);
     }
 
     /**
@@ -268,7 +264,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
     {
         if (is_resource($this->_connection)) {
             if (@fclose($this->_connection) === false) {
-                throw new Exception("Can't close connection");
+                $this->_log("Can't close connection", true);
             }
         }
     }
