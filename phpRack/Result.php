@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/license
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -40,7 +40,7 @@ require_once PHPRACK_PATH . '/Test.php';
  */
 class phpRack_Result
 {
-    
+
     /**
      * Log lines
      *
@@ -48,7 +48,7 @@ class phpRack_Result
      * @see getLog()
      */
     protected $_lines;
-    
+
     /**
      * Total result is SUCCESS?
      *
@@ -56,7 +56,7 @@ class phpRack_Result
      * @see wasSuccessful()
      */
     protected $_success;
-    
+
     /**
      * When this result was created by test
      *
@@ -75,7 +75,7 @@ class phpRack_Result
      * @see getTest()
      */
     protected $_test;
-    
+
     /**
      * Construct the class
      *
@@ -88,62 +88,62 @@ class phpRack_Result
         $this->_test = $test;
         $this->clean();
     }
-    
+
     /**
      * Set total result to FAILURE
      *
      * @return void
      * @see phpRack_Package::_failure()
      */
-    public function fail() 
+    public function fail()
     {
         $this->_success = false;
     }
-    
+
     /**
      * Was the test successful?
      *
      * @return boolean
      * @see phpRack_Runner::runSuite()
      */
-    public function wasSuccessful() 
+    public function wasSuccessful()
     {
         return $this->_success;
     }
-    
+
     /**
      * Get full log of the result
      *
      * @return string
      * @see phpRack_Runner::run()
      */
-    public function getLog() 
+    public function getLog()
     {
         return implode("\n", $this->_lines);
     }
-    
+
     /**
      * Get log of assertions only, without any other messages
      *
      * @return string
      * @see phpRack_Runner::runSuite()
      */
-    public function getPureLog() 
+    public function getPureLog()
     {
         return implode("\n", preg_grep('/^\[[A-Z]+\]\s/', $this->_lines));
     }
-    
+
     /**
      * Get result lifetime, duration in seconds
      *
      * @return void
      * @see phpRack_Runner::runSuite()
      */
-    public function getDuration() 
+    public function getDuration()
     {
         return microtime(true) - $this->_started;
     }
-    
+
     /**
      * Add new log line
      *
@@ -151,19 +151,54 @@ class phpRack_Result
      * @return $this
      * @see phpRack_Package::_log()
      */
-    public function addLog($line) 
+    public function addLog($line)
     {
+        $options = $this->_test->getAjaxOptions();
+        if (!empty($options['logSizeLimit'])
+            && is_numeric($options['logSizeLimit'])) {
+            $len = 0;
+            if (function_exists('mb_strlen')) {
+                $len += mb_strlen($line, 'UTF-8');
+            } elseif (function_exists('iconv_strlen')) {
+                $len += iconv_strlen($line, 'UTF-8');
+            } else {
+                $len += strlen($line) * 2; // bad variant
+            }
+            
+            $max = $options['logSizeLimit'] * 1024;
+            if ($len > $max) {
+                $cutSize = $max / 2;
+                $func = '';
+                if (function_exists('iconv_substr')) {
+                    $func = 'iconv_substr';
+                } elseif (function_exists('mb_substr')) {
+                    $func = 'mb_substr';
+                }
+                if ($func) {
+                    $head = call_user_func($func, $line, 0, $cutSize, 'UTF-8');
+                    $tail = call_user_func(
+                        $func, $line, -1 * $cutSize, $cutSize, 'UTF-8'
+                    );
+                } else {
+                    // bad variant
+                    $head = substr($line, 0, $cutSize * 2);
+                    $tail = substr($line, -1 * $cutSize * 2);
+                }
+                $line = "{$head}\n\n\t" . str_repeat('.', 50) . "\n\n{$tail}";
+            }
+        }
+
         $this->_lines[] = $line;
         return $this;
     }
-    
+
     /**
      * Clean log
      *
      * @return void
      * @see phpRack_Test::run()
      */
-    public function clean() 
+    public function clean()
     {
         $this->_success = true;
         $this->_lines = array();

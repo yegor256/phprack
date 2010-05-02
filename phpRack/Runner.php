@@ -415,11 +415,30 @@ class phpRack_Runner
         return json_encode(
             array(
                 'success' => $result->wasSuccessful(),
-                'log' => utf8_encode($result->getLog()),
+                'log' => $this->_utf8Encode($result->getLog()),
                 PHPRACK_AJAX_TOKEN => $token,
                 'options' => $test->getAjaxOptions()
             )
         );
+    }
+
+    /**
+     * checks for string encoding.
+     * If encoding is not utf-8, encodes to utf-8
+     *
+     * @return string
+     * @param string $str
+     */
+    protected function _utf8Encode($str)
+    {
+        $isUtf = false;
+        if (function_exists('mb_check_encoding')) {
+            $isUtf = mb_check_encoding($str, 'UTF-8');
+        }
+        if (function_exists('iconv')) {
+            $isUtf = (@iconv('UTF-8', 'UTF-16', $str) !== false);
+        }
+        return (!$isUtf) ? utf8_encode($str) : $str;
     }
 
     /**
@@ -430,21 +449,21 @@ class phpRack_Runner
      * @see runSuite()
      * @throws Exception
      * @todo Now we work only with one notifier, which is in class phpRack_Mail. Later
-     *      we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we 
+     *      we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we
      *      should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
      *      notifiers there.
      */
-    protected function _notifyAboutFailure($report) 
+    protected function _notifyAboutFailure($report)
     {
         // no notification required
         if (empty($this->_options['notify'])) {
             return;
         }
-        
+
         if (!is_array($this->_options['notify'])) {
             throw new Exception("Parameter 'notify' should be an array, '{$this->_options['notify']}' given");
         }
-        
+
         if (array_key_exists('email', $this->_options['notify'])) {
             /**
              * @see phpRack_Adapters_Notifier_Mail
