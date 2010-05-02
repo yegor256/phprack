@@ -53,6 +53,18 @@ class phpRack_Package_Simple extends phpRack_Package
     }
 
     /**
+     * Mark the test as successful
+     *
+     * @param string Message to show
+     * @return $this
+     */
+    public function success($msg) 
+    {
+        $this->_success($msg);
+        return $this;
+    }
+
+    /**
      * Is it true?
      *
      * @param mixed Variable to check
