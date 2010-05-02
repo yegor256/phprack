@@ -164,7 +164,7 @@ class phpRack_Result
             } else {
                 $len += strlen($line) * 2; // bad variant
             }
-            
+
             $max = $options['logSizeLimit'] * 1024;
             if ($len > $max) {
                 $cutSize = $max / 2;
@@ -181,8 +181,8 @@ class phpRack_Result
                     );
                 } else {
                     // bad variant
-                    $head = substr($line, 0, $cutSize * 2);
-                    $tail = substr($line, -1 * $cutSize * 2);
+                    $head = substr($line, 0, $cutSize);
+                    $tail = substr($line, -1 * $cutSize);
                 }
                 $line = "{$head}\n\n\t" . str_repeat('.', 50) . "\n\n{$tail}";
             }
