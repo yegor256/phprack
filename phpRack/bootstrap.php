@@ -176,6 +176,5 @@ try {
 
 } catch (Exception $e) {
     $content = $e->getMessage();
-    header('Content-Length: ' . strlen($content));
     echo $content;
 }
