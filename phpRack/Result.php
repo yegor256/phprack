@@ -162,7 +162,7 @@ class phpRack_Result
             } elseif (function_exists('iconv_strlen')) {
                 $len += iconv_strlen($line, 'UTF-8');
             } else {
-                $len += strlen($line) * 2; // bad variant
+                $len += strlen($line) / 2; // bad variant
             }
 
             $max = $options['logSizeLimit'] * 1024;
@@ -181,8 +181,8 @@ class phpRack_Result
                     );
                 } else {
                     // bad variant
-                    $head = substr($line, 0, $cutSize * 2);
-                    $tail = substr($line, -1 * $cutSize * 2);
+                    $head = substr($line, 0, $cutSize / 2);
+                    $tail = substr($line, -1 * $cutSize / 2);
                 }
                 $line = "{$head}\n\n\t" . str_repeat('.', 50) . "\n\n{$tail}";
             }
