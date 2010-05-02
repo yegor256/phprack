@@ -181,8 +181,8 @@ class phpRack_Result
                     );
                 } else {
                     // bad variant
-                    $head = substr($line, 0, $cutSize);
-                    $tail = substr($line, -1 * $cutSize);
+                    $head = substr($line, 0, $cutSize * 2);
+                    $tail = substr($line, -1 * $cutSize * 2);
                 }
                 $line = "{$head}\n\n\t" . str_repeat('.', 50) . "\n\n{$tail}";
             }
