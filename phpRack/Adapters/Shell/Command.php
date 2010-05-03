@@ -92,42 +92,42 @@ class phpRack_Adapters_Shell_Command
      * Execute shell command. Use asynchronous pipes to communicate
      * with child process
      *
+     * We must pass custom env from _getEnv() method to to
+     * proc_open() call, because on phprack.com server.
+     * When we execute external php file from other process, script
+     * make some strange forks and execute itself many times. This
+     * behavior results server internal error.
+     *
+     * shell_exec() was also affected by this issue, we have earlier
+     * this problem, and was solved by adding "env -i" before shell
+     * command. Recently we have added PEAR support, which internally
+     * execute PHP script, so problem returned.
+     *
+     * Direct reason of this error is $_ENV['SCRIPT_FILENAME']
+     * variable. When we unset it and pass modified env to
+     * proc_open(). It works on Windows XP, Ubuntu Linux and solve
+     * problem on phprack.com server.
+     * But from some reason on MacOS there is some problem with
+     * this env value reseting, and we lose some privilege? Due to
+     * this fact, our unit tests fail, because PEAR test produce
+     * error:
+     *
+     * <code>
+     * touch(): Unable to create file /opt/local/lib/php/.lock
+     * because Permission denied in /usr/local/PEAR/PEAR/Registry.php
+     * on line 835
+     * </code>
+     *
+     * If we pass null to proc_open() env param we have no problems
+     * on MacOS, but problem on phprack.com still exists.
+     *
+     * That is reason why we must pass to this function custom env
+     * param.
+     * 
      * @return string Command execution output
      * @throws Exception if from some reason command can't be executed
      * @throws Exception if command process was terminated
      * @see phpRack_Package_Php::lint()
-     *
-     *           We must pass custom env from _getEnv() method to to
-     *           proc_open() call, because on phprack.com server.
-     *           When we execute external php file from other process, script
-     *           make some strange forks and execute itself many times. This
-     *           behavior results server internal error.
-     *
-     *           shell_exec() was also affected by this issue, we have earlier
-     *           this problem, and was solved by adding "env -i" before shell
-     *           command. Recently we have added PEAR support, which internally
-     *           execute PHP script, so problem returned.
-     *
-     *           Direct reason of this error is $_ENV['SCRIPT_FILENAME']
-     *           variable. When we unset it and pass modified env to
-     *           proc_open(). It works on Windows XP, Ubuntu Linux and solve
-     *           problem on phprack.com server.
-     *           But from some reason on MacOS there is some problem with
-     *           this env value reseting, and we lose some privilege? Due to
-     *           this fact, our unit tests fail, because PEAR test produce
-     *           error:
-     *
-     *           <code>
-     *           touch(): Unable to create file /opt/local/lib/php/.lock
-     *           because Permission denied in /usr/local/PEAR/PEAR/Registry.php
-     *           on line 835
-     *           </code>
-     *
-     *           If we pass null to proc_open() env param we have no problems
-     *           on MacOS, but problem on phprack.com still exists.
-     *
-     *           That is reason why we must pass to this function custom env
-     *           param.
      */
     public function run()
     {
@@ -138,7 +138,13 @@ class phpRack_Adapters_Shell_Command
 
         $pipes = array();
         // execute command and get its proccess resource
-        $this->_process = proc_open($this->_command, $descriptors, $pipes, getcwd(), $this->_getEnv());
+        $this->_process = proc_open(
+            $this->_command, 
+            $descriptors, 
+            $pipes, 
+            getcwd(), 
+            $this->_getEnv()
+        );
 
         // if there was some problems with command execution
         if (!is_resource($this->_process)) {
