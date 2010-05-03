@@ -69,8 +69,10 @@ class phpRack_Package_Shell extends phpRack_Package
         $this->_log('$ ' . $cmd);
         $this->_log($result);
         if (!is_null($regex)) {
-            if (!preg_match($regex, $cmd)) {
-                $this->_failure("Result of '{$cmd}' doesn't match regular expression '{$regex}': '{$result}'");
+            if (!preg_match($regex, $result)) {
+                $this->_failure("Result of '{$cmd}' doesn't match regex '{$regex}': '{$result}'");
+            } else {
+                $this->_success("Result of '{$cmd}' matches regex '{$regex}'");
             }
         }
     }
