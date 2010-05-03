@@ -153,41 +153,6 @@ class phpRack_Result
      */
     public function addLog($line)
     {
-        $options = $this->_test->getAjaxOptions();
-        if (!empty($options['logSizeLimit'])
-            && is_numeric($options['logSizeLimit'])) {
-            $len = 0;
-            if (function_exists('mb_strlen')) {
-                $len += mb_strlen($line, 'UTF-8');
-            } elseif (function_exists('iconv_strlen')) {
-                $len += iconv_strlen($line, 'UTF-8');
-            } else {
-                $len += strlen($line) / 2; // bad variant
-            }
-
-            $max = $options['logSizeLimit'] * 1024;
-            if ($len > $max) {
-                $cutSize = $max / 2;
-                $func = '';
-                if (function_exists('iconv_substr')) {
-                    $func = 'iconv_substr';
-                } elseif (function_exists('mb_substr')) {
-                    $func = 'mb_substr';
-                }
-                if ($func) {
-                    $head = call_user_func($func, $line, 0, $cutSize, 'UTF-8');
-                    $tail = call_user_func(
-                        $func, $line, -1 * $cutSize, $cutSize, 'UTF-8'
-                    );
-                } else {
-                    // bad variant
-                    $head = substr($line, 0, $cutSize / 2);
-                    $tail = substr($line, -1 * $cutSize / 2);
-                }
-                $line = "{$head}\n\n\t" . str_repeat('.', 50) . "\n\n{$tail}";
-            }
-        }
-
         $this->_lines[] = $line;
         return $this;
     }
