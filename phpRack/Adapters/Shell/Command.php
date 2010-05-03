@@ -96,8 +96,10 @@ class phpRack_Adapters_Shell_Command
      * @throws Exception if from some reason command can't be executed
      * @throws Exception if command process was terminated
      * @see phpRack_Package_Php::lint()
-     * @todo #49 We must fix proc_open() call, because on phprack.com server
-     *           when we execute external php file from other process, script
+     *
+     *           We must pass custom env from _getEnv() method to to
+     *           proc_open() call, because on phprack.com server.
+     *           When we execute external php file from other process, script
      *           make some strange forks and execute itself many times. This
      *           behavior results server internal error.
      *
@@ -136,8 +138,7 @@ class phpRack_Adapters_Shell_Command
 
         $pipes = array();
         // execute command and get its proccess resource
-        // @todo #49
-        $this->_process = proc_open($this->_command, $descriptors, $pipes, getcwd()/*, $this->_getEnv()*/);
+        $this->_process = proc_open($this->_command, $descriptors, $pipes, getcwd(), $this->_getEnv());
 
         // if there was some problems with command execution
         if (!is_resource($this->_process)) {
@@ -250,20 +251,21 @@ class phpRack_Adapters_Shell_Command
      *
      * @return array|null
      * @see run()
-     * @todo #49 Uncomment it if will be used in run() or delete when
-     *           found other method to solve server internal error on
-     *           phprack.com
      */
     protected function _getEnv()
     {
-        /*
-        // on Windows or when $_ENV was unset use current process environment
-        if (substr(PHP_OS, 0, 3) == 'WIN' || !isset($_ENV)) {
+        /**
+         * @see phpRack_Adapters_Os
+         */
+        require_once PHPRACK_PATH . '/Adapters/Os.php';
+        $os = phpRack_Adapters_Os::get();
+
+        // we must modify env only on Linux, so we should return default env in other cases
+        if ($os != phpRack_Adapters_Os::LINUX || !isset($_ENV)) {
             return null;
         }
 
         // we must remove SCRIPT_FILENAME to avoid script forking problem on some servers
         return array_diff_key($_ENV, array('SCRIPT_FILENAME' => ''));
-        */
     }
 }
