@@ -420,7 +420,7 @@ class phpRack_Runner
                 'log' => $this->_utf8Encode(
                     $this->_cutLog(
                         $result->getLog(),
-                        (int)$options['logSizeLimit']
+                        intval($options['logSizeLimit'])
                     )
                 ),
                 PHPRACK_AJAX_TOKEN => $token
@@ -429,11 +429,10 @@ class phpRack_Runner
     }
 
     /**
-     * checks for string encoding.
-     * If encoding is not utf-8, encodes to utf-8
+     * Checks for string encoding, and if encoding is not utf-8, encodes to utf-8
      *
-     * @return string
-     * @param string $str
+     * @param string String to convert into UTF-8
+     * @return string Proper UTF-8 formatted string
      * @see run()
      */
     protected function _utf8Encode($str)
@@ -449,10 +448,10 @@ class phpRack_Runner
     }
 
     /**
-     * Cuts log according limit
+     * Cuts log according to the limit provided
      *
-     * @param string $log
-     * @param integer $limit
+     * @param string Log to cut
+     * @param integer Limit in Kb
      * @see run()
      * @return string
      */
