@@ -434,17 +434,20 @@ class phpRack_Runner
      * @param string String to convert into UTF-8
      * @return string Proper UTF-8 formatted string
      * @see run()
+     * @see #60 I think that this method shall be extensively tested. Now I have problems
+     *      with content that is not in English.
      */
     protected function _utf8Encode($str)
     {
-        $isUtf = false;
-        if (function_exists('mb_check_encoding')) {
-            $isUtf = mb_check_encoding($str, 'UTF-8');
-        }
-        if (function_exists('iconv')) {
-            $isUtf = (@iconv('UTF-8', 'UTF-16', $str) !== false);
-        }
-        return (!$isUtf) ? utf8_encode($str) : $str;
+        return utf8_encode($str);
+        // $isUtf = false;
+        // if (function_exists('mb_check_encoding')) {
+        //     $isUtf = mb_check_encoding($str, 'UTF-8');
+        // }
+        // if (function_exists('iconv')) {
+        //     $isUtf = (@iconv('UTF-8', 'UTF-16', $str) !== false);
+        // }
+        // return (!$isUtf) ? utf8_encode($str) : $str;
     }
 
     /**
@@ -486,7 +489,7 @@ class phpRack_Runner
                 $head = substr($log, 0, $cutSize / 2);
                 $tail = substr($log, -1 * $cutSize / 2);
             }
-            return "{$head}\n\t" . str_repeat('.', 50) . "\n{$tail}";
+            return $head . "\n... content skipped ...\n" . $tail;
         }
         return $log;
     }
