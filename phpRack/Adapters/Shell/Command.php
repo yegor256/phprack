@@ -89,40 +89,15 @@ class phpRack_Adapters_Shell_Command
     }
 
     /**
-     * Execute shell command. Use asynchronous pipes to communicate
-     * with child process
+     * Execute shell command. Use asynchronous pipes to communicate with child
+     * process
      *
-     * We must pass custom env from _getEnv() method to to
-     * proc_open() call, because on phprack.com server.
-     * When we execute external php file from other process, script
-     * make some strange forks and execute itself many times. This
-     * behavior results server internal error.
+     * We must add 'env -i' to passed shell command on Linux, because on
+     * phprack.com server when we execute external php file from other
+     * process, script make some strange forks and execute itself many times.
+     * This behavior results server internal error.
      *
-     * shell_exec() was also affected by this issue, we have earlier
-     * this problem, and was solved by adding "env -i" before shell
-     * command. Recently we have added PEAR support, which internally
-     * execute PHP script, so problem returned.
-     *
-     * Direct reason of this error is $_ENV['SCRIPT_FILENAME']
-     * variable. When we unset it and pass modified env to
-     * proc_open(). It works on Windows XP, Ubuntu Linux and solve
-     * problem on phprack.com server.
-     * But from some reason on MacOS there is some problem with
-     * this env value reseting, and we lose some privilege? Due to
-     * this fact, our unit tests fail, because PEAR test produce
-     * error:
-     *
-     * <code>
-     * touch(): Unable to create file /opt/local/lib/php/.lock
-     * because Permission denied in /usr/local/PEAR/PEAR/Registry.php
-     * on line 835
-     * </code>
-     *
-     * If we pass null to proc_open() env param we have no problems
-     * on MacOS, but problem on phprack.com still exists.
-     *
-     * That is reason why we must pass to this function custom env
-     * param.
+     * shell_exec() is also affected by this issue.
      * 
      * @return string Command execution output
      * @throws Exception if from some reason command can't be executed
@@ -139,11 +114,10 @@ class phpRack_Adapters_Shell_Command
         $pipes = array();
         // execute command and get its proccess resource
         $this->_process = proc_open(
-            $this->_command, 
-            $descriptors, 
-            $pipes, 
-            getcwd(), 
-            $this->_getEnv()
+            $this->_prepareCommand($this->_command),
+            $descriptors,
+            $pipes,
+            getcwd()
         );
 
         // if there was some problems with command execution
@@ -253,12 +227,13 @@ class phpRack_Adapters_Shell_Command
     }
 
     /**
-     * Get env which should be passed to proc_open()
+     * Prepare command depending on OS where it will be executed.
      *
-     * @return array|null
+     * @param shell command to execute
+     * @return string
      * @see run()
      */
-    protected function _getEnv()
+    protected function _prepareCommand($command)
     {
         /**
          * @see phpRack_Adapters_Os
@@ -266,12 +241,10 @@ class phpRack_Adapters_Shell_Command
         require_once PHPRACK_PATH . '/Adapters/Os.php';
         $os = phpRack_Adapters_Os::get();
 
-        // we must modify env only on Linux, so we should return default env in other cases
-        if ($os != phpRack_Adapters_Os::LINUX || !isset($_ENV)) {
-            return null;
+        // we must reset env to fix fork problem described in #59
+        if ($os == phpRack_Adapters_Os::LINUX) {
+            $command = 'env -i ' . $command;
         }
-
-        // we must remove SCRIPT_FILENAME to avoid script forking problem on some servers
-        return array_diff_key($_ENV, array('SCRIPT_FILENAME' => ''));
+        return $command;
     }
 }
