@@ -4,7 +4,7 @@
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt. It is also available
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -412,14 +412,86 @@ class phpRack_Runner
         $test->setAjaxOptions($options);
 
         $result = $test->run();
+        $options = $test->getAjaxOptions();
         return json_encode(
             array(
                 'success' => $result->wasSuccessful(),
-                'log' => utf8_encode($result->getLog()),
-                PHPRACK_AJAX_TOKEN => $token,
-                'options' => $test->getAjaxOptions()
+                'options' => $options,
+                'log' => $this->_utf8Encode(
+                    $this->_cutLog(
+                        $result->getLog(),
+                        intval($options['logSizeLimit'])
+                    )
+                ),
+                PHPRACK_AJAX_TOKEN => $token
             )
         );
+    }
+
+    /**
+     * Checks for string encoding, and if encoding is not utf-8, encodes to utf-8
+     *
+     * @param string String to convert into UTF-8
+     * @return string Proper UTF-8 formatted string
+     * @see run()
+     * @see #60 I think that this method shall be extensively tested. Now I have problems
+     *      with content that is not in English.
+     */
+    protected function _utf8Encode($str)
+    {
+        return utf8_encode($str);
+        // $isUtf = false;
+        // if (function_exists('mb_check_encoding')) {
+        //     $isUtf = mb_check_encoding($str, 'UTF-8');
+        // }
+        // if (function_exists('iconv')) {
+        //     $isUtf = (@iconv('UTF-8', 'UTF-16', $str) !== false);
+        // }
+        // return (!$isUtf) ? utf8_encode($str) : $str;
+    }
+
+    /**
+     * Cuts log according to the limit provided
+     *
+     * @param string Log to cut
+     * @param integer Limit in Kb
+     * @see run()
+     * @return string
+     */
+    protected function _cutLog($log, $limit)
+    {
+        $len = 0;
+        if (function_exists('mb_strlen')) {
+            $len += mb_strlen($log, 'UTF-8');
+        } elseif (function_exists('iconv_strlen')) {
+            $len += iconv_strlen($log, 'UTF-8');
+        } else {
+            // bad variant
+            $len += strlen($log) / 2;
+        }
+
+        $max = $limit * 1024; // in kb
+        if ($len > $max) {
+            $cutSize = $max / 2;
+            $func = '';
+            if (function_exists('iconv_substr')) {
+                $func = 'iconv_substr';
+            } elseif (function_exists('mb_substr')) {
+                $func = 'mb_substr';
+            }
+            if ($func) {
+                $head = call_user_func($func, $log, 0, $cutSize, 'UTF-8');
+                $tail = call_user_func(
+                    $func, $log, -1 * $cutSize, $cutSize, 'UTF-8'
+                );
+            } else {
+                // bad variant
+                $head = substr($log, 0, $cutSize / 2);
+                $tail = substr($log, -1 * $cutSize / 2);
+            }
+            return $head . "\n... content skipped ...\n" . $tail;
+        }
+        return $log;
     }
 
     /**
@@ -430,21 +502,21 @@ class phpRack_Runner
      * @see runSuite()
      * @throws Exception
      * @todo Now we work only with one notifier, which is in class phpRack_Mail. Later
-     *      we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we 
+     *      we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we
      *      should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
      *      notifiers there.
      */
-    protected function _notifyAboutFailure($report) 
+    protected function _notifyAboutFailure($report)
     {
         // no notification required
         if (empty($this->_options['notify'])) {
             return;
         }
-        
+
         if (!is_array($this->_options['notify'])) {
             throw new Exception("Parameter 'notify' should be an array, '{$this->_options['notify']}' given");
         }
-        
+
         if (array_key_exists('email', $this->_options['notify'])) {
             /**
              * @see phpRack_Adapters_Notifier_Mail
