@@ -86,15 +86,15 @@ abstract class phpRack_Test
      * @see getAjaxOptions()
      */
     private $_ajaxOptions = array(
-        'autoStart' => true, // start it when front is loaded
-        'reload' => false, // reload every X seconds, in AJAX
-        'linesCount' => null, // how many lines should be displayed on browser side when we use tailf method
-        'secVisible' => null, // how long these lines should be visible (in seconds)
-        'attachOutput' => false, // attach output to previous result log
-        'data' => array(), // used for store data which should be returned in next ajax query
-        'fileLastOffset' => null, // used for control offset to read in phpRack_Package_Disc_File::tailf()
-        'logSizeLimit' => 100, // maximum size of log
-        'pauseWhenFocusLost' => true // stop ajax requests when window lost focus
+        'autoStart'          => true, // start it when front is loaded
+        'reload'             => false, // reload every X seconds, in AJAX
+        'linesCount'         => null, // how many lines should be displayed on browser side when we use tailf method
+        'secVisible'         => null, // how long these lines should be visible (in seconds)
+        'attachOutput'       => false, // attach output to previous result log
+        'data'               => array(), // used for store data which should be returned in next ajax query
+        'fileLastOffset'     => null, // used for control offset to read in phpRack_Package_Disc_File::tailf()
+        'logSizeLimit'       => 100, // maximum size of log, in KB
+        'pauseWhenFocusLost' => true, // stop ajax requests when window lost focus
     );
 
     /**
