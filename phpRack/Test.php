@@ -133,6 +133,11 @@ abstract class phpRack_Test
 
         // workaround against ZCA static code analysis
         eval('require_once $fileName;');
+        
+        if (!class_exists($className)) {
+            throw new Exception("Class '{$className}' is not defined in '{$fileName}'");
+        }
+        
         return new $className($fileName, $runner);
     }
 
