@@ -100,7 +100,9 @@ abstract class phpRack_Test
     /**
      * Construct the class
      * 
-     * This constructor is going to be used only from factory() method.
+     * This constructor is going to be used only from factory() method. Making
+     * this method "private" leads to problems in PHP 5.2.5 and maybe earlier
+     * versions.
      *
      * @param string ID of the test, absolute (!) file name
      * @param phpRack_Runner Instance of test runner
