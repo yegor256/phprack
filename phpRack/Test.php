@@ -99,12 +99,15 @@ abstract class phpRack_Test
 
     /**
      * Construct the class
+     * 
+     * This constructor is going to be used only from factory() method.
      *
      * @param string ID of the test, absolute (!) file name
      * @param phpRack_Runner Instance of test runner
      * @return void
+     * @see factory()
      */
-    private final function __construct($fileName, phpRack_Runner $runner)
+    protected final function __construct($fileName, phpRack_Runner $runner)
     {
         $this->_fileName = realpath($fileName);
         $this->_runner = $runner;
