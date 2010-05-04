@@ -489,7 +489,7 @@ class phpRack_Runner
                 $head = substr($log, 0, $cutSize / 2);
                 $tail = substr($log, -1 * $cutSize / 2);
             }
-            return $head . "\n... content skipped ...\n" . $tail;
+            return $head . "\n\n... content skipped (" . ($len - $max) . " bytes) ...\n\n" . $tail;
         }
         return $log;
     }
