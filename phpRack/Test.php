@@ -204,6 +204,10 @@ abstract class phpRack_Test
             }
             try {
                 $this->setUp();
+                
+                // to avoid test cancelation because time is over
+                set_time_limit(0);
+                
                 $this->{$method->getName()}();
                 $this->tearDown();
             } catch (Exception $e) {
