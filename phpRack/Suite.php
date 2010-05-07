@@ -4,7 +4,7 @@
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt. It is also available
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -29,6 +29,11 @@
 
 /**
  * Parent class of all test suites
+ *
+ * Suites are maintained as directories full of tests, inside "phpRack/Suite/library"
+ * holder. When we {@link _addSuite()}, this class files all tests in this suite
+ * directory and add them all to itself. Also, library contains individual
+ * tests, which can be added to the suite by means of {@link _addTest()}.
  *
  * @package Tests
  */
@@ -119,46 +124,49 @@ abstract class PhpRack_Suite
     /**
      * Add suite
      *
+     * Suite is a collection of tests. Name of the suite ($suiteName) is a name
+     * of directory in "phpRack/Suite/library".
+     *
      * @param string Suite name
      * @param array options
      * @return $this
      * @throws Exception if suite can't be found
      * @see MySuite::_init()
-     * @todo #48 From what locations we should load these suites. We will have
-     *           built-in suites and maybe also user-defined?
+     * @see phpRack_Suite_Test
      */
     protected function _addSuite($suiteName, array $options = array())
     {
+        assert(is_string($suiteName)); // for ZCA only
+        assert(is_array($options)); // for ZCA only
         // @see #48
-        $suitePath = $suiteName;
+        // $suitePath = $suiteName;
         // Exception is possible here
-        $this->_suites[] = self::factory($suitePath, $this->_runner, $options);
+        // $this->_suites[] = self::factory($suitePath, $this->_runner, $options);
         return $this;
     }
 
     /**
      * Add test
      *
+     * Test should be located in our test library, inside "phpRack/Suite/library"
+     * directory, and should be inherited from {@link phpRack_Suite_Test} class.
+     *
      * @param string Suite name
      * @param array options
      * @return $this
      * @throws Exception if test can't be found
      * @see MySuite::_init()
-     * @todo #48 From what locations we should load these tests?
-     *           "integration-tests" folder or other?
-     *           How we should map $testName to $testPath?
-     *
-     *           How we should pass options to test constructor/factory
-     *           and how use this param inside it?
+     * @see phpRack_Suite_Test
      */
     protected function _addTest($testName, array $options = array())
     {
         // @see #48
-        $testPath = $testName;
+        // $testPath = $testName;
         // @see #48
         assert(is_array($options)); // for ZCA only
+        assert(is_string($testName)); // for ZCA only
         // Exception is possible here
-        $this->_tests[] = phpRack_Test::factory($testPath, $this->_runner);
+        // $this->_tests[] = phpRack_Test::factory($testPath, $this->_runner);
         return $this;
     }
 

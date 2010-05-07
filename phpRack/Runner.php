@@ -339,10 +339,19 @@ class phpRack_Runner
     /**
      * Get full list of tests, in array
      *
+     * This method builds a list of phpRack_Test class instances, collecting
+     * them from integration 1) tests and 2) suites. They both are located in 
+     * the same directory (pre-configured in $phpRackConfig), but differ only
+     * in file name suffix. Integration test ends with "...Test.php" and integration
+     * suite ends with "...Suite.php".
+     *
+     * Suite is an integration of tests, that allows you to use library tests
+     * and suites. The majority of testing tasks are similar from server to server.
+     * If you want to avoid manual development of tests for every application, just
+     * use our library suites, and taylor them for your application needs.
+     *
      * @return phpRack_Test[]
      * @see index.phtml
-     * @todo #48 Where phpRack_Suite-s should be placed to be automatically
-     *           loaded? Same path like we have for phpRack_Test-s?
      */
     public function getTests()
     {

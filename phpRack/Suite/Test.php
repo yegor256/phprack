@@ -28,43 +28,39 @@
  */
 
 /**
- * User custom suite
+ * @see phpRack_Test
+ */
+require_once PHPRACK_PATH . '/Test.php';
+
+/**
+ * Parent class of all tests in suite library
  *
  * @package Tests
  */
-
-class MySuite extends PhpRack_Suite
+abstract class PhpRack_Suite_Test extends phpRack_Test
 {
     /**
-     * Set custom suites and tests
+     * Configuration options
      *
-     * @todo #48 Remove try { ... } catch when used suites will be fully
-     *           implemented
+     * @var array
+     * @see setConfig()
      */
-    protected function _init()
+    protected $_config = array();
+    
+    /**
+     * Set configuration params
+     *
+     * @param array List of configuration options
+     * @return void
+     * @throws Exception
+     */
+    public final function setConfig(array $config = array()) 
     {
-        /**
-        * Catch errors, because we have not implemented all suites used in code
-        * below
-        * @see #48
-        */
-        try {
-            $this->_addSuite('ServerHealth');
-            $this->_addSuite(
-                'DatabaseHealth',
-                array(
-                    'url' => 'jdbc:mysql://localhost:3306/test?username=test&password=test'
-                )
-            );
-            $this->_addSuite('Php5');
-            $this->_addTest(
-                'LogViewer',
-                array(
-                    'file' => 'my.log',
-                )
-            );
-        } catch(Exception $e) {
-            assert($e instanceof Exception); // for ZCA only
+        foreach ($config as $name=>$value) {
+            if (!array_key_exists($name, $this->_config)) {
+                throw new Exception("Option '{$name}' is not allowed for " . get_class($this));
+            }
+            $this->_config[$name] = $value;
         }
     }
 }

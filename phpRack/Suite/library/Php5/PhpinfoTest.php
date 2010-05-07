@@ -28,43 +28,24 @@
  */
 
 /**
- * User custom suite
+ * @see phpRack_Suite_Test
+ */
+require_once PHPRACK_PATH . '/Suite/Test.php';
+
+/**
+ * View phpinfo()
  *
  * @package Tests
  */
-
-class MySuite extends PhpRack_Suite
+class phpRack_Suite_Php5_PhpinfoTest extends phpRack_Suite_Test
 {
     /**
-     * Set custom suites and tests
+     * Show phpinfo()
      *
-     * @todo #48 Remove try { ... } catch when used suites will be fully
-     *           implemented
+     * @return void
      */
-    protected function _init()
+    public function testShowPhpinfo()
     {
-        /**
-        * Catch errors, because we have not implemented all suites used in code
-        * below
-        * @see #48
-        */
-        try {
-            $this->_addSuite('ServerHealth');
-            $this->_addSuite(
-                'DatabaseHealth',
-                array(
-                    'url' => 'jdbc:mysql://localhost:3306/test?username=test&password=test'
-                )
-            );
-            $this->_addSuite('Php5');
-            $this->_addTest(
-                'LogViewer',
-                array(
-                    'file' => 'my.log',
-                )
-            );
-        } catch(Exception $e) {
-            assert($e instanceof Exception); // for ZCA only
-        }
+        $this->assert->php->phpinfo();
     }
 }

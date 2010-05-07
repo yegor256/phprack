@@ -28,43 +28,47 @@
  */
 
 /**
- * User custom suite
+ * @see phpRack_Suite_Test
+ */
+require_once PHPRACK_PATH . '/Suite/Test.php';
+
+/**
+ * List of processes running on the server
  *
  * @package Tests
  */
-
-class MySuite extends PhpRack_Suite
+class phpRack_Suite_ServerHealth_ProcessesTest extends phpRack_Suite_Test
 {
     /**
-     * Set custom suites and tests
+     * Pre-configuration of the test
      *
-     * @todo #48 Remove try { ... } catch when used suites will be fully
-     *           implemented
+     * @return void
      */
     protected function _init()
     {
-        /**
-        * Catch errors, because we have not implemented all suites used in code
-        * below
-        * @see #48
-        */
-        try {
-            $this->_addSuite('ServerHealth');
-            $this->_addSuite(
-                'DatabaseHealth',
-                array(
-                    'url' => 'jdbc:mysql://localhost:3306/test?username=test&password=test'
-                )
-            );
-            $this->_addSuite('Php5');
-            $this->_addTest(
-                'LogViewer',
-                array(
-                    'file' => 'my.log',
-                )
-            );
-        } catch(Exception $e) {
-            assert($e instanceof Exception); // for ZCA only
-        }
+        $this->setAjaxOptions(
+            array(
+                'reload' => 5, // every 5 seconds, if possible
+            )
+        );
+    }
+
+    /**
+     * Show full list of top-processes and some other supplementary information
+     *
+     * @return void
+     * @todo #48 This test works only on Linux, so we should change it
+     *      soon to something more portable
+     */
+    public function testShowProcesses()
+    {
+        $this->assert->shell->exec('date 2>&1');
+        $this->assert->shell->exec('uptime 2>&1');
+        $this->assert->shell->exec(
+            'ps o "%cpu %mem nice user time stat command" ax | '
+            . 'awk \'NR==1; NR > 1 {print $0 | "sort -k 1 -r"}\' | '
+            . 'grep -v "^ 0.0" 2>&1'
+        );
+        $this->assert->shell->exec('df 2>&1');
     }
 }
