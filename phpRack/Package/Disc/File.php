@@ -53,6 +53,11 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * Default number of lines to show
      */
     const LINES_TO_SHOW = 25;
+    
+    /**
+     * Maximum number of bytes we can render, if more we will skip the rest
+     */
+    const MAX_SIZE_TO_RENDER = 50000;
 
     /**
      * Show the content of the file
@@ -67,6 +72,18 @@ class phpRack_Package_Disc_File extends phpRack_Package
         // Check that file exists
         if (!$this->_isFileExists($fileName)) {
             return $this;
+        }
+        
+        // too long/big files should not be returned
+        if (filesize($fileName) > self::MAX_SIZE_TO_RENDER) {
+            $this->_log(
+                sprintf(
+                    "File '%s' is too big (%d bytes), we can't render its content in full",
+                    $fileName,
+                    filesize($fileName)
+                )
+            );
+            return $this->tail($fileName);
         }
 
         $content = file_get_contents($fileName);
@@ -93,7 +110,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         if (!$this->_isFileExists($fileName)) {
             return $this;
         }
-
+        
         // Open file and move pointer to end of file
         $fp = fopen($fileName, 'rb');
         fseek($fp, 0, SEEK_END);
@@ -128,6 +145,16 @@ class phpRack_Package_Disc_File extends phpRack_Package
 
             // Attach last readed lines at beggining of earlier readed fragments
             $content = $readBuffer . $content;
+            
+            if (strlen($content) > self::MAX_SIZE_TO_RENDER) {
+                $this->_log(
+                    sprintf(
+                        "Content is too long already (%d bytes), we won't render any more",
+                        strlen($content)
+                    )
+                );
+                break;
+            }
         } while ($offset > 0 && $linesCount > 0);
 
         $this->_log($content);
@@ -224,15 +251,32 @@ class phpRack_Package_Disc_File extends phpRack_Package
 
         $content = '';
         $readedLinesCount = 0;
-        $fp = fopen($fileName, 'rb');
+        $fp = @fopen($fileName, 'rb');
+        if ($fp === false) {
+            $this->_failure("Failed to fopen('{$fileName}')");
+            return $this;
+        }
 
         // Read line by line until we have required count or we reach EOF
         while ($readedLinesCount < $linesCount && !feof($fp)) {
-            $content .= fgets($fp);
+            $content .= @fgets($fp);
             $readedLinesCount++;
+            if (strlen($content) > self::MAX_SIZE_TO_RENDER) {
+                $this->_log(
+                    sprintf(
+                        "Content is too long already (%d bytes), we won't render any more",
+                        strlen($content)
+                    )
+                );
+                break;
+            }
         }
 
-        fclose($fp);
+        if (@fclose($fp) === false) {
+            $this->_failure("Failed to fclose('{$fileName}')");
+            return $this;
+        }
+        
         $this->_log($content);
         return $this;
     }
