@@ -30,7 +30,7 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
     public function testPublicFunctionsProvider()
     {
         return array(
-            array('setTo', 'test1@example.com'),
+            array('setTo', 'test1@phprack.com'),
             array('setBody', 'hello, World!'),
             array('setSubject', 'hello, Earth!'),
         );
@@ -51,7 +51,7 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
             'password' => 'yourpwd',
         );
         $adapter = new phpRack_Adapters_Notifier_Mail_Smtp($a);
-        $adapter->setTo('test5@example.com');
+        $adapter->setTo('test1@phprack.com');
         $adapter->setBody('Passed');
         $adapter->setSubject('Unit Test');
 
@@ -82,7 +82,7 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
     public function testSendWithoutBodyException()
     {
         $adapter = new phpRack_Adapters_Notifier_Mail_Smtp();
-        $adapter->setTo('test6@example.com');
+        $adapter->setTo('test1@phprack.com');
         $adapter->send();
     }
 }

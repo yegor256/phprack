@@ -48,8 +48,8 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
     public function testPublicFunctionsProvider()
     {
         return array(
-            array('setTo', 'test1@example.com'),
-            array('setTo', 'test2@example.com'),
+            array('setTo', 'test1@phprack.com'),
+            array('setTo', 'test2@phprack.com'),
             array('setBody', 'hello, World!'),
             array('setSubject', 'hello, Earth!'),
         );
@@ -57,7 +57,7 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
 
     public function testSend()
     {
-        $this->_adapter->setTo('test3@example.com');
+        $this->_adapter->setTo('test1@phprack.com');
         $this->_adapter->setBody('This is test');
         $this->assertTrue($this->_adapter->send());
     }
@@ -76,7 +76,7 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
      */
     public function testSendWithoutBodyException()
     {
-        $this->_adapter->setTo('test5@example.com');
+        $this->_adapter->setTo('test1@phprack.com');
         $this->_adapter->send();
     }
 }
