@@ -204,6 +204,16 @@ class phpRack_Runner
                 }
                 return $this->_validated(false, 'Invalid login credentials provided');
 
+            // list of login/password provided in associative array
+            // key is username and value is password
+            case is_array($this->_options['htpasswd']):
+                foreach ($this->_options['htpasswd'] as $lg=>$psw) {
+                    if (($lg == $login) && ($psw == $hash)) {
+                        return $this->_validated(true);
+                    }
+                }
+                return $this->_validated(false, 'Invalid login credentials provided');
+
             // authenticated TRUE, if no authentication required
             default:
                 return $this->_validated(true);
