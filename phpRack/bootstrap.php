@@ -79,9 +79,7 @@ try {
     }
 
     if (!defined('PHPRACK_VERSION')) {
-        // we use svn:keywords here in order to get the revision number of phpRack
-        $revision = intval(substr('$Rev$', 6));
-        define('PHPRACK_VERSION', '0.1dev' . ($revision ? " (r{$revision})" : false));
+        define('PHPRACK_VERSION', '0.1dev');
     }
 
     if (!defined('PHPRACK_AJAX_TAG')) {
