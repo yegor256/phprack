@@ -190,6 +190,8 @@ $(
                 $result: $this.find('span.result'),
                 // jQuery object which represent test name Element in DOM tree
                 $label: $this.find('span.label'),
+                // jQuery object which represent tags Element in DOM tree
+                $tags: $this.find('span.tags'),
                 // jQuery object which represent test message Element in DOM tree
                 $message: $this.find('pre'),
                 displayTimer: false,
@@ -295,6 +297,29 @@ $(
                             function()
                             {
                                 message += this.text + "\n";
+                            }
+                        );
+                    }
+
+                    if (options && options.tags) {
+                        // cleanup tags list
+                        that.$tags.empty();
+                        $.each(
+                            options.tags,
+                            function(index, value)
+                            {
+                                // create new tag
+                                var $tag = $('<span class="tag">' + value + '</span>');
+                                $tag.click(
+                                    function()
+                                    {
+                                        // set ajax call param and execute test again
+                                        that.options.data['tag'] = value;
+                                        that.run();
+                                    }
+                                );
+                                // add tag to list
+                                that.$tags.append($tag);
                             }
                         );
                     }

@@ -95,6 +95,8 @@ abstract class phpRack_Test
         'fileLastOffset'     => null, // used for control offset to read in phpRack_Package_Disc_File::tailf()
         'logSizeLimit'       => 100, // maximum size of log, in KB
         'pauseWhenFocusLost' => true, // stop ajax requests when window lost focus
+        'tags'               => array(), // used for store available options for parametrized test
+        'tag'                => null // selected tag param from front end
     );
 
     /**
@@ -207,8 +209,11 @@ abstract class phpRack_Test
                 
                 // to avoid test cancelation because time is over
                 set_time_limit(0);
-                
-                $this->{$method->getName()}();
+
+                call_user_func(
+                    array($this, $method->getName()),
+                    $this->_ajaxOptions['tag']
+                );
                 $this->tearDown();
             } catch (Exception $e) {
                 $this->assert->getResult()->addLog(
