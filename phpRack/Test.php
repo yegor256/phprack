@@ -209,8 +209,11 @@ abstract class phpRack_Test
                 
                 // to avoid test cancelation because time is over
                 set_time_limit(0);
-                
-                $this->{$method->getName()}();
+
+                call_user_func(
+                    array($this, $method->getName()),
+                    $this->_ajaxOptions['tag']
+                );
                 $this->tearDown();
             } catch (Exception $e) {
                 $this->assert->getResult()->addLog(

@@ -18,11 +18,10 @@ class ParametrizedTest extends PhpRack_Test
             )
         );
     }
-    public function testFiles()
+    public function testFiles($tag = null)
     {
-        $ajaxOptions = $this->getAjaxOptions();
-        if ($ajaxOptions['tag']) {
-            $this->assert->disc->file->cat($ajaxOptions['tag']);
+        if ($tag) {
+            $this->assert->disc->file->cat($tag);
             return;
         }
         $this->_log("Click one of the tags...");
