@@ -4,7 +4,7 @@
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt. It is also available
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -56,11 +56,11 @@ class MySuite extends PhpRack_Suite
                     'url' => 'jdbc:mysql://localhost:3306/test?username=test&password=test'
                 )
             );
-            $this->_addSuite('PHP5');
+            $this->_addSuite('Php5');
             $this->_addTest(
                 'LogViewer',
                 array(
-                    'file' => APPLICATION_PATH . '/../../my.log',
+                    'file' => 'my.log',
                 )
             );
         } catch(Exception $e) {

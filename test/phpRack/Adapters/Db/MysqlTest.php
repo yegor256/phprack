@@ -41,7 +41,7 @@ class Adapters_Db_MysqlTest extends AbstractTest
             $this->_adapter->query('SELECT 1');
         } catch (Exception $e) {
             // ignore it
-            $this->_log(get_class($e) . ': ' . $e->getMessage());
+            $this->_log($e);
         }
     }
 
@@ -127,6 +127,24 @@ class Adapters_Db_MysqlTest extends AbstractTest
     public function testShowConnectionsWithoutConnect()
     {
         $this->_adapter->showConnections();
+    }
+
+    public function testShowServerInfo()
+    {
+        try {
+            $this->_adapter->connect('jdbc:mysql://localhost');
+            $this->_adapter->showServerInfo();
+        } catch (Exception $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testShowServerInfoWithoutConnect()
+    {
+        $this->_adapter->showServerInfo();
     }
 
     /**

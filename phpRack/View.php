@@ -4,7 +4,7 @@
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt. It is also available
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -149,10 +149,11 @@ class phpRack_View
         }
 
         $replacers = array(
-            '/\/\*.*?\*\//s' => '', // remove multi line comments
+            '/\/\*.*?\*\//s'   => '', // remove multi line comments
             '/\/\/.*\r?\n\s*/' => '', // remove single line comments
-            '/\s*\r?\n\s*/' => '', // remove lines end with leading/trailing spaces
-            '/\s+/' => ' ', // convert multiple spaces to single
+            '/\s*\r?\n\s*/'    => '', // remove lines end with leading/trailing spaces
+            '/\s+/'            => ' ', // convert multiple spaces to single
+            '/\s?([\(\)\,\;=\'\"\-\+:\*&])\s?/' => '${1}', // compress unnecessary spaces
         );
 
         $scripts = $xpath->query('//xhtml:script');
@@ -167,7 +168,10 @@ class phpRack_View
                 }
             }
         }
-        return $dom->saveXml();
+        /**
+         * fix output due to libxml2 bug described in #53
+         */
+        return preg_replace('/<!\[CDATA\[\s*(\/\/)?\]\]>/', '//', $dom->saveXml());
     }
     
     /**
@@ -180,11 +184,11 @@ class phpRack_View
     {
         $content = file_get_contents(PHPRACK_PATH . '/layout/' . $css);
         $replacers = array(
-            '/[\n\r\t]+/' => ' ', // remove duplicated white spaces
-            '/\s+/' => ' ', // convert multiple spaces to single
-            '/\s+([\,\:\{\}])/' => '${1}', // compress leading white spaces
+            '/[\n\r\t]+/'         => ' ', // remove duplicated white spaces
+            '/\s+/'               => ' ', // convert multiple spaces to single
+            '/\s+([\,\:\{\}])/'   => '${1}', // compress leading white spaces
             '/([\,\;\:\{\}])\s+/' => '${1}', // compress trailing white spaces
-            '/\/\*.*?\*\//' => '', // kill comments at all
+            '/\/\*.*?\*\//'       => '', // kill comments at all
         );
         return preg_replace(
             array_keys($replacers),

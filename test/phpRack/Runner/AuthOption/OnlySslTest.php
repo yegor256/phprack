@@ -1,10 +1,12 @@
 <?php
+/**
+ * @version $Id$
+ */
 
 /**
  * @see AbstractTest
  */
 require_once 'AbstractTest.php';
-
 
 class Runner_AuthOption_OnlySslTest extends AbstractTest
 {

@@ -4,7 +4,7 @@
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt. It is also available 
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -53,6 +53,11 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * Default number of lines to show
      */
     const LINES_TO_SHOW = 25;
+    
+    /**
+     * Maximum number of bytes we can render, if more we will skip the rest
+     */
+    const MAX_SIZE_TO_RENDER = 50000;
 
     /**
      * Show the content of the file
@@ -67,6 +72,18 @@ class phpRack_Package_Disc_File extends phpRack_Package
         // Check that file exists
         if (!$this->_isFileExists($fileName)) {
             return $this;
+        }
+        
+        // too long/big files should not be returned
+        if (filesize($fileName) > self::MAX_SIZE_TO_RENDER) {
+            $this->_log(
+                sprintf(
+                    "File '%s' is too big (%d bytes), we can't render its content in full",
+                    $fileName,
+                    filesize($fileName)
+                )
+            );
+            return $this->tail($fileName);
         }
 
         $content = file_get_contents($fileName);
@@ -93,7 +110,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         if (!$this->_isFileExists($fileName)) {
             return $this;
         }
-
+        
         // Open file and move pointer to end of file
         $fp = fopen($fileName, 'rb');
         fseek($fp, 0, SEEK_END);
@@ -128,6 +145,16 @@ class phpRack_Package_Disc_File extends phpRack_Package
 
             // Attach last readed lines at beggining of earlier readed fragments
             $content = $readBuffer . $content;
+            
+            if (strlen($content) > self::MAX_SIZE_TO_RENDER) {
+                $this->_log(
+                    sprintf(
+                        "Content is too long already (%d bytes), we won't render any more",
+                        strlen($content)
+                    )
+                );
+                break;
+            }
         } while ($offset > 0 && $linesCount > 0);
 
         $this->_log($content);
@@ -158,8 +185,16 @@ class phpRack_Package_Disc_File extends phpRack_Package
         );
         $options = $test->getAjaxOptions();
 
-        // if it is first request send all x last lines
-        if (!isset($options['fileLastOffset'])) {
+        clearstatcache();
+        // get current file size
+        $fileSize = @filesize($fileName);
+        if ($fileSize === false) {
+            $this->_failure("Failed to filesize('{$fileName}')");
+            return $this;
+        }
+
+        // if it is first request or file was truncated, send all x last lines
+        if (!isset($options['fileLastOffset']) || $fileSize < $options['fileLastOffset']) {
             $this->tail($fileName, $linesCount);
             return $this;
         }
@@ -170,19 +205,19 @@ class phpRack_Package_Disc_File extends phpRack_Package
             return $this;
         }
         // get only new content since last time
-        $content = stream_get_contents($fp, -1, $options['fileLastOffset']);
+        $content = @stream_get_contents($fp, -1, $options['fileLastOffset']);
         if ($content === false) {
             $this->_failure("Failed to stream_get_contents({$fp}/'{$fileName}', -1, {$options['fileLastOffset']})");
             return $this;
         }
 
         // save current offset
-        $offset = ftell($fp);
+        $offset = @ftell($fp);
         if ($offset === false) {
             $this->_failure("Failed to ftell({$fp}/'{$fileName}')");
             return $this;
         }
-        if (fclose($fp) === false) {
+        if (@fclose($fp) === false) {
             $this->_failure("Failed to fclose({$fp}/'{$fileName}')");
             return $this;
         }
@@ -216,15 +251,32 @@ class phpRack_Package_Disc_File extends phpRack_Package
 
         $content = '';
         $readedLinesCount = 0;
-        $fp = fopen($fileName, 'rb');
+        $fp = @fopen($fileName, 'rb');
+        if ($fp === false) {
+            $this->_failure("Failed to fopen('{$fileName}')");
+            return $this;
+        }
 
         // Read line by line until we have required count or we reach EOF
         while ($readedLinesCount < $linesCount && !feof($fp)) {
-            $content .= fgets($fp);
+            $content .= @fgets($fp);
             $readedLinesCount++;
+            if (strlen($content) > self::MAX_SIZE_TO_RENDER) {
+                $this->_log(
+                    sprintf(
+                        "Content is too long already (%d bytes), we won't render any more",
+                        strlen($content)
+                    )
+                );
+                break;
+            }
         }
 
-        fclose($fp);
+        if (@fclose($fp) === false) {
+            $this->_failure("Failed to fclose('{$fileName}')");
+            return $this;
+        }
+        
         $this->_log($content);
         return $this;
     }
@@ -319,9 +371,12 @@ class phpRack_Package_Disc_File extends phpRack_Package
         }
 
         $this->_log(
-            "File '{$fileName}' (" . filesize($fileName) 
-            . ' bytes, modified on ' 
-            . $this->_modifiedOn(filemtime($fileName)) . '):'
+            sprintf(
+                "File '%s' (%d bytes, modified on %s):",
+                realpath($fileName),
+                filesize($fileName),
+                $this->_modifiedOn(filemtime($fileName))
+            )
         );
         return true;
     }
@@ -333,7 +388,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * @return string
      * @see _isFileExists()
      */
-    protected function _modifiedOn($time) 
+    protected function _modifiedOn($time)
     {
         $mins = round((time() - $time)/60, 1);
         if ($mins < 1) {
@@ -346,6 +401,6 @@ class phpRack_Package_Disc_File extends phpRack_Package
             $age = round($mins/(60*24)) . 'days';
         }
         
-        return date('d-M-y h:i:s', $time) . ', ' . $age . ' ago';
+        return date('d-M-y H:i:s', $time) . ', ' . $age . ' ago';
     }
 }

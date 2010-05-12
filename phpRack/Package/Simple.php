@@ -4,7 +4,7 @@
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt. It is also available 
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -49,6 +49,18 @@ class phpRack_Package_Simple extends phpRack_Package
     public function fail($msg) 
     {
         $this->_failure($msg);
+        return $this;
+    }
+
+    /**
+     * Mark the test as successful
+     *
+     * @param string Message to show
+     * @return $this
+     */
+    public function success($msg) 
+    {
+        $this->_success($msg);
         return $this;
     }
 

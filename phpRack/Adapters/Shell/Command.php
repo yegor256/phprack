@@ -4,7 +4,7 @@
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt. It is also available
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -92,40 +92,42 @@ class phpRack_Adapters_Shell_Command
      * Execute shell command. Use asynchronous pipes to communicate
      * with child process
      *
+     * We must pass custom env from _getEnv() method to to
+     * proc_open() call, because on phprack.com server.
+     * When we execute external php file from other process, script
+     * make some strange forks and execute itself many times. This
+     * behavior results server internal error.
+     *
+     * shell_exec() is also affected by this issue, we have earlier
+     * this problem, and was solved by adding "env -i" before shell
+     * command. Recently we have added PEAR support, which internally
+     * execute PHP script, so problem returned.
+     *
+     * Direct reason of this error is $_ENV['PATH']
+     * variable. When we unset it and pass modified env to
+     * proc_open(). It works on Windows XP, Ubuntu Linux and solve
+     * problem on phprack.com server.
+     * But from some reason on MacOS there is some problem with
+     * this env value reseting, and we lose some privilege? Due to
+     * this fact, our unit tests fail, because PEAR test produce
+     * error:
+     *
+     * <code>
+     * touch(): Unable to create file /opt/local/lib/php/.lock
+     * because Permission denied in /usr/local/PEAR/PEAR/Registry.php
+     * on line 835
+     * </code>
+     *
+     * If we pass null to proc_open() env param we have no problems
+     * on MacOS, but problem on phprack.com still exists.
+     *
+     * That is reason why we must pass to this function custom env
+     * param.
+     * 
      * @return string Command execution output
      * @throws Exception if from some reason command can't be executed
      * @throws Exception if command process was terminated
      * @see phpRack_Package_Php::lint()
-     * @todo #49 We must fix proc_open() call, because on phprack.com server
-     *           when we execute external php file from other process, script
-     *           make some strange forks and execute itself many times. This
-     *           behavior results server internal error.
-     *
-     *           shell_exec() was also affected by this issue, we have earlier
-     *           this problem, and was solved by adding "env -i" before shell
-     *           command. Recently we have added PEAR support, which internally
-     *           execute PHP script, so problem returned.
-     *
-     *           Direct reason of this error is $_SERVER['SCRIPT_NAME']
-     *           variable. When we unset it and pass modified env to
-     *           proc_open(). It works on Windows XP, Ubuntu Linux and solve
-     *           problem on phprack.com server.
-     *           But from some reason on MacOS there is some problem with
-     *           this env value reseting, and we lose some privilege? Due to
-     *           this fact, our unit tests fail, because PEAR test produce
-     *           error:
-     *
-     *           <code>
-     *           touch(): Unable to create file /opt/local/lib/php/.lock
-     *           because Permission denied in /usr/local/PEAR/PEAR/Registry.php
-     *           on line 835
-     *           </code>
-     *
-     *           If we pass null to proc_open() env param we have no problems
-     *           on MacOS, but problem on phprack.com still exists.
-     *
-     *           That is reason why we must pass to this function custom env
-     *           param.
      */
     public function run()
     {
@@ -136,8 +138,13 @@ class phpRack_Adapters_Shell_Command
 
         $pipes = array();
         // execute command and get its proccess resource
-        // @todo #49
-        $this->_process = proc_open($this->_command, $descriptors, $pipes, getcwd()/*, $this->_getEnv()*/);
+        $this->_process = proc_open(
+            $this->_command,
+            $descriptors, 
+            $pipes, 
+            getcwd(), 
+            $this->_getEnv()
+        );
 
         // if there was some problems with command execution
         if (!is_resource($this->_process)) {
@@ -250,20 +257,21 @@ class phpRack_Adapters_Shell_Command
      *
      * @return array|null
      * @see run()
-     * @todo #49 Uncomment it if will be used in run() or delete when
-     *           found other method to solve server internal error on
-     *           phprack.com
      */
     protected function _getEnv()
     {
-        /*
-        // on Windows or when $_ENV was unset use current process environment
-        if (substr(PHP_OS, 0, 3) == 'WIN' || !isset($_ENV)) {
+        /**
+         * @see phpRack_Adapters_Os
+         */
+        require_once PHPRACK_PATH . '/Adapters/Os.php';
+        $os = phpRack_Adapters_Os::get();
+
+        // we must modify env only on Linux, so we should return default env in other cases
+        if ($os != phpRack_Adapters_Os::LINUX || !isset($_ENV)) {
             return null;
         }
 
-        // we must remove SCRIPT_FILENAME to avoid script forking problem on some servers
-        return array_diff_key($_ENV, array('SCRIPT_FILENAME' => ''));
-        */
+        // we must remove PATH to avoid script forking problem on some servers
+        return array_diff_key($_ENV, array('PATH' => ''));
     }
 }

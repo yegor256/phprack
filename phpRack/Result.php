@@ -3,8 +3,8 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * with this package in the file LICENSE.txt. It is also available
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -40,7 +40,7 @@ require_once PHPRACK_PATH . '/Test.php';
  */
 class phpRack_Result
 {
-    
+
     /**
      * Log lines
      *
@@ -48,7 +48,7 @@ class phpRack_Result
      * @see getLog()
      */
     protected $_lines;
-    
+
     /**
      * Total result is SUCCESS?
      *
@@ -56,7 +56,7 @@ class phpRack_Result
      * @see wasSuccessful()
      */
     protected $_success;
-    
+
     /**
      * When this result was created by test
      *
@@ -75,7 +75,7 @@ class phpRack_Result
      * @see getTest()
      */
     protected $_test;
-    
+
     /**
      * Construct the class
      *
@@ -88,62 +88,62 @@ class phpRack_Result
         $this->_test = $test;
         $this->clean();
     }
-    
+
     /**
      * Set total result to FAILURE
      *
      * @return void
      * @see phpRack_Package::_failure()
      */
-    public function fail() 
+    public function fail()
     {
         $this->_success = false;
     }
-    
+
     /**
      * Was the test successful?
      *
      * @return boolean
      * @see phpRack_Runner::runSuite()
      */
-    public function wasSuccessful() 
+    public function wasSuccessful()
     {
         return $this->_success;
     }
-    
+
     /**
      * Get full log of the result
      *
      * @return string
      * @see phpRack_Runner::run()
      */
-    public function getLog() 
+    public function getLog()
     {
         return implode("\n", $this->_lines);
     }
-    
+
     /**
      * Get log of assertions only, without any other messages
      *
      * @return string
      * @see phpRack_Runner::runSuite()
      */
-    public function getPureLog() 
+    public function getPureLog()
     {
         return implode("\n", preg_grep('/^\[[A-Z]+\]\s/', $this->_lines));
     }
-    
+
     /**
      * Get result lifetime, duration in seconds
      *
      * @return void
      * @see phpRack_Runner::runSuite()
      */
-    public function getDuration() 
+    public function getDuration()
     {
         return microtime(true) - $this->_started;
     }
-    
+
     /**
      * Add new log line
      *
@@ -151,19 +151,19 @@ class phpRack_Result
      * @return $this
      * @see phpRack_Package::_log()
      */
-    public function addLog($line) 
+    public function addLog($line)
     {
         $this->_lines[] = $line;
         return $this;
     }
-    
+
     /**
      * Clean log
      *
      * @return void
      * @see phpRack_Test::run()
      */
-    public function clean() 
+    public function clean()
     {
         $this->_success = true;
         $this->_lines = array();

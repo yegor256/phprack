@@ -4,7 +4,7 @@
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt. It is also available
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -134,7 +134,7 @@ class phpRack_Package_Php_Pear extends phpRack_Package
         try {
             $packages = $this->_pear->getAllPackages();
 
-            $this->_success("Installed PEAR packages:");
+            $this->_log("Installed PEAR packages:");
             foreach ($packages as $package) {
                 $this->_log($package->getRawInfo());
             }

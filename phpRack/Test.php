@@ -3,8 +3,8 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * with this package in the file LICENSE.txt. It is also available
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -47,7 +47,7 @@ abstract class phpRack_Test
 
     const OK = 'OK';
     const FAILURE = 'FAILURE';
-    
+
     /**
      * This timezone will be used in there is NO timezone
      * set on the server
@@ -55,21 +55,21 @@ abstract class phpRack_Test
      * @see setUp()
      */
     const DEFAULT_TIMEZONE = 'EST';
-    
+
     /**
      * ID of the test (unique in the system)
      *
      * @var string
      */
     protected $_fileName;
-    
+
     /**
      * Runner of tests
      *
      * @var phpRack_Runner
      */
     protected $_runner;
-    
+
     /**
      * Assertion to use
      *
@@ -86,29 +86,36 @@ abstract class phpRack_Test
      * @see getAjaxOptions()
      */
     private $_ajaxOptions = array(
-        'autoStart' => true, // start it when front is loaded
-        'reload' => false, // reload every X seconds, in AJAX
-        'linesCount' => null, // how many lines should be displayed on browser side when we use tailf method
-        'secVisible' => null, // how long these lines should be visible (in seconds)
-        'attachOutput' => false, // attach output to previous result log
-        'data' => array(), // used for store data which should be returned in next ajax query
-        'fileLastOffset' => null // used for control offset to read in phpRack_Package_Disc_File::tailf()
+        'autoStart'          => true, // start it when front is loaded
+        'reload'             => false, // reload every X seconds, in AJAX
+        'linesCount'         => null, // how many lines should be displayed on browser side when we use tailf method
+        'secVisible'         => null, // how long these lines should be visible (in seconds)
+        'attachOutput'       => false, // attach output to previous result log
+        'data'               => array(), // used for store data which should be returned in next ajax query
+        'fileLastOffset'     => null, // used for control offset to read in phpRack_Package_Disc_File::tailf()
+        'logSizeLimit'       => 100, // maximum size of log, in KB
+        'pauseWhenFocusLost' => true, // stop ajax requests when window lost focus
     );
-    
+
     /**
      * Construct the class
+     * 
+     * This constructor is going to be used only from factory() method. Making
+     * this method "private" leads to problems in PHP 5.2.5 and maybe earlier
+     * versions.
      *
      * @param string ID of the test, absolute (!) file name
      * @param phpRack_Runner Instance of test runner
      * @return void
+     * @see factory()
      */
-    private final function __construct($fileName, phpRack_Runner $runner)
+    protected final function __construct($fileName, phpRack_Runner $runner)
     {
         $this->_fileName = realpath($fileName);
         $this->_runner = $runner;
         $this->_init();
     }
-    
+
     /**
      * Create new instance of the class, using PHP absolute file name
      *
@@ -122,18 +129,23 @@ abstract class phpRack_Test
         if (!file_exists($fileName)) {
             throw new Exception("File '{$fileName}' is not found");
         }
-        
+
         if (!preg_match(phpRack_Runner::TEST_PATTERN, $fileName)) {
             throw new Exception("File '{$fileName}' is not named properly, can't run it");
         }
-        
+
         $className = pathinfo($fileName, PATHINFO_FILENAME);
-        
+
         // workaround against ZCA static code analysis
         eval('require_once $fileName;');
+        
+        if (!class_exists($className)) {
+            throw new Exception("Class '{$className}' is not defined in '{$fileName}'");
+        }
+        
         return new $className($fileName, $runner);
     }
-    
+
     /**
      * Dispatches property-like calls to the class
      *
@@ -141,7 +153,7 @@ abstract class phpRack_Test
      * @return mixed
      * @throws Exception If nothing found
      */
-    public final function __get($name) 
+    public final function __get($name)
     {
         if ($name == 'assert') {
             if (!isset($this->_assertion)) {
@@ -151,35 +163,35 @@ abstract class phpRack_Test
         }
         throw new Exception("Property '{$name}' not found in " . get_class($this));
     }
-    
+
     /**
      * Get unique test ID (file name of the test)
      *
      * @return string
      * @see $this->_fileName
      */
-    public function getFileName() 
+    public function getFileName()
     {
         return $this->_fileName;
     }
-    
+
     /**
      * Get label of the test
      *
      * @return string
      */
-    public function getLabel() 
+    public function getLabel()
     {
         return ltrim(substr($this->_fileName, strlen($this->_runner->getDir())), '/');
     }
-    
+
     /**
      * Run the test and return result
      *
      * @return phpRack_Result
      * @see phpRack_Runner::run()
      */
-    public final function run() 
+    public final function run()
     {
         // clean all previous results, if any
         $this->assert->getResult()->clean();
@@ -192,6 +204,10 @@ abstract class phpRack_Test
             }
             try {
                 $this->setUp();
+                
+                // to avoid test cancelation because time is over
+                set_time_limit(0);
+                
                 $this->{$method->getName()}();
                 $this->tearDown();
             } catch (Exception $e) {
@@ -206,7 +222,7 @@ abstract class phpRack_Test
                 ->fail();
             }
         }
-        
+
         // add final log line, summarizing the test execution
         $this->assert->getResult()->addLog(
             sprintf(
@@ -215,38 +231,38 @@ abstract class phpRack_Test
                 $this->assert->getResult()->getDuration()
             )
         );
-        
+
         // return instance of phpRack_Result class
         return $this->assert->getResult();
     }
-    
+
     /**
      * Setup test environment, if necessary, before running every test
      *
      * @return void
      * @see run()
      */
-    public function setUp() 
+    public function setUp()
     {
         // Check the default time zone
         $defaultTimeZone = ini_get('date.timezone');
         if (empty($defaultTimeZone)) {
             ini_set('date.timezone', self::DEFAULT_TIMEZONE);
             $this->_log(
-                'INI setting date.timezone is not set. ' . 
+                'INI setting date.timezone is not set. ' .
                 self::DEFAULT_TIMEZONE . ' set as the time zone. ' .
                 'Please set date.timezone to you current time zone'
             );
         }
     }
-    
+
     /**
      * Clean environment if necessary
      *
      * @return void
      * @see run()
      */
-    public function tearDown() 
+    public function tearDown()
     {
     }
 
@@ -291,14 +307,14 @@ abstract class phpRack_Test
     {
 
     }
-    
+
     /**
      * Log one message
      *
      * @param string The message
      * @return void
      */
-    protected function _log($message) 
+    protected function _log($message)
     {
         $this->assert->getResult()->addLog($message);
     }

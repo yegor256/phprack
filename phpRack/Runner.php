@@ -3,8 +3,8 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * with this package in the file LICENSE.txt. It is also available
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -46,7 +46,7 @@ require_once PHPRACK_PATH . '/Runner/AuthResult.php';
  * Run all tests together, or one by one
  *
  * First you should create an instance of this class, providing it an array
- * of options. Then you can either run individual test or all tests in a 
+ * of options. Then you can either run individual test or all tests in a
  * test suite:
  *
  * <code>
@@ -62,14 +62,14 @@ require_once PHPRACK_PATH . '/Runner/AuthResult.php';
  */
 class phpRack_Runner
 {
-    
+
     /**
      * COOKIE name
      *
      * @see isAuthenticated()
      */
     const COOKIE_NAME = 'phpRack_auth';
-    
+
     /**
      * COOKIE lifetime in seconds
      *
@@ -78,7 +78,7 @@ class phpRack_Runner
      * @see isAuthenticated()
      */
     const COOKIE_LIFETIME = 2592000;
-    
+
     /**
      * Form param names
      *
@@ -86,7 +86,7 @@ class phpRack_Runner
      */
     const POST_LOGIN = 'login';
     const POST_PWD = 'password';
-    
+
     /**
      * Param names for authenticating using GET
      *
@@ -94,7 +94,7 @@ class phpRack_Runner
      */
     const GET_LOGIN = 'login';
     const GET_PWD = 'password';
-    
+
     /**
      * This is how you should name your test files, if you want
      * them to be found by the Runner
@@ -120,11 +120,12 @@ class phpRack_Runner
      * @see __construct()
      */
     protected $_options = array(
-        'dir' => null,
-        'auth' => null,
+        'dir'      => null,
+        'auth'     => null,
         'htpasswd' => null,
+        'notify'   => null,
     );
-    
+
     /**
      * Auth result, if authentication was already performed
      *
@@ -132,7 +133,7 @@ class phpRack_Runner
      * @see authenticate()
      */
     protected $_authResult = null;
-    
+
     /**
      * Construct the class
      *
@@ -141,7 +142,7 @@ class phpRack_Runner
      * @throws Exception If an option is invalid
      * @see bootstrap.php
      */
-    public function __construct(array $options) 
+    public function __construct(array $options)
     {
         foreach ($options as $option=>$value) {
             if (!array_key_exists($option, $this->_options)) {
@@ -150,7 +151,7 @@ class phpRack_Runner
             $this->_options[$option] = $value;
         }
     }
-    
+
     /**
      * Authenticate the user before running any tests
      *
@@ -166,10 +167,10 @@ class phpRack_Runner
         if (!is_null($this->_authResult)) {
             return $this->_authResult;
         }
-            
+
         // make sure that we're working with HASH
         $hash = ($isHash) ? $password : md5($password);
-        
+
         switch (true) {
             // plain authentication by login/password
             // this option is set by default to NULL, here we validate that
@@ -183,14 +184,14 @@ class phpRack_Runner
                     return $this->_validated(false, 'Invalid password');
                 }
                 return $this->_validated(true);
-        
+
             // list of login/password provided in file
             // this option is set by default to NULL, here we just validate
             // that it contains a name of file
             case is_string($this->_options['htpasswd']):
                 require_once PHPRACK_PATH . '/Adapters/File.php';
                 $file = phpRack_Adapters_File::factory($this->_options['htpasswd'])->getFileName();
-            
+
                 $fileContent = file($file);
                 foreach ($fileContent as $line) {
                     list($lg, $psw) = explode(':', $line, 2);
@@ -202,34 +203,44 @@ class phpRack_Runner
                     }
                 }
                 return $this->_validated(false, 'Invalid login credentials provided');
-                
+
+            // list of login/password provided in associative array
+            // key is username and value is password
+            case is_array($this->_options['htpasswd']):
+                foreach ($this->_options['htpasswd'] as $lg=>$psw) {
+                    if (($lg == $login) && (md5($psw) == $hash)) {
+                        return $this->_validated(true);
+                    }
+                }
+                return $this->_validated(false, 'Invalid login credentials provided');
+
             // authenticated TRUE, if no authentication required
             default:
                 return $this->_validated(true);
         }
     }
-    
+
     /**
      * Checks whether user is authenticated before running any tests
      *
      * @return boolean
      * @see bootstrap.php
      */
-    public function isAuthenticated() 
+    public function isAuthenticated()
     {
         if (!is_null($this->_authResult)) {
             return $this->_authResult->isValid();
         }
-        
+
         // global variables, in case they are not declared as global yet
         global $_COOKIE;
-        
+
         // there are a number of possible authentication scenarios
         switch (true) {
             // login/password are provided in HTTP request, through POST
             // params. we should save them in COOKIE in order to avoid
             // further login requests.
-            case array_key_exists(self::POST_LOGIN, $_POST) && 
+            case array_key_exists(self::POST_LOGIN, $_POST) &&
             array_key_exists(self::POST_PWD, $_POST):
                 $login = $_POST[self::POST_LOGIN];
                 $hash = md5($_POST[self::POST_PWD]);
@@ -239,44 +250,44 @@ class phpRack_Runner
                     time() + self::COOKIE_LIFETIME // cookie expiration date
                 );
                 break;
-            
+
             // login/password are provided as GET params
             // as it's only one-time Phing bridge,
             // we don't store them anywhere
-            case array_key_exists(self::GET_LOGIN, $_GET) && 
+            case array_key_exists(self::GET_LOGIN, $_GET) &&
             array_key_exists(self::GET_PWD, $_GET):
                 $login = $_GET[self::GET_LOGIN];
                 $hash = md5($_GET[self::GET_PWD]);
                 break;
-                
+
             // this is CLI environment, not web -- we don't require any
             // authentication
             case $this->isCliEnvironment():
                 return $this->_validated(true)->isValid();
-                
+
             // we already have authentication information in COOKIE, we just
             // need to parse it and validate
             case array_key_exists(self::COOKIE_NAME, $_COOKIE):
                 list($login, $hash) = explode(':', $_COOKIE[self::COOKIE_NAME]);
                 break;
-                
+
             // we expect authentication information to be sent via headers
             // for example by Phing
-            case array_key_exists('PHP_AUTH_USER', $_SERVER) && 
+            case array_key_exists('PHP_AUTH_USER', $_SERVER) &&
             array_key_exists('PHP_AUTH_PW', $_SERVER):
                 $login = $_SERVER['PHP_AUTH_USER'];
                 $hash = md5($_SERVER['PHP_AUTH_PW']);
                 break;
-            
+
             // no authinfo, chances are that site is not protected
             default:
                 $login = $hash = false;
                 break;
         }
-        
+
         return $this->authenticate($login, $hash, true)->isValid();
     }
-    
+
     /**
      * Get current auth result, if it exists
      *
@@ -284,14 +295,14 @@ class phpRack_Runner
      * @see boostrap.php
      * @throws Exception If the result is not set yet
      */
-    public function getAuthResult() 
+    public function getAuthResult()
     {
         if (!isset($this->_authResult)) {
             throw new Exception("AuthResult is not set yet, use authenticate() before");
         }
         return $this->_authResult;
     }
-    
+
     /**
      * We're running the tests in CLI environment?
      *
@@ -318,7 +329,7 @@ class phpRack_Runner
         }
         return !empty($_SERVER['HTTPS']);
     }
-    
+
     /**
      * Get tests location directory
      *
@@ -326,7 +337,7 @@ class phpRack_Runner
      * @throws Exception If directory is absent
      * @see getTests()
      */
-    public function getDir() 
+    public function getDir()
     {
         $dir = $this->_options['dir'];
         if (!file_exists($dir)) {
@@ -334,16 +345,25 @@ class phpRack_Runner
         }
         return realpath($dir);
     }
-    
+
     /**
      * Get full list of tests, in array
      *
+     * This method builds a list of phpRack_Test class instances, collecting
+     * them from integration 1) tests and 2) suites. They both are located in 
+     * the same directory (pre-configured in $phpRackConfig), but differ only
+     * in file name suffix. Integration test ends with "...Test.php" and integration
+     * suite ends with "...Suite.php".
+     *
+     * Suite is an integration of tests, that allows you to use library tests
+     * and suites. The majority of testing tasks are similar from server to server.
+     * If you want to avoid manual development of tests for every application, just
+     * use our library suites, and taylor them for your application needs.
+     *
      * @return phpRack_Test[]
      * @see index.phtml
-     * @todo #48 Where phpRack_Suite-s should be placed to be automatically
-     *           loaded? Same path like we have for phpRack_Test-s?
      */
-    public function getTests() 
+    public function getTests()
     {
         $tests = array();
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getDir())) as $file) {
@@ -362,33 +382,58 @@ class phpRack_Runner
         }
         return $tests;
     }
-    
+
     /**
      * Run all tests and return a text report about their execution
      *
      * @return string
      * @see boostrap.php
      */
-    public function runSuite() 
+    public function runSuite()
     {
         $tests = $this->getTests();
-        $report = '';
+        $report = sprintf(
+            "\nphpRack v%s\nSuite report, on %s\nPHPRACK_PATH: %s\n\n",
+            PHPRACK_VERSION,
+            date('d-M-y H:i:s'),
+            PHPRACK_PATH
+        );
         $success = true;
+        $duration = 0;
         foreach ($tests as $test) {
             $result = $test->run();
             $report .= sprintf(
-                "%s\n%s: %s, %0.3fsec\n",
+                "%s\n%s: %s, %0.3fsec\n\n",
                 $result->getPureLog(),
                 $test->getLabel(),
                 $result->wasSuccessful() ? phpRack_Test::OK : phpRack_Test::FAILURE,
                 $result->getDuration()
             );
             $success &= $result->wasSuccessful();
+            $duration += $result->getDuration();
         }
-        $report .= "PHPRACK SUITE: " . ($success ? phpRack_Test::OK : phpRack_Test::FAILURE) . "\n";
+        $report .= sprintf(
+            "PHPRACK SUITE: %s, %0.2fmin\n",
+            $success ? phpRack_Test::OK : phpRack_Test::FAILURE,
+            $duration / 60
+        );
+
+        // notify about suite failure
+        if (!$success) {
+            try {
+                $this->_notifyAboutFailure($report);
+            } catch (Exception $e) {
+                $report .= sprintf(
+                    "Failed to notify admin (%s): '%s'\n",
+                    get_class($e),
+                    $e->getMessage()
+                );
+            }
+        }
+
         return $report;
     }
-    
+
     /**
      * Run one test and return JSON result
      *
@@ -399,7 +444,7 @@ class phpRack_Runner
      * @throws Exception
      * @see bootstrap.php
      */
-    public function run($fileName, $token = 'token', $options = array()) 
+    public function run($fileName, $token = 'token', $options = array())
     {
         if (!$this->isAuthenticated()) {
             //TODO: handle situation when login screen should appear
@@ -407,18 +452,137 @@ class phpRack_Runner
         }
         $test = phpRack_Test::factory($fileName, $this);
         $test->setAjaxOptions($options);
-        
+
         $result = $test->run();
+        $options = $test->getAjaxOptions();
         return json_encode(
             array(
                 'success' => $result->wasSuccessful(),
-                'log' => utf8_encode($result->getLog()),
-                PHPRACK_AJAX_TOKEN => $token,
-                'options' => $test->getAjaxOptions()
+                'options' => $options,
+                'log' => $this->_utf8Encode(
+                    $this->_cutLog(
+                        $result->getLog(),
+                        intval($options['logSizeLimit'])
+                    )
+                ),
+                PHPRACK_AJAX_TOKEN => $token
             )
         );
     }
-    
+
+    /**
+     * Checks for string encoding, and if encoding is not utf-8, encodes to utf-8
+     *
+     * @param string String to convert into UTF-8
+     * @return string Proper UTF-8 formatted string
+     * @see run()
+     * @see #60 I think that this method shall be extensively tested. Now I have problems
+     *      with content that is not in English.
+     */
+    protected function _utf8Encode($str)
+    {
+        return utf8_encode($str);
+        // $isUtf = false;
+        // if (function_exists('mb_check_encoding')) {
+        //     $isUtf = mb_check_encoding($str, 'UTF-8');
+        // }
+        // if (function_exists('iconv')) {
+        //     $isUtf = (@iconv('UTF-8', 'UTF-16', $str) !== false);
+        // }
+        // return (!$isUtf) ? utf8_encode($str) : $str;
+    }
+
+    /**
+     * Cuts log according to the limit provided
+     *
+     * @param string Log to cut
+     * @param integer Limit in Kb
+     * @see run()
+     * @return string
+     */
+    protected function _cutLog($log, $limit)
+    {
+        $len = 0;
+        if (function_exists('mb_strlen')) {
+            $len += mb_strlen($log, 'UTF-8');
+        } elseif (function_exists('iconv_strlen')) {
+            $len += iconv_strlen($log, 'UTF-8');
+        } else {
+            // bad variant
+            $len += strlen($log) / 2;
+        }
+
+        $max = $limit * 1024; // in kb
+        if ($len > $max) {
+            $cutSize = $max / 2;
+            $func = '';
+            if (function_exists('iconv_substr')) {
+                $func = 'iconv_substr';
+            } elseif (function_exists('mb_substr')) {
+                $func = 'mb_substr';
+            }
+            if ($func) {
+                $head = call_user_func($func, $log, 0, $cutSize, 'UTF-8');
+                $tail = call_user_func(
+                    $func, $log, -1 * $cutSize, $cutSize, 'UTF-8'
+                );
+            } else {
+                // bad variant
+                $head = substr($log, 0, $cutSize / 2);
+                $tail = substr($log, -1 * $cutSize / 2);
+            }
+            return $head . "\n\n... content skipped (" . ($len - $max) . " bytes) ...\n\n" . $tail;
+        }
+        return $log;
+    }
+
+    /**
+     * Notify admin about suite failure
+     *
+     * @param string Full suite text report
+     * @return void
+     * @see runSuite()
+     * @throws Exception
+     * @todo Now we work only with one notifier, which is in class phpRack_Mail. Later
+     *      we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we
+     *      should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
+     *      notifiers there.
+     */
+    protected function _notifyAboutFailure($report)
+    {
+        // no notification required
+        if (empty($this->_options['notify'])) {
+            return;
+        }
+
+        if (!is_array($this->_options['notify'])) {
+            throw new Exception("Parameter 'notify' should be an array, '{$this->_options['notify']}' given");
+        }
+
+        if (array_key_exists('email', $this->_options['notify'])) {
+            /**
+             * @see phpRack_Adapters_Notifier_Mail
+             */
+            require_once PHPRACK_PATH . '/Adapters/Notifier/Mail.php';
+
+            $transport = $this->_options['notify']['email']['transport'];
+            if (!empty($transport['class'])) {
+                $class = $transport['class'];
+                unset($transport['class']);
+            } else {
+                $class = 'sendmail';
+            }
+            $mail = phpRack_Adapters_Notifier_Mail::factory($class, $transport);
+            $mail->setSubject('phpRack Suite Failure');
+            $mail->setBody($report);
+            /**
+             * @todo Only one recipient is supported now
+             */
+            $mail->setTo($this->_options['notify']['email']['recipients']);
+            $mail->send();
+        }
+    }
+
     /**
      * Save and return an AuthResult
      *
@@ -427,9 +591,9 @@ class phpRack_Runner
      * @return phpRack_Runner_AuthResult
      * @see authenticate()
      */
-    protected function _validated($result, $message = null) 
+    protected function _validated($result, $message = null)
     {
         return $this->_authResult = new phpRack_Runner_AuthResult($result, $message);
     }
-    
+
 }

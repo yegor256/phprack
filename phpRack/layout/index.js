@@ -2,8 +2,8 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * with this package in the file LICENSE.txt. It is also available
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -42,6 +42,29 @@ $(
         {
             return this.replace(/[<]/g, '&lt;').replace(/[>]/g, '&gt;');
         };
+
+        var that = {
+            focus: true,
+            init: function()
+            {
+                $(window).blur(that.onBlur);
+                $(window).focus(that.onFocus);
+            },
+            onBlur: function()
+            {
+                that.focus = false;
+            },
+            onFocus: function()
+            {
+                that.focus = true;
+            },
+            hasFocus: function()
+            {
+                return that.focus;
+            }
+        };
+        phpRack_Window = that;
+        phpRack_Window.init();
 
         // Our processing queue to control tests concurrency
         function phpRack_TaskQueue()
@@ -197,7 +220,7 @@ $(
                     );
 
                     // Attach one time event to "click to start..." text
-                    if (!options.autoStart) {
+                    if (!that.options.autoStart) {
                         that.$result.one('click', that.run);
                     }
                 },
@@ -207,12 +230,14 @@ $(
                 },
                 onResultClick: function()
                 {
-                    if (that.isRunning) {
-                        if (that.timer.getElapsedSeconds() >= that.abortWaitTime) {
-                            that.xmlHttpRequest.abort();
-                        }
+                    // if test is running above that.abortWaitTime seconds abort it
+                    if (that.isRunning && that.timer.getElapsedSeconds() >= that.abortWaitTime) {
+                        that.xmlHttpRequest.abort();
                     } else {
-                        that.$message.slideToggle();
+                        // if test is finished, or running below than that.abortWaitTime seconds
+                        if (that.$message.html()) {
+                            that.$message.slideToggle();
+                        }
                     }
                 },
                 _setStatus: function (success, message, options)
@@ -222,6 +247,10 @@ $(
                         that.$result.html(phpParams.ok).addClass('success');
                     } else {
                         that.$result.html(phpParams.failure).addClass('failure');
+                    }
+
+                    if (options && options.reload) {
+                        that.$result.html(that.$result.html() + '?');
                     }
 
                     if (options && options.attachOutput) {
@@ -247,7 +276,7 @@ $(
 
                         // Add last log output to our lines set
                         $.each(
-                            message.split("\n"), 
+                            message.split("\n"),
                             function()
                             {
                                 that.lines.push(
@@ -262,7 +291,7 @@ $(
                         // Create message from visible lines
                         message = '';
                         $.each(
-                            that.lines, 
+                            that.lines,
                             function()
                             {
                                 message += this.text + "\n";
@@ -299,9 +328,9 @@ $(
 
                     // Check that should display timer (User click or time execution > 5s)
                     if (that.displayTimer) {
-                        var message = 'running (' + that.timer.getFormattedTime();
+                        var message = 'running&nbsp;(' + that.timer.getFormattedTime();
                         if (elapsedSeconds >= that.abortWaitTime) {
-                            message += ', click to stop';
+                            message += ',&nbsp;click to stop';
                         }
                         message += ')...';
 
@@ -311,8 +340,21 @@ $(
                 _setReloadTimeout: function(seconds)
                 {
                     that._removeReloadTimeout();
-                    var delay = seconds * 1000; // in miliseconds
-                    that.timeoutId = window.setTimeout(that.run, delay);
+
+                    // if window has focus, and result message is expanded
+                    if ((phpRack_Window.hasFocus() || !that.options.pauseWhenFocusLost) &&
+                         that.$message.is(":visible")) {
+                        var delay = seconds * 1000; // in miliseconds
+                        // execute run() method with passed reload timeout
+                        that.timeoutId = window.setTimeout(that.run, delay);
+                    } else {
+                        // if window has no focus, try again in 1 second
+                        var sleepFunction = function()
+                        {
+                            that._setReloadTimeout(seconds);
+                        };
+                        window.setTimeout(sleepFunction, 1000);
+                    }
                 },
                 _removeReloadTimeout: function()
                 {
@@ -432,7 +474,8 @@ $(
                     id: call.divId,
                     url: phpParams.requestUri,
                     data: data,
-                    autoStart: call.autoStart
+                    autoStart: call.autoStart,
+                    pauseWhenFocusLost: call.pauseWhenFocusLost
                 }
             );
 

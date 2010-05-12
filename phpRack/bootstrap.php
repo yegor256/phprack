@@ -3,8 +3,8 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * with this package in the file LICENSE.txt. It is also available
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -33,17 +33,26 @@
  */
 error_reporting(E_ALL);
 ini_set('display_errors', true);
+ini_set('error_prepend_string', '');
+ini_set('error_append_string', '');
+ini_set('html_errors', false);
 
 /**
  * Here we define a error handler in order to catch all possible
  * PHP errors and show them online, no matter what server settings
  * exist for error handling...
+ *
+ * Warnings will be IGNORED if statement that caused the error
+ * was prepended by the @ error-control operator. This behavior
+ * is important for functions like mysql_connect(), fsockopen()
+ * to avoid warnings displaying, because when we use them we
+ * implement own error detection mechanism.
  */
 set_error_handler(
     create_function(
         '$errno, $errstr, $errfile, $errline',
         '
-        if (in_array($errno, array(E_WARNING))) {
+        if (in_array($errno, array(E_WARNING)) && error_reporting() == 0) {
             return;
         }
         echo sprintf(
@@ -66,13 +75,11 @@ try {
      */
     global $phpRackConfig;
     if (!isset($phpRackConfig)) {
-        throw new Exception('Invalid configuration: $phpRackConfig is missed');
+        throw new Exception('Invalid configuration: global $phpRackConfig is missed');
     }
-    
+
     if (!defined('PHPRACK_VERSION')) {
-        // we use svn:keywords here in order to get the revision number of phpRack
-        $revision = intval(substr('$Rev$', 6));
-        define('PHPRACK_VERSION', '0.1dev' . ($revision ? " (r{$revision})" : false));
+        define('PHPRACK_VERSION', '0.1dev');
     }
 
     if (!defined('PHPRACK_AJAX_TAG')) {
@@ -92,7 +99,7 @@ try {
      */
     require_once PHPRACK_PATH . '/Runner.php';
     $runner = new phpRack_Runner($phpRackConfig);
-    
+
     /**
      * @see phpRack_View
      */
@@ -105,7 +112,19 @@ try {
 
     // check whether SSL connection is mandatory?
     if (!$runner->isEnoughSecurityLevel()) {
-        throw new Exception('You must use SSL protol to run test suite');
+        throw new Exception('You must use SSL protocol to run integration tests');
+    }
+
+    /**
+     * Using this tag in GET URL we can get a summary report
+     * in plain text format.
+     */
+    if (array_key_exists('suite', $_GET)) {
+        header('Content-Type: text/plain');
+        if (!$runner->isAuthenticated()) {
+            throw new Exception('Access denied');
+        }
+        throw new Exception($runner->runSuite());
     }
 
     // Global layout is required, show the front web page of the report
@@ -116,7 +135,13 @@ try {
             $view->assign(array('authResult' => $runner->getAuthResult()));
             throw new Exception($view->render('login.phtml'));
         }
-        $view->assign(array('runner' => $runner)); 
+        $view->assign(array('runner' => $runner));
+        /**
+         * @todo #57 this line leads to the problem explained in the ticket,
+         * on some servers, not everywhere. I don't know what is the reason, that's
+         * why the line is commented for now.
+         */
+        // header('Content-Type: application/xhtml+xml');
         throw new Exception($view->render());
     }
 
@@ -131,14 +156,14 @@ try {
      * already rendered testing page.
      */
     $options = $_GET;
-    
-    /** 
+
+    /**
      * '_' param is automatically added by jQuery with current time in miliseconds,
      * when we call $.ajax function with cache = false. We unset it to have
      * no exception in phpRack_Test::setAjaxOptions()
      */
     unset($options['_']);
-    
+
     $fileName = $options[PHPRACK_AJAX_TAG];
     unset($options[PHPRACK_AJAX_TAG]);
     $token = $options[PHPRACK_AJAX_TOKEN];
@@ -148,5 +173,6 @@ try {
     throw new Exception($runner->run($fileName, $token, $options));
 
 } catch (Exception $e) {
-    echo $e->getMessage();
+    $content = $e->getMessage();
+    echo $content;
 }

@@ -4,7 +4,7 @@
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt. It is also available 
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -37,7 +37,7 @@
         <?php $ajaxOptions = $test->getAjaxOptions();?>
 
         <div id="d<?php echo ++$i?>" class="task">
-            <span class="label" title="click to re-start"><?php echo $test->getLabel() ?>:</span>&nbsp;
+            <span class="label" title="click to re-start"><?php echo $test->getLabel() ?>:</span>&#160;
             <span class="result" title="click to see the log"><?php
             if (!empty($ajaxOptions['autoStart'])) {
                 echo 'waiting...';
@@ -50,15 +50,16 @@
         </div>
         <?php 
         $jsCalls[$i] = array(
-            'divId'     => 'div#d' . $i,
-            'fileName'  => $this->jsPath($test->getFileName()),
-            'autoStart' => !empty($ajaxOptions['autoStart']) ? true : false
+            'divId'              => 'div#d' . $i,
+            'fileName'           => $this->jsPath($test->getFileName()),
+            'autoStart'          => !empty($ajaxOptions['autoStart']) ? true : false,
+            'pauseWhenFocusLost' => !empty($ajaxOptions['pauseWhenFocusLost']) ? true : false,
         );
         ?>
     <?php endforeach; ?>
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript" language="Javascript">
 //<![CDATA[
     // array with server side params which will be used in javascript
     var phpParams = {

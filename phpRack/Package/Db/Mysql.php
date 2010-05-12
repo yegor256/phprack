@@ -4,7 +4,7 @@
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt. It is also available
- * through the world-wide-web at this URL: http://www.phprack.com/license
+ * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phprack.com so we can send you a copy immediately.
@@ -209,14 +209,28 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
             throw new Exception('You must call connect() method before');
         }
 
-        $answer = $this->_adapter->query('SHOW GRANTS FOR CURRENT_USER');
-        if (!preg_match('~GRANT (PROCESS|ALL)~', $answer)) {
+        $result = $this->_adapter->showConnections();
+        if ($result === false) {
             $this->_failure('MySQL user does not have GRANT PROCESS|ALL permissions');
-            return $this;
         }
 
-        $result = $this->_adapter->showConnections();
         $this->_log($result);
+        return $this;
+    }
+
+    /**
+     * Show server info
+     *
+     * @return $this
+     * @throws Exception If this method is called before connect()
+     */
+    public function showServerInfo()
+    {
+        if (!$this->_adapter->isConnected()) {
+            throw new Exception('You must call connect() method before');
+        }
+
+        $this->_log($this->_adapter->showServerInfo());
         return $this;
     }
 
