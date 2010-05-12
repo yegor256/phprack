@@ -465,9 +465,10 @@ $(
             var call = calls[id];
             // Create test object
 
-            var data = {};
+            var data = call.data;
             data[phpParams.ajaxTag] = call.fileName;
             data[phpParams.ajaxToken] = call.divId;
+            data['suiteTest'] = call.suiteTest ? 1 : 0;
 
             var test = new phpRack_Test(
                 {

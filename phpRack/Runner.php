@@ -350,7 +350,7 @@ class phpRack_Runner
      * Get full list of tests, in array
      *
      * This method builds a list of phpRack_Test class instances, collecting
-     * them from integration 1) tests and 2) suites. They both are located in 
+     * them from integration 1) tests and 2) suites. They both are located in
      * the same directory (pre-configured in $phpRackConfig), but differ only
      * in file name suffix. Integration test ends with "...Test.php" and integration
      * suite ends with "...Suite.php".
@@ -450,7 +450,21 @@ class phpRack_Runner
             //TODO: handle situation when login screen should appear
             throw new Exception("Authentication failed, please login first");
         }
-        $test = phpRack_Test::factory($fileName, $this);
+        // if this is one of our built-in tests
+        if (!empty($options['suiteTest'])) {
+            /**
+             * @see phpRack_Suite
+             */
+            require_once PHPRACK_PATH . '/Suite/Test.php';
+            $test = phpRack_Suite_Test::factory($fileName, $this);
+            if (isset($options['config'])) {
+                $test->setConfig($options['config']);
+            }
+        } else {
+            $test = phpRack_Test::factory($fileName, $this);
+        }
+        unset($options['config']);
+        unset($options['suiteTest']);
         $test->setAjaxOptions($options);
 
         $result = $test->run();

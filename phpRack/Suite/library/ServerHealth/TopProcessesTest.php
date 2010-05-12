@@ -37,7 +37,7 @@ require_once PHPRACK_PATH . '/Suite/Test.php';
  *
  * @package Tests
  */
-class phpRack_Suite_ServerHealth_ProcessesTest extends phpRack_Suite_Test
+class phpRack_Suite_ServerHealth_TopProcessesTest extends phpRack_Suite_Test
 {
     /**
      * Pre-configuration of the test

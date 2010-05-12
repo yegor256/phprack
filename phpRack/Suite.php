@@ -37,7 +37,7 @@
  *
  * @package Tests
  */
-abstract class PhpRack_Suite
+abstract class phpRack_Suite
 {
     /**
      * Runner of tests
@@ -59,15 +59,6 @@ abstract class PhpRack_Suite
     private $_tests = array();
 
     /**
-     * Sub-suites
-     *
-     * @var array of PhpRack_Suite
-     * @see getTests()
-     * @see _addSuite()
-     */
-    private $_suites = array();
-
-    /**
      * Create new instance of the class, using PHP absolute file name
      *
      * @param string ID of the suite, absolute (!) file name
@@ -77,7 +68,7 @@ abstract class PhpRack_Suite
      * @see _addSuite()
      * @see phpRack_Runner::getTests()
      */
-    public static function factory($fileName, $runner)
+    public static function factory($fileName, phpRack_Runner $runner)
     {
         if (!file_exists($fileName)) {
             throw new Exception("File '{$fileName}' is not found");
@@ -91,22 +82,18 @@ abstract class PhpRack_Suite
 
         // workaround against ZCA static code analysis
         eval('require_once $fileName;');
-        return new $className($fileName, $runner);
+        return new $className($runner);
     }
 
     /**
-     * Get tests defined in this suite and sub suites
+     * Get tests defined in this suite
      *
-     * @return array of phpRack_Test
+     * @return array of phpRack_Suite_Test
      * @see phpRack_Runner::getTests()
      */
     public function getTests()
     {
-        $tests = $this->_tests;
-        foreach ($this->_suites as $suite) {
-            $tests = array_merge($tests, $suite->getTests());
-        }
-        return $tests;
+        return $this->_tests;
     }
 
     /**
@@ -128,20 +115,30 @@ abstract class PhpRack_Suite
      * of directory in "phpRack/Suite/library".
      *
      * @param string Suite name
-     * @param array options
+     * @param array config
      * @return $this
      * @throws Exception if suite can't be found
      * @see MySuite::_init()
      * @see phpRack_Suite_Test
      */
-    protected function _addSuite($suiteName, array $options = array())
+    protected function _addSuite($suiteName, array $config = array())
     {
-        assert(is_string($suiteName)); // for ZCA only
-        assert(is_array($options)); // for ZCA only
-        // @see #48
-        // $suitePath = $suiteName;
-        // Exception is possible here
-        // $this->_suites[] = self::factory($suitePath, $this->_runner, $options);
+        $dir = PHPRACK_PATH . '/Suite/library/' . $suiteName;
+
+        // create suite file iterator
+        require_once PHPRACK_PATH . '/Adapters/Files/DirectoryFilterIterator.php';
+        $iterator = phpRack_Adapters_Files_DirectoryFilterIterator::factory($dir)
+            ->setExtensions('php');
+
+        require_once PHPRACK_PATH . '/Suite/Test.php';
+
+        foreach ($iterator as $file) {
+            $testPath = realpath($file->getPathname());
+            // Exception is possible here
+            $test = phpRack_Suite_Test::factory($testPath, $this->_runner);
+            $test->setConfig($config);
+            $this->_tests[] = $test;
+        }
         return $this;
     }
 
@@ -152,32 +149,33 @@ abstract class PhpRack_Suite
      * directory, and should be inherited from {@link phpRack_Suite_Test} class.
      *
      * @param string Suite name
-     * @param array options
+     * @param array config
      * @return $this
      * @throws Exception if test can't be found
      * @see MySuite::_init()
      * @see phpRack_Suite_Test
      */
-    protected function _addTest($testName, array $options = array())
+    protected function _addTest($testName, array $config = array())
     {
-        // @see #48
-        // $testPath = $testName;
-        // @see #48
-        assert(is_array($options)); // for ZCA only
-        assert(is_string($testName)); // for ZCA only
+        $testPath = PHPRACK_PATH . '/Suite/library/' . $testName . 'Test.php';
+        require_once PHPRACK_PATH . '/Suite/Test.php';
         // Exception is possible here
-        // $this->_tests[] = phpRack_Test::factory($testPath, $this->_runner);
+        $test = phpRack_Suite_Test::factory($testPath, $this->_runner);
+        $test->setConfig($config);
+        $this->_tests[] = $test;
         return $this;
     }
 
     /**
-     * Test suite constructor
+     * Construct the class
      *
+     * @param phpRack_Runner Instance of test runner
      * @return void
      * @see factory()
      */
-    private function __construct()
+    protected final function __construct(phpRack_Runner $runner)
     {
+        $this->_runner = $runner;
         $this->_init();
     }
 }
