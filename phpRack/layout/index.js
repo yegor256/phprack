@@ -355,7 +355,7 @@ $(
                     if (that.displayTimer) {
                         var message = 'running&nbsp;(' + that.timer.getFormattedTime();
                         if (elapsedSeconds >= that.abortWaitTime) {
-                            message += ',&nbsp;click to stop';
+                            message += ',&nbsp;click&nbsp;to&nbsp;stop';
                         }
                         message += ')...';
 
