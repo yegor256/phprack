@@ -95,6 +95,12 @@ a {
     #task-list .label {
         cursor: pointer;
     }
+
+    /* task tag, with the value of param */
+    #task-list .tag {
+        cursor: pointer;
+        margin-left: 20px;
+    }
     
     /* finished with success */
     #task-list .success {
