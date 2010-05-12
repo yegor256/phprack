@@ -208,7 +208,7 @@ class phpRack_Runner
             // key is username and value is password
             case is_array($this->_options['htpasswd']):
                 foreach ($this->_options['htpasswd'] as $lg=>$psw) {
-                    if (($lg == $login) && ($psw == $hash)) {
+                    if (($lg == $login) && (md5($psw) == $hash)) {
                         return $this->_validated(true);
                     }
                 }
