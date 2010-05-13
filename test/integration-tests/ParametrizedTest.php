@@ -14,16 +14,25 @@ class ParametrizedTest extends PhpRack_Test
     {
         $this->setAjaxOptions(
             array(
-                'tags' => glob(PHPRACK_PATH . '/*.php'),
+                'tags' => array_keys($this->_getFiles()),
             )
         );
     }
     public function testFiles($tag = null)
     {
         if ($tag) {
-            $this->assert->disc->file->cat($tag);
+            $files = $this->_getFiles(); 
+            $this->assert->disc->file->cat($files[$tag]);
             return;
         }
         $this->_log("Click one of the tags...");
+    }
+    protected function _getFiles()
+    {
+        $files = array();
+        foreach (glob(PHPRACK_PATH . '/*.php') as $file) {
+            $files[pathinfo($file, PATHINFO_FILENAME)] = $file;
+        }
+        return $files;
     }
 }
