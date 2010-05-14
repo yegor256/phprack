@@ -75,6 +75,7 @@ class phpRack_Package_Shell extends phpRack_Package
                 $this->_success("Result of '{$cmd}' matches regex '{$regex}'");
             }
         }
+        return $this;
     }
 
 }
