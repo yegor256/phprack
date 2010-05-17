@@ -77,7 +77,22 @@ class phpRack_Package_Simple extends phpRack_Package
         } else {
             $this->_failure('Failed to assert that variable is TRUE');
         }
-            
+        return $this;
+    }
+        
+    /**
+     * Is it false?
+     *
+     * @param mixed Variable to check
+     * @return $this
+     */
+    public function isFalse($var) 
+    {
+        if (!$var) {
+            $this->_success('Variable is FALSE, success');
+        } else {
+            $this->_failure('Failed to assert that variable is FALSE');
+        }
         return $this;
     }
         
