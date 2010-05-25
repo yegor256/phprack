@@ -56,8 +56,22 @@ class phpRack_Package_Disc_File extends phpRack_Package
     
     /**
      * Maximum number of bytes we can render, if more we will skip the rest
+     * 
+     * @var int
      */
-    const MAX_SIZE_TO_RENDER = 50000;
+    protected $_maxBytesToRender = 50000;
+
+    /**
+     * Set another limit for max bytes to render
+     *
+     * @param int Number of bytes that is allowed for rendering
+     * @return $this
+     */
+    public function setMaxBytesToRender($maxBytesToRender) 
+    {
+        $this->_maxBytesToRender = $maxBytesToRender;
+        return $this;
+    }
 
     /**
      * Show the content of the file
@@ -75,7 +89,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         }
         
         // too long/big files should not be returned
-        if (filesize($fileName) > self::MAX_SIZE_TO_RENDER) {
+        if (filesize($fileName) > $this->_maxBytesToRender) {
             $this->_log(
                 sprintf(
                     "File '%s' is too big (%d bytes), we can't render its content in full",
@@ -146,7 +160,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
             // Attach last readed lines at beggining of earlier readed fragments
             $content = $readBuffer . $content;
             
-            if (strlen($content) > self::MAX_SIZE_TO_RENDER) {
+            if (strlen($content) > $this->_maxBytesToRender) {
                 $this->_log(
                     sprintf(
                         "Content is too long already (%d bytes), we won't render any more",
@@ -261,7 +275,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         while ($readedLinesCount < $linesCount && !feof($fp)) {
             $content .= @fgets($fp);
             $readedLinesCount++;
-            if (strlen($content) > self::MAX_SIZE_TO_RENDER) {
+            if (strlen($content) > $this->_maxBytesToRender) {
                 $this->_log(
                     sprintf(
                         "Content is too long already (%d bytes), we won't render any more",
