@@ -138,7 +138,7 @@
         <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz" />
 
         <!-- get FTP properties from file -->
-        <property file="./build.properties" />
+        <property file="${project.basedir}/../phprack.properties" />
         
 		<echo message="uploading PHP code to the server..." />
 		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
