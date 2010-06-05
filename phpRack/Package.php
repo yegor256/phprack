@@ -136,10 +136,7 @@ class phpRack_Package
      */
     public static function factory($name, phpRack_Result $result) 
     {
-        $sectors = array_map(
-            create_function('$a', 'return ucfirst($a);'),
-            explode('/', $name)
-        );
+        $sectors = array_map('ucfirst', explode('/', $name));
         $className = 'phpRack_Package_' . implode('_', $sectors);
         
         $packageFile = PHPRACK_PATH . '/Package/' . implode('/', $sectors) . '.php';
