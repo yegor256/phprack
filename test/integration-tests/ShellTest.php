@@ -13,7 +13,7 @@ class ShellTest extends phpRack_Test
 
     public function testWhoAmI()
     {
-        $this->assert->shell->exec('who am i');
+        $this->assert->shell->exec('whoami');
     }
 
 }
