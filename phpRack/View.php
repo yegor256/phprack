@@ -156,7 +156,9 @@ class phpRack_View
             '/\s?([\(\)\,\;=\'\"\-\+:\*&])\s?/' => '${1}', // compress unnecessary spaces
         );
 
-        $scripts = $xpath->query('//xhtml:script');
+        // skip compressing first script, because it is minified version of jQuery
+        $scripts = $xpath->query('//xhtml:script[position() > 1]');
+
         foreach ($scripts as $script) {
             foreach ($script->childNodes as $childNode) {
                 if ($childNode->nodeType == XML_CDATA_SECTION_NODE) {
