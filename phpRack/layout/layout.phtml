@@ -40,8 +40,11 @@
     </head>
 
     <body>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-
+        <script type="text/javascript">
+        //<![CDATA[
+            <?php include PHPRACK_PATH . '/layout/jquery-1.4.2.min.js' ?>
+        //]]>
+        </script>
         <div id='logo'>
             <a href='http://www.phprack.com'><img
                 src='data:image/png;base64,<?php
