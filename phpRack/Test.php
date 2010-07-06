@@ -218,7 +218,7 @@ abstract class phpRack_Test
             } catch (Exception $e) {
                 $this->assert->getResult()->addLog(
                     sprintf(
-                        '%s: %s "%s"',
+                        '[Exception] %s: %s "%s"',
                         $method->getName(),
                         get_class($e),
                         $e->getMessage()
