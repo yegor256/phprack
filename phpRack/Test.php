@@ -323,6 +323,7 @@ abstract class phpRack_Test
                 $this->_log("Comparison succeeded");
             }
         }
+        return $this;
     }
 
     /**
