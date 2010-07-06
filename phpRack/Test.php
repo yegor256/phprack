@@ -302,6 +302,30 @@ abstract class phpRack_Test
     }
 
     /**
+     * Simple assertion method to compare two values
+     *
+     * @param mixed What we're expecting to have
+     * @param mixed What we actually have
+     * @param string Optional message to show
+     * @return $this
+     */
+    public function assertEquals($dest, $src, $message = null) 
+    {
+        if ($dest != $src) {
+            if (!is_null($message)) {
+                $this->_log($message);
+            }
+            $this->assert->fail("Comparison failed");
+        } else {
+            if (!is_null($message)) {
+                $this->assert->success($message);
+            } else {
+                $this->_log("Comparison succeeded");
+            }
+        }
+    }
+
+    /**
      * Allow child class to overwrite test default options, by overwritting this method
      * If you want disable ajax auto start it is proper place for that
      *
