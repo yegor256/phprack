@@ -317,11 +317,7 @@ abstract class phpRack_Test
             }
             $this->assert->fail("Comparison failed");
         } else {
-            if (!is_null($message)) {
-                $this->assert->success($message);
-            } else {
-                $this->_log("Comparison succeeded");
-            }
+            $this->_log("Comparison succeeded");
         }
         return $this;
     }
