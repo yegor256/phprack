@@ -57,7 +57,7 @@
     <target name="jslint" description="Validate syntax in all JS files" >
         <jsllint haltonfailure="true">
             <fileset dir="${project.basedir}">
-                <include name="**/*.js"/>
+                <include name="**/index.js"/>
             </fileset>
         </jsllint>
     </target>
