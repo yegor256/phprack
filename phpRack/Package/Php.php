@@ -39,7 +39,21 @@ require_once PHPRACK_PATH . '/Package.php';
  */
 class phpRack_Package_Php extends phpRack_Package
 {
-    
+    /**
+     * Format of a megabyte
+     *
+     * @see http://en.wikipedia.org/wiki/Megabyte
+     * @var int
+     */
+    const SIZE_FORMAT = 1024;
+
+    /**
+     * Storage for the ini value
+     *
+     * @var string
+     */
+    protected $_iniValue;
+
     /**
      * Check php.ini param with expected value
      *
@@ -57,37 +71,73 @@ class phpRack_Package_Php extends phpRack_Package
      * @param mixed Expected value
      * @return $this
      */
-    public function ini($param, $expected = true) 
+    public function ini($param, $expected = true)
     {
-        $value = ini_get($param);
-        if ($value != $expected) {
-            $this->_failure("php.ini '{$param}' is set to '{$value}', while '{$expected}' expected");
+        $this->_iniValue = ini_get($param);
+        if ($this->_iniValue != $expected) {
+            $this->_failure(
+                "php.ini '{$param}' is set to '{$this->_iniValue}', while '{$expected}' expected"
+            );
         } else {
-            $this->_log("php.ini '{$param}' is set to '{$value}', it's OK");
+            $this->_log("php.ini '{$param}' is set to '{$this->_iniValue}', it's OK");
         }
         return $this;
     }
-    
+
+    /**
+     * Check value according required size
+     *
+     * Example:
+     *
+     * <code>
+     * class MyTest extends phpRack_Test {
+     *   public fuction testPhpIniAtleast() {
+     *     $this->assert->php->ini('memory_limit')->atLeast('128M');
+     *   }
+     * }
+     * </code>
+     *
+     * @param string value to check
+     * @return $this
+     */
+    public function atLeast($value)
+    {
+        // checking digit part
+        if (!preg_match('~^\d+(K|M|G)?$~i', $value)) {
+            $this->_failure("php.ini value has incorrect numeric format: '{$value}'");
+            return $this;
+        }
+
+        if ($this->_sizeFormat($value) < $this->_sizeFormat($this->_iniValue)) {
+            $this->_success("php.ini value is set to {$this->_iniValue}, {$value} required");
+        } else {
+            $this->_failure("php.ini value has only {$this->_iniValue}, but {$value} is required");
+        }
+
+        // check
+        return $this;
+    }
+
     /**
      * Show phpinfo() in proper format
      *
      * @return $this
      */
-    public function phpinfo() 
+    public function phpinfo()
     {
         ob_start();
         phpinfo(INFO_ALL);
         $html = ob_get_clean();
-        
+
         // maybe it's CLI version, not HTML?
         if (strpos($html, '<') !== 0) {
             $this->_log($html);
             return $this;
         }
-        
+
         // clean HTML out of special symbols
         $html = preg_replace('/&(#\d+|\w+);/', ' ', $html);
-        
+
         $lines = array();
         $xml = simplexml_load_string($html);
         foreach ($xml->xpath("//tr | //h1 | //h2") as $line) {
@@ -109,7 +159,7 @@ class phpRack_Package_Php extends phpRack_Package
             $lines[] = strval($line);
         }
         $this->_log(implode("\n", $lines));
-        
+
         return $this;
     }
 
@@ -183,7 +233,7 @@ class phpRack_Package_Php extends phpRack_Package
                 $invalid++;
             }
         }
-        
+
         // notify phpRack about success in the test
         if (!$invalid) {
             $this->_success("{$valid} files are LINT-valid");
@@ -192,11 +242,34 @@ class phpRack_Package_Php extends phpRack_Package
             sprintf(
                 '%d files LINT-checked, among them: %d valid and %d invalid',
                 $valid + $invalid,
-                $valid, 
+                $valid,
                 $invalid
             )
         );
         return $this;
     }
-    
+
+    /**
+     * Convert string into size
+     *
+     * @param mixed value to convert
+     * @return int
+     */
+    protected function _sizeFormat($value)
+    {
+        // set of sizes
+        $sizeSet = array(
+            'K' => self::SIZE_FORMAT,
+            'M' => self::SIZE_FORMAT * self::SIZE_FORMAT,
+            'G' => self::SIZE_FORMAT * self::SIZE_FORMAT * self::SIZE_FORMAT,
+        );
+
+        // calculation
+        $size = $mask = '';
+        sscanf($value, '%d%s', $size, $mask);
+        if ($mask) {
+            $size *= $sizeSet[$mask];
+        }
+        return $size;
+    }
 }
