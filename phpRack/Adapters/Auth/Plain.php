@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -28,60 +28,28 @@
  */
 
 /**
- * Result of authentication before running tests
+ * Authentication plain adapter
  *
- * @package Tests
+ * @package Adapters
+ * @subpackage Auth
  */
-class phpRack_Runner_AuthResult
+class phpRack_Adapters_Auth_Plain extends phpRack_Adapters_Auth_Abstract
 {
-
     /**
-     * Stores auth result
+     * Authenticate and return an auth result
      *
-     * @var boolean
-     * @see isValid()
+     * @return phpRack_Runner_Auth_Result
+     * @see phpRack_Adapters_Auth_Abstract::authenticate()
      */
-    protected $_valid;
-    
-    /**
-     * Optional error message
-     *
-     * @var string
-     * @see isValid()
-     */
-    protected $_message;
-    
-    /**
-     * Constructor
-     *
-     * @param boolean Whether the auth is valid or not
-     * @param string Optional error message
-     * @return void
-     */
-    public function __construct($valid, $message = null)
+    public function authenticate()
     {
-        $this->_valid = $valid;
-        $this->_message = $message;
+        $auth = $this->_options['auth'];
+        if ($auth['username'] != $this->_request['login']) {
+            return $this->_validated(false, 'Invalid login');
+        }
+        if (md5($auth['password']) != $this->_request['hash']) {
+            return $this->_validated(false, 'Invalid password');
+        }
+        return $this->_validated(true);
     }
-    
-    /**
-     * Result is VALID?
-     *
-     * @return boolean
-     */
-    public function isValid() 
-    {
-        return $this->_valid;
-    }
-    
-    /**
-     * Error message, if exists
-     *
-     * @return string
-     */
-    public function getMessage() 
-    {
-        return $this->_message;
-    }
-    
 }

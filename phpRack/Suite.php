@@ -41,13 +41,14 @@ abstract class PhpRack_Suite
 {
     /**
      * Runner of tests
+     * @todo #48 Will be used when #48 will be merged into trunk
      *
      * @var phpRack_Runner
      * @see __construct()
      * @see _addTest()
      * @see _addSuite()
      */
-    private $_runner;
+    //private $_runner;
 
     /**
      * Suite tests

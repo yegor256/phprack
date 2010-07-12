@@ -38,9 +38,9 @@ require_once PHPRACK_PATH . '/Test.php';
 require_once PHPRACK_PATH . '/Suite.php';
 
 /**
- * @see phpRack_Runner_AuthResult
+ * @see phpRack_Runner_Auth_Result
  */
-require_once PHPRACK_PATH . '/Runner/AuthResult.php';
+require_once PHPRACK_PATH . '/Runner/Auth/Result.php';
 
 /**
  * Run all tests together, or one by one
@@ -62,38 +62,6 @@ require_once PHPRACK_PATH . '/Runner/AuthResult.php';
  */
 class phpRack_Runner
 {
-
-    /**
-     * COOKIE name
-     *
-     * @see isAuthenticated()
-     */
-    const COOKIE_NAME = 'phpRack_auth';
-
-    /**
-     * COOKIE lifetime in seconds
-     *
-     * We set to 30 days, which equals to 30 * 24 * 60 * 60 = 2592000
-     *
-     * @see isAuthenticated()
-     */
-    const COOKIE_LIFETIME = 2592000;
-
-    /**
-     * Form param names
-     *
-     * @see isAuthenticated()
-     */
-    const POST_LOGIN = 'login';
-    const POST_PWD = 'password';
-
-    /**
-     * Param names for authenticating using GET
-     *
-     * @see isAuthenticated()
-     */
-    const GET_LOGIN = 'login';
-    const GET_PWD = 'password';
 
     /**
      * This is how you should name your test files, if you want
@@ -127,12 +95,11 @@ class phpRack_Runner
     );
 
     /**
-     * Auth result, if authentication was already performed
+     * Authentication adapter
      *
-     * @var phpRack_Runner_AuthResult
-     * @see authenticate()
+     * @var phpRack_Runner_Auth
      */
-    protected $_authResult = null;
+    protected $_auth;
 
     /**
      * Construct the class
@@ -150,164 +117,29 @@ class phpRack_Runner
             }
             $this->_options[$option] = $value;
         }
+        /**
+         * @see phpRack_Runner_Auth
+         */
+        require_once PHPRACK_PATH . '/Runner/Auth.php';
+        $this->_auth = new phpRack_Runner_Auth($this, $this->_options);
     }
 
     /**
-     * Authenticate the user before running any tests
+     * Return authentication adapter
      *
-     * @param string Login of the user
-     * @param string Secret password of the user
-     * @param boolean Defines whether second argument is password or it's hash
-     * @return phpRack_Runner_AuthResult
+     * @return phpRack_Runner_Auth
      * @see bootstrap.php
      */
-    public function authenticate($login, $password, $isHash = false)
+    public function getAuth()
     {
-        // if it's already authenticated, just return it
-        if (!is_null($this->_authResult)) {
-            return $this->_authResult;
-        }
-
-        // make sure that we're working with HASH
-        $hash = ($isHash) ? $password : md5($password);
-
-        switch (true) {
-            // plain authentication by login/password
-            // this option is set by default to NULL, here we validate that
-            // it was changed to ARRAY
-            case is_array($this->_options['auth']):
-                $auth = $this->_options['auth'];
-                if ($auth['username'] != $login) {
-                    return $this->_validated(false, 'Invalid login');
-                }
-                if (md5($auth['password']) != $hash) {
-                    return $this->_validated(false, 'Invalid password');
-                }
-                return $this->_validated(true);
-
-            // list of login/password provided in file
-            // this option is set by default to NULL, here we just validate
-            // that it contains a name of file
-            case is_string($this->_options['htpasswd']):
-                require_once PHPRACK_PATH . '/Adapters/File.php';
-                $file = phpRack_Adapters_File::factory($this->_options['htpasswd'])->getFileName();
-
-                $fileContent = file($file);
-                foreach ($fileContent as $line) {
-                    list($lg, $psw) = explode(':', $line, 2);
-                    /* Just to make sure we don't analyze some whitespace */
-                    $lg = trim($lg);
-                    $psw = trim($psw);
-                    if (($lg == $login) && ($psw == $hash)) {
-                        return $this->_validated(true);
-                    }
-                }
-                return $this->_validated(false, 'Invalid login credentials provided');
-
-            // list of login/password provided in associative array
-            // key is username and value is password
-            case is_array($this->_options['htpasswd']):
-                foreach ($this->_options['htpasswd'] as $lg=>$psw) {
-                    if (($lg == $login) && (md5($psw) == $hash)) {
-                        return $this->_validated(true);
-                    }
-                }
-                return $this->_validated(false, 'Invalid login credentials provided');
-
-            // authenticated TRUE, if no authentication required
-            default:
-                return $this->_validated(true);
-        }
-    }
-
-    /**
-     * Checks whether user is authenticated before running any tests
-     *
-     * @return boolean
-     * @see bootstrap.php
-     */
-    public function isAuthenticated()
-    {
-        if (!is_null($this->_authResult)) {
-            return $this->_authResult->isValid();
-        }
-
-        // global variables, in case they are not declared as global yet
-        global $_COOKIE;
-
-        // there are a number of possible authentication scenarios
-        switch (true) {
-            // login/password are provided in HTTP request, through POST
-            // params. we should save them in COOKIE in order to avoid
-            // further login requests.
-            case array_key_exists(self::POST_LOGIN, $_POST) &&
-            array_key_exists(self::POST_PWD, $_POST):
-                $login = $_POST[self::POST_LOGIN];
-                $hash = md5($_POST[self::POST_PWD]);
-                setcookie(
-                    self::COOKIE_NAME, // name of HTTP cookie
-                    $login . ':' . $hash, // hashed form of login and pwd
-                    time() + self::COOKIE_LIFETIME // cookie expiration date
-                );
-                break;
-
-            // login/password are provided as GET params
-            // as it's only one-time Phing bridge,
-            // we don't store them anywhere
-            case array_key_exists(self::GET_LOGIN, $_GET) &&
-            array_key_exists(self::GET_PWD, $_GET):
-                $login = $_GET[self::GET_LOGIN];
-                $hash = md5($_GET[self::GET_PWD]);
-                break;
-
-            // this is CLI environment, not web -- we don't require any
-            // authentication
-            case $this->isCliEnvironment():
-                return $this->_validated(true)->isValid();
-
-            // we already have authentication information in COOKIE, we just
-            // need to parse it and validate
-            case array_key_exists(self::COOKIE_NAME, $_COOKIE):
-                list($login, $hash) = explode(':', $_COOKIE[self::COOKIE_NAME]);
-                break;
-
-            // we expect authentication information to be sent via headers
-            // for example by Phing
-            case array_key_exists('PHP_AUTH_USER', $_SERVER) &&
-            array_key_exists('PHP_AUTH_PW', $_SERVER):
-                $login = $_SERVER['PHP_AUTH_USER'];
-                $hash = md5($_SERVER['PHP_AUTH_PW']);
-                break;
-
-            // no authinfo, chances are that site is not protected
-            default:
-                $login = $hash = false;
-                break;
-        }
-
-        return $this->authenticate($login, $hash, true)->isValid();
-    }
-
-    /**
-     * Get current auth result, if it exists
-     *
-     * @return phpRack_Runner_AuthResult
-     * @see boostrap.php
-     * @throws Exception If the result is not set yet
-     */
-    public function getAuthResult()
-    {
-        if (!isset($this->_authResult)) {
-            throw new Exception("AuthResult is not set yet, use authenticate() before");
-        }
-        return $this->_authResult;
+        return $this->_auth;
     }
 
     /**
      * We're running the tests in CLI environment?
      *
      * @return boolean
-     * @see isAuthenticated()
+     * @see phpRack_Runner_Auth::isAuthenticated()
      */
     public function isCliEnvironment()
     {
@@ -446,7 +278,7 @@ class phpRack_Runner
      */
     public function run($fileName, $token = 'token', $options = array())
     {
-        if (!$this->isAuthenticated()) {
+        if (!$this->getAuth()->isAuthenticated()) {
             //TODO: handle situation when login screen should appear
             throw new Exception("Authentication failed, please login first");
         }
@@ -455,12 +287,18 @@ class phpRack_Runner
 
         $result = $test->run();
         $options = $test->getAjaxOptions();
+
+        /**
+         * @see phpRack_Runner_Logger
+         */
+        require_once PHPRACK_PATH . '/Runner/Logger.php';
+
         return json_encode(
             array(
                 'success' => $result->wasSuccessful(),
                 'options' => $options,
-                'log' => $this->_utf8Encode(
-                    $this->_cutLog(
+                'log' => phpRack_Runner_Logger::utf8Encode(
+                    phpRack_Runner_Logger::cutLog(
                         $result->getLog(),
                         intval($options['logSizeLimit'])
                     )
@@ -468,72 +306,6 @@ class phpRack_Runner
                 PHPRACK_AJAX_TOKEN => $token
             )
         );
-    }
-
-    /**
-     * Checks for string encoding, and if encoding is not utf-8, encodes to utf-8
-     *
-     * @param string String to convert into UTF-8
-     * @return string Proper UTF-8 formatted string
-     * @see run()
-     * @see #60 I think that this method shall be extensively tested. Now I have problems
-     *      with content that is not in English.
-     */
-    protected function _utf8Encode($str)
-    {
-        return utf8_encode($str);
-        // $isUtf = false;
-        // if (function_exists('mb_check_encoding')) {
-        //     $isUtf = mb_check_encoding($str, 'UTF-8');
-        // }
-        // if (function_exists('iconv')) {
-        //     $isUtf = (@iconv('UTF-8', 'UTF-16', $str) !== false);
-        // }
-        // return (!$isUtf) ? utf8_encode($str) : $str;
-    }
-
-    /**
-     * Cuts log according to the limit provided
-     *
-     * @param string Log to cut
-     * @param integer Limit in Kb
-     * @see run()
-     * @return string
-     */
-    protected function _cutLog($log, $limit)
-    {
-        $len = 0;
-        if (function_exists('mb_strlen')) {
-            $len += mb_strlen($log, 'UTF-8');
-        } elseif (function_exists('iconv_strlen')) {
-            $len += iconv_strlen($log, 'UTF-8');
-        } else {
-            // bad variant
-            $len += strlen($log) / 2;
-        }
-
-        $max = $limit * 1024; // in kb
-        if ($len > $max) {
-            $cutSize = $max / 2;
-            $func = '';
-            if (function_exists('iconv_substr')) {
-                $func = 'iconv_substr';
-            } elseif (function_exists('mb_substr')) {
-                $func = 'mb_substr';
-            }
-            if ($func) {
-                $head = call_user_func($func, $log, 0, $cutSize, 'UTF-8');
-                $tail = call_user_func(
-                    $func, $log, -1 * $cutSize, $cutSize, 'UTF-8'
-                );
-            } else {
-                // bad variant
-                $head = substr($log, 0, $cutSize / 2);
-                $tail = substr($log, -1 * $cutSize / 2);
-            }
-            return $head . "\n\n... content skipped (" . ($len - $max) . " bytes) ...\n\n" . $tail;
-        }
-        return $log;
     }
 
     /**
@@ -581,19 +353,6 @@ class phpRack_Runner
             $mail->setTo($this->_options['notify']['email']['recipients']);
             $mail->send();
         }
-    }
-
-    /**
-     * Save and return an AuthResult
-     *
-     * @param boolean Success/failure of the validation
-     * @param string Optional error message
-     * @return phpRack_Runner_AuthResult
-     * @see authenticate()
-     */
-    protected function _validated($result, $message = null)
-    {
-        return $this->_authResult = new phpRack_Runner_AuthResult($result, $message);
     }
 
 }
