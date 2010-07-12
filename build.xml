@@ -86,7 +86,7 @@
             codesize,unusedcode
             --extensions='php,phtml'"
             escape="false"
-            checkreturn="false" 
+            checkreturn="true" 
             passthru="true"
         />
     </target>
