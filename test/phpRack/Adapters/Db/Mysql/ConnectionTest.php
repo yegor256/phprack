@@ -9,30 +9,12 @@
 require_once 'AbstractTest.php';
 
 /**
- * @see phpRack_Adapters_Db_Mysql
+ * @see phpRack_Adapters_Db_Mysql_AbstractTest
  */
-require_once PHPRACK_PATH . '/Adapters/Db/Mysql.php';
+require_once PHPRACK_PATH . '/../test/phpRack/Adapters/Db/Mysql/AbstractTest.php';
 
-class Adapters_Db_MysqlTest extends AbstractTest
+class phpRack_Adapters_Db_Mysql_ConnectionTest extends phpRack_Adapters_Db_Mysql_AbstractTest
 {
-    /**
-     * MySQL adapter
-     *
-     * @var phpRack_Adapters_Db_Mysql
-     */
-    private $_adapter;
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->_adapter = new phpRack_Adapters_Db_Mysql();
-    }
-
-    protected function tearDown()
-    {
-        unset($this->_adapter);
-        parent::tearDown();
-    }
 
     public function testWeCanConnectToDb()
     {
@@ -69,25 +51,6 @@ class Adapters_Db_MysqlTest extends AbstractTest
         $this->_adapter->query("SELECT 1");
     }
 
-    public function testIsDatabaseSelected()
-    {
-        try {
-            $this->_adapter->connect('jdbc:mysql://localhost');
-        } catch (Exception $e) {
-            $this->markTestSkipped($e->getMessage());
-        }
-
-        $this->assertFalse($this->_adapter->isDatabaseSelected());
-
-        try {
-            $this->_adapter->query('USE `test`');
-        } catch (Exception $e) {
-            $this->markTestSkipped($e->getMessage());
-        }
-
-        $this->assertTrue($this->_adapter->isDatabaseSelected());
-    }
-
     public function testIsConnected()
     {
         $this->assertFalse($this->_adapter->isConnected());
@@ -99,16 +62,6 @@ class Adapters_Db_MysqlTest extends AbstractTest
         }
 
         $this->assertTrue($this->_adapter->isConnected());
-    }
-
-    public function testSchema()
-    {
-        try {
-            $this->_adapter->connect('jdbc:mysql://localhost/test');
-            $this->_adapter->showSchema();
-        } catch (Exception $e) {
-            $this->markTestSkipped($e->getMessage());
-        }
     }
 
     public function testShowConnections()
@@ -129,36 +82,7 @@ class Adapters_Db_MysqlTest extends AbstractTest
         $this->_adapter->showConnections();
     }
 
-    public function testShowServerInfo()
-    {
-        try {
-            $this->_adapter->connect('jdbc:mysql://localhost');
-            $this->_adapter->showServerInfo();
-        } catch (Exception $e) {
-            $this->markTestSkipped($e->getMessage());
-        }
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testShowServerInfoWithoutConnect()
-    {
-        $this->_adapter->showServerInfo();
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testSchemaWithoutConnect()
-    {
-        $this->_adapter->showSchema();
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testSchemaWithoutDatabaseSelect()
+    public function testIsDatabaseSelected()
     {
         try {
             $this->_adapter->connect('jdbc:mysql://localhost');
@@ -166,6 +90,14 @@ class Adapters_Db_MysqlTest extends AbstractTest
             $this->markTestSkipped($e->getMessage());
         }
 
-        $this->_adapter->showSchema();
+        $this->assertFalse($this->_adapter->isDatabaseSelected());
+
+        try {
+            $this->_adapter->query('USE `test`');
+        } catch (Exception $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
+
+        $this->assertTrue($this->_adapter->isDatabaseSelected());
     }
 }

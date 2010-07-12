@@ -121,7 +121,7 @@ try {
      */
     if (array_key_exists('suite', $_GET)) {
         header('Content-Type: text/plain');
-        if (!$runner->isAuthenticated()) {
+        if (!$runner->getAuth()->isAuthenticated()) {
             throw new Exception('Access denied');
         }
         throw new Exception($runner->runSuite());
@@ -131,8 +131,8 @@ try {
     if (empty($_GET[PHPRACK_AJAX_TAG])) {
         $view = new phpRack_View();
         // show login form, if the user is not authenticated yet
-        if (!$runner->isAuthenticated()) {
-            $view->assign(array('authResult' => $runner->getAuthResult()));
+        if (!$runner->getAuth()->isAuthenticated()) {
+            $view->assign(array('authResult' => $runner->getAuth()->getAuthResult()));
             throw new Exception($view->render('login.phtml'));
         }
         $view->assign(array('runner' => $runner));
@@ -146,7 +146,7 @@ try {
     }
 
     // show error message
-    if (!$runner->isAuthenticated()) {
+    if (!$runner->getAuth()->isAuthenticated()) {
         throw new Exception("Authentication problem. You have to login first.");
     }
 

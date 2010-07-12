@@ -14,9 +14,9 @@ require_once 'AbstractTest.php';
 require_once PHPRACK_PATH . '/Runner.php';
 
 /**
- * @see phpRack_Runner_AuthResult
+ * @see phpRack_Runner_Auth_Result
  */
-require_once PHPRACK_PATH . '/Runner/AuthResult.php';
+require_once PHPRACK_PATH . '/Runner/Auth/Result.php';
 
 /**
  * @see phpRack_Result
@@ -46,16 +46,16 @@ class RunnerTest extends AbstractTest
             $login = $hash = false; // no authentication
         }
 
-        $auth = $this->_runner->authenticate($login, $hash, true);
-        $this->assertTrue($auth instanceof phpRack_Runner_AuthResult);
+        $auth = $this->_runner->getAuth()->authenticate($login, $hash, true);
+        $this->assertTrue($auth instanceof phpRack_Runner_Auth_Result);
         $this->assertTrue(
             $auth->isValid(),
             "Invalid auth with authenticate(), " .
             "login: '{$login}', hash: '{$hash}', message: '{$auth->getMessage()}'"
         );
-        
+
         $this->assertTrue(
-            $this->_runner->isAuthenticated(), 
+            $this->_runner->getAuth()->isAuthenticated(),
             "Invalid result in isAuthenticated(), " .
             "login: '{$login}', hash: '{$hash}', message: '{$auth->getMessage()}'"
         );
@@ -83,7 +83,7 @@ class RunnerTest extends AbstractTest
         $_SERVER['PHP_AUTH_USER'] = $authArray['auth']['username'];
         $_SERVER['PHP_AUTH_PW']   = $authArray['auth']['password'];
         $this->assertTrue(
-            $runner->isAuthenticated(),
+            $runner->getAuth()->isAuthenticated(),
             'Invalid auth using header'
         );
     }
@@ -107,10 +107,10 @@ class RunnerTest extends AbstractTest
         
         // Creating instance of Runner to test it with our config
         $runner = new phpRack_Runner($authArray);
-        $_GET[phpRack_Runner::GET_LOGIN] = $authArray['auth']['username'];
-        $_GET[phpRack_Runner::GET_PWD]   = $authArray['auth']['password'];
+        $_GET[phpRack_Runner_Auth::GET_LOGIN] = $authArray['auth']['username'];
+        $_GET[phpRack_Runner_Auth::GET_PWD]   = $authArray['auth']['password'];
         $this->assertTrue(
-            $runner->isAuthenticated(),
+            $runner->getAuth()->isAuthenticated(),
             'Invalid auth using get parameters (Phing bridge)'
         );
     }
@@ -135,6 +135,7 @@ class RunnerTest extends AbstractTest
     {
         ini_set('date.timezone', null);
         $tests = $this->_runner->getTests();
+        $this->assertTrue(is_array($tests));
         $result = $tests[0]->run();
         $this->assertRegExp('/date\.timezone/', $result->getLog(), 'Default TZ warning missing');
     }
@@ -143,6 +144,7 @@ class RunnerTest extends AbstractTest
     {
         ini_set('date.timezone', 'EST');
         $tests = $this->_runner->getTests();
+        $this->assertTrue(is_array($tests));
         $result = $tests[0]->run();
         $this->assertNotRegExp('/date\.timezone/', $result->getLog(), 'Default TZ warning exists, why?');
     }

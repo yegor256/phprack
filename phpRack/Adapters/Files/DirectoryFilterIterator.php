@@ -154,14 +154,14 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
         $file = $this->current();
 
         // Ignore "dots files" which appear in some systems
-        if (($file == '.') || ($file == '..')) {
+        if (trim($file, '.') == '') {
             return false;
         }
         
-        if (!is_null($this->_maxDepth)) {
-            if (substr_count(substr($file, strlen($this->_dir) + 1), '/') > $this->_maxDepth) {
-                return false;
-            }
+        if (!is_null($this->_maxDepth)
+            && substr_count(substr($file, strlen($this->_dir) + 1), '/') > $this->_maxDepth
+        ) {
+            return false;
         }
 
         // Ignore files which don't match extensionsPattern
