@@ -143,7 +143,7 @@ class phpRack_Runner_Auth
         }
 
         $className = 'phpRack_Adapters_Auth_' . ucfirst($method);
-        eval("require_once PHPRACK_PATH . '/Adapters/Auth/' . ucfirst($method) . '.php';");
+        eval("require_once PHPRACK_PATH . '/Adapters/Auth/' . ucfirst(\$method) . '.php';");
         $adapter = new $className();
         $adapter->setOptions($this->_runner->getOptions())
             ->setRequest(
