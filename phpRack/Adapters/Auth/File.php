@@ -28,6 +28,11 @@
  */
 
 /**
+ * @see phpRack_Adapters_Auth_Abstract
+ */
+require_once PHPRACK_PATH . '/Adapters/Auth/Abstract.php';
+
+/**
  * Authentication file adapter
  *
  * @package Adapters
@@ -43,6 +48,9 @@ class phpRack_Adapters_Auth_File extends phpRack_Adapters_Auth_Abstract
      */
     public function authenticate()
     {
+        /**
+         * @see phpRack_Adapters_File
+         */
         require_once PHPRACK_PATH . '/Adapters/File.php';
         $file = phpRack_Adapters_File::factory($this->_options['htpasswd'])->getFileName();
 

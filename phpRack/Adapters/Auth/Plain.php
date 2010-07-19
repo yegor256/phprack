@@ -28,6 +28,11 @@
  */
 
 /**
+ * @see phpRack_Adapters_Auth_Abstract
+ */
+require_once PHPRACK_PATH . '/Adapters/Auth/Abstract.php';
+
+/**
  * Authentication plain adapter
  *
  * @package Adapters
