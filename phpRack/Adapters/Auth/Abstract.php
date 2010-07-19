@@ -50,7 +50,7 @@ abstract class phpRack_Adapters_Auth_Abstract
      *
      * @var array
      */
-    private $_options = array();
+    protected $_options = array();
 
     /**
      * Set authentication options
