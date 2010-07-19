@@ -31,7 +31,7 @@
 <p><?php echo $this->authResult->getMessage()?></p>
 
 <form method="post">
-    <? require_once PHPRACK_PATH . '/Runner/Auth.php' ?>
+    <?php require_once PHPRACK_PATH . '/Runner/Auth.php' ?>
     <dd>Login:<br/><input name="<?php echo phpRack_Runner_Auth::POST_LOGIN?>" /></dd>
     <dd>Password:<br/><input name="<?php echo phpRack_Runner_Auth::POST_PWD?>" type="password" /></dd>
     <dd><input type="submit" /></dd>
