@@ -55,6 +55,7 @@ class phpRack_Runner_Auth
      * Form param names
      *
      * @see isAuthenticated()
+     * @see login.phtml
      */
     const POST_LOGIN = 'login';
     const POST_PWD = 'password';
