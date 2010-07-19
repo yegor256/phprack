@@ -28,6 +28,11 @@
  */
 
 /**
+ * @see phpRack_Runner
+ */
+require_once PHPRACK_PATH . '/Runner.php';
+
+/**
  * Runner authentication adapter
  *
  * @package Tests
@@ -320,6 +325,10 @@ class phpRack_Runner_Auth
      */
     protected function _validated($result, $message = null)
     {
+        /**
+         * @see phpRack_Runner_Auth_Result
+         */
+        require_once PHPRACK_PATH . '/Runner/Auth/Result.php';
         return $this->_authResult = new phpRack_Runner_Auth_Result($result, $message);
     }
     

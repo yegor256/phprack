@@ -38,11 +38,6 @@ require_once PHPRACK_PATH . '/Test.php';
 require_once PHPRACK_PATH . '/Suite.php';
 
 /**
- * @see phpRack_Runner_Auth_Result
- */
-require_once PHPRACK_PATH . '/Runner/Auth/Result.php';
-
-/**
  * Run all tests together, or one by one
  *
  * First you should create an instance of this class, providing it an array
@@ -292,7 +287,6 @@ class phpRack_Runner
          * @see phpRack_Runner_Logger
          */
         require_once PHPRACK_PATH . '/Runner/Logger.php';
-
         return json_encode(
             array(
                 'success' => $result->wasSuccessful(),
