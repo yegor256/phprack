@@ -40,7 +40,7 @@ abstract class phpRack_Adapters_Auth_Abstract
      *
      * @var array
      */
-    private $_request = array(
+    protected $_request = array(
         'login'    => '',
         'hash'     => ''
     );
