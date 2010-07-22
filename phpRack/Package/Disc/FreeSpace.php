@@ -49,7 +49,7 @@ class phpRack_Package_Disc_FreeSpace extends phpRack_Package
     public function atLeast($mb) 
     {
         $free = disk_free_space(dirname(__FILE__)) / (1024 * 1024);
-        if ($free > $mb) {
+        if ($free >= $mb) {
             $this->_success(sprintf("We have %0.2fMb free space, {$mb}Mb required", $free));
         } else {
             $this->_failure(sprintf("We have just %0.2fMb free space, while {$mb}Mb required", $free));
