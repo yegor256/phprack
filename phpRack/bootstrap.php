@@ -79,7 +79,7 @@ try {
     }
 
     if (!defined('PHPRACK_VERSION')) {
-        define('PHPRACK_VERSION', '0.1dev');
+        define('PHPRACK_VERSION', '0.2dev');
     }
 
     if (!defined('PHPRACK_AJAX_TAG')) {
