@@ -331,7 +331,11 @@ class phpRack_Runner
              */
             require_once PHPRACK_PATH . '/Adapters/Notifier/Mail.php';
 
-            $transport = $this->_options['notify']['email']['transport'];
+            if (array_key_exists('transport', $this->_options['notify']['email'])) {
+                $transport = $this->_options['notify']['email']['transport'];
+            } else {
+                $transport = array();
+            }
             if (!empty($transport['class'])) {
                 $class = $transport['class'];
                 unset($transport['class']);
