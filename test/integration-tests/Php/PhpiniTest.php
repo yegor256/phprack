@@ -12,6 +12,9 @@ class PhpiniTest extends phpRack_Test
 {
     public function testPhpiniMemoryLimit()
     {
-        $this->assert->php->ini('memory_limit')->atLeast('128M');
+        $this->assert->php
+            ->ini('short_open_tag')
+            ->ini('memory_limit')->atLeast('128M')
+            ->ini('register_globals', false);
     }
 }
