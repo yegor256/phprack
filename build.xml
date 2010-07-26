@@ -43,6 +43,10 @@
     <!-- To make sure that we have enough memory limit for running all tests -->
     <php expression="ini_set('memory_limit', '128M');" />
 
+    <!-- Packaging properties -->
+    <property name="package.name" value="phpRack-stable" />
+    <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz" />
+
     <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca" >
     </target>
 
@@ -136,10 +140,17 @@
         <delete file="${coverage.db}" />
     </target>
     
-    <target name="deploy" description="Deploy stable TGZ by FTP and other files">
-        <property name="package.name" value="phpRack-stable" />
-        <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz" />
+    <target name="package" description="Package the product into TGZ">
+        <tar destfile="${build.tgz}" compression="gzip">
+            <fileset dir="${project.basedir}">
+                <include name="phpRack/**" />
+                <include name="LICENSE.txt" />
+                <exclude name=".svn/**" />
+            </fileset>
+        </tar>
+    </target>
 
+    <target name="deploy" description="Deploy stable TGZ by FTP and other files">
         <!-- get FTP properties from file -->
         <property file="${project.basedir}/../phprack.properties" />
         
@@ -156,19 +167,9 @@
 			</fileset>
 		</ftpdeploy>
 
-        <tar destfile="${build.tgz}" compression="gzip">
-            <fileset dir="${project.basedir}">
-                <include name="phpRack/**" />
-                <include name="LICENSE.txt" />
-                <exclude name=".svn/**" />
-            </fileset>
-        </tar>
-		<echo message="uploading ${package.name}.tgz to the server..." />
+		<echo message="uploading public files to the server..." />
 		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
 			dir="./public" clearfirst="true" port="${ftp.port}">
-			<fileset dir="${project.basedir}/build">
-				<include name="${package.name}.tgz"/>
-			</fileset>
 			<fileset dir="${project.basedir}/phprack.com">
 				<include name="**/*"/>
 				<exclude name=".svn/**" />
