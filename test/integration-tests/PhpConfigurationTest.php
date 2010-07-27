@@ -32,4 +32,11 @@ class PhpConfigurationTest extends phpRack_Test
         $this->assert->php->extensions->fileinfo->isAlive();
     }
 
+    public function testPhpFunctionExist()
+    {
+        $this->assert->php
+            ->fnExists('lcfirst')
+            ->fnExists('printf');
+    }
+
 }

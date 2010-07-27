@@ -55,6 +55,35 @@ class phpRack_Package_Php extends phpRack_Package
     protected $_iniValue;
 
     /**
+     * Validates the existence of certain PHP function
+     *
+     * Good example, that validates the existence of PHP function "lcfirst",
+     * which normally exists in PHP 5.3+:
+     *
+     * <code>
+     * class MyTest extends phpRack_Test {
+     *   public fuction testPhpIni() {
+     *     $this->assert->php->fnExists('lcfirst');
+     *   }
+     * }
+     * </code>
+     *
+     * @param string Name of function to check
+     * @return $this
+     */
+    public function fnExists($name)
+    {
+        if (function_exists($name)) {
+            $this->_log("PHP function '{$name}' exists, it's OK");
+        } else {
+            $this->_failure(
+                "PHP function '{$name}' does NOT exist: function_exists('{$name}') returned FALSE"
+            );
+        }
+        return $this;
+    }
+
+    /**
      * Check php.ini param with expected value
      *
      * Good example:
