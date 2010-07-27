@@ -274,7 +274,6 @@ class phpRack_Runner
     public function run($fileName, $token = 'token', $options = array())
     {
         if (!$this->getAuth()->isAuthenticated()) {
-            //TODO: handle situation when login screen should appear
             throw new Exception("Authentication failed, please login first");
         }
         $test = phpRack_Test::factory($fileName, $this);

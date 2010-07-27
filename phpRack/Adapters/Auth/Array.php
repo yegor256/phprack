@@ -48,13 +48,22 @@ class phpRack_Adapters_Auth_Array extends phpRack_Adapters_Auth_Abstract
      */
     public function authenticate()
     {
-        foreach ($this->_options['htpasswd'] as $login => $password) {
-            if (($login == $this->_request['login'])
-                && (md5($password) == $this->_request['hash'])
-            ) {
-                return $this->_validated(true);
+        $htpasswd =& $this->_options['htpasswd'];
+        foreach (array_keys($htpasswd) as $login) {
+            if ($login == $this->_request['login']) {
+                $user = $login;
             }
         }
-        return $this->_validated(false, 'Invalid login credentials provided');
+        if (!isset($user)) {
+            return $this->_validated(false, 'Invalid user name');
+        }
+        
+        $password = $htpasswd[$user];
+        if (md5($password) != $this->_request['hash']) {
+            return $this->_validated(false, 'Invalid password provided');
+        }
+
+        // everything is fine
+        return $this->_validated(true);
     }
 }

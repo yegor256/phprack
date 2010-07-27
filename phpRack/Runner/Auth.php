@@ -97,7 +97,15 @@ class phpRack_Runner_Auth
      */
     protected $_options = null;
 
-    public function __construct(phpRack_Runner $runner, $options)
+    /**
+     * Public constructor
+     *
+     * @param phpRack_Runner
+     * @param array List of options
+     * @return void
+     * @see phpRack_Runner::__construct()
+     */
+    public function __construct(phpRack_Runner $runner, array $options)
     {
         $this->_runner = $runner;
         $this->_options = $options;

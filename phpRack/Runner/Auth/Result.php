@@ -58,6 +58,7 @@ class phpRack_Runner_Auth_Result
      * @param boolean Whether the auth is valid or not
      * @param string Optional error message
      * @return void
+     * @see phpRack_Runner_Auth::_validated()
      */
     public function __construct($valid, $message = null)
     {
