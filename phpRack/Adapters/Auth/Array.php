@@ -48,6 +48,15 @@ class phpRack_Adapters_Auth_Array extends phpRack_Adapters_Auth_Abstract
      */
     public function authenticate()
     {
+        if (strlen($this->_request['hash']) != 32) {
+            // This situation is a clear indicator of something wrong
+            // in phpRack configuration. "hash" should contain MD5 hash.
+            return $this->_validated(
+                false, 
+                "Invalid password hash: '{$this->_request['hash']}'"
+            );
+        }
+        
         $htpasswd =& $this->_options['htpasswd'];
         foreach (array_keys($htpasswd) as $login) {
             if ($login == $this->_request['login']) {
