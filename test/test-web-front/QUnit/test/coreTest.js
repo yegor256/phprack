@@ -40,7 +40,7 @@ $(
                 equals(
                     "Special<b>Test<b>With<br/>Html".stripTags(),
                     expected,
-                    "We expect value to be " + expected
+                    "Check html tags are removed"
                 );
             }
         );
@@ -53,7 +53,7 @@ $(
                 equals(
                     "Special<b>test</b>".htmlspecialchars(),
                     expected,
-                    "We expect value to be " + expected
+                    "Check html tags are replaced by entities"
                 );
             }
         );

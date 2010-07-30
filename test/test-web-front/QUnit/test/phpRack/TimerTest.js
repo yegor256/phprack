@@ -40,15 +40,15 @@ $(
                     onTick: function(timer) {
                         // resume test suite
                         start();
-                        equals(timer.getElapsedSeconds(), 1);
-                        equals(timer.getFormattedTime(), '0:01');
+                        equals(timer.getElapsedSeconds(), 1, 'Check whether timer value is incremented');
+                        equals(timer.getFormattedTime(), '0:01', 'Check time is correctly formatted');
                         timer.stop();
                     }
                 }
                 var timer = new phpRack_Timer(options);
                 timer.start();
-                equals(timer.getElapsedSeconds(), 0);
-                equals(timer.getFormattedTime(), '0:00');
+                equals(timer.getElapsedSeconds(), 0, 'Check whether timer start from 0');
+                equals(timer.getFormattedTime(), '0:00', 'Check time is correctly formatted');
 
                 // wait for timer tick, halt test suite
                 stop();
