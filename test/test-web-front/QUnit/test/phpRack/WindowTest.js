@@ -37,9 +37,9 @@ $(
             function()
             {
                $(window).blur();
-               ok(!phpRack_Window.hasFocus(), 'Can not recognize window blur state');
+               ok(!phpRack_Window.hasFocus(), 'Check window blur state can be recognized');
                $(window).focus();
-               ok(phpRack_Window.hasFocus(), 'Can not recognize window focus state');
+               ok(phpRack_Window.hasFocus(), 'Check window focus state can be recognized');
             }
         );
     }
