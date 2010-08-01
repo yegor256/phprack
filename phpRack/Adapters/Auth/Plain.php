@@ -40,6 +40,7 @@ require_once PHPRACK_PATH . '/Adapters/Auth/Abstract.php';
  */
 class phpRack_Adapters_Auth_Plain extends phpRack_Adapters_Auth_Abstract
 {
+    
     /**
      * Authenticate and return an auth result
      *
@@ -50,11 +51,20 @@ class phpRack_Adapters_Auth_Plain extends phpRack_Adapters_Auth_Abstract
     {
         $auth = $this->_options['auth'];
         if ($auth['username'] != $this->_request['login']) {
-            return $this->_validated(false, 'Invalid login');
+            return $this->_validated(
+                false, 
+                "Invalid login '{$this->_request['login']}"
+            );
         }
+        
         if (md5($auth['password']) != $this->_request['hash']) {
-            return $this->_validated(false, 'Invalid password');
+            return $this->_validated(
+                false, 
+                'Invalid password'
+            );
         }
+        
         return $this->_validated(true);
     }
+    
 }
