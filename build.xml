@@ -47,7 +47,7 @@
     <property name="package.name" value="phpRack-stable" />
     <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz" />
 
-    <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca" >
+    <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca, jscoverage" >
     </target>
 
     <target name="lint" description="Run syntax check for all classes" >
@@ -103,6 +103,19 @@
                 <exclude name=".svn/**" />
             </fileset>
         </zendcodeanalyzer>
+    </target>
+
+    <target name="jscoverage" description="JSCoverage">
+        <exec command="jscoverage
+		-v
+		--exclude=.svn
+		--exclude=jquery-1.4.2.min.js
+		${project.basedir}/phpRack/layout/js
+		${project.basedir}/test/test-web-front/instrumented-js"
+            escape="false"
+            checkreturn="true" 
+            passthru="true"
+        />
     </target>
 
     <target name="test" description="Run all existing unit-tests">

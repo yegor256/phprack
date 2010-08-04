@@ -1,3 +1,8 @@
+<?php
+if (!is_dir('instrumented-js')) {
+    exit("'instrumented-js' directory does NOT exists. Please execute phing first");
+}
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -8,7 +13,7 @@
         <link rel="stylesheet" href="QUnit/qunit.css" type="text/css" />
 
         <script type="text/javascript">
-            <?php echo file_get_contents("../../phpRack/layout/jquery-1.4.2.min.js")?>
+            <?php echo file_get_contents("../../phpRack/layout/js/jquery-1.4.2.min.js")?>
         </script>
 
         <script type="text/javascript">
@@ -23,7 +28,7 @@
         </script>
     
         <script type="text/javascript">
-            <?php echo file_get_contents("../../phpRack/layout/index.js")?>
+            <?php echo file_get_contents("instrumented-js/index.js")?>
         </script>
     
         <script type="text/javascript" src="QUnit/qunit.js"></script>
@@ -51,6 +56,9 @@
         <div id="qunit-testrunner-toolbar"></div>
         <h2 id="qunit-userAgent"></h2>
         <ol id="qunit-tests"></ol>
+        <button style="margin: 5px 0px;" onclick='window.open("instrumented-js/jscoverage.html");'>
+            Coverage report
+        </button>
     </body>
 
 </html>
