@@ -61,7 +61,7 @@ class phpRack_Package_Qos extends phpRack_Package
         reset($options['scenario']);
 
         while ($requestsCompleted < $options['testsTotal']) {
-            $url = current ($options['scenario']);
+            $url = current($options['scenario']);
             if ($url === false) {
                 reset($options['scenario']);
                 continue;
@@ -92,7 +92,9 @@ class phpRack_Package_Qos extends phpRack_Package
         if ($averageMs < $options['averageMs']) {
             $this->_success("Average latency {$averageMs}ms");
         } else {
-            $this->_failure("Average latency is {$averageMs}ms, but value below {$options['averageMs']}ms was expected");
+            $this->_failure(
+                "Average latency is {$averageMs}ms, but {$options['averageMs']}ms was expected"
+            );
         }
         return $this;
     }
