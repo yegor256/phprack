@@ -100,4 +100,5 @@ class phpRack_Runner_Logger
         // }
         // return (!$isUtf) ? utf8_encode($str) : $str;
     }
+    
 }
