@@ -69,18 +69,21 @@ class phpRack_Package_Qos extends phpRack_Package
             // make request and measure latency
             $start = microtime(true);
             $urlAdapter = new phpRack_Adapters_Url($url);
-            $urlAdapter->getContent();
+            $content = $urlAdapter->getContent();
             $requestTime = microtime(true) - $start;
             $requestTimeInMs = intval($requestTime * 1000);
 
-            $this->_log("HTTP to {$url}: {$requestTimeInMs}ms");
+            $this->_log(
+                "HTTP to {$url}: {$requestTimeInMs}ms, "
+                . strlen($content) . ' bytes'
+            );
 
             // check single query time meets limit
             if ($requestTimeInMs > $options['peakMs']) {
                 $this->_failure(
                     "Peak latency is {$requestTimeInMs}ms, but value below {$options['peakMs']}ms was expected"
                 );
-                return;
+                return $this;
             }
 
             $totalRequestsTime += $requestTime;
