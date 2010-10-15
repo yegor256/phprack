@@ -101,7 +101,7 @@ abstract class phpRack_Test
 
     /**
      * Construct the class
-     * 
+     *
      * This constructor is going to be used only from factory() method. Making
      * this method "private" leads to problems in PHP 5.2.5 and maybe earlier
      * versions.
@@ -140,11 +140,11 @@ abstract class phpRack_Test
 
         // workaround against ZCA static code analysis
         eval('require_once $fileName;');
-        
+
         if (!class_exists($className)) {
             throw new Exception("Class '{$className}' is not defined in '{$fileName}'");
         }
-        
+
         return new $className($fileName, $runner);
     }
 
@@ -206,7 +206,7 @@ abstract class phpRack_Test
             }
             try {
                 $this->setUp();
-                
+
                 // to avoid test cancelation because time is over
                 set_time_limit(0);
 
@@ -309,7 +309,7 @@ abstract class phpRack_Test
      * @param string Optional message to show
      * @return $this
      */
-    public function assertEquals($dest, $src, $message = null) 
+    public function assertEquals($dest, $src, $message = null)
     {
         if ($dest != $src) {
             if (!is_null($message)) {
@@ -338,10 +338,22 @@ abstract class phpRack_Test
      * Log one message
      *
      * @param string The message
+     * @param ... A number of parameters, passed to sprintf()
      * @return void
      */
-    protected function _log($message)
+    protected function _log($message/*, ...*/)
     {
+        // pass it to sprintf
+        if (func_num_args() > 1) {
+            $args = func_get_args();
+            $message = call_user_func_array(
+                'sprintf',
+                array_merge(
+                    array($message),
+                    array_slice($args, 1)
+                )
+            );
+        }
         $this->assert->getResult()->addLog($message);
     }
 }
