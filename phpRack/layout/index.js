@@ -167,6 +167,8 @@ function phpRack_Test(options)
         // jQuery object which represent test message Element in DOM tree
         $message: $this.find('pre'),
         displayTimer: false,
+        // response size in bytes received so far from server for this test request
+        receivedResponseSize: 0,
         timeoutId: null,
         // log lines buffer, used for control which lines should be still visible
         lines: [],
@@ -326,6 +328,13 @@ function phpRack_Test(options)
             // Check that should display timer (User click or time execution > 5s)
             if (that.displayTimer) {
                 var message = 'running&nbsp;(' + that.timer.getFormattedTime();
+
+                if (that.receivedResponseSize > 0) {
+                    message += '&nbsp;' + that.receivedResponseSize  + '&nbsp;bytes';
+                } else {
+                    message += '&nbsp;waiting';
+                }
+
                 if (elapsedSeconds >= that.abortWaitTime) {
                     message += ',&nbsp;click&nbsp;to&nbsp;stop';
                 }
@@ -360,6 +369,10 @@ function phpRack_Test(options)
                 window.clearTimeout(that.timeoutId);
             }
         },
+        onProgress: function(e)
+        {
+            that.receivedResponseSize = e.loaded;
+        },
         run: function()
         {
             // Script still waiting for receive response from server
@@ -386,6 +399,9 @@ function phpRack_Test(options)
             // Remove added classes, because test can be executed many times
             that.$result.removeClass('success failure');
 
+            // Reset received bytes count
+            that.receivedResponseSize = 0;
+
             // Make ajax query to server
             that.xmlHttpRequest = $.ajax(
                 {
@@ -393,6 +409,12 @@ function phpRack_Test(options)
                     data: that.options.data,
                     dataType: 'json',
                     cache: false, // Set flag to don't cache server response
+                    // Create custom XMLHttpRequest object with progress monitoring functionality
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.onprogress = that.onProgress;
+                        return xhr;
+                    },
                     // Standard callback if JSON returned from server is correct
                     // or have 0 bytes response
                     success: function (json)
