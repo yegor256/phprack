@@ -21,13 +21,13 @@
                 ajaxToken: 'token',
             };
         </script>
-    
+
         <script type="text/javascript">
             <?php echo file_get_contents("../../phpRack/layout/index.js")?>
         </script>
-    
+
         <script type="text/javascript" src="QUnit/qunit.js"></script>
-    
+
         <?php
         $jsTestsPath = "QUnit/test/";
         /**
@@ -51,6 +51,15 @@
         <div id="qunit-testrunner-toolbar"></div>
         <h2 id="qunit-userAgent"></h2>
         <ol id="qunit-tests"></ol>
+        <div id="test-area">
+            <div class="task" id="testid" style="display:none;">
+                <span title="click to re-start" class="label"></span>
+                &nbsp;
+                <span title="click to see the log" class="result"></span>
+                <span class="tags"></span>
+                <pre style="display: block;"></pre>
+            </div>
+        </div>
     </body>
 
 </html>
