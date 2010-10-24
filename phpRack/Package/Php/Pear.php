@@ -97,7 +97,19 @@ class phpRack_Package_Php_Pear extends phpRack_Package
     }
 
     /**
-     * Check that least this version of PEAR package is present
+     * Check that exactly this version of PEAR package is present
+     *
+     * @param string Version number, required
+     * @return $this
+     * @see PearTest::testPearPackages()
+     */
+    public function exactly($requiredVersion)
+    {
+        return $this->_validateVersion($requiredVersion, '==');
+    }
+
+    /**
+     * Check that at least this version of PEAR package is present
      *
      * @param string Version number, required
      * @return $this
@@ -105,22 +117,7 @@ class phpRack_Package_Php_Pear extends phpRack_Package
      */
     public function atLeast($requiredVersion)
     {
-        if (is_null($this->_package)) {
-            $this->_failure("PEAR package is absent, can't compare versions");
-            return $this;
-        }
-
-        $currentVersion = $this->_package->getVersion();
-
-        if (version_compare($currentVersion, $requiredVersion, '>=')) {
-            $this->_success("PEAR '{$this->_package->getName()}' package version is '{$currentVersion}'");
-        } else {
-            $this->_failure(
-                "PEAR '{$this->_package->getName()}' package version is '{$currentVersion}'"
-                . ", but '{$requiredVersion}' is required"
-            );
-        }
-        return $this;
+        return $this->_validateVersion($requiredVersion, '>=');
     }
 
     /**
@@ -143,5 +140,32 @@ class phpRack_Package_Php_Pear extends phpRack_Package
         }
         return $this;
     }
-    
+
+    /**
+     * Validate version.
+     *
+     * @return void
+     * @see exactly()
+     * @see atLeast()
+     */
+    protected function _validateVersion($required, $comparison = '=')
+    {
+        if (is_null($this->_package)) {
+            $this->_failure("PEAR package is absent, can't compare versions");
+            return $this;
+        }
+
+        $currentVersion = $this->_package->getVersion();
+
+        if (version_compare($currentVersion, $required, $comparison)) {
+            $this->_success("PEAR '{$this->_package->getName()}' package version is '{$currentVersion}'");
+        } else {
+            $this->_failure(
+                "PEAR '{$this->_package->getName()}' package version is '{$currentVersion}'"
+                . ", but '{$required}' is required"
+            );
+        }
+        return $this;
+    }
+
 }
