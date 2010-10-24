@@ -2,12 +2,16 @@
  * @version $Id$
  -->
 <html>
-<style>
-* {
-    font-family: Verdana;
-}
-</style>
-<title>phpRack -- Integration Testing Framework</title>
+<head>
+    <style>
+    * {
+        font-family: Verdana;
+    }
+    </style>
+    <title>phpRack -- Integration Testing Framework</title>
+    <meta name="description" content="Free Open-Source Integration Testing Framework, the only one of its kind" />
+    <meta name="keywords" content="Integration Testing, PHP, Framework, Integration Test" />
+</head>
 <body>
     <table height="100%" width="100%">
         <tr>
@@ -19,22 +23,24 @@
                     <a href="http://trac.fazend.com/phpRack/wiki/Download">download</a><br/>
                     <a href="http://www.phprack.com/phprack.php">try how it works</a>
                 </p>
-                <p>
-                    Thanks to 
-                    <a href="http://secure.hostgator.com/cgi-bin/affiliates/clickthru.cgi?id=tpc256">HostGator.com</a>
-                    for the web-hosting provided!
-                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <script type="text/javascript" src="http://www.ohloh.net/p/486049/widgets/project_basic_stats.js">
+                </script>
             </td>
         </tr>
     </table>
     <script type="text/javascript">
-    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        try {
+            var pageTracker = _gat._getTracker("UA-1963507-15");
+            pageTracker._trackPageview();
+        } catch (err) {
+            // swallow it
+        }
     </script>
-    <script type="text/javascript">
-    try {
-    var pageTracker = _gat._getTracker("UA-1963507-15");
-    pageTracker._trackPageview();
-    } catch(err) {}</script>
 </body>
 </html>
