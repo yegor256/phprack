@@ -136,6 +136,10 @@ class phpRack_View
      */
     public function compressedHtml($html)
     {
+        if (!class_exists('DOMDocument')) {
+            return $html;
+        }
+
         $dom = new DOMDocument();
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = false;
