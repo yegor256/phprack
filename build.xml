@@ -4,7 +4,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -32,14 +32,14 @@
  *
 -->
 
-<project name="phpRack tests" basedir="." default="main"> 
+<project name="phpRack tests" basedir="." default="main">
 
-    <!-- Sets the DSTAMP, TSTAMP and TODAY properties --> 
+    <!-- Sets the DSTAMP, TSTAMP and TODAY properties -->
     <tstamp/>
 
     <includepath classpath="${project.basedir}" />
     <includepath classpath="${project.basedir}/test/" />
-    
+
     <!-- To make sure that we have enough memory limit for running all tests -->
     <php expression="ini_set('memory_limit', '128M');" />
 
@@ -68,15 +68,15 @@
             </fileset>
         </jsllint>
     </target>
-    
+
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
-        <exec command="phpcs 
+        <exec command="phpcs
             -n
             --report=full
-            --standard=Zend 
-            --ignore='.svn/*' 
-            --extensions='php,phtml' 
-            ${project.basedir}" 
+            --standard=Zend
+            --ignore='.svn/*'
+            --extensions='php,phtml'
+            ${project.basedir}"
             escape="false"
             checkreturn="true"
             passthru="true"
@@ -84,13 +84,13 @@
     </target>
 
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
-        <exec command="phpmd 
-            ${project.basedir} 
+        <exec command="phpmd
+            ${project.basedir}
             text
             codesize,unusedcode
             --extensions='php,phtml'"
             escape="false"
-            checkreturn="true" 
+            checkreturn="true"
             passthru="true"
         />
     </target>
@@ -107,20 +107,20 @@
 
     <target name="jscoverage" description="JSCoverage">
         <exec command="jscoverage
-		-v
-		--exclude=.svn
-		--exclude=jquery-1.4.2.min.js
-		${project.basedir}/phpRack/layout/js
-		${project.basedir}/test/test-web-front/instrumented-js"
+    		-v
+    		--exclude=.svn
+    		--exclude=jquery-1.4.2.min.js
+    		${project.basedir}/phpRack/layout/js
+    		${project.basedir}/build/instrumented-js"
             escape="false"
-            checkreturn="true" 
+            checkreturn="true"
             passthru="true"
         />
     </target>
 
     <target name="test" description="Run all existing unit-tests">
         <property name="coverage.db" value="${project.basedir}/build/coverage.data" />
-        
+
         <!-- create coverage database that will collect all reports -->
         <coverage-setup database="${coverage.db}">
             <fileset dir="${project.basedir}/phpRack">
@@ -128,7 +128,7 @@
                 <exclude name=".svn/**"/>
             </fileset>
         </coverage-setup>
-        
+
 		<phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
 			<formatter type="plain" usefile="no" />
 			<batchtest>
@@ -148,11 +148,11 @@
             perClass="0"
             perMethod="0"
         />
-            
+
         <!-- delete coverage database, since it's not necessary any more -->
         <delete file="${coverage.db}" />
     </target>
-    
+
     <target name="package" description="Package the product into TGZ">
         <tar destfile="${build.tgz}" compression="gzip">
             <fileset dir="${project.basedir}">
@@ -166,7 +166,7 @@
     <target name="deploy" description="Deploy stable TGZ by FTP and other files">
         <!-- get FTP properties from file -->
         <property file="${project.basedir}/../phprack.properties" />
-        
+
 		<echo message="uploading PHP code to the server..." />
 		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
 		    clearfirst="true" port="${ftp.port}">

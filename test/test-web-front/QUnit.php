@@ -1,6 +1,7 @@
 <?php
-if (!is_dir('instrumented-js')) {
-    exit("'instrumented-js' directory does NOT exists. Please execute phing first");
+define('INSTRUMENTED', dirname(__FILE__) . '/../../build/instrumented-js');
+if (!is_dir(INSTRUMENTED)) {
+    exit("'" . INSTRUMENTED . "' directory does NOT exist, execute 'phing' first");
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -26,13 +27,13 @@ if (!is_dir('instrumented-js')) {
                 ajaxToken: 'token',
             };
         </script>
-    
+
         <script type="text/javascript">
-            <?php echo file_get_contents("instrumented-js/index.js")?>
+            <?php echo file_get_contents(INSTRUMENTED . '/index.js')?>
         </script>
-    
+
         <script type="text/javascript" src="QUnit/qunit.js"></script>
-    
+
         <?php
         $jsTestsPath = "QUnit/test/";
         /**
@@ -56,7 +57,7 @@ if (!is_dir('instrumented-js')) {
         <div id="qunit-testrunner-toolbar"></div>
         <h2 id="qunit-userAgent"></h2>
         <ol id="qunit-tests"></ol>
-        <button style="margin: 5px 0px;" onclick='window.open("instrumented-js/jscoverage.html");'>
+        <button style="margin: 5px 0px;" onclick='window.open("<?=INSTRUMENTED?>/jscoverage.html");'>
             Coverage report
         </button>
     </body>

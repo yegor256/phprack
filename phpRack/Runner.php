@@ -342,7 +342,11 @@ class phpRack_Runner
                 $class = 'sendmail';
             }
             $mail = phpRack_Adapters_Notifier_Mail::factory($class, $transport);
-            $mail->setSubject('phpRack Suite Failure');
+            $mail->setSubject(
+                'phpRack Suite Failure'
+                . (isset($this->_options['notify']['title']) ? 
+                ' at ' . $this->_options['notify']['title'] : false)
+            );
             $mail->setBody($report);
             /**
              * @todo Only one recipient is supported now

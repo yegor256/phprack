@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -59,7 +59,7 @@ require_once PHPRACK_PATH . '/Test.php';
  */
 class phpRack_Package
 {
-    
+
     /**
      * Result collector
      *
@@ -68,7 +68,7 @@ class phpRack_Package
      * @see __get()
      */
     protected $_result;
-    
+
     /**
      * Result of the latest call
      *
@@ -77,7 +77,7 @@ class phpRack_Package
      * @see _success()
      */
     protected $_latestCallSuccess = false;
-    
+
     /**
      * Construct the class
      *
@@ -107,7 +107,7 @@ class phpRack_Package
      * @return void
      * @throws Exception
      */
-    public final function __call($name, array $args) 
+    public final function __call($name, array $args)
     {
         throw new Exception(
             sprintf(
@@ -124,7 +124,7 @@ class phpRack_Package
      *
      * The method is called factory, but this is not really a static factory. This method
      * just simplifies the instantiation of phpRack_Package and encapsulates private
-     * constructor. Some time ago we had a static factory here, but then removed it. The 
+     * constructor. Some time ago we had a static factory here, but then removed it. The
      * organization of methods stay like before (factory + private constructor). Maybe in
      * the future we might decide to introduce static factory again.
      *
@@ -134,27 +134,27 @@ class phpRack_Package
      * @throws Exception
      * @see phpRack_Assertion::__call()
      */
-    public static function factory($name, phpRack_Result $result) 
+    public static function factory($name, phpRack_Result $result)
     {
         $sectors = array_map('ucfirst', explode('/', $name));
         $className = 'phpRack_Package_' . implode('_', $sectors);
-        
+
         $packageFile = PHPRACK_PATH . '/Package/' . implode('/', $sectors) . '.php';
         if (!file_exists($packageFile)) {
             throw new Exception("Package '$name' is absent in phpRack: '{$packageFile}'");
         }
-        
+
         // workaround against ZCA static code analysis
         eval('require_once $packageFile;');
 
         return new $className($result);
     }
-    
+
     /**
      * Dispatcher of calls to packages
      *
      * Here we create a sub-package, for example:
-     * 
+     *
      * <code>
      * // inside your instance of phpRack_Test:
      * $this->assert->php->extensions->isLoaded('simplexml');
@@ -172,56 +172,56 @@ class phpRack_Package
     {
         return self::factory($this->_getName() . '/' . $name, $this->_result);
     }
-    
+
     /**
      * What to do on success?
      *
      * @param mixed What to do? STRING will log this string
      * @return $this
      */
-    public final function onSuccess($action) 
+    public final function onSuccess($action)
     {
         if ($this->_latestCallSuccess) {
             $this->_log($action);
         }
         return $this;
     }
-        
+
     /**
      * What to do on failure?
      *
      * @param mixed What to do? STRING will log this string
      * @return $this
      */
-    public final function onFailure($action) 
+    public final function onFailure($action)
     {
         if (!$this->_latestCallSuccess) {
             $this->_log($action);
         }
         return $this;
     }
-    
+
     /**
      * Get my name, like: "php/version"
      *
      * @return string
      * @see __get()
      */
-    protected function _getName() 
+    protected function _getName()
     {
         $sectors = explode('_', get_class($this)); // e.g. "phpRack_Package_Php_Version"
         return implode(
-            '/', 
+            '/',
             array_slice(
                 array_map(
                     create_function('$a', 'return strtolower($a[0]) . substr($a, 1);'),
                     $sectors
-                ), 
+                ),
                 2
             )
         );
     }
-    
+
     /**
      * Call failed
      *
@@ -229,13 +229,13 @@ class phpRack_Package
      * @return void
      * @see phpRack_Package_Php::lint() and many other methods
      */
-    protected function _failure($log) 
+    protected function _failure($log)
     {
         $this->_latestCallSuccess = false;
         $this->_result->fail();
         $this->_log('[' . phpRack_Test::FAILURE . '] ' . $log);
     }
-        
+
     /**
      * Call was successful
      *
@@ -243,22 +243,33 @@ class phpRack_Package
      * @return void
      * @see phpRack_Package_Php::lint() and many other methods
      */
-    protected function _success($log) 
+    protected function _success($log)
     {
         $this->_latestCallSuccess = true;
         $this->_log('[' . phpRack_Test::OK . '] ' . $log);
     }
-        
+
     /**
-     * Just log a line
+     * Just log a line.
      *
      * @param string String to log
      * @return void
      * @see phpRack_Package_Php::lint() and many other methods
      */
-    protected function _log($log) 
+    protected function _log($message/*, ...*/)
     {
-        $this->_result->addLog($log);
+        // pass it to sprintf
+        if (func_num_args() > 1) {
+            $args = func_get_args();
+            $message = call_user_func_array(
+                'sprintf',
+                array_merge(
+                    array($message),
+                    array_slice($args, 1)
+                )
+            );
+        }
+        $this->_result->addLog($message);
     }
-    
+
 }
