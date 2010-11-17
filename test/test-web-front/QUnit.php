@@ -57,7 +57,16 @@ if (!is_dir(INSTRUMENTED)) {
         <div id="qunit-testrunner-toolbar"></div>
         <h2 id="qunit-userAgent"></h2>
         <ol id="qunit-tests"></ol>
-        <button style="margin: 5px 0px;" onclick='window.open("<?=INSTRUMENTED?>/jscoverage.html");'>
+        <div id="test-area">
+            <div class="task" id="testid" style="display:none;">
+                <span title="click to re-start" class="label"></span>
+                &nbsp;
+                <span title="click to see the log" class="result"></span>
+                <span class="tags"></span>
+                <pre style="display: block;"></pre>
+            </div>
+        </div>
+        <button style="margin: 5px 0px;" onclick='window.open("../../build/instrumented-js/jscoverage.html");'>
             Coverage report
         </button>
     </body>
