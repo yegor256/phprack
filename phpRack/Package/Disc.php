@@ -36,6 +36,8 @@ require_once PHPRACK_PATH . '/Package.php';
  * Local HDD related assertions
  *
  * @package Tests
+ * @property-read phpRack_Package_Disc_File $file File informations and content
+ * @property-read phpRack_Package_Disc_FreeSpace $freeSpace Free space on HDD
  */
 class phpRack_Package_Disc extends phpRack_Package
 {

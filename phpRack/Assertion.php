@@ -47,6 +47,15 @@ require_once PHPRACK_PATH . '/Test.php';
  *
  * @package Tests
  * @see phpRack_Test::__get()
+ *
+ * @property-read phpRack_Package_Cpu $cpu CPU related assertions
+ * @property-read phpRack_Package_Db $db DB related assertions
+ * @property-read phpRack_Package_Disc $disc Local HDD related assertions
+ * @property-read phpRack_Package_Network $network Network-related assertions
+ * @property-read phpRack_Package_Php $php PHP related assertions
+ * @property-read phpRack_Package_Qos $qos QOS related assertions
+ * @property-read phpRack_Package_Shell $shell Assertions related to SHELL
+ * @property-read phpRack_Package_Simple $simple Simple package, for simple assertions
  */
 class phpRack_Assertion
 {

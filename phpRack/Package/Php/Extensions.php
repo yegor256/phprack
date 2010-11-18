@@ -33,9 +33,11 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * PHP related assertions
+ * PHP extensions related assertions
  *
  * @package Tests
+ *
+ * @property-read phpRack_Package_Php_Extensions_Fileinfo $fileinfo fileinfo to validate
  */
 class phpRack_Package_Php_Extensions extends phpRack_Package
 {

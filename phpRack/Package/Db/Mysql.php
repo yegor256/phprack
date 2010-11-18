@@ -38,7 +38,7 @@ require_once PHPRACK_PATH . '/Package.php';
 require_once PHPRACK_PATH . '/Adapters/Db/Mysql.php';
 
 /**
- * Db abstract
+ * MySQL related assertions
  *
  * @package Tests
  */

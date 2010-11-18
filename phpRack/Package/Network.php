@@ -36,6 +36,8 @@ require_once PHPRACK_PATH . '/Package.php';
  * Network-related assertions
  *
  * @package Tests
+ * @property-read phpRack_Package_Network_Ports $ports Ports on the server
+ * @property-read phpRack_Package_Network_Url $url Network check using Url
  */
 class phpRack_Package_Network extends phpRack_Package
 {
