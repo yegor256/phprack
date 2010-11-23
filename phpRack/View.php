@@ -127,6 +127,30 @@ class phpRack_View
     {
         return addcslashes($path, "\\'");
     }
+
+    /**
+     * Compress JS code
+     *
+     * @param string Javascript code, before compression
+     * @return string Javascript code, compressed
+     * @see compressedHtml
+     */
+    protected function _compressJs($jsCode)
+    {
+        $replacers = array(
+            '/\/\*.*?\*\//s'   => '', // remove multi line comments
+            '/\/\/.*\r?\n\s*/' => '', // remove single line comments
+            '/\s*\r?\n\s*/'    => '', // remove lines end with leading/trailing spaces
+            '/\s+/'            => ' ', // convert multiple spaces to single
+            '/\s?([\(\)\,\;=\'\"\-\+:\*&])\s?/' => '${1}', // compress unnecessary spaces
+        );
+
+        return preg_replace(
+            array_keys($replacers),
+            $replacers,
+            $jsCode
+        );
+    }
     
     /**
      * Compress HTML content
@@ -137,6 +161,40 @@ class phpRack_View
     public function compressedHtml($html)
     {
         if (!class_exists('DOMDocument')) {
+            $replacers = array(
+                '/<!--.*?-->/s'    => '', // remove multi line comments
+            );
+            $html = preg_replace(
+                array_keys($replacers),
+                $replacers,
+                $html
+            );
+            $offset = 0;
+            $startPattern = '<script type="text/javascript">';
+            $endPattern = '</script>';
+            $lp = 0;
+
+            while (($scriptStartPos = strpos($html, $startPattern, $offset)) !== false) {
+                $offset = $scriptStartPos + 1;
+
+                // first script is minified jQuery lib, so doesn't need additional compression
+                if (++$lp === 1) {
+                    continue;
+                }
+
+                $scriptEndPos = strpos($html, $endPattern, $scriptStartPos);
+                if ($scriptEndPos === null) {
+                    throw new Exception('<script> tag is not closed');
+                }
+                $length = $scriptEndPos - $scriptStartPos + 1;
+                $html = substr_replace(
+                    $html,
+                    $this->_compressJs(substr($html, $scriptStartPos, $length)),
+                    $scriptStartPos,
+                    $length
+                );
+            }
+
             return $html;
         }
 
@@ -152,25 +210,13 @@ class phpRack_View
             $comment->parentNode->removeChild($comment);
         }
 
-        $replacers = array(
-            '/\/\*.*?\*\//s'   => '', // remove multi line comments
-            '/\/\/.*\r?\n\s*/' => '', // remove single line comments
-            '/\s*\r?\n\s*/'    => '', // remove lines end with leading/trailing spaces
-            '/\s+/'            => ' ', // convert multiple spaces to single
-            '/\s?([\(\)\,\;=\'\"\-\+:\*&])\s?/' => '${1}', // compress unnecessary spaces
-        );
-
         // skip compressing first script, because it is minified version of jQuery
         $scripts = $xpath->query('//xhtml:script[position() > 1]');
 
         foreach ($scripts as $script) {
             foreach ($script->childNodes as $childNode) {
                 if ($childNode->nodeType == XML_CDATA_SECTION_NODE) {
-                    $childNode->nodeValue = "\n" . preg_replace(
-                        array_keys($replacers),
-                        $replacers,
-                        $childNode->nodeValue
-                    );
+                    $childNode->nodeValue = "\n" . $this->_compressJs($childNode->nodeValue);
                 }
             }
         }
