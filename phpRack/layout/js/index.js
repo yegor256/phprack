@@ -479,6 +479,50 @@ $(
     {
         // List with DOM ids and test names
         var calls = phpParams.calls;
+        var groups = {};
+
+        $('span.label').each(
+            function()
+            {
+                var $this = $(this);
+                var matches = $this.text().match(/(\w+)/g);
+                if (matches && matches.length > 2) {
+                    var dirName = matches[0];
+                    if (!$.isArray(groups[dirName])) {
+                        groups[dirName] = [];
+                    }
+                    groups[dirName].push($this.parent());
+                }
+            }
+        );
+
+        $.each(
+            groups,
+            function(index, group)
+            {
+                var html = '<div class="taskGroupControl">' +
+                    '<span class="label"><div class="sign">+</div>' + index + '</span>' +
+                    '</div>';
+                    
+                var $controlDiv = $(html);
+                var $div = $('<div class="taskGroupContainer"></div>');
+
+                $div.insertBefore(group[0]).append.apply($div, group).hide();
+
+                $controlDiv.insertBefore($div).click(
+                    function()
+                    {
+                        var $sign = $(this).find('div.sign');
+                        if ($sign.text() == '+') {
+                            $sign.text('-');
+                        } else {
+                            $sign.text('+');
+                        }
+                        $div.slideToggle();
+                    }
+                );
+            }
+        );
 
         var that = {
             focus: true,

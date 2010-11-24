@@ -137,6 +137,11 @@ class phpRack_View
      */
     protected function _compressJs($jsCode)
     {
+        // don't compress code when we use instrumented version, to avoid errors after compression
+        if (defined('INSTRUMENTED')) {
+            return $jsCode;
+        }
+
         $replacers = array(
             '/\/\*.*?\*\//s'   => '', // remove multi line comments
             '/\/\/.*\r?\n\s*/' => '', // remove single line comments
@@ -183,7 +188,7 @@ class phpRack_View
                 }
 
                 $scriptEndPos = strpos($html, $endPattern, $scriptStartPos);
-                if ($scriptEndPos === null) {
+                if ($scriptEndPos === false) {
                     throw new Exception('<script> tag is not closed');
                 }
                 $length = $scriptEndPos - $scriptStartPos + 1;

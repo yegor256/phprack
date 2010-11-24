@@ -115,6 +115,20 @@ a {
         text-decoration: underline;
     }
 
+    #task-list .taskGroupControl .label {
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    #task-list .taskGroupControl .sign {
+        width: 10px;
+        float: left;
+    }
+
+    #task-list .taskGroupContainer {
+        margin-left: 10px;
+    }
+
 /* wrapping of words when the result is not a formatted text */
 .word_wrap {
     white-space: pre-wrap; /* css-3 */

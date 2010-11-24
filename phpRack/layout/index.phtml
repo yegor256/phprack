@@ -32,7 +32,7 @@
 
 <?php $i = 0; ?>
 <?php $jsCalls = array(); ?>
-<div id='task-list'>
+<div id="task-list">
     <?php foreach ($this->runner->getTests() as $test):?>
         <?php $ajaxOptions = $test->getAjaxOptions();?>
 
@@ -53,7 +53,7 @@
         $jsCalls[$i] = array(
             'divId'              => 'div#d' . $i,
             'fileName'           => $this->jsPath($test->getFileName()),
-            'autoStart'          => !empty($ajaxOptions['autoStart']) ? true : false,
+            'autoStart'          => !empty($ajaxOptions['autoStart']) && !defined('INSTRUMENTED') ? true : false,
             'pauseWhenFocusLost' => !empty($ajaxOptions['pauseWhenFocusLost']) ? true : false,
         );
         ?>
@@ -71,6 +71,12 @@
         ajaxTag: '<?php echo PHPRACK_AJAX_TAG?>',
         ajaxToken: '<?php echo PHPRACK_AJAX_TOKEN?>',
     };
-    <?php include PHPRACK_PATH . '/layout/js/index.js' ?>
+    <?php
+    if (defined('INSTRUMENTED')) {
+        include INSTRUMENTED . '/index.js';
+    } else {
+        include PHPRACK_PATH . '/layout/js/index.js';
+    }
+    ?>
 //]]>
 </script>
