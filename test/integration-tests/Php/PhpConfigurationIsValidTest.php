@@ -8,7 +8,7 @@
  */
 require_once PHPRACK_PATH . '/Test.php';
 
-class PhpConfigurationIsValidTest extends PhpRack_Test
+class Php_PhpConfigurationIsValidTest extends PhpRack_Test
 {
     protected function _init()
     {

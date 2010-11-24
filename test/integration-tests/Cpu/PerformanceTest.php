@@ -8,7 +8,7 @@
  */
 require_once PHPRACK_PATH . '/Test.php';
 
-class PerformanceTest extends PhpRack_Test
+class Cpu_PerformanceTest extends PhpRack_Test
 {
     public function testServerIsFast()
     {

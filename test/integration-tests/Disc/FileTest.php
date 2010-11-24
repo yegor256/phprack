@@ -8,7 +8,7 @@
  */
 require_once PHPRACK_PATH . '/Test.php';
 
-class FileTest extends phpRack_Test
+class Disc_FileTest extends phpRack_Test
 {
     public function testFileContent()
     {

@@ -8,7 +8,7 @@
  */
 require_once PHPRACK_PATH . '/Test.php';
 
-class PhpiniTest extends phpRack_Test
+class Php_PhpiniTest extends phpRack_Test
 {
     public function testPhpiniMemoryLimit()
     {
