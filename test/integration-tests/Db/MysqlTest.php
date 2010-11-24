@@ -8,7 +8,7 @@
  */
 require_once PHPRACK_PATH . '/Test.php';
 
-class MysqlTest extends phpRack_Test
+class Db_MysqlTest extends phpRack_Test
 {
     /**
      * DB connection details on the server provided by HostGator.com

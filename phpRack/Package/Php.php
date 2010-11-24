@@ -36,6 +36,10 @@ require_once PHPRACK_PATH . '/Package.php';
  * PHP related assertions
  *
  * @package Tests
+ *
+ * @property-read phpRack_Package_Php_Extensions $extensions PHP extensions related assertions
+ * @property-read phpRack_Package_Php_Pear $pear PEAR package used for checking PEAR packages availability
+ * @property-read phpRack_Package_Php_Version $version PHP-version related assertions
  */
 class phpRack_Package_Php extends phpRack_Package
 {

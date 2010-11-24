@@ -41,6 +41,8 @@ require_once PHPRACK_PATH . '/Assertion.php';
  * Parent class of all integration tests
  *
  * @package Tests
+ *
+ * @property-read phpRack_Assertion $assert One single test assertion
  */
 abstract class phpRack_Test
 {
@@ -136,13 +138,29 @@ abstract class phpRack_Test
             throw new Exception("File '{$fileName}' is not named properly, can't run it");
         }
 
-        $className = pathinfo($fileName, PATHINFO_FILENAME);
+        // fix for windows "\" path separator
+        $fileName = preg_replace('/\\\\+/', '/', $fileName);
+
+        // convert filename to class name, support also subdirs in tests dir
+        $className = str_replace(
+            '/',
+            '_',
+            substr($fileName, strlen($runner->getDir()) + 1, -4)
+        );
 
         // workaround against ZCA static code analysis
         eval('require_once $fileName;');
 
         if (!class_exists($className)) {
-            throw new Exception("Class '{$className}' is not defined in '{$fileName}'");
+            $match = array();
+            // for back compatibility we should still support class names
+            // without dir prefix in sub dirs
+            if (preg_match('/_(\w+)$/', $className, $match)) {
+                $className = $match[1];
+            }
+            if (!class_exists($className)) {
+                throw new Exception("Class '{$className}' is not defined in '{$fileName}'");
+            }
         }
 
         return new $className($fileName, $runner);

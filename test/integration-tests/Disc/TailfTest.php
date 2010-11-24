@@ -8,7 +8,7 @@
  */
 require_once PHPRACK_PATH . '/Test.php';
 
-class TailfTest extends phpRack_Test
+class Disc_TailfTest extends phpRack_Test
 {
     public function testLiveTail()
     {

@@ -8,7 +8,7 @@
  */
 require_once PHPRACK_PATH . '/Test.php';
 
-class PhpinfoTest extends phpRack_Test
+class Php_PhpinfoTest extends phpRack_Test
 {
 
     public function testPhpinfoIsVisible()
