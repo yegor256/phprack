@@ -66,7 +66,7 @@ if (!is_dir(INSTRUMENTED)) {
                 <pre style="display: block;"></pre>
             </div>
         </div>
-        <button style="margin: 5px 0px;" onclick='window.open("../../build/instrumented-js/jscoverage.html");'>
+        <button style="margin: 5px 0px;" onclick='window.open("./JsCoverage/jscoverage.html");'>
             Coverage report
         </button>
     </body>
