@@ -165,7 +165,7 @@
 
     <target name="deploy" description="Deploy stable TGZ by FTP and other files">
         <!-- get FTP properties from file -->
-        <property file="${project.basedir}/../phprack.properties" />
+        <property file="${project.basedir}/../external.properties" />
 
 		<echo message="uploading PHP code to the server..." />
 		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
