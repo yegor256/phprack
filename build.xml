@@ -144,7 +144,7 @@
 
         <!-- make sure that the code is covered -->
         <coverage-threshold database="${coverage.db}"
-            perProject="80"
+            perProject="75"
             perClass="0"
             perMethod="0"
         />
