@@ -7,7 +7,7 @@ if (!is_dir(INSTRUMENTED)) {
 define(
     'IS_AJAX_REQUEST',
     isset($_SERVER['HTTP_X_REQUESTED_WITH'])
-        && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+    && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
 );
 
 if (IS_AJAX_REQUEST) {
@@ -46,7 +46,7 @@ $iterator->setExclude('/.svn/')
     Coverage report
 </button>
 
-<?
+<?php
 
 $qUnitContent = ob_get_clean();
 
