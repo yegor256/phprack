@@ -473,56 +473,99 @@ function phpRack_Test(options)
     return that;
 }
 
+function phpRack_Task_Grouper()
+{
+    var that = {
+        // get test groups, whi
+        getGroupsByDir: function()
+        {
+            var groups = {};
+            // foreach test label
+            $('span.label').each(
+                function()
+                {
+                    var $this = $(this);
+                    // get path parts
+                    var matches = $this.text().match(/(\w+)/g);
+                    // if contain folder in path
+                    if (matches && matches.length > 2) {
+                        var dirName = matches[0];
+                        // if we have NOT so far this group, create it
+                        if (!$.isArray(groups[dirName])) {
+                            groups[dirName] = [];
+                        }
+                        // add this test to this group
+                        groups[dirName].push($this.parent());
+                    }
+                }
+            );
+            return groups;
+        },
+        groupTestsInSameDir: function()
+        {
+            // divs list to insert into DOM tree
+            var divs = [];
+            $.each(
+                that.getGroupsByDir(),
+                function(index, group)
+                {
+                    // create test group container
+                    var html = '<div class="taskGroupControl">' +
+                        '<span class="label"><div class="sign">+</div>' + index + '</span>' +
+                        '</div>';
+
+                    var $controlDiv = $(html);
+
+                    var $containerDiv = $('<div class="taskGroupContainer"></div>');
+                    // add click action to provide show/hide container functionality
+                    $controlDiv.click(
+                        function()
+                        {
+                            var $sign = $(this).find('div.sign');
+                            // toogle sign for show/hide
+                            if ($sign.text() == '+') {
+                                $sign.text('-');
+                            } else {
+                                $sign.text('+');
+                            }
+                            $containerDiv.slideToggle();
+                        }
+                    );
+
+                    // add tasks to the container and hide them
+                    $containerDiv.append.apply($containerDiv, group).hide();
+
+                    // add group container to the task list
+                    divs.push($controlDiv);
+                    divs.push($containerDiv);
+                }
+            );
+            // insert new divs at the top of task list
+            var $taskList = $('#task-list');
+            $taskList.prepend.apply($taskList, divs);
+        }
+    };
+    return that;
+}
 
 $(
     function()
     {
         // List with DOM ids and test names
         var calls = phpParams.calls;
-        var groups = {};
 
-        $('span.label').each(
-            function()
+        // sort tests
+        var sorted = $('#task-list > div.task').sort(
+            function(a, b)
             {
-                var $this = $(this);
-                var matches = $this.text().match(/(\w+)/g);
-                if (matches && matches.length > 2) {
-                    var dirName = matches[0];
-                    if (!$.isArray(groups[dirName])) {
-                        groups[dirName] = [];
-                    }
-                    groups[dirName].push($this.parent());
-                }
+                return $(a).find('span.label').text() > $(b).find('span.label').text() ? 1 : -1;
             }
         );
+        $('#task-list').append(sorted);
 
-        $.each(
-            groups,
-            function(index, group)
-            {
-                var html = '<div class="taskGroupControl">' +
-                    '<span class="label"><div class="sign">+</div>' + index + '</span>' +
-                    '</div>';
-                    
-                var $controlDiv = $(html);
-                var $div = $('<div class="taskGroupContainer"></div>');
-
-                $div.insertBefore(group[0]).append.apply($div, group).hide();
-
-                $controlDiv.insertBefore($div).click(
-                    function()
-                    {
-                        var $sign = $(this).find('div.sign');
-                        if ($sign.text() == '+') {
-                            $sign.text('-');
-                        } else {
-                            $sign.text('+');
-                        }
-                        $div.slideToggle();
-                    }
-                );
-            }
-        );
+        // group tasks in same dir
+        var taskGrouper = new phpRack_Task_Grouper();
+        taskGrouper.groupTestsInSameDir();
 
         var that = {
             focus: true,
