@@ -22,14 +22,16 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
+ * @category phpRack
+ * @package Adapters
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
- * @category phpRack
  */
 
 /**
  * Authentication abstract adapter
  *
+ * @category phpRack
  * @package Adapters
  * @subpackage Auth
  */

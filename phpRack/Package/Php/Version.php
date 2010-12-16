@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -47,7 +48,7 @@ class phpRack_Package_Php_Version extends phpRack_Package
      * @return $this
      * @see http://www.php.net/manual/en/function.version-compare.php
      */
-    public function atLeast($version) 
+    public function atLeast($version)
     {
         if (version_compare(phpversion(), $version) >= 0) {
             $this->_success('PHP version is ' . phpversion() . ", newer or equal to {$version}");
@@ -56,5 +57,5 @@ class phpRack_Package_Php_Version extends phpRack_Package
         }
         return $this;
     }
-        
+
 }

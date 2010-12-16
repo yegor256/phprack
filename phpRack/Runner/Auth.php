@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -339,5 +340,5 @@ class phpRack_Runner_Auth
         require_once PHPRACK_PATH . '/Runner/Auth/Result.php';
         return $this->_authResult = new phpRack_Runner_Auth_Result($result, $message);
     }
-    
+
 }

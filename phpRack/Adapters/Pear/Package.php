@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Adapters
  */
 
 /**
@@ -83,7 +84,7 @@ class phpRack_Adapters_Pear_Package
      *
      * @return string
      */
-    public function getName() 
+    public function getName()
     {
         return $this->_name;
     }

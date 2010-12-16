@@ -25,8 +25,8 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Adapters
  */
-
 
 /**
  * Config adapter used for store tests configuration and provide object

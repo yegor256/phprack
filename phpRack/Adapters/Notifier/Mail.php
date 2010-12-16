@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Adapters
  */
 
 /**
@@ -36,7 +37,7 @@ class phpRack_Adapters_Notifier_Mail
 {
     /**
      * Factory method to get one of Sendmail or Smtp class instances.
-     * 
+     *
      * Depends on options specified. Available options depend on transport
      * you choose.
      *

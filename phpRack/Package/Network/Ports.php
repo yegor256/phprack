@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -52,7 +53,7 @@ class phpRack_Package_Network_Ports extends phpRack_Package
      * @param string IP address of the server to check
      * @return $this
      */
-    public function isOpen($port, $server = '127.0.0.1') 
+    public function isOpen($port, $server = '127.0.0.1')
     {
         $urlAdapter = phpRack_Adapters_Url::factory("{$server}:{$port}");
 
@@ -64,5 +65,5 @@ class phpRack_Package_Network_Ports extends phpRack_Package
 
         return $this;
     }
-        
+
 }

@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Adapters
  */
 
  /**
@@ -123,7 +124,7 @@ class phpRack_Adapters_Shell_Command
      *
      * That is reason why we must pass to this function custom env
      * param.
-     * 
+     *
      * @return string Command execution output
      * @throws Exception if from some reason command can't be executed
      * @throws Exception if command process was terminated
@@ -140,9 +141,9 @@ class phpRack_Adapters_Shell_Command
         // execute command and get its proccess resource
         $this->_process = proc_open(
             $this->_command,
-            $descriptors, 
-            $pipes, 
-            getcwd(), 
+            $descriptors,
+            $pipes,
+            getcwd(),
             $this->_getEnv()
         );
 

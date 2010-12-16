@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Adapters
  */
 
 /**
@@ -52,11 +53,11 @@ class phpRack_Adapters_Auth_Array extends phpRack_Adapters_Auth_Abstract
             // This situation is a clear indicator of something wrong
             // in phpRack configuration. "hash" should contain MD5 hash.
             return $this->_validated(
-                false, 
+                false,
                 "Invalid password hash: '{$this->_request['hash']}'"
             );
         }
-        
+
         $htpasswd =& $this->_options['htpasswd'];
         foreach (array_keys($htpasswd) as $login) {
             if ($login == $this->_request['login']) {
@@ -66,7 +67,7 @@ class phpRack_Adapters_Auth_Array extends phpRack_Adapters_Auth_Abstract
         if (!isset($user)) {
             return $this->_validated(false, 'Invalid user name');
         }
-        
+
         $password = $htpasswd[$user];
         if (md5($password) != $this->_request['hash']) {
             return $this->_validated(false, 'Invalid password provided');

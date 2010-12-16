@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Adapters
  */
 
 /**
@@ -36,7 +37,7 @@
  */
 class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
 {
-    
+
     /**
      * Directory we're iterating
      *
@@ -44,7 +45,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
      * @see __construct()
      */
     protected $_dir;
-    
+
     /**
      * Maximum depth to be visible
      *
@@ -91,7 +92,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
      * @param string Path
      * @return phpRack_Adapters_Files_DirectoryFilterIterator
      */
-    public static function factory($dir) 
+    public static function factory($dir)
     {
         return new self($dir);
     }
@@ -131,14 +132,14 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
         $this->_excludePatterns = $excludePatterns;
         return $this;
     }
-    
+
     /**
      * Set maximum directory depth
      *
      * @param integer Maximum depth
      * @return $this
      */
-    public function setMaxDepth($maxDepth) 
+    public function setMaxDepth($maxDepth)
     {
         $this->_maxDepth = $maxDepth;
         return $this;
@@ -157,7 +158,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
         if (trim($file, '.') == '') {
             return false;
         }
-        
+
         if (!is_null($this->_maxDepth)
             && substr_count(substr($file, strlen($this->_dir) + 1), '/') > $this->_maxDepth
         ) {
@@ -181,5 +182,5 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
         // Everything rest is allowable
         return true;
     }
-    
+
 }

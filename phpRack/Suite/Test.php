@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -46,7 +47,7 @@ abstract class PhpRack_Suite_Test extends phpRack_Test
      * @see setConfig()
      */
     protected $_config = array();
-    
+
     /**
      * Set configuration params
      *
@@ -54,7 +55,7 @@ abstract class PhpRack_Suite_Test extends phpRack_Test
      * @return void
      * @throws Exception
      */
-    public final function setConfig(array $config = array()) 
+    public final function setConfig(array $config = array())
     {
         foreach ($config as $name=>$value) {
             if (!array_key_exists($name, $this->_config)) {

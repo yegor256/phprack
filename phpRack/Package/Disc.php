@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -41,7 +42,7 @@ require_once PHPRACK_PATH . '/Package.php';
  */
 class phpRack_Package_Disc extends phpRack_Package
 {
-    
+
     /**
      * Show directory structure
      *
@@ -49,38 +50,38 @@ class phpRack_Package_Disc extends phpRack_Package
      * @param array List of options
      * @return $this
      */
-    public function showDirectory($dir, array $options = array()) 
+    public function showDirectory($dir, array $options = array())
     {
         require_once PHPRACK_PATH . '/Adapters/File.php';
         $dir = phpRack_Adapters_File::factory($dir)->getFileName();
-        
+
         if (!file_exists($dir)) {
             $this->_failure("Directory '{$dir}' is absent");
             return $this;
         }
-        
+
         $this->_log("Directory tree '" . realpath($dir) . "':");
-        
+
         // Create our file iterator
         require_once PHPRACK_PATH . '/Adapters/Files/DirectoryFilterIterator.php';
         $iterator = phpRack_Adapters_Files_DirectoryFilterIterator::factory($dir);
         if (array_key_exists('exclude', $options)) {
             $iterator->setExclude($options['exclude']);
         }
-        
+
         if (array_key_exists('maxDepth', $options)) {
             $iterator->setMaxDepth($options['maxDepth']);
         }
         $this->_log(
             implode(
-                "\n", 
+                "\n",
                 $this->_convertDirectoriesToLines($iterator, $dir)
             )
         );
-        
+
         return $this;
     }
-    
+
     /**
      * Convert list of files to lines to show
      *
@@ -89,28 +90,28 @@ class phpRack_Package_Disc extends phpRack_Package
      * @return void
      * @see showDirectory()
      */
-    protected function _convertDirectoriesToLines(Iterator $iterator, $dir) 
+    protected function _convertDirectoriesToLines(Iterator $iterator, $dir)
     {
         $lines = array();
         foreach ($iterator as $file) {
             $name = substr($file, strlen($dir) + 1);
-            
+
             $line = str_repeat('  ', substr_count($name, '/')) . $file->getBaseName();
             $attribs = array();
-            
+
             if ($file->isFile()) {
                 $attribs[] = $file->getSize() . ' bytes';
                 $attribs[] = date('d-M-y H:i:s', $file->getMTime());
                 $attribs[] = sprintf('0x%o', $file->getPerms());
             }
-            
+
             if ($file->isLink()) {
                 $attribs[] = "link to '{$file->getRealPath()}']";
             }
-            
+
             $lines[] = $line . ($attribs ? ': ' . implode('; ', $attribs) : false);
         }
         return $lines;
     }
-    
+
 }

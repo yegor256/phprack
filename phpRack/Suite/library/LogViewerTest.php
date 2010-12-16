@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -56,6 +57,6 @@ class phpRack_Suite_LogViewerTest extends phpRack_Suite_Test
     public function testShowLogFile()
     {
         $this->assert->disc->file
-            ->tailf($this->_config['file']); 
+            ->tailf($this->_config['file']);
     }
 }

@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id: Package.php 82 2010-03-16 13:46:41Z yegor256@yahoo.com $
  * @category phpRack
+ * @package Adapters
  */
 
 /**
@@ -34,14 +35,14 @@
  */
 class phpRack_Adapters_File
 {
-    
+
     /**
      * Absolute file name
      *
      * @var string
      */
     protected $_fileName;
-    
+
     /**
      * Constructor
      *
@@ -49,11 +50,11 @@ class phpRack_Adapters_File
      * @return void
      * @see _convertFileName()
      */
-    public function __construct($fileName) 
+    public function __construct($fileName)
     {
         $this->_fileName = $this->_convertFileName($fileName);
     }
-    
+
     /**
      * Create an instance of this class
      *
@@ -61,11 +62,11 @@ class phpRack_Adapters_File
      * @return phpRack_Adapters_File
      * @see _convertFileName()
      */
-    public static function factory($fileName) 
+    public static function factory($fileName)
     {
         return new self($fileName);
     }
-    
+
     /**
      * Returns an absolute file name
      *
@@ -73,11 +74,11 @@ class phpRack_Adapters_File
      * @return string
      * @see _convertFileName()
      */
-    public function getFileName() 
+    public function getFileName()
     {
         return $this->_fileName;
     }
-    
+
     /**
      * Converts file name from any form possible to an absolute path
      *
@@ -91,7 +92,7 @@ class phpRack_Adapters_File
      * // returns 'c:/Windows/System32/my.dll'
      * $file = $this->_convertFileName('c:/Windows/System32/my.dll');
      * </code>
-     * 
+     *
      * If the file not found, it doesn't affect the result of this method. The
      * result always contain an absolute path of the file. This method doesn't
      * do any operations with the file, just re-constructs its name.
@@ -99,7 +100,7 @@ class phpRack_Adapters_File
      * @param string File name, as it is provided (raw form)
      * @return string
      */
-    protected function _convertFileName($fileName) 
+    protected function _convertFileName($fileName)
     {
         switch (true) {
             // relative name started with '/..', or '../', or './'
@@ -110,5 +111,5 @@ class phpRack_Adapters_File
                 return $fileName;
         }
     }
-        
+
 }

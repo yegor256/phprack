@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -39,14 +40,14 @@ require_once PHPRACK_PATH . '/Package.php';
  */
 class phpRack_Package_Simple extends phpRack_Package
 {
-    
+
     /**
      * Just fail the test
      *
      * @param string Message to show
      * @return $this
      */
-    public function fail($msg) 
+    public function fail($msg)
     {
         $this->_failure($msg);
         return $this;
@@ -58,7 +59,7 @@ class phpRack_Package_Simple extends phpRack_Package
      * @param string Message to show
      * @return $this
      */
-    public function success($msg) 
+    public function success($msg)
     {
         $this->_success($msg);
         return $this;
@@ -70,7 +71,7 @@ class phpRack_Package_Simple extends phpRack_Package
      * @param mixed Variable to check
      * @return $this
      */
-    public function isTrue($var) 
+    public function isTrue($var)
     {
         if ($var) {
             $this->_success('Variable is TRUE, success');
@@ -79,14 +80,14 @@ class phpRack_Package_Simple extends phpRack_Package
         }
         return $this;
     }
-        
+
     /**
      * Is it false?
      *
      * @param mixed Variable to check
      * @return $this
      */
-    public function isFalse($var) 
+    public function isFalse($var)
     {
         if (!$var) {
             $this->_success('Variable is FALSE, success');
@@ -95,5 +96,5 @@ class phpRack_Package_Simple extends phpRack_Package
         }
         return $this;
     }
-        
+
 }

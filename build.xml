@@ -119,10 +119,10 @@
     </target>
 
     <target name="test" description="Run all existing unit-tests">
-        <property name="coverage.db" value="${project.basedir}/build/coverage.data" />
+        <property name="coverage.database" value="${project.basedir}/build/coverage.data" />
 
         <!-- create coverage database that will collect all reports -->
-        <coverage-setup database="${coverage.db}">
+        <coverage-setup database="${coverage.database}">
             <fileset dir="${project.basedir}/phpRack">
                 <include name="**/*.php"/>
                 <exclude name=".svn/**"/>
@@ -142,15 +142,21 @@
 			</batchtest>
 		</phpunit>
 
+        <!-- build coverage report -->
+        <mkdir dir="${project.basedir}/build/coverage"/>
+        <coverage-report outfile="${project.basedir}/build/coverage.xml">
+            <report todir="${project.basedir}/build/coverage" />
+        </coverage-report>
+
         <!-- make sure that the code is covered -->
-        <coverage-threshold database="${coverage.db}"
-            perProject="75"
+        <coverage-threshold database="${coverage.database}"
+            perProject="70"
             perClass="0"
             perMethod="0"
         />
 
         <!-- delete coverage database, since it's not necessary any more -->
-        <delete file="${coverage.db}" />
+        <delete file="${coverage.database}" />
     </target>
 
     <target name="package" description="Package the product into TGZ">
@@ -163,7 +169,22 @@
         </tar>
     </target>
 
-    <target name="deploy" description="Deploy stable TGZ by FTP and other files">
+    <target name="doc" description="Generate phpDocumentor files">
+        <phpdoc title="API Documentation"
+            destdir="${project.basedir}/build/apidocs"
+            sourcecode="false"
+            output="HTML:Smarty:PHP">
+            <fileset dir="${project.basedir}/phpRack">
+                <include name="**/*.php" />
+            </fileset>
+            <projdocfileset dir=".">
+                <include name="README.txt" />
+                <include name="LICENSE.txt" />
+            </projdocfileset>
+        </phpdoc>
+    </target>
+
+    <target name="deploy" description="Deploy stable TGZ by FTP and other files" depends="doc">
         <!-- get FTP properties from file -->
         <property file="${project.basedir}/../external.properties" />
 
@@ -194,7 +215,14 @@
 				<include name="LICENSE.txt"/>
 			</fileset>
 		</ftpdeploy>
-      	<delete file="${build.tgz}" />
+
+		<echo message="uploading API..." />
+		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
+			dir="./public/api" clearfirst="true" port="${ftp.port}">
+			<fileset dir="${project.basedir}/build/apidocs">
+				<include name="**/*"/>
+			</fileset>
+		</ftpdeploy>
 	</target>
 
 </project>

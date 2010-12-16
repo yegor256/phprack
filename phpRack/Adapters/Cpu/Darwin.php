@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id: Linux.php 447 2010-04-24 03:59:09Z yegor256@yahoo.com $
  * @category phpRack
+ * @package Adapters
  */
 
 /**
@@ -76,11 +77,11 @@ class phpRack_Adapters_Cpu_Darwin extends phpRack_Adapters_Cpu_Abstract
         }
         $nodes = $xml->xpath('//string[preceding-sibling::key="current_processor_speed"]');
         $node = strval($nodes[0]);
-        
+
         if (strpos($node, 'GHz') === false) {
             throw new Exception("Strange frequency from system_profiler: '{$node}'");
         }
-        
+
         return floatval($node) * 1000;
     }
 }

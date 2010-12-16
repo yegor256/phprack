@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -75,7 +76,7 @@ class phpRack_Runner
      * @see getTests()
      */
     const SUITE_PATTERN = '/(\w+Suite)\.php$/i';
-    
+
     /**
      * List of options, which are changeable
      *
@@ -177,7 +178,7 @@ class phpRack_Runner
      * Get full list of tests, in array
      *
      * This method builds a list of phpRack_Test class instances, collecting
-     * them from integration 1) tests and 2) suites. They both are located in 
+     * them from integration 1) tests and 2) suites. They both are located in
      * the same directory (pre-configured in $phpRackConfig), but differ only
      * in file name suffix. Integration test ends with "...Test.php" and integration
      * suite ends with "...Suite.php".
@@ -344,7 +345,7 @@ class phpRack_Runner
             $mail = phpRack_Adapters_Notifier_Mail::factory($class, $transport);
             $mail->setSubject(
                 'phpRack Suite Failure'
-                . (isset($this->_options['notify']['title']) ? 
+                . (isset($this->_options['notify']['title']) ?
                 ' at ' . $this->_options['notify']['title'] : false)
             );
             $mail->setBody($report);

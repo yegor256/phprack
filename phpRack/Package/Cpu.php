@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -40,5 +41,5 @@ require_once PHPRACK_PATH . '/Package.php';
  */
 class phpRack_Package_Cpu extends phpRack_Package
 {
-    
+
 }

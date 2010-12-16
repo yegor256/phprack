@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -100,5 +101,5 @@ class phpRack_Runner_Logger
         // }
         // return (!$isUtf) ? utf8_encode($str) : $str;
     }
-    
+
 }

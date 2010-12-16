@@ -23,7 +23,7 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
 
     public function testSingleUrl()
     {
-        $this->_qos->latency('http://example.com');
+        $this->_qos->latency('http://phprack.com');
     }
 
     public function testMultiUrl()
@@ -31,8 +31,8 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
         $this->_qos->latency(
             array(
                 'scenario' => array(
-                    'http://www.example.com',
-                    'http://www.example.com/index.html'
+                    'http://www.phprack.com',
+                    'http://www.phprack.com/index.html'
                 ),
                 'averageMs' => 500, // 500ms average per request
                 'peakMs' => 2000, // 2s maximum per request

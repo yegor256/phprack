@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id: Db.php 169 2010-03-23 07:04:08Z yegor256@yahoo.com $
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -58,14 +59,14 @@ class phpRack_Package_Shell extends phpRack_Package
      * @param string Regular exception
      * @return $this
      */
-    public function exec($cmd, $regex = null) 
+    public function exec($cmd, $regex = null)
     {
         /**
          * @see phpRack_Adapters_Shell_Command
          */
         require_once PHPRACK_PATH . '/Adapters/Shell/Command.php';
         $result = phpRack_Adapters_Shell_Command::factory($cmd)->run();
-        
+
         $this->_log('$ ' . $cmd);
         $this->_log($result);
         if (!is_null($regex)) {

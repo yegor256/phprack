@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -54,7 +55,7 @@ require_once PHPRACK_PATH . '/Test.php';
  */
 class phpRack_View
 {
-    
+
     /**
      * Injected variables
      *
@@ -73,14 +74,14 @@ class phpRack_View
      * @return mixed
      * @see $this->_injected
      */
-    public function __get($name) 
+    public function __get($name)
     {
         if (array_key_exists($name, $this->_injected)) {
             return $this->_injected[$name];
         }
         throw new Exception("Property '{$name}' is absent in " . get_class($this));
     }
-    
+
     /**
      * Inject variables into class
      *
@@ -89,7 +90,7 @@ class phpRack_View
      * @return $this
      * @see bootstrap.php
      */
-    public function assign(array $injects) 
+    public function assign(array $injects)
     {
         foreach ($injects as $name=>$value) {
             $this->_injected[$name] = $value;
@@ -108,7 +109,7 @@ class phpRack_View
     {
         // two-step view, with layout
         $this->assign(array('script' => $script));
-        
+
         ob_start();
         // workaround against ZCA static code analysis
         eval("include PHPRACK_PATH . '/layout/layout.phtml';");
@@ -156,7 +157,7 @@ class phpRack_View
             $jsCode
         );
     }
-    
+
     /**
      * Compress HTML content
      *
@@ -230,14 +231,14 @@ class phpRack_View
          */
         return preg_replace('/<!\[CDATA\[\s*(\/\/)?\]\]>/', '//', $dom->saveXml());
     }
-    
+
     /**
      * Return a compressed version of CSS
      *
      * @param string Relative path of CSS script, inside /layout dir
      * @return string CSS content compressed
      */
-    public function compressedCss($css) 
+    public function compressedCss($css)
     {
         $content = file_get_contents(PHPRACK_PATH . '/layout/' . $css);
         $replacers = array(
@@ -253,5 +254,5 @@ class phpRack_View
             $content
         );
     }
-    
+
 }

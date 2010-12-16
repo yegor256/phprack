@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Tests
  */
 
 /**
@@ -48,15 +49,15 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * Buffer used is tail function to read blocks from file end
      */
     const READ_BUFFER_SIZE = 1024;
-    
+
     /**
      * Default number of lines to show
      */
     const LINES_TO_SHOW = 25;
-    
+
     /**
      * Maximum number of bytes we can render, if more we will skip the rest
-     * 
+     *
      * @var int
      */
     protected $_maxBytesToRender = 50000;
@@ -67,7 +68,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
      * @param int Number of bytes that is allowed for rendering
      * @return $this
      */
-    public function setMaxBytesToRender($maxBytesToRender) 
+    public function setMaxBytesToRender($maxBytesToRender)
     {
         $this->_maxBytesToRender = $maxBytesToRender;
         return $this;
@@ -87,7 +88,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         if (!$this->_isFileExists($fileName)) {
             return $this;
         }
-        
+
         // too long/big files should not be returned
         if (filesize($fileName) > $this->_maxBytesToRender) {
             $this->_log(
@@ -124,7 +125,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         if (!$this->_isFileExists($fileName)) {
             return $this;
         }
-        
+
         // Open file and move pointer to end of file
         $fp = fopen($fileName, 'rb');
         fseek($fp, 0, SEEK_END);
@@ -138,7 +139,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
                 'data' => array('fileLastOffset' => $offset)
             )
         );
-        
+
         $content = '';
 
         do {
@@ -159,7 +160,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
 
             // Attach last readed lines at beggining of earlier readed fragments
             $content = $readBuffer . $content;
-            
+
             if (strlen($content) > $this->_maxBytesToRender) {
                 $this->_log(
                     sprintf(
@@ -188,7 +189,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
     {
         $fileName = phpRack_Adapters_File::factory($fileName)->getFileName();
         $test = $this->_result->getTest();
-        
+
         $test->setAjaxOptions(
             array(
                 'reload' => 0.5, //500ms I think is okey for delay between requests, can be lower
@@ -290,7 +291,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
             $this->_failure("Failed to fclose('{$fileName}')");
             return $this;
         }
-        
+
         $this->_log($content);
         return $this;
     }
@@ -370,7 +371,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         }
         return $this;
     }
-    
+
     /**
      * Check that file exists
      *
@@ -414,7 +415,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         } else {
             $age = round($mins/(60*24)) . 'days';
         }
-        
+
         return date('d-M-y H:i:s', $time) . ', ' . $age . ' ago';
     }
 }

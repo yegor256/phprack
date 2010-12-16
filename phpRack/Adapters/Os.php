@@ -25,8 +25,8 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Adapters
  */
-
 
 /**
  * OS adapter used to get information where script is executed
@@ -55,7 +55,7 @@ class phpRack_Adapters_Os
             /* windows */
             case (substr(PHP_OS, 0, 3) === 'WIN'):
                 return self::WINDOWS;
-                
+
             /* Mac OS and Mac OS X */
             case (substr(PHP_OS, 0, 6) === 'Darwin'):
                 return self::DARWIN;
@@ -63,13 +63,13 @@ class phpRack_Adapters_Os
             /* Linux */
             case (substr(PHP_OS, 0, 5) === 'Linux'):
                 return self::LINUX;
-                
+
             /* all other systems */
             default:
                 throw new Exception('Unknown operating system');
         }
     }
-    
+
     /**
      * Is it *NIX system?
      *
@@ -78,7 +78,7 @@ class phpRack_Adapters_Os
      *
      * @return boolean
      */
-    public static function isUnix() 
+    public static function isUnix()
     {
         return (self::get() != self::WINDOWS);
     }

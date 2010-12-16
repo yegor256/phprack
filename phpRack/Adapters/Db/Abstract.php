@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,7 @@
  * @copyright Copyright (c) phpRack.com
  * @version $Id$
  * @category phpRack
+ * @package Adapters
  */
 
 /**
@@ -35,7 +36,7 @@
  */
 abstract class phpRack_Adapters_Db_Abstract
 {
-    
+
     /**
      * Connect to the server
      *
@@ -45,7 +46,7 @@ abstract class phpRack_Adapters_Db_Abstract
      * @throws Exception If something wrong happens there
      */
     abstract public function connect($url);
-    
+
     /**
      * Execute SQL query on the server
      *
@@ -68,7 +69,7 @@ abstract class phpRack_Adapters_Db_Abstract
      * </code>
      *
      * Mandatory parts of the URL are: "adapter", "host". All other params are
-     * optional and could be omitted. 
+     * optional and could be omitted.
      *
      * @param string JDBC URL to parse
      * @throws Exception If JDBC URL have wrong format
