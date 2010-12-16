@@ -223,6 +223,14 @@
 				<include name="**/*"/>
 			</fileset>
 		</ftpdeploy>
+
+		<echo message="uploading coverage map..." />
+		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
+			dir="./public/coverage" clearfirst="true" port="${ftp.port}">
+			<fileset dir="${project.basedir}/build/coverage">
+				<include name="**/*"/>
+			</fileset>
+		</ftpdeploy>
 	</target>
 
 </project>
