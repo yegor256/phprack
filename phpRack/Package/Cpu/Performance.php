@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -35,9 +36,6 @@ require_once PHPRACK_PATH . '/Package.php';
 
 /**
  * CPU Performance check
- *
- * @category phpRack
- * @package Tests
  */
 class phpRack_Package_Cpu_Performance extends phpRack_Package
 {

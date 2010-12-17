@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage core
  */
 
 /**
@@ -50,7 +51,6 @@ require_once PHPRACK_PATH . '/Test.php';
  * In this example, you can access "name" inside "index.phtml" like this:
  * $this->name.
  *
- * @package Tests
  * @see bootstrap.php
  */
 class phpRack_View

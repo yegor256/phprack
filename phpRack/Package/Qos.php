@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -35,8 +36,6 @@ require_once PHPRACK_PATH . '/Package.php';
 
 /**
  * QOS related assertions
- *
- * @package Tests
  */
 class phpRack_Package_Qos extends phpRack_Package
 {

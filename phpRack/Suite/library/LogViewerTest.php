@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage suites
  */
 
 /**
@@ -35,8 +36,6 @@ require_once PHPRACK_PATH . '/Suite/Test.php';
 
 /**
  * View log file
- *
- * @package Tests
  */
 class phpRack_Suite_LogViewerTest extends phpRack_Suite_Test
 {

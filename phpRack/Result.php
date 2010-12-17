@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage core
  */
 
 /**
@@ -36,8 +37,7 @@ require_once PHPRACK_PATH . '/Test.php';
 /**
  * Result of a test execution
  *
- * @package Tests
- * @see phpRack_Assertion::__construct()
+ * @see phpRack_Assertion#__construct()
  */
 class phpRack_Result
 {

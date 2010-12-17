@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage core
  */
 
 /**
@@ -46,9 +47,7 @@ require_once PHPRACK_PATH . '/Test.php';
 /**
  * One single test assertion
  *
- * @package Tests
  * @see phpRack_Test::__get()
- *
  * @property-read phpRack_Package_Cpu $cpu CPU related assertions
  * @property-read phpRack_Package_Db $db DB related assertions
  * @property-read phpRack_Package_Disc $disc Local HDD related assertions

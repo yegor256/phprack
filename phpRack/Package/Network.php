@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -36,7 +37,6 @@ require_once PHPRACK_PATH . '/Package.php';
 /**
  * Network-related assertions
  *
- * @package Tests
  * @property-read phpRack_Package_Network_Ports $ports Ports on the server
  * @property-read phpRack_Package_Network_Url $url Network check using Url
  */

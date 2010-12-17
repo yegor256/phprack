@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -40,8 +41,6 @@ require_once PHPRACK_PATH . '/Adapters/Pear.php';
 
 /**
  * PEAR package used for checking PEAR packages availability
- *
- * @package Tests
  */
 class phpRack_Package_Php_Pear extends phpRack_Package
 {

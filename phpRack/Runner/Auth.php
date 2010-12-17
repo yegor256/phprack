@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage core
  */
 
 /**
@@ -34,9 +35,7 @@
 require_once PHPRACK_PATH . '/Runner.php';
 
 /**
- * Runner authentication adapter
- *
- * @package Tests
+ * Runner authentication adapter.
  */
 class phpRack_Runner_Auth
 {

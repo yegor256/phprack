@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage core
  */
 
 /**
@@ -53,7 +54,6 @@ require_once PHPRACK_PATH . '/Suite.php';
  * This code will give you a plain-text report of all tests in your collection,
  * executed and logged.
  *
- * @package Tests
  * @see bootstrap.php
  */
 class phpRack_Runner

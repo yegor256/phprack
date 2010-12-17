@@ -26,6 +26,7 @@
  * @version $Id: Extensions.php 25 2010-02-20 09:30:13Z yegor256@yahoo.com $
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -35,8 +36,6 @@ require_once PHPRACK_PATH . '/Package.php';
 
 /**
  * fileinfo to validate
- *
- * @package Tests
  */
 class phpRack_Package_Php_Extensions_Fileinfo extends phpRack_Package
 {

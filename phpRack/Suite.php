@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage core
  */
 
 /**
@@ -35,8 +36,6 @@
  * holder. When we {@link _addSuite()}, this class files all tests in this suite
  * directory and add them all to itself. Also, library contains individual
  * tests, which can be added to the suite by means of {@link _addTest()}.
- *
- * @package Tests
  */
 abstract class PhpRack_Suite
 {

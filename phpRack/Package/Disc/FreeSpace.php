@@ -3,7 +3,7 @@
  * phpRack: Integration Testing Framework
  *
  * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available 
+ * with this package in the file LICENSE.txt. It is also available
  * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -35,8 +36,6 @@ require_once PHPRACK_PATH . '/Package.php';
 
 /**
  * Free space on HDD
- *
- * @package Tests
  */
 class phpRack_Package_Disc_FreeSpace extends phpRack_Package
 {
@@ -47,7 +46,7 @@ class phpRack_Package_Disc_FreeSpace extends phpRack_Package
      * @param integer Mega-bytes to check
      * @return $this
      */
-    public function atLeast($mb) 
+    public function atLeast($mb)
     {
         $free = disk_free_space(dirname(__FILE__)) / (1024 * 1024);
         if ($free >= $mb) {
@@ -55,8 +54,8 @@ class phpRack_Package_Disc_FreeSpace extends phpRack_Package
         } else {
             $this->_failure(sprintf("We have just %0.2fMb free space, while {$mb}Mb required", $free));
         }
-            
+
         return $this;
     }
-        
+
 }

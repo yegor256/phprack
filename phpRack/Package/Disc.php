@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -36,7 +37,6 @@ require_once PHPRACK_PATH . '/Package.php';
 /**
  * Local HDD related assertions
  *
- * @package Tests
  * @property-read phpRack_Package_Disc_File $file File informations and content
  * @property-read phpRack_Package_Disc_FreeSpace $freeSpace Free space on HDD
  */

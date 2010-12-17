@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage suites
  */
 
 /**
@@ -35,8 +36,6 @@ require_once PHPRACK_PATH . '/Suite/Test.php';
 
 /**
  * List of processes running on the server
- *
- * @package Tests
  */
 class phpRack_Suite_ServerHealth_ProcessesTest extends phpRack_Suite_Test
 {

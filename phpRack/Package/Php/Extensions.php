@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -35,8 +36,6 @@ require_once PHPRACK_PATH . '/Package.php';
 
 /**
  * PHP extensions related assertions
- *
- * @package Tests
  *
  * @property-read phpRack_Package_Php_Extensions_Fileinfo $fileinfo fileinfo to validate
  */

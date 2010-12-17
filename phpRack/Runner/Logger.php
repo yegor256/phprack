@@ -26,12 +26,12 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage core
  */
 
 /**
  * Runner logger
  *
- * @package Tests
  * @see phpRack_Runner::run()
  */
 class phpRack_Runner_Logger

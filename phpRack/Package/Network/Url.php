@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -40,8 +41,6 @@ require_once PHPRACK_PATH . '/Adapters/Url.php';
 
 /**
  * Network check using Url
- *
- * @package Tests
  */
 class phpRack_Package_Network_Url extends phpRack_Package
 {

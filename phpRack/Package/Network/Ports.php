@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -40,8 +41,6 @@ require_once PHPRACK_PATH . '/Adapters/Url.php';
 
 /**
  * Ports on the server
- *
- * @package Tests
  */
 class phpRack_Package_Network_Ports extends phpRack_Package
 {

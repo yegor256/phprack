@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -40,8 +41,6 @@ require_once PHPRACK_PATH . '/Adapters/Db/Mysql.php';
 
 /**
  * MySQL related assertions
- *
- * @package Tests
  */
 class phpRack_Package_Db_Mysql extends phpRack_Package
 {

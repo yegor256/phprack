@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage core
  */
 
 /**
@@ -55,8 +56,7 @@ require_once PHPRACK_PATH . '/Test.php';
  * In this example package {@link phpRack_Package_Php_Version} will be instantiated
  * and returned. Later, method atLeast() will be called in this package.
  *
- * @package Tests
- * @see phpRack_Assertion::__call()
+ * @see phpRack_Assertion#__call()
  */
 class phpRack_Package
 {

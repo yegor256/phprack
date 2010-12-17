@@ -26,13 +26,13 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage core
  */
 
 /**
  * Result of authentication before running tests
  *
- * @package Tests
- * @see phpRack_Runner_Auth::_validated()
+ * @see phpRack_Runner_Auth#_validated()
  */
 class phpRack_Runner_Auth_Result
 {

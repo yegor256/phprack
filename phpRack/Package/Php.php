@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -35,8 +36,6 @@ require_once PHPRACK_PATH . '/Package.php';
 
 /**
  * PHP related assertions
- *
- * @package Tests
  *
  * @property-read phpRack_Package_Php_Extensions $extensions PHP extensions related assertions
  * @property-read phpRack_Package_Php_Pear $pear PEAR package used for checking PEAR packages availability

@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -40,8 +41,6 @@ require_once PHPRACK_PATH . '/Adapters/File.php';
 
 /**
  * File informations and content
- *
- * @package Tests
  */
 class phpRack_Package_Disc_File extends phpRack_Package
 {

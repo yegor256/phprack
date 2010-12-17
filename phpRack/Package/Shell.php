@@ -26,6 +26,7 @@
  * @version $Id: Db.php 169 2010-03-23 07:04:08Z yegor256@yahoo.com $
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -35,8 +36,6 @@ require_once PHPRACK_PATH . '/Package.php';
 
 /**
  * Assertions related to SHELL
- *
- * @package Tests
  */
 class phpRack_Package_Shell extends phpRack_Package
 {

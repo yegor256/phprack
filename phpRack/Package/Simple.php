@@ -26,6 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
+ * @subpackage packages
  */
 
 /**
@@ -35,8 +36,6 @@ require_once PHPRACK_PATH . '/Package.php';
 
 /**
  * Simple package, for simple assertions
- *
- * @package Tests
  */
 class phpRack_Package_Simple extends phpRack_Package
 {
