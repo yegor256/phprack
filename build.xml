@@ -57,6 +57,7 @@
                 <include name="**/*.html"/>
                 <include name="**/*.phtml"/>
                 <exclude name=".svn/**"/>
+                <exclude name="build/**"/>
             </fileset>
         </phplint>
     </target>
@@ -65,6 +66,7 @@
         <jsllint haltonfailure="true">
             <fileset dir="${project.basedir}">
                 <include name="**/index.js"/>
+                <exclude name="build/**"/>
             </fileset>
         </jsllint>
     </target>
@@ -74,7 +76,7 @@
             -n
             --report=full
             --standard=Zend
-            --ignore='.svn/*'
+            --ignore='.svn/*;build/**'
             --extensions='php,phtml'
             ${project.basedir}"
             escape="false"
@@ -101,6 +103,7 @@
                 <include name="**/*.php" />
                 <include name="**/*.phtml" />
                 <exclude name=".svn/**" />
+                <exclude name="build/**"/>
             </fileset>
         </zendcodeanalyzer>
     </target>
@@ -126,6 +129,7 @@
             <fileset dir="${project.basedir}/phpRack">
                 <include name="**/*.php"/>
                 <exclude name=".svn/**"/>
+                <exclude name="build/**"/>
             </fileset>
         </coverage-setup>
 
@@ -138,6 +142,7 @@
 					<exclude name="**/_*.php"/>
 					<exclude name=".svn/**"/>
 					<exclude name="**/integration-tests/**"/>
+                    <exclude name="build/**"/>
 				</fileset>
 			</batchtest>
 		</phpunit>
@@ -165,6 +170,7 @@
                 <include name="phpRack/**" />
                 <include name="LICENSE.txt" />
                 <exclude name=".svn/**" />
+                <exclude name="build/**"/>
             </fileset>
         </tar>
     </target>
