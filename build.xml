@@ -50,6 +50,11 @@
     <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca, jscoverage" >
     </target>
 
+    <!-- get revision number -->
+    <svnlastrevision
+        workingcopy="${project.basedir}"
+        propertyname="svn.lastrevision"/>
+
     <target name="lint" description="Run syntax check for all classes" >
         <phplint haltonfailure="yes" level="verbose">
             <fileset dir="${project.basedir}">
@@ -178,7 +183,7 @@
     <target name="doc" description="Generate phpDocumentor files">
         <php expression="define('PHPRACK_PATH', '${project.basedir}/phpRack');"/>
         <php expression="set_error_handler(create_function('', 'return true;'));"/>
-        <phpdoc title="API Documentation"
+        <phpdoc title="API Documentation, rev.${svn.lastrevision}"
             destdir="${project.basedir}/build/apidocs"
             sourcecode="false" quiet="true"
             output="HTML:frames:default">
