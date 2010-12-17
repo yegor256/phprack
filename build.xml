@@ -81,7 +81,7 @@
             -n
             --report=full
             --standard=Zend
-            --ignore='.svn/*;build/**'
+            --ignore='.svn/*,build/**'
             --extensions='php,phtml'
             ${project.basedir}"
             escape="false"
