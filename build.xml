@@ -174,7 +174,7 @@
         <phpdoc title="API Documentation"
             destdir="${project.basedir}/build/apidocs"
             sourcecode="false" quiet="true"
-            output="HTML:Smarty:PHP">
+            output="HTML:frames:default">
             <fileset dir="${project.basedir}/phpRack">
                 <include name="**/*.php" />
             </fileset>
