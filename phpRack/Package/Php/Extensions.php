@@ -38,6 +38,8 @@ require_once PHPRACK_PATH . '/Package.php';
  * PHP extensions related assertions
  *
  * @property-read phpRack_Package_Php_Extensions_Fileinfo $fileinfo fileinfo to validate
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Php_Extensions extends phpRack_Package
 {

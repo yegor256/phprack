@@ -52,6 +52,8 @@ require_once PHPRACK_PATH . '/Test.php';
  * $this->name.
  *
  * @see bootstrap.php
+ * @package Tests
+ * @subpackage core
  */
 class phpRack_View
 {

@@ -57,6 +57,8 @@ require_once PHPRACK_PATH . '/Test.php';
  * and returned. Later, method atLeast() will be called in this package.
  *
  * @see phpRack_Assertion#__call()
+ * @package Tests
+ * @subpackage core
  */
 class phpRack_Package
 {

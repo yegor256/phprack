@@ -35,7 +35,10 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * CPU Performance check
+ * CPU Performance check.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Cpu_Performance extends phpRack_Package
 {

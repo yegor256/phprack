@@ -38,6 +38,8 @@ require_once PHPRACK_PATH . '/Test.php';
  * Result of a test execution
  *
  * @see phpRack_Assertion#__construct()
+ * @package Tests
+ * @subpackage core
  */
 class phpRack_Result
 {

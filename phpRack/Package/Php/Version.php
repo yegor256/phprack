@@ -35,7 +35,10 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * PHP-version related assertions
+ * PHP-version related assertions.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Php_Version extends phpRack_Package
 {

@@ -40,7 +40,10 @@ require_once PHPRACK_PATH . '/Package.php';
 require_once PHPRACK_PATH . '/Adapters/Url.php';
 
 /**
- * Network check using Url
+ * Network check using Url.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Network_Url extends phpRack_Package
 {

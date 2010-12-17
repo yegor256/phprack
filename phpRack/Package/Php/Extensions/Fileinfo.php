@@ -35,7 +35,10 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * fileinfo to validate
+ * fileinfo to validate.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Php_Extensions_Fileinfo extends phpRack_Package
 {

@@ -177,6 +177,7 @@
 
     <target name="doc" description="Generate phpDocumentor files">
         <php expression="define('PHPRACK_PATH', '${project.basedir}/phpRack');"/>
+        <php expression="set_error_handler(create_function('', 'return true;'));"/>
         <phpdoc title="API Documentation"
             destdir="${project.basedir}/build/apidocs"
             sourcecode="false" quiet="true"

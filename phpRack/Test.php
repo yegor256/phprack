@@ -43,6 +43,8 @@ require_once PHPRACK_PATH . '/Assertion.php';
  * Parent class of all integration tests
  *
  * @property-read phpRack_Assertion $assert One single test assertion
+ * @package Tests
+ * @subpackage core
  */
 abstract class phpRack_Test
 {

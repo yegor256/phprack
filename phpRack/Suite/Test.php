@@ -26,7 +26,7 @@
  * @version $Id$
  * @category phpRack
  * @package Tests
- * @subpackage core
+ * @subpackage suites
  */
 
 /**
@@ -36,6 +36,9 @@ require_once PHPRACK_PATH . '/Test.php';
 
 /**
  * Parent class of all tests in suite library.
+ *
+ * @package Tests
+ * @subpackage suites
  */
 abstract class PhpRack_Suite_Test extends phpRack_Test
 {

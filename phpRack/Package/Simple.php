@@ -35,7 +35,10 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * Simple package, for simple assertions
+ * Simple package, for simple assertions.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Simple extends phpRack_Package
 {

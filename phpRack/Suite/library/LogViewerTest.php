@@ -35,7 +35,10 @@
 require_once PHPRACK_PATH . '/Suite/Test.php';
 
 /**
- * View log file
+ * View log file.
+ *
+ * @package Tests
+ * @subpackage suites
  */
 class phpRack_Suite_LogViewerTest extends phpRack_Suite_Test
 {

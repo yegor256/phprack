@@ -33,6 +33,8 @@
  * Result of authentication before running tests
  *
  * @see phpRack_Runner_Auth#_validated()
+ * @package Tests
+ * @subpackage core
  */
 class phpRack_Runner_Auth_Result
 {

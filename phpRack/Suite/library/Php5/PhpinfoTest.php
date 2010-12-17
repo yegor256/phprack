@@ -35,7 +35,10 @@
 require_once PHPRACK_PATH . '/Suite/Test.php';
 
 /**
- * View phpinfo()
+ * View phpinfo().
+ *
+ * @package Tests
+ * @subpackage suites
  */
 class phpRack_Suite_Php5_PhpinfoTest extends phpRack_Suite_Test
 {

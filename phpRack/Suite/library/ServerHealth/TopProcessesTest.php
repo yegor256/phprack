@@ -35,7 +35,10 @@
 require_once PHPRACK_PATH . '/Suite/Test.php';
 
 /**
- * List of processes running on the server
+ * List of processes running on the server.
+ *
+ * @package Tests
+ * @subpackage suites
  */
 class phpRack_Suite_ServerHealth_ProcessesTest extends phpRack_Suite_Test
 {

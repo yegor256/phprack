@@ -35,7 +35,10 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * Free space on HDD
+ * Free space on HDD.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Disc_FreeSpace extends phpRack_Package
 {

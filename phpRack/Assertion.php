@@ -56,6 +56,8 @@ require_once PHPRACK_PATH . '/Test.php';
  * @property-read phpRack_Package_Qos $qos QOS related assertions
  * @property-read phpRack_Package_Shell $shell Assertions related to SHELL
  * @property-read phpRack_Package_Simple $simple Simple package, for simple assertions
+ * @package Tests
+ * @subpackage core
  */
 class phpRack_Assertion
 {

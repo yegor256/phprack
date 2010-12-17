@@ -40,7 +40,10 @@ require_once PHPRACK_PATH . '/Package.php';
 require_once PHPRACK_PATH . '/Adapters/Url.php';
 
 /**
- * Ports on the server
+ * Ports on the server.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Network_Ports extends phpRack_Package
 {

@@ -40,7 +40,10 @@ require_once PHPRACK_PATH . '/Package.php';
 require_once PHPRACK_PATH . '/Adapters/Pear.php';
 
 /**
- * PEAR package used for checking PEAR packages availability
+ * PEAR package used for checking PEAR packages availability.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Php_Pear extends phpRack_Package
 {

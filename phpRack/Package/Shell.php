@@ -35,7 +35,10 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * Assertions related to SHELL
+ * Assertions related to SHELL.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Shell extends phpRack_Package
 {

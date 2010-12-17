@@ -40,7 +40,10 @@ require_once PHPRACK_PATH . '/Package.php';
 require_once PHPRACK_PATH . '/Adapters/File.php';
 
 /**
- * File informations and content
+ * File informations and content.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Disc_File extends phpRack_Package
 {

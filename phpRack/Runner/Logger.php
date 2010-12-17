@@ -32,7 +32,9 @@
 /**
  * Runner logger
  *
- * @see phpRack_Runner::run()
+ * @see phpRack_Runner#run()
+ * @package Tests
+ * @subpackage core
  */
 class phpRack_Runner_Logger
 {

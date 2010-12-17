@@ -55,6 +55,8 @@ require_once PHPRACK_PATH . '/Suite.php';
  * executed and logged.
  *
  * @see bootstrap.php
+ * @package Tests
+ * @subpackage core
  */
 class phpRack_Runner
 {

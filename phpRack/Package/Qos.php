@@ -35,7 +35,10 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
- * QOS related assertions
+ * QOS related assertions.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Qos extends phpRack_Package
 {

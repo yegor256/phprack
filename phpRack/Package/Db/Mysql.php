@@ -40,7 +40,10 @@ require_once PHPRACK_PATH . '/Package.php';
 require_once PHPRACK_PATH . '/Adapters/Db/Mysql.php';
 
 /**
- * MySQL related assertions
+ * MySQL related assertions.
+ *
+ * @package Tests
+ * @subpackage packages
  */
 class phpRack_Package_Db_Mysql extends phpRack_Package
 {
