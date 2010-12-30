@@ -131,6 +131,7 @@
     </target>
 
     <target name="test" description="Run all existing unit-tests">
+        <mkdir dir="${project.basedir}/build"/>
         <property name="coverage.database" value="${project.basedir}/build/coverage.data" />
 
         <!-- create coverage database that will collect all reports -->
@@ -205,6 +206,7 @@
         <!-- get FTP properties from file -->
         <property file="${project.basedir}/../../closures/external.properties" />
 
+        <mkdir dir="${project.basedir}/build/ftp-upload"/>
         <copy todir="${project.basedir}/build/ftp-upload">
 		    <filterchain>
                 <stripwhitespace />
