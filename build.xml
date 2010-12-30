@@ -55,6 +55,10 @@
         workingcopy="${project.basedir}"
         propertyname="svn.lastrevision"/>
 
+    <target name="clean" description="Remove all build-related files" >
+        <delete dir="${project.basedir}/build"/>
+    </target>
+
     <target name="lint" description="Run syntax check for all classes" >
         <phplint haltonfailure="yes" level="verbose">
             <fileset dir="${project.basedir}">
