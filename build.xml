@@ -204,6 +204,9 @@
 		<echo message="uploading PHP code to the server..." />
 		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
 		    clearfirst="true" port="${ftp.port}">
+		    <filterchain>
+                <stripwhitespace />
+            </filterchain>
 			<fileset dir="${project.basedir}">
 				<include name="phpRack/**"/>
 				<exclude name=".svn/**" />
