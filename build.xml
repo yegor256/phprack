@@ -197,13 +197,11 @@
         </phpdoc>
     </target>
 
-    <target name="deploy" description="Deploy stable TGZ by FTP and other files" depends="doc">
+    <target name="deploy" description="Deploy stable TGZ by FTP and other files" depends="doc, test">
         <!-- get FTP properties from file -->
         <property file="${project.basedir}/../../closures/external.properties" />
 
-		<echo message="uploading PHP code to the server..." />
-		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
-		    clearfirst="true" port="${ftp.port}">
+        <copy todir="${project.basedir}/build/ftp-upload">
 		    <filterchain>
                 <stripwhitespace />
             </filterchain>
@@ -215,11 +213,8 @@
 				<include name="integration-tests/**"/>
 				<exclude name=".svn/**" />
 			</fileset>
-		</ftpdeploy>
-
-		<echo message="uploading public files to the server..." />
-		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
-			dir="./public" clearfirst="true" port="${ftp.port}">
+        </copy>
+        <copy todir="${project.basedir}/build/ftp-upload/public">
 			<fileset dir="${project.basedir}/phprack.com">
 				<include name="**/*"/>
 				<exclude name=".svn/**" />
@@ -230,22 +225,22 @@
 			<fileset dir="${project.basedir}/">
 				<include name="LICENSE.txt"/>
 			</fileset>
-		</ftpdeploy>
+		</copy>
+        <copy todir="${project.basedir}/build/ftp-upload/public/api">
+    		<fileset dir="${project.basedir}/build/apidocs">
+    			<include name="**/*"/>
+    		</fileset>
+		</copy>
+        <copy todir="${project.basedir}/build/ftp-upload/public/coverage">
+    		<fileset dir="${project.basedir}/build/coverage">
+    			<include name="**/*"/>
+    		</fileset>
+		</copy>
 
-		<echo message="uploading API..." />
+		<echo message="uploading PHP code to the server..." />
 		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
-			dir="./public/api" clearfirst="true" port="${ftp.port}">
-			<fileset dir="${project.basedir}/build/apidocs">
-				<include name="**/*"/>
-			</fileset>
-		</ftpdeploy>
-
-		<echo message="uploading coverage map..." />
-		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
-			dir="./public/coverage" clearfirst="true" port="${ftp.port}">
-			<fileset dir="${project.basedir}/build/coverage">
-				<include name="**/*"/>
-			</fileset>
+		    clearfirst="true" port="${ftp.port}">
+			<fileset dir="${project.basedir}/build/ftp-upload" />
 		</ftpdeploy>
 	</target>
 
