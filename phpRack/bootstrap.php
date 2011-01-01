@@ -175,9 +175,11 @@ try {
     throw new Exception($runner->run($fileName, $token, $options));
 
 } catch (Exception $e) {
-    printf(
-        '%s: %s',
-        get_class($e),
-        $e->getMessage()
-    );
+    /**
+     * Here we render the content prepared above. It's not
+     * an exception actually, but a content prepared. Such
+     * design is not perfect and needs refactoring sooner or
+     * later...
+     */
+    echo $e->getMessage();
 }
