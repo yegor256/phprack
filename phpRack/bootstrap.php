@@ -175,6 +175,9 @@ try {
     throw new Exception($runner->run($fileName, $token, $options));
 
 } catch (Exception $e) {
-    $content = $e->getMessage();
-    echo $content;
+    printf(
+        '%s: %s',
+        get_class($e),
+        $e->getMessage()
+    );
 }
