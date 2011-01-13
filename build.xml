@@ -47,7 +47,7 @@
     <property name="package.name" value="phpRack-stable" />
     <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz" />
 
-    <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca, jscoverage" >
+    <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca, jscoverage, doc" >
     </target>
 
     <!-- get revision number -->
@@ -202,7 +202,7 @@
         </phpdoc>
     </target>
 
-    <target name="deploy" description="Deploy stable TGZ by FTP and other files" depends="doc, test">
+    <target name="deploy" description="Deploy stable TGZ by FTP and other files">
         <!-- get FTP properties from file -->
         <property file="${project.basedir}/../../closures/external.properties" />
 
