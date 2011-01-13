@@ -27,10 +27,26 @@ class Adapters_Auth_FileTest extends AbstractTest
 
     protected function setUp()
     {
-        $this->_config['htpasswd'] = dirname(__FILE__) . '/_files/_htpasswd';
-        
+        $this->_config['htpasswd'] = @tempnam(sys_get_temp_dir(), 'prk');
+        if ($this->_config['htpasswd'] === false) {
+            $this->markTestSkipped("System can't create temp file");
+        }
+
+        // making temp file and writing data into it
+        $handle = @fopen($this->_config['htpasswd'], "w+");
+        if ($handle === false) {
+            $this->markTestSkipped("System can't open temp file");
+        }
+        fwrite($handle, "test:phprack");
+        fclose($handle);
+
         $this->_auth = new phpRack_Adapters_Auth_File();
         $this->_auth->setOptions($this->_config);
+    }
+
+    protected function tearDown()
+    {
+        @unlink($this->_config['htpasswd']);
     }
 
     public function testValidAuthFile()
