@@ -279,7 +279,21 @@ class phpRack_Runner
         if (!$this->getAuth()->isAuthenticated()) {
             throw new Exception("Authentication failed, please login first");
         }
-        $test = phpRack_Test::factory($fileName, $this);
+        // if this is one of our built-in tests
+        if (!empty($options['suiteTest'])) {
+            /**
+             * @see phpRack_Suite
+             */
+            require_once PHPRACK_PATH . '/Suite/Test.php';
+            $test = phpRack_Suite_Test::factory($fileName, $this);
+            if (isset($options['config'])) {
+                $test->setConfig($options['config']);
+            }
+        } else {
+            $test = phpRack_Test::factory($fileName, $this);
+        }
+        unset($options['config']);
+        unset($options['suiteTest']);
         $test->setAjaxOptions($options);
 
         $result = $test->run();
