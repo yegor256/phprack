@@ -54,4 +54,23 @@ class Adapters_Auth_ArrayTest extends AbstractTest
             $this->_auth->setRequest($request)->authenticate()->isValid()
         );
     }
+
+    public function testNotValidOnlyLoginAuthArray()
+    {
+        $request = array('login' => current(array_keys($this->_config['htpasswd']))
+        );
+        $this->assertFalse(
+            $this->_auth->setRequest($request)->authenticate()->isValid()
+        );
+    }
+
+    public function testNotValidOnlyPwdAuthArray()
+    {
+        $request = array(
+            'hash' => md5(current(array_values($this->_config['htpasswd'])))
+        );
+        $this->assertFalse(
+            $this->_auth->setRequest($request)->authenticate()->isValid()
+        );
+    }
 }
