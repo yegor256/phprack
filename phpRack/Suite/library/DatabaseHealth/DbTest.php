@@ -28,31 +28,36 @@
  */
 
 /**
- * User custom suite
+ * @see phpRack_Suite_Test
+ */
+require_once PHPRACK_PATH . '/Suite/Test.php';
+
+/**
+ * Check database status
  *
  * @package Tests
  */
-
-class MySuite extends phpRack_Suite
+class phpRack_Suite_DatabaseHealth_DbTest extends phpRack_Suite_Test
 {
     /**
-     * Set custom suites and tests
+     * Configuration options
+     *
+     * @var array
+     * @see setConfig()
      */
-    protected function _init()
+    protected $_config = array(
+        'url' => null
+    );
+
+    /**
+     * Check db status
+     *
+     * @todo #48: Should be implemented (need add jdbc parameter support in
+     * db package)
+     * @return void
+     */
+    public function testDb()
     {
-        $this->_addSuite('ServerHealth');
-        $this->_addSuite(
-            'DatabaseHealth',
-            array(
-                'url' => 'jdbc:mysql://localhost:3306/test?username=test&password=test'
-            )
-        );
-        $this->_addSuite('Php5');
-        $this->_addTest(
-            'LogViewer',
-            array(
-                'file' => 'my.log',
-            )
-        );
+        $this->_log('Passed jdbc url: ' . $this->_config['url']);
     }
 }
