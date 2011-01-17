@@ -32,6 +32,7 @@
  * CPU adapter used to get details about available processor
  *
  * @package Adapters
+ * @subpackage Cpu
  */
 class phpRack_Adapters_Cpu
 {
