@@ -32,6 +32,7 @@
  * Abstract class for the phpRack_Adapters_Notifier_Mail_*
  *
  * @package Adapters
+ * @subpackage Notifiers
  */
 abstract class phpRack_Adapters_Notifier_Mail_Abstract
 {

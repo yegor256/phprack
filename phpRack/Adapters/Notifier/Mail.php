@@ -32,6 +32,7 @@
  * Mail adapter used for mailing phpRack reports
  *
  * @package Adapters
+ * @subpackage Notifiers
  */
 class phpRack_Adapters_Notifier_Mail
 {

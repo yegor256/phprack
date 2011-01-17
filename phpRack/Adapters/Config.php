@@ -46,6 +46,7 @@
  * </code>
  *
  * @package Adapters
+ * @subpackage Configs
  */
 class phpRack_Adapters_Config
 {

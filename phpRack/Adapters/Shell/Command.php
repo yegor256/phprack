@@ -37,6 +37,7 @@ require_once PHPRACK_PATH . '/Adapters/ConnectionMonitor.php';
  * Shell command adapter used to execute external commands and programs
  *
  * @package Adapters
+ * @subpackage Shell
  * @author netcoderpl@gmail.com
  */
 class phpRack_Adapters_Shell_Command

@@ -38,6 +38,7 @@ require_once PHPRACK_PATH . '/Adapters/Notifier/Mail/Abstract.php';
  *
  * @see phpRack_Notifier_Mail_Abstract
  * @package Adapters
+ * @subpackage Notifiers
  */
 class phpRack_Adapters_Notifier_Mail_Smtp
     extends phpRack_Adapters_Notifier_Mail_Abstract
