@@ -21,7 +21,7 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
      * @var Adapters_Notifier_Mail_Sendmail
      */
     protected $_adapter;
-    
+
     protected function setUp()
     {
         parent::setUp();
@@ -57,7 +57,7 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
 
     public function testSend()
     {
-        $this->_adapter->setTo('test1@phprack.com');
+        $this->_adapter->setTo('test@phprack.com');
         $this->_adapter->setBody('This is test');
         $this->assertTrue($this->_adapter->send());
     }

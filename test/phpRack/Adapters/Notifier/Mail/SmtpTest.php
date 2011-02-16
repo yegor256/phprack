@@ -30,7 +30,7 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
     public function testPublicFunctionsProvider()
     {
         return array(
-            array('setTo', 'test1@phprack.com'),
+            array('setTo', 'test@phprack.com'),
             array('setBody', 'hello, World!'),
             array('setSubject', 'hello, Earth!'),
         );
@@ -51,7 +51,7 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
             'password' => 'yourpwd',
         );
         $adapter = new phpRack_Adapters_Notifier_Mail_Smtp($a);
-        $adapter->setTo('test1@phprack.com');
+        $adapter->setTo('test@phprack.com');
         $adapter->setBody('Passed');
         $adapter->setSubject('Unit Test');
 
