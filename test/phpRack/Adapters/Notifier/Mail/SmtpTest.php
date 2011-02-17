@@ -82,7 +82,7 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
     public function testSendWithoutBodyException()
     {
         $adapter = new phpRack_Adapters_Notifier_Mail_Smtp();
-        $adapter->setTo('test1@phprack.com');
+        $adapter->setTo('test@phprack.com');
         $adapter->send();
     }
 }
