@@ -108,13 +108,11 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
         if (!is_array($extensions)) {
             $extensions = explode(',', $extensions);
         }
-
         // Escape extension special chars to have always valid regular expression
         foreach ($extensions as &$extension) {
-            preg_quote(trim($extension));
+            $extension = preg_quote(trim($extension));
         }
-
-        $this->_extensionsPattern = '#(\.' . implode('|', $extensions). '$)#';
+        $this->_extensionsPattern = '/(\.' . implode('|', $extensions). ')$/';
         return $this;
     }
 
