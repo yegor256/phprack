@@ -34,6 +34,11 @@
 require_once PHPRACK_PATH . '/Adapters/ConnectionMonitor.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Shell command adapter used to execute external commands and programs
  *
  * @package Adapters
@@ -127,8 +132,8 @@ class phpRack_Adapters_Shell_Command
      * param.
      *
      * @return string Command execution output
-     * @throws Exception if from some reason command can't be executed
-     * @throws Exception if command process was terminated
+     * @throws phpRack_Exception if from some reason command can't be executed
+     * @throws phpRack_Exception if command process was terminated
      * @see phpRack_Package_Php::lint()
      */
     public function run()
@@ -150,7 +155,7 @@ class phpRack_Adapters_Shell_Command
 
         // if there was some problems with command execution
         if (!is_resource($this->_process)) {
-            throw new Exception("Can't execute shell command '{$this->_command}'");
+            throw new phpRack_Exception("Can't execute shell command '{$this->_command}'");
         }
 
         $output = '';
@@ -208,7 +213,7 @@ class phpRack_Adapters_Shell_Command
 
             // if child process was terminated
             if ($changedStreamsCount === false) {
-                throw new Exception('Proccess was terminated');
+                throw new phpRack_Exception('Proccess was terminated');
             }
 
             // check client connection is still opened

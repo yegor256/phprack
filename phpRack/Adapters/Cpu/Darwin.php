@@ -34,6 +34,11 @@
 require_once PHPRACK_PATH . '/Adapters/Cpu/Abstract.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Darwin CPU Adapter (Mac OS)
  *
  * @package Adapters
@@ -58,7 +63,7 @@ class phpRack_Adapters_Cpu_Darwin extends phpRack_Adapters_Cpu_Abstract
      * Get CPU frequency in MHz
      *
      * @return float
-     * @throws Exception If can't get cpu frequency
+     * @throws phpRack_Exception If can't get cpu frequency
      * @see getBogoMips()
      * @see phpRack_Adapters_Cpu_Abstract::getCpuFrequency()
      */
@@ -73,13 +78,13 @@ class phpRack_Adapters_Cpu_Darwin extends phpRack_Adapters_Cpu_Abstract
         )->run();
         $xml = simplexml_load_string($data);
         if (!($xml instanceof SimpleXMLElement)) {
-            throw new Exception("Invalid result from system_profiler: '{$data}'");
+            throw new phpRack_Exception("Invalid result from system_profiler: '{$data}'");
         }
         $nodes = $xml->xpath('//string[preceding-sibling::key="current_processor_speed"]');
         $node = strval($nodes[0]);
 
         if (strpos($node, 'GHz') === false) {
-            throw new Exception("Strange frequency from system_profiler: '{$node}'");
+            throw new phpRack_Exception("Strange frequency from system_profiler: '{$node}'");
         }
 
         return floatval($node) * 1000;

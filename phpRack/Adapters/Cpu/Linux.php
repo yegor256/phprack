@@ -34,6 +34,11 @@
 require_once PHPRACK_PATH . '/Adapters/Cpu/Abstract.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Linux CPU Adapter
  *
  * @package Adapters
@@ -45,7 +50,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
      * Get CPU BogoMips
      *
      * @return float
-     * @throws Exception If unable to get BogoMips
+     * @throws phpRack_Exception If unable to get BogoMips
      * @see phpRack_Package_Cpu_Performance::atLeast()
      * @see phpRack_Adapters_Cpu_Abstract::getBogoMips()
      */
@@ -60,7 +65,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
                 $matches
             )
         ) {
-            throw new Exception("Unable to find bogomips value in cpuinfo");
+            throw new phpRack_Exception("Unable to find bogomips value in cpuinfo");
         }
         return floatval($matches[1]);
     }
@@ -69,7 +74,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
      * Get CPU frequency in MHz
      *
      * @return float
-     * @throws Exception If can't get cpu frequency
+     * @throws phpRack_Exception If can't get cpu frequency
      * @see getBogoMips()
      * @see phpRack_Adapters_Cpu_Abstract::getCpuFrequency()
      */
@@ -84,7 +89,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
                 $matches
             )
         ) {
-            throw new Exception('Unable to find CPU MHz value in cpuinfo');
+            throw new phpRack_Exception('Unable to find CPU MHz value in cpuinfo');
         }
         return floatval($matches[1]);
     }
@@ -93,7 +98,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
      * Get result of "cat /proc/cpuinfo" shell command execution
      *
      * @return string
-     * @throws Exception If unable to execute shell command
+     * @throws phpRack_Exception If unable to execute shell command
      * @see getBogoMips()
      * @see getCpuFrequency()
      */

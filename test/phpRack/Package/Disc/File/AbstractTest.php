@@ -26,7 +26,7 @@ abstract class phpRack_Package_Disc_File_AbstractTest extends AbstractTest
      * @var string
      */
     protected $_tmpFileName;
-    
+
     /**
      * @var phpRack_Package_Disc_File
      */
@@ -44,7 +44,7 @@ abstract class phpRack_Package_Disc_File_AbstractTest extends AbstractTest
         $this->_package = $this->_test->assert->disc->file;
         $this->_testFilesDir = PHPRACK_PATH . '/../test/phpRack/Package/Disc/_files';
     }
-    
+
     protected function tearDown()
     {
         clearstatcache();

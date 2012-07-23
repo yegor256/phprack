@@ -34,6 +34,11 @@
 require_once PHPRACK_PATH . '/Adapters/Db/Abstract.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * MySQL adapter
  *
  * The class is using native PHP mysql_ methods, without any specific
@@ -69,8 +74,8 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * @param string JDBC URL to connect to the server
      * @return void
      * @see http://java.sun.com/docs/books/tutorial/jdbc/basics/connecting.html
-     * @throws Exception If MySQL extension is not loaded
-     * @throws Exception If any of the required params are missed in the URL
+     * @throws phpRack_Exception If MySQL extension is not loaded
+     * @throws phpRack_Exception If any of the required params are missed in the URL
      */
     public function connect($url)
     {
@@ -78,7 +83,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         $jdbcUrlParts = $this->_parseJdbcUrl($url);
 
         if (!extension_loaded('mysql')) {
-            throw new Exception('MySQL extension is not loaded');
+            throw new phpRack_Exception('MySQL extension is not loaded');
         }
 
         $server = $jdbcUrlParts['host'];
@@ -106,14 +111,14 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
         $this->_connection = @mysql_connect($server, $username, $password);
 
         if (!$this->_connection) {
-            throw new Exception("Can't connect to MySQL server: '{$server}'");
+            throw new phpRack_Exception("Can't connect to MySQL server: '{$server}'");
         }
 
         // Check whether database was set in JDBC URL
         if (!empty($jdbcUrlParts['database'])) {
             // Try to set this database as current
             if (!@mysql_select_db($jdbcUrlParts['database'], $this->_connection)) {
-                throw new Exception("Can't select database '{$jdbcUrlParts['database']}'");
+                throw new phpRack_Exception("Can't select database '{$jdbcUrlParts['database']}'");
             }
         }
     }
@@ -123,13 +128,13 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      *
      * @param string SQL query
      * @return string Raw result from the server, in text
-     * @throws Exception If something wrong happens there
+     * @throws phpRack_Exception If something wrong happens there
      * @see mysql_query()
      */
     public function query($sql)
     {
         if (!$this->_connection) {
-            throw new Exception('connect() method should be called before');
+            throw new phpRack_Exception('connect() method should be called before');
         }
 
         $result = mysql_query($sql, $this->_connection);
@@ -142,7 +147,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
 
         // Something goes wrong
         if ($result === false) {
-            throw new Exception('MySQL query error: ' . mysql_error());
+            throw new phpRack_Exception('MySQL query error: ' . mysql_error());
         }
 
         // SELECT, SHOW type queries
@@ -164,19 +169,19 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * Show database schema
      *
      * @return string Raw result from the server, in text
-     * @throws Exception If connect() method wasn't executed earlier
-     * @throws Exception If no database was selected as current
-     * @throws Exception Passed from query()
+     * @throws phpRack_Exception If connect() method wasn't executed earlier
+     * @throws phpRack_Exception If no database was selected as current
+     * @throws phpRack_Exception Passed from query()
      * @see phpRack_Package_Db_Mysql::showSchema()
      */
     public function showSchema()
     {
         if (!$this->isConnected()) {
-            throw new Exception('You must call connect() method before');
+            throw new phpRack_Exception('You must call connect() method before');
         }
 
         if (!$this->isDatabaseSelected()) {
-            throw new Exception('No database selected yet');
+            throw new phpRack_Exception('No database selected yet');
         }
 
         $response = '';
@@ -207,13 +212,13 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * Show connections and their status
      *
      * @return string Raw result from the server, in text
-     * @throws Exception If connect() method wasn't executed earlier
+     * @throws phpRack_Exception If connect() method wasn't executed earlier
      * @see phpRack_Package_Db_Mysql::showConnections()
      */
     public function showConnections()
     {
         if (!$this->isConnected()) {
-            throw new Exception('You must call connect() method before');
+            throw new phpRack_Exception('You must call connect() method before');
         }
 
         $answer = $this->query('SHOW GRANTS FOR CURRENT_USER');
@@ -228,7 +233,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * Show server info
      *
      * @return string Raw result from the server, in text
-     * @throws Exception If connect() method wasn't executed earlier
+     * @throws phpRack_Exception If connect() method wasn't executed earlier
      * @see phpRack_Package_Db_Mysql::showServerInfo()
      */
     public function showServerInfo()

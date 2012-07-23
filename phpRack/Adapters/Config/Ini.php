@@ -34,6 +34,11 @@
 require_once PHPRACK_PATH . '/Adapters/Config.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Config adapter used for store test configuration loaded from INI file
  *
  * You can use it like this:
@@ -58,8 +63,8 @@ class phpRack_Adapters_Config_Ini extends phpRack_Adapters_Config
      * @param string Filename of INI file
      * @param string|null Section name to load, or null to load all
      * @return void
-     * @throws Exception if INI file not exists
-     * @throws Exception if section not exists in INI file
+     * @throws phpRack_Exception if INI file not exists
+     * @throws phpRack_Exception if section not exists in INI file
      * @see ConfigTest::testConfigIni() and other integration tests
      */
     public function __construct($filename, $sectionName = null)
@@ -68,7 +73,7 @@ class phpRack_Adapters_Config_Ini extends phpRack_Adapters_Config
         // one section to return
         if ($sectionName) {
             if (!array_key_exists($sectionName, $sections)) {
-                throw new Exception("Section '{$sectionName}' doesn't exist in INI file '{$filename}'");
+                throw new phpRack_Exception("Section '{$sectionName}' doesn't exist in INI file '{$filename}'");
             }
             $dataArray = $this->_sectionToArray($sections[$sectionName]);
         } else {
@@ -106,13 +111,13 @@ class phpRack_Adapters_Config_Ini extends phpRack_Adapters_Config
      *
      * @param string INI file to load and parse
      * @return array
-     * @throws Exception if config INI file not exists
+     * @throws phpRack_Exception if config INI file not exists
      * @see __construct()
      */
     protected function _loadSectionsFromIniFile($filename)
     {
         if (!file_exists($filename)) {
-            throw new Exception("INI file '{$filename}' doesn't exist");
+            throw new phpRack_Exception("INI file '{$filename}' doesn't exist");
         }
         $sections = array();
         $iniFileSections = parse_ini_file($filename, true);

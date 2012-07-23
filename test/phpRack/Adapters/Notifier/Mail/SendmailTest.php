@@ -63,7 +63,7 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testSendWithoutToException()
     {
@@ -72,7 +72,7 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testSendWithoutBodyException()
     {

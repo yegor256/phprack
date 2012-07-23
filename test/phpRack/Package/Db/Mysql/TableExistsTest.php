@@ -29,7 +29,7 @@ class phpRack_Package_Db_Mysql_TableExistsTest extends phpRack_Package_Db_Mysql_
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testTableExistsWithoutConnect()
     {
@@ -37,7 +37,7 @@ class phpRack_Package_Db_Mysql_TableExistsTest extends phpRack_Package_Db_Mysql_
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testTableExistsWithoutDbExists()
     {

@@ -40,6 +40,11 @@ require_once PHPRACK_PATH . '/Result.php';
 require_once PHPRACK_PATH . '/Test.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * One test assertion package
  *
  * The package is used from your custom integration test, through the instance
@@ -112,7 +117,7 @@ class phpRack_Package
      */
     public final function __call($name, array $args)
     {
-        throw new Exception(
+        throw new phpRack_Exception(
             sprintf(
                 "Method '%s' is absent in '%s' package, %d args passed",
                 $name,

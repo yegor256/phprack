@@ -45,7 +45,7 @@ class Adapters_Config_IniTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testWithNotExistingFile()
     {
@@ -53,7 +53,7 @@ class Adapters_Config_IniTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testWithNotExistingSection()
     {

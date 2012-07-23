@@ -40,7 +40,7 @@ class phpRack_Package_Db_Mysql_QueryTest extends phpRack_Package_Db_Mysql_Abstra
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testQueryWithoutConnect()
     {

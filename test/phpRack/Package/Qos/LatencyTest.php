@@ -41,7 +41,7 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testWithotUrl()
     {
@@ -53,7 +53,7 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testWithInvalidUrl()
     {
@@ -65,7 +65,7 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testWithInvalidOption()
     {

@@ -29,6 +29,11 @@
  */
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Config adapter used for store tests configuration and provide object
  * oriented access methods
  *
@@ -82,13 +87,13 @@ class phpRack_Adapters_Config
      *
      * @param string Name of config option
      * @return mixed
-     * @throws Exception if config option not exists
+     * @throws phpRack_Exception if config option not exists
      * @see ConfigTest::testConfigIni() and other integration tests
      */
     public function __get($name)
     {
         if (!array_key_exists($name, $this->_data)) {
-            throw new Exception("Config option '{$name}' doesn't exist");
+            throw new phpRack_Exception("Config option '{$name}' doesn't exist");
         }
         return $this->_data[$name];
     }

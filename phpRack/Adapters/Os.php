@@ -29,6 +29,11 @@
  */
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * OS adapter used to get information where script is executed
  *
  * @package Adapters
@@ -47,7 +52,7 @@ class phpRack_Adapters_Os
      *
      * @return string
      * @see phpRack_Adapters_Cpu::factory()
-     * @throws Exception if operating system can't be recognized
+     * @throws phpRack_Exception if operating system can't be recognized
      */
     public static function get()
     {
@@ -66,7 +71,7 @@ class phpRack_Adapters_Os
 
             /* all other systems */
             default:
-            throw new Exception('Unknown operating system');
+            throw new phpRack_Exception('Unknown operating system');
         }
     }
 

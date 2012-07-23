@@ -43,7 +43,7 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testUrlWithInvalidUrl()
     {
@@ -75,7 +75,7 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testRegexWithoutUrlCall()
     {

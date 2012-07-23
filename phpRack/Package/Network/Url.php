@@ -40,6 +40,11 @@ require_once PHPRACK_PATH . '/Package.php';
 require_once PHPRACK_PATH . '/Adapters/Url.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Network check using Url.
  *
  * @package Tests
@@ -71,7 +76,7 @@ class phpRack_Package_Network_Url extends phpRack_Package
      * @param string URL
      * @param array Options which will affect connection
      * @return $this
-     * @throws Exception if URL is invalid
+     * @throws phpRack_Exception if URL is invalid
      */
     public function url($url, $options = array())
     {
@@ -86,13 +91,13 @@ class phpRack_Package_Network_Url extends phpRack_Package
      * @param string Pattern to check
      * @return $this
      * @see url()
-     * @throws Exception If this method is called before url()
-     * @throws Exception If can't connect
+     * @throws phpRack_Exception If this method is called before url()
+     * @throws phpRack_Exception If can't connect
      */
     public function regex($pattern)
     {
         if (empty($this->_url)) {
-            throw new Exception('url() function must be called before');
+            throw new phpRack_Exception('url() function must be called before');
         }
 
         $content = $this->_adapter->getContent();

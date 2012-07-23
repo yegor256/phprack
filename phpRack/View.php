@@ -75,13 +75,14 @@ class phpRack_View
      * @param string Name of the property to get
      * @return mixed
      * @see $this->_injected
+     * @throws phpRack_Exception If such property is absent
      */
     public function __get($name)
     {
         if (array_key_exists($name, $this->_injected)) {
             return $this->_injected[$name];
         }
-        throw new Exception("Property '{$name}' is absent in " . get_class($this));
+        throw new phpRack_Exception("Property '{$name}' is absent in " . get_class($this));
     }
 
     /**
@@ -192,7 +193,7 @@ class phpRack_View
 
                 $scriptEndPos = strpos($html, $endPattern, $scriptStartPos);
                 if ($scriptEndPos === false) {
-                    throw new Exception('<script> tag is not closed');
+                    throw new phpRack_Exception('<script> tag is not closed');
                 }
                 $length = $scriptEndPos - $scriptStartPos + 1;
                 $html = substr_replace(

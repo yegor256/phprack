@@ -30,6 +30,11 @@
  */
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Parent class of all test suites
  *
  * Suites are maintained as directories full of tests, inside "phpRack/Suite/library"
@@ -68,18 +73,18 @@ abstract class phpRack_Suite
      * @param string ID of the suite, absolute (!) file name
      * @param phpRack_Runner Instance of test runner
      * @return phpRack_Suite
-     * @throws Exception
+     * @throws phpRack_Exception
      * @see _addSuite()
      * @see phpRack_Runner::getTests()
      */
     public static function factory($fileName, phpRack_Runner $runner)
     {
         if (!file_exists($fileName)) {
-            throw new Exception("File '{$fileName}' is not found");
+            throw new phpRack_Exception("File '{$fileName}' is not found");
         }
 
         if (!preg_match(phpRack_Runner::SUITE_PATTERN, $fileName)) {
-            throw new Exception("File '{$fileName}' is not named properly, can't run it");
+            throw new phpRack_Exception("File '{$fileName}' is not named properly, can't run it");
         }
 
         $className = pathinfo($fileName, PATHINFO_FILENAME);
@@ -121,7 +126,7 @@ abstract class phpRack_Suite
      * @param string Suite name
      * @param array config
      * @return $this
-     * @throws Exception if suite can't be found
+     * @throws phpRack_Exception if suite can't be found
      * @see MySuite::_init()
      * @see phpRack_Suite_Test
      */
@@ -138,7 +143,7 @@ abstract class phpRack_Suite
 
         foreach ($iterator as $file) {
             $testPath = realpath($file->getPathname());
-            // Exception is possible here
+            // phpRack_Exception is possible here
             $test = phpRack_Suite_Test::factory($testPath, $this->_runner);
             $test->setConfig($config);
             $this->_tests[] = $test;
@@ -155,7 +160,7 @@ abstract class phpRack_Suite
      * @param string Suite name
      * @param array config
      * @return $this
-     * @throws Exception if test can't be found
+     * @throws phpRack_Exception if test can't be found
      * @see MySuite::_init()
      * @see phpRack_Suite_Test
      */

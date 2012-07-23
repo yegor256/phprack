@@ -28,7 +28,7 @@ class phpRack_Package_Db_Mysql_ShowSchemaTest extends phpRack_Package_Db_Mysql_A
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testShowSchemaWithoutConnect()
     {
@@ -36,7 +36,7 @@ class phpRack_Package_Db_Mysql_ShowSchemaTest extends phpRack_Package_Db_Mysql_A
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testShowSchemaWithoutDbExists()
     {

@@ -34,6 +34,11 @@
 require_once PHPRACK_PATH . '/Adapters/Cpu/Abstract.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Windows CPU Adapter
  *
  * @package Adapters
@@ -45,7 +50,7 @@ class phpRack_Adapters_Cpu_Windows extends phpRack_Adapters_Cpu_Abstract
      * Get CPU BogoMips
      *
      * @return float
-     * @throws Exception If unable to get BogoMips
+     * @throws phpRack_Exception If unable to get BogoMips
      * @see phpRack_Package_Cpu_Performance::atLeast()
      * @see phpRack_Adapters_Cpu_Abstract::getBogoMips()
      */
@@ -62,7 +67,7 @@ class phpRack_Adapters_Cpu_Windows extends phpRack_Adapters_Cpu_Abstract
      * Get CPU frequency in MHz
      *
      * @return float
-     * @throws Exception If can't get cpu frequency
+     * @throws phpRack_Exception If can't get cpu frequency
      * @see getBogoMips()
      * @see phpRack_Adapters_Cpu_Abstract::getCpuFrequency()
      */
@@ -91,7 +96,7 @@ class phpRack_Adapters_Cpu_Windows extends phpRack_Adapters_Cpu_Abstract
          * interface.
          */
         if (!$maxClockSpeed) {
-            throw new Exception(
+            throw new phpRack_Exception(
                 "Unable to get maxClockSpeed using COM 'Winmgmts://' and '{$query}' query"
             );
         }

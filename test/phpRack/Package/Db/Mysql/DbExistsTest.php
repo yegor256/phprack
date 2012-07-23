@@ -28,7 +28,7 @@ class phpRack_Package_Db_Mysql_DbExistsTest extends phpRack_Package_Db_Mysql_Abs
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testDbExistsWithoutConnect()
     {

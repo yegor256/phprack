@@ -41,7 +41,7 @@ abstract class phpRack_Adapters_Cpu_Abstract
      * Get CPU BogoMips
      *
      * @return float
-     * @throws Exception If unable to get BogoMips
+     * @throws phpRack_Exception If unable to get BogoMips
      * @see phpRack_Package_Cpu_Performance::atLeast()
      */
     abstract public function getBogoMips();
@@ -50,7 +50,7 @@ abstract class phpRack_Adapters_Cpu_Abstract
      * Get CPU frequency in MHz
      *
      * @return float
-     * @throws Exception If can't get cpu frequency
+     * @throws phpRack_Exception If can't get cpu frequency
      * @see getBogoMips()
      */
     abstract public function getCpuFrequency();

@@ -31,7 +31,7 @@ class Adapters_UrlTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testFactoryWithInvalidUrl()
     {
@@ -51,7 +51,7 @@ class Adapters_UrlTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testFactoryWithInvalidOptions()
     {

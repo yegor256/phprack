@@ -35,6 +35,11 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * CPU Performance check.
  *
  * @package Tests
@@ -67,7 +72,7 @@ class phpRack_Package_Cpu_Performance extends phpRack_Package
                     "It has only '{$currentBogoMips}' BogoMips, but '{$bogoMips}' is required"
                 );
             }
-        } catch (Exception $e) {
+        } catch (phpRack_Exception $e) {
             $this->_failure("CPU problem: {$e->getMessage()}");
         }
         return $this;

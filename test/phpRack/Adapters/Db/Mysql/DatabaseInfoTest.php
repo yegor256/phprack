@@ -37,7 +37,7 @@ class phpRack_Adapters_Db_Mysql_DatabaseInfoTest extends phpRack_Adapters_Db_Mys
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testShowServerInfoWithoutConnect()
     {
@@ -45,7 +45,7 @@ class phpRack_Adapters_Db_Mysql_DatabaseInfoTest extends phpRack_Adapters_Db_Mys
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testSchemaWithoutConnect()
     {
@@ -53,7 +53,7 @@ class phpRack_Adapters_Db_Mysql_DatabaseInfoTest extends phpRack_Adapters_Db_Mys
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testSchemaWithoutDatabaseSelect()
     {

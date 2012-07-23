@@ -43,7 +43,7 @@ class Adapters_ConfigTest extends AbstractTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException phpRack_Exception
      */
     public function testGetWithNotExistingKey()
     {

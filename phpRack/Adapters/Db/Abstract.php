@@ -29,6 +29,11 @@
  */
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Abstract adapter for DB connectivity
  *
  * @package Adapters
@@ -43,7 +48,7 @@ abstract class phpRack_Adapters_Db_Abstract
      * @param string JDBC URL to connect to the server
      * @return void
      * @see http://java.sun.com/docs/books/tutorial/jdbc/basics/connecting.html
-     * @throws Exception If something wrong happens there
+     * @throws phpRack_Exception If something wrong happens there
      */
     abstract public function connect($url);
 
@@ -52,7 +57,7 @@ abstract class phpRack_Adapters_Db_Abstract
      *
      * @param string SQL query
      * @return string Raw result from the server, in text
-     * @throws Exception If something wrong happens there
+     * @throws phpRack_Exception If something wrong happens there
      */
     abstract public function query($sql);
 
@@ -72,7 +77,7 @@ abstract class phpRack_Adapters_Db_Abstract
      * optional and could be omitted.
      *
      * @param string JDBC URL to parse
-     * @throws Exception If JDBC URL have wrong format
+     * @throws phpRack_Exception If JDBC URL have wrong format
      * @return array We set "adapter", "host", "port", "database", "params"
      */
     protected function _parseJdbcUrl($url)
@@ -85,7 +90,7 @@ abstract class phpRack_Adapters_Db_Abstract
 
         $matches = array();
         if (!preg_match($pattern, $url, $matches)) {
-            throw new Exception('JDBC URL parse error');
+            throw new phpRack_Exception('JDBC URL parse error');
         }
 
         // Convert params string to array

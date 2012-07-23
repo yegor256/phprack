@@ -35,6 +35,11 @@
 require_once PHPRACK_PATH . '/Package.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * QOS related assertions.
  *
  * @package Tests
@@ -47,8 +52,8 @@ class phpRack_Package_Qos extends phpRack_Package
      *
      * @param string|array of options
      * @return $this
-     * @throws Exception if invalid option was passed
-     * @throws Exception if no url was passed
+     * @throws phpRack_Exception if invalid option was passed
+     * @throws phpRack_Exception if no url was passed
      */
     public function latency($options)
     {
@@ -112,8 +117,8 @@ class phpRack_Package_Qos extends phpRack_Package
      *
      * @param string|array of options
      * @return array
-     * @throws Exception if invalid option was passed
-     * @throws Exception if no url was passed
+     * @throws phpRack_Exception if invalid option was passed
+     * @throws phpRack_Exception if no url was passed
      */
     protected function _prepareLatencyOptions($options)
     {
@@ -131,13 +136,13 @@ class phpRack_Package_Qos extends phpRack_Package
         // validate options
         foreach (array_keys($options) as $key) {
             if (!array_key_exists($key, $defaultOptions)) {
-                throw new Exception("Invalid option '{$key}'");
+                throw new phpRack_Exception("Invalid option '{$key}'");
             }
         }
         $options = array_merge($defaultOptions, $options);
 
         if (empty($options['scenario'])) {
-            throw new Exception('You must specify at least one url to check');
+            throw new phpRack_Exception('You must specify at least one url to check');
         }
         return $options;
     }

@@ -29,6 +29,11 @@
  */
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * PEAR adapter used for checking PEAR packages availability
  *
  * @package Adapters
@@ -58,7 +63,7 @@ class phpRack_Adapters_Pear_Package
      * Construct the class
      *
      * @param string Name of the package
-     * @throws Exception if PEAR is not installed properly
+     * @throws phpRack_Exception if PEAR is not installed properly
      * @return void
      */
     public function __construct($name)
@@ -73,7 +78,7 @@ class phpRack_Adapters_Pear_Package
         $result = phpRack_Adapters_Shell_Command::factory($command)->run();
 
         if (!$result) {
-            throw new Exception('PEAR is not installed properly');
+            throw new phpRack_Exception('PEAR is not installed properly');
         }
 
         $this->_rawInfo = $result;

@@ -29,6 +29,11 @@
  */
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Mail adapter used for mailing phpRack reports
  *
  * @package Adapters
@@ -46,7 +51,7 @@ class phpRack_Adapters_Notifier_Mail
      * @see phpRack_Adapters_Notifier_Mail_Sendmail
      * @param array List of parameters
      * @return phpRack_Adapters_Mail
-     * @throws Exception
+     * @throws phpRack_Exception
      */
     public static function factory($class = 'sendmail', array $params = array())
     {
@@ -56,7 +61,7 @@ class phpRack_Adapters_Notifier_Mail
          */
         $classFile = PHPRACK_PATH . "/Adapters/Notifier/Mail/{$transport}.php";
         if (!file_exists($classFile)) {
-            throw new Exception("Transport {$transport} is absent");
+            throw new phpRack_Exception("Transport {$transport} is absent");
         }
         eval("require_once '{$classFile}';"); // for ZCA validation
         $transportClass = 'phpRack_Adapters_Notifier_Mail_' . $transport;

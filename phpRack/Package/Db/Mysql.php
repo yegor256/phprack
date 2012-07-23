@@ -40,6 +40,11 @@ require_once PHPRACK_PATH . '/Package.php';
 require_once PHPRACK_PATH . '/Adapters/Db/Mysql.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * MySQL related assertions.
  *
  * @package Tests
@@ -91,8 +96,8 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
         try {
             $this->_adapter->connect($jdbcUrl);
             $this->_success("Connected successfully to MySQL server '{$host}':'{$port}'");
-        } catch(Exception $e) {
-            assert($e instanceof Exception); // for ZCA only
+        } catch(phpRack_Exception $e) {
+            assert($e instanceof phpRack_Exception); // for ZCA only
             $this->_failure("Can't connect to MySQL server '{$host}':'{$port}', login: '{$username}'");
         }
 
@@ -105,18 +110,18 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
      * @param string Database name
      * @return $this
      * @see connect()
-     * @throws Exception If this method is called before connect()
+     * @throws phpRack_Exception If this method is called before connect()
      */
     public function dbExists($dbName)
     {
         if (!$this->_adapter->isConnected()) {
-            throw new Exception('You must call connect() method before');
+            throw new phpRack_Exception('You must call connect() method before');
         }
 
         try {
             $this->_adapter->query(sprintf("USE `%s`", addcslashes($dbName, '`')));
             $this->_success("Database '{$dbName}' exists");
-        } catch (Exception $e) {
+        } catch (phpRack_Exception $e) {
             $this->_failure($e->getMessage());
         }
 
@@ -129,17 +134,17 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
      * @param string Table name
      * @return $this
      * @see connect()
-     * @throws Exception If this method is called before connect()
-     * @throws Exception If this method is called before dbExists()
+     * @throws phpRack_Exception If this method is called before connect()
+     * @throws phpRack_Exception If this method is called before dbExists()
      */
     public function tableExists($tableName)
     {
         if (!$this->_adapter->isConnected()) {
-            throw new Exception('You must call connect() method before');
+            throw new phpRack_Exception('You must call connect() method before');
         }
 
         if (!$this->_adapter->isDatabaseSelected()) {
-            throw new Exception('You must call dbExists() method before');
+            throw new phpRack_Exception('You must call dbExists() method before');
         }
 
         $response = $this->_adapter->query(sprintf("SHOW TABLES LIKE '%s'", addslashes($tableName)));
@@ -158,18 +163,18 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
      * @param string Query to execute
      * @return $this
      * @see connect()
-     * @throws Exception If this method is called before connect()
+     * @throws phpRack_Exception If this method is called before connect()
      */
     public function query($query)
     {
         if (!$this->_adapter->isConnected()) {
-            throw new Exception('You must call connect() method before');
+            throw new phpRack_Exception('You must call connect() method before');
         }
 
         try {
             $result = $this->_adapter->query($query);
             $this->_log($result);
-        } catch (Exception $e) {
+        } catch (phpRack_Exception $e) {
             $this->_failure($e->getMessage());
         }
 
@@ -180,18 +185,18 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
      * Show database schema
      *
      * @return $this
-     * @throws Exception If this method is called before connect()
-     * @throws Exception If this method is called before dbExists()
-     * @throws Exception If something wrong happen during getting database schema
+     * @throws phpRack_Exception If this method is called before connect()
+     * @throws phpRack_Exception If this method is called before dbExists()
+     * @throws phpRack_Exception If something wrong happen during getting database schema
      */
     public function showSchema()
     {
         if (!$this->_adapter->isConnected()) {
-            throw new Exception('You must call connect() method before');
+            throw new phpRack_Exception('You must call connect() method before');
         }
 
         if (!$this->_adapter->isDatabaseSelected()) {
-            throw new Exception('You must call dbExists() method before');
+            throw new phpRack_Exception('You must call dbExists() method before');
         }
 
         $result = $this->_adapter->showSchema();
@@ -204,12 +209,12 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
      * Show connections and their status
      *
      * @return $this
-     * @throws Exception If this method is called before connect()
+     * @throws phpRack_Exception If this method is called before connect()
      */
     public function showConnections()
     {
         if (!$this->_adapter->isConnected()) {
-            throw new Exception('You must call connect() method before');
+            throw new phpRack_Exception('You must call connect() method before');
         }
 
         $result = $this->_adapter->showConnections();
@@ -225,12 +230,12 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
      * Show server info
      *
      * @return $this
-     * @throws Exception If this method is called before connect()
+     * @throws phpRack_Exception If this method is called before connect()
      */
     public function showServerInfo()
     {
         if (!$this->_adapter->isConnected()) {
-            throw new Exception('You must call connect() method before');
+            throw new phpRack_Exception('You must call connect() method before');
         }
 
         $this->_log($this->_adapter->showServerInfo());

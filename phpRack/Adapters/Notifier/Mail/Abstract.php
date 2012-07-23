@@ -29,6 +29,11 @@
  */
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Abstract class for the phpRack_Adapters_Notifier_Mail_*
  *
  * @package Adapters
@@ -128,16 +133,16 @@ abstract class phpRack_Adapters_Notifier_Mail_Abstract
      * @return bool
      * @see phpRack_Adapters_Notifier_Mail_Sendmail->send()
      * @see phpRack_Adapters_Notifier_Mail_Smtp->send()
-     * @throws Exception if To not defined
-     * @throws Exception if Body not defined
+     * @throws phpRack_Exception if To not defined
+     * @throws phpRack_Exception if Body not defined
      */
     protected function _validateBeforeSend()
     {
         if (!count($this->_to)) {
-            throw new Exception('Recipients are not specified');
+            throw new phpRack_Exception('Recipients are not specified');
         }
         if (empty($this->_body)) {
-            throw new Exception('Body is not specified');
+            throw new phpRack_Exception('Body is not specified');
         }
         return true;
     }

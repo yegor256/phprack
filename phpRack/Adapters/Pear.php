@@ -34,6 +34,11 @@
 require_once PHPRACK_PATH . '/Adapters/Pear/Package.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * PEAR adapter used for checking PEAR packages availability
  *
  * @package Adapters
@@ -45,7 +50,7 @@ class phpRack_Adapters_Pear
      *
      * @param string Package name
      * @return phpRack_Adapters_Pear_Package|null
-     * @throws Exception If PEAR is not installed properly
+     * @throws phpRack_Exception If PEAR is not installed properly
      * @see phpRack_Package_Pear::package()
      */
     public function getPackage($name)
@@ -53,8 +58,8 @@ class phpRack_Adapters_Pear
         $package = new phpRack_Adapters_Pear_Package($name);
         try {
             $package->getVersion();
-        } catch (Exception $e) {
-            assert($e instanceof Exception); // for ZCA only
+        } catch (phpRack_Exception $e) {
+            assert($e instanceof phpRack_Exception); // for ZCA only
             return null;
         }
         return $package;
@@ -64,7 +69,7 @@ class phpRack_Adapters_Pear
      * Get full list of installed packages
      *
      * @return array of phpRack_Adapters_Pear_Package
-     * @throws Exception If some problem appear during package informations loading
+     * @throws phpRack_Exception If some problem appear during package informations loading
      * @see phpRack_Package_Pear::showList()
      */
     public function getAllPackages()

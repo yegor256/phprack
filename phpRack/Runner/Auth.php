@@ -35,6 +35,11 @@
 require_once PHPRACK_PATH . '/Runner.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Runner authentication adapter.
  *
  * @package Tests
@@ -179,7 +184,7 @@ class phpRack_Runner_Auth
      * Login/password are provided in HTTP request, through POST params.
      * we should save them in COOKIE in order to avoid further login requests.
      *
-     * @throws Exception if some required request parameter is missed
+     * @throws phpRack_Exception if some required request parameter is missed
      * @return array with retrieved login and hash
      */
     private function _tryHttpPost()
@@ -208,7 +213,7 @@ class phpRack_Runner_Auth
      * Login/password are provided as GET params as it's only one-time Phing
      * bridge, we don't store them anywhere
      *
-     * @throws Exception if some required request parameter is missed
+     * @throws phpRack_Exception if some required request parameter is missed
      * @return array with retrieved login and hash
      */
     private function _tryHttpGet()
@@ -316,12 +321,12 @@ class phpRack_Runner_Auth
      *
      * @return phpRack_Runner_Auth_Result
      * @see boostrap.php
-     * @throws Exception If the result is not set yet
+     * @throws phpRack_Exception If the result is not set yet
      */
     public function getAuthResult()
     {
         if (!isset($this->_authResult)) {
-            throw new Exception("AuthResult is not set yet, use authenticate() before");
+            throw new phpRack_Exception("AuthResult is not set yet, use authenticate() before");
         }
         return $this->_authResult;
     }

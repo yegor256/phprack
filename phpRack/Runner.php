@@ -40,6 +40,11 @@ require_once PHPRACK_PATH . '/Test.php';
 require_once PHPRACK_PATH . '/Suite.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Run all tests together, or one by one
  *
  * First you should create an instance of this class, providing it an array
@@ -104,14 +109,14 @@ class phpRack_Runner
      *
      * @param array Options to set to the class
      * @return void
-     * @throws Exception If an option is invalid
+     * @throws phpRack_Exception If an option is invalid
      * @see bootstrap.php
      */
     public function __construct(array $options)
     {
         foreach ($options as $option=>$value) {
             if (!array_key_exists($option, $this->_options)) {
-                throw new Exception("Option '{$option}' is not recognized");
+                throw new phpRack_Exception("Option '{$option}' is not recognized");
             }
             $this->_options[$option] = $value;
         }
@@ -164,14 +169,14 @@ class phpRack_Runner
      * Get tests location directory
      *
      * @return string
-     * @throws Exception If directory is absent
+     * @throws phpRack_Exception If directory is absent
      * @see getTests()
      */
     public function getDir()
     {
         $dir = $this->_options['dir'];
         if (!file_exists($dir)) {
-            throw new Exception("Test directory '{$dir}' is not found");
+            throw new phpRack_Exception("Test directory '{$dir}' is not found");
         }
         return realpath($dir);
     }
@@ -252,7 +257,7 @@ class phpRack_Runner
         if (!$success) {
             try {
                 $this->_notifyAboutFailure($report);
-            } catch (Exception $e) {
+            } catch (phpRack_Exception $e) {
                 $report .= sprintf(
                     "Failed to notify admin (%s): '%s'\n",
                     get_class($e),
@@ -271,13 +276,13 @@ class phpRack_Runner
      * @param string Unique token to return back, if required
      * @param array Associative array of options to be used for setAjaxOptions()
      * @return string JSON
-     * @throws Exception
+     * @throws phpRack_Exception
      * @see bootstrap.php
      */
     public function run($fileName, $token = 'token', $options = array())
     {
         if (!$this->getAuth()->isAuthenticated()) {
-            throw new Exception("Authentication failed, please login first");
+            throw new phpRack_Exception("Authentication failed, please login first");
         }
         // if this is one of our built-in tests
         if (!empty($options['suiteTest'])) {
@@ -324,7 +329,7 @@ class phpRack_Runner
      * @param string Full suite text report
      * @return void
      * @see runSuite()
-     * @throws Exception
+     * @throws phpRack_Exception
      * @todo Now we work only with one notifier, which is in class phpRack_Mail. Later
      *      we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we
      *      should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
@@ -338,7 +343,7 @@ class phpRack_Runner
         }
 
         if (!is_array($this->_options['notify'])) {
-            throw new Exception("Parameter 'notify' should be an array, '{$this->_options['notify']}' given");
+            throw new phpRack_Exception("Parameter 'notify' should be an array, '{$this->_options['notify']}' given");
         }
 
         if (array_key_exists('email', $this->_options['notify'])) {

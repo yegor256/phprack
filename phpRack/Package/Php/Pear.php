@@ -40,6 +40,11 @@ require_once PHPRACK_PATH . '/Package.php';
 require_once PHPRACK_PATH . '/Adapters/Pear.php';
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * PEAR package used for checking PEAR packages availability.
  *
  * @package Tests
@@ -138,7 +143,7 @@ class phpRack_Package_Php_Pear extends phpRack_Package
             foreach ($packages as $package) {
                 $this->_log($package->getRawInfo());
             }
-        } catch (Exception $e) {
+        } catch (phpRack_Exception $e) {
             $this->_failure("PEAR problem: {$e->getMessage()}");
         }
         return $this;

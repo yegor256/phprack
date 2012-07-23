@@ -29,6 +29,11 @@
  */
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * Socket based adapter which help checking remote url accessibility
  * and retrieve content from them
  *
@@ -80,8 +85,8 @@ class phpRack_Adapters_Url
      * @param string URL
      * @param array Options
      * @return void
-     * @throws Exception if URL is not valid
-     * @throws Exception if some of passed options is not recognized
+     * @throws phpRack_Exception if URL is not valid
+     * @throws phpRack_Exception if some of passed options is not recognized
      */
     public function __construct($url, array $options = array())
     {
@@ -94,7 +99,7 @@ class phpRack_Adapters_Url
 
         // If there was url parsing error
         if ($urlParts === false) {
-            throw new Exception('This is NOT valid url');
+            throw new phpRack_Exception('This is NOT valid url');
         }
 
         // Set host
@@ -120,7 +125,7 @@ class phpRack_Adapters_Url
         // Overwrite default options
         foreach ($options as $option => $value) {
             if (!array_key_exists($option, $this->_options)) {
-                throw new Exception("Option '{$option}' is not recognized");
+                throw new phpRack_Exception("Option '{$option}' is not recognized");
             }
             $this->_options[$option] = $value;
         }
@@ -142,7 +147,7 @@ class phpRack_Adapters_Url
      * Create connection to server
      *
      * @return void
-     * @throws Exception if can't connect to server
+     * @throws phpRack_Exception if can't connect to server
      */
     protected function _connect()
     {
@@ -163,7 +168,7 @@ class phpRack_Adapters_Url
 
         // If can't connect
         if (!$this->_socket) {
-            throw new Exception(
+            throw new phpRack_Exception(
                 "Can't connect to '{$this->_host}':'{$this->_port}'"
                 . " Error #'{$errorNumber}': '{$errorString}'"
             );
@@ -193,8 +198,8 @@ class phpRack_Adapters_Url
     {
         try {
             $this->_connect();
-        } catch (Exception $e) {
-            assert($e instanceof Exception); // for ZCA only
+        } catch (phpRack_Exception $e) {
+            assert($e instanceof phpRack_Exception); // for ZCA only
             return false;
         }
 
@@ -206,7 +211,7 @@ class phpRack_Adapters_Url
      *
      * @see __construct()
      * @return string Content of URL
-     * @throws Exception If can't get content for some reason
+     * @throws phpRack_Exception If can't get content for some reason
      */
     public function getContent()
     {
@@ -240,7 +245,7 @@ class phpRack_Adapters_Url
 
         // If connection timeouted
         if ($info['timed_out']) {
-            throw new Exception('Connection timed out!');
+            throw new phpRack_Exception('Connection timed out!');
         }
 
         return $response;

@@ -128,16 +128,16 @@ abstract class phpRack_Test
      * @param string ID of the test, absolute (!) file name
      * @param phpRack_Runner Instance of test runner
      * @return phpRack_Test
-     * @throws Exception
+     * @throws phpRack_Exception
      */
     public static function factory($fileName, phpRack_Runner $runner)
     {
         if (!file_exists($fileName)) {
-            throw new Exception("File '{$fileName}' is not found");
+            throw new phpRack_Exception("File '{$fileName}' is not found");
         }
 
         if (!preg_match(phpRack_Runner::TEST_PATTERN, $fileName)) {
-            throw new Exception("File '{$fileName}' is not named properly, can't run it");
+            throw new phpRack_Exception("File '{$fileName}' is not named properly, can't run it");
         }
 
         // fix for windows "\" path separator
@@ -161,7 +161,7 @@ abstract class phpRack_Test
                 $className = $match[1];
             }
             if (!class_exists($className)) {
-                throw new Exception("Class '{$className}' is not defined in '{$fileName}'");
+                throw new phpRack_Exception("Class '{$className}' is not defined in '{$fileName}'");
             }
         }
 
@@ -173,7 +173,7 @@ abstract class phpRack_Test
      *
      * @param string Name of the property to get
      * @return mixed
-     * @throws Exception If nothing found
+     * @throws phpRack_Exception If nothing found
      */
     public final function __get($name)
     {
@@ -183,7 +183,7 @@ abstract class phpRack_Test
             }
             return $this->_assertion;
         }
-        throw new Exception("Property '{$name}' not found in " . get_class($this));
+        throw new phpRack_Exception("Property '{$name}' not found in " . get_class($this));
     }
 
     /**
@@ -302,8 +302,7 @@ abstract class phpRack_Test
     {
         foreach ($options as $name=>$value) {
             if (!array_key_exists($name, $this->_ajaxOptions)) {
-                throw new Exception("AJAX option '{$name}' is not valid");
-                continue;
+                throw new phpRack_Exception("AJAX option '{$name}' is not valid");
             }
             $this->_ajaxOptions[$name] = $value;
         }

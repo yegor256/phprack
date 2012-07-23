@@ -29,6 +29,11 @@
  */
 
 /**
+ * @see phpRack_Exception
+ */
+require_once PHPRACK_PATH . '/Exception.php';
+
+/**
  * @see phpRack_Adapters_Notifier_Mail_Abstract
  */
 require_once PHPRACK_PATH . '/Adapters/Notifier/Mail/Abstract.php';
@@ -101,7 +106,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
     /**
      * Prepares and sends an mail
      *
-     * @throws Exception if connection doesn't established
+     * @throws phpRack_Exception if connection doesn't established
      * @return void
      */
     public function send()
@@ -161,7 +166,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
      * Connects to the stream and returns connection status
      *
      * @return void
-     * @throws Exception if can't connect to the mail server
+     * @throws phpRack_Exception if can't connect to the mail server
      */
     protected function _connect()
     {
@@ -176,7 +181,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
      *
      * @var string Message to send to SMTP server
      * @return $this
-     * @throws Exception if can't write to the stream
+     * @throws phpRack_Exception if can't write to the stream
      */
     protected function _query($msg)
     {
@@ -194,8 +199,8 @@ class phpRack_Adapters_Notifier_Mail_Smtp
      *
      * @param int|array $code
      * @param int Timeout (Default: 300)
-     * @throws Exception if can't change stream timeout
-     * @throws Exception if can't read from the socket
+     * @throws phpRack_Exception if can't change stream timeout
+     * @throws phpRack_Exception if can't read from the socket
      * @see _log()
      * @return $this
      */
@@ -234,14 +239,14 @@ class phpRack_Adapters_Notifier_Mail_Smtp
      * @see _query()
      * @param string $msg
      * @param bool $throwError
-     * @throws Exception if $throwError eq. true
+     * @throws phpRack_Exception if $throwError eq. true
      * @return void
      */
     protected function _log($msg, $throwError = false)
     {
         $this->_log[] = $msg;
         if ($throwError) {
-            throw new Exception($this->_getLog());
+            throw new phpRack_Exception($this->_getLog());
         }
     }
 
@@ -260,7 +265,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
      *
      * Closes connection if needed
      *
-     * @throws Exception if can't close connection
+     * @throws phpRack_Exception if can't close connection
      * @return void
      */
     public function __destruct()
