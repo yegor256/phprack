@@ -31,15 +31,13 @@ $(
     function()
     {
         module("Core");
-
         test(
             "stripTags function",
             function()
             {
-                var expected = "SpecialTestWithHtml";
                 equals(
                     "Special<b>Test<b>With<br/>Html".stripTags(),
-                    expected,
+                    "SpecialTestWithHtml",
                     "Check html tags are removed"
                 );
             }
@@ -49,10 +47,9 @@ $(
             "htmlspecialchars function",
             function()
             {
-                var expected = "Special&lt;b&gt;test&lt;/b&gt;";
                 equals(
                     "Special<b>test</b>".htmlspecialchars(),
-                    expected,
+                    "Special&lt;b&gt;test&lt;/b&gt;",
                     "Check html tags are replaced by entities"
                 );
             }
