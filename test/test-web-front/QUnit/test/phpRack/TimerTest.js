@@ -31,7 +31,6 @@ $(
     function()
     {
         module("phpRack_Timer");
-
         test(
             "test timer works",
             function()
@@ -49,7 +48,6 @@ $(
                 timer.start();
                 equals(timer.getElapsedSeconds(), 0, 'Check whether timer start from 0');
                 equals(timer.getFormattedTime(), '0:00', 'Check time is correctly formatted');
-
                 // wait for timer tick, halt test suite
                 stop();
             }

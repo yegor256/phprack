@@ -31,7 +31,6 @@ $(
     function()
     {
         module("phpRack_Window");
-
         test(
             "test window focus can be recognized",
             function()
