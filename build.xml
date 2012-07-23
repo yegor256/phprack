@@ -23,7 +23,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @copyright Copyright (c) phpRack.com
+ * @copyright Copyright (c) 2009-2012 phpRack.com
  * @version $Id$
  * @category phpRack
  *
@@ -119,11 +119,11 @@
 
     <target name="jscoverage" description="JSCoverage">
         <exec command="jscoverage
-    		-v
-    		--exclude=.svn
-    		--exclude=jquery-1.4.2.min.js
-    		${project.basedir}/phpRack/layout/js
-    		${project.basedir}/build/instrumented-js"
+            -v
+            --exclude=.svn
+            --exclude=jquery-1.4.2.min.js
+            ${project.basedir}/phpRack/layout/js
+            ${project.basedir}/build/instrumented-js"
             escape="false"
             checkreturn="true"
             passthru="true"
@@ -143,19 +143,19 @@
             </fileset>
         </coverage-setup>
 
-		<phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
-			<formatter type="plain" usefile="no" />
-			<batchtest>
-				<fileset dir="${project.basedir}/test">
-					<include name="**/*Test*.php"/>
-					<exclude name="**/Abstract*.php"/>
-					<exclude name="**/_*.php"/>
-					<exclude name=".svn/**"/>
-					<exclude name="**/integration-tests/**"/>
+        <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
+            <formatter type="plain" usefile="no" />
+            <batchtest>
+                <fileset dir="${project.basedir}/test">
+                    <include name="**/*Test*.php"/>
+                    <exclude name="**/Abstract*.php"/>
+                    <exclude name="**/_*.php"/>
+                    <exclude name=".svn/**"/>
+                    <exclude name="**/integration-tests/**"/>
                     <exclude name="build/**"/>
-				</fileset>
-			</batchtest>
-		</phpunit>
+                </fileset>
+            </batchtest>
+        </phpunit>
 
         <!-- build coverage report -->
         <mkdir dir="${project.basedir}/build/coverage"/>
@@ -208,46 +208,46 @@
 
         <mkdir dir="${project.basedir}/build/ftp-upload"/>
         <copy todir="${project.basedir}/build/ftp-upload">
-		    <filterchain>
+            <filterchain>
                 <stripwhitespace />
             </filterchain>
-			<fileset dir="${project.basedir}">
-				<include name="phpRack/**"/>
-				<exclude name=".svn/**" />
-			</fileset>
-			<fileset dir="${project.basedir}/test">
-				<include name="integration-tests/**"/>
-				<exclude name=".svn/**" />
-			</fileset>
+            <fileset dir="${project.basedir}">
+                <include name="phpRack/**"/>
+                <exclude name=".svn/**" />
+            </fileset>
+            <fileset dir="${project.basedir}/test">
+                <include name="integration-tests/**"/>
+                <exclude name=".svn/**" />
+            </fileset>
         </copy>
         <copy todir="${project.basedir}/build/ftp-upload/public">
-			<fileset dir="${project.basedir}/phprack.com">
-				<include name="**/*"/>
-				<exclude name=".svn/**" />
-			</fileset>
-			<fileset dir="${project.basedir}/phpRack/layout">
-				<include name="logo.png"/>
-			</fileset>
-			<fileset dir="${project.basedir}/">
-				<include name="LICENSE.txt"/>
-			</fileset>
-		</copy>
+            <fileset dir="${project.basedir}/phprack.com">
+                <include name="**/*"/>
+                <exclude name=".svn/**" />
+            </fileset>
+            <fileset dir="${project.basedir}/phpRack/layout">
+                <include name="logo.png"/>
+            </fileset>
+            <fileset dir="${project.basedir}/">
+                <include name="LICENSE.txt"/>
+            </fileset>
+        </copy>
         <copy todir="${project.basedir}/build/ftp-upload/public/api">
-    		<fileset dir="${project.basedir}/build/apidocs">
-    			<include name="**/*"/>
-    		</fileset>
-		</copy>
+            <fileset dir="${project.basedir}/build/apidocs">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
         <copy todir="${project.basedir}/build/ftp-upload/public/coverage">
-    		<fileset dir="${project.basedir}/build/coverage">
-    			<include name="**/*"/>
-    		</fileset>
-		</copy>
+            <fileset dir="${project.basedir}/build/coverage">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
 
-		<echo message="uploading PHP code to the server..." />
-		<ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
-		    clearfirst="true" port="${ftp.port}">
-			<fileset dir="${project.basedir}/build/ftp-upload" />
-		</ftpdeploy>
-	</target>
+        <echo message="uploading PHP code to the server..." />
+        <ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
+            clearfirst="true" port="${ftp.port}">
+            <fileset dir="${project.basedir}/build/ftp-upload" />
+        </ftpdeploy>
+    </target>
 
 </project>

@@ -22,7 +22,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @copyright Copyright (c) phpRack.com
+ * @copyright Copyright (c) 2009-2012 phpRack.com
  * @version $Id: Db.php 169 2010-03-23 07:04:08Z yegor256@yahoo.com $
  * @category phpRack
  * @package Tests

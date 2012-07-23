@@ -24,7 +24,7 @@
  *
  * @category phpRack
  * @package Adapters
- * @copyright Copyright (c) phpRack.com
+ * @copyright Copyright (c) 2009-2012 phpRack.com
  * @version $Id$
  */
 
