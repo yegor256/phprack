@@ -163,7 +163,7 @@ class phpRack_Adapters_Url
 
         // If can't connect
         if (!$this->_socket) {
-            throw new Exception (
+            throw new Exception(
                 "Can't connect to '{$this->_host}':'{$this->_port}'"
                 . " Error #'{$errorNumber}': '{$errorString}'"
             );

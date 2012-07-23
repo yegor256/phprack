@@ -54,19 +54,19 @@ class phpRack_Adapters_Os
         switch (true) {
             /* windows */
             case (substr(PHP_OS, 0, 3) === 'WIN'):
-                return self::WINDOWS;
+            return self::WINDOWS;
 
             /* Mac OS and Mac OS X */
             case (substr(PHP_OS, 0, 6) === 'Darwin'):
-                return self::DARWIN;
+            return self::DARWIN;
 
             /* Linux */
             case (substr(PHP_OS, 0, 5) === 'Linux'):
-                return self::LINUX;
+            return self::LINUX;
 
             /* all other systems */
             default:
-                throw new Exception('Unknown operating system');
+            throw new Exception('Unknown operating system');
         }
     }
 
