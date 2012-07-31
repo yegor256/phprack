@@ -245,7 +245,7 @@
 
         <echo message="uploading PHP code to the server..." />
         <ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}"
-            clearfirst="true" port="${ftp.port}">
+            clearfirst="true" port="${ftp.port}" passive="true">
             <fileset dir="${project.basedir}/build/ftp-upload" />
         </ftpdeploy>
     </target>
