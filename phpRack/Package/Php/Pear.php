@@ -169,8 +169,13 @@ class phpRack_Package_Php_Pear extends phpRack_Package
             $this->_success("PEAR '{$this->_package->getName()}' package version is '{$currentVersion}'");
         } else {
             $this->_failure(
-                "PEAR '{$this->_package->getName()}' package version is '{$currentVersion}'"
-                . ", but '{$required}' is required"
+                sprintf(
+                    "PEAR '%s' package version is '%s', but '%s' is required (%s)",
+                    $this->_package->getName(),
+                    $currentVersion,
+                    $required,
+                    $comparison
+                )
             );
         }
         return $this;
