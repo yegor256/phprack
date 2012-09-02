@@ -161,7 +161,7 @@ class phpRack_Runner_Auth
 
             // authenticated TRUE, if no authentication required
             default:
-            return $this->_validated(true);
+                return $this->_validated(true);
         }
 
         $className = 'phpRack_Adapters_Auth_' . ucfirst($method);

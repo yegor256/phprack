@@ -105,10 +105,10 @@ class phpRack_Adapters_File
         switch (true) {
             // relative name started with '/..', or '../', or './'
             case preg_match('/^\/?\.\.?\//', $fileName):
-            return PHPRACK_PATH . '/' . $fileName;
+                return PHPRACK_PATH . '/' . $fileName;
 
             default:
-            return $fileName;
+                return $fileName;
         }
     }
 
