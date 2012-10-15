@@ -23,7 +23,7 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
 
     public function testSingleUrl()
     {
-        $this->_qos->latency('http://phprack.com');
+        $this->_qos->latency('http://www.phprack.com');
     }
 
     public function testMultiUrl()
