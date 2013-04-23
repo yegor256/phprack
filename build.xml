@@ -51,9 +51,8 @@
     </target>
 
     <!-- get revision number -->
-    <svnlastrevision
-        workingcopy="${project.basedir}"
-        propertyname="svn.lastrevision"/>
+    <exec command="git log -n 1 --pretty=format:%H"
+        outputproperty="git.hash"/>
 
     <target name="clean" description="Remove all build-related files" >
         <delete dir="${project.basedir}/build"/>
@@ -188,7 +187,7 @@
     <target name="doc" description="Generate phpDocumentor files">
         <php expression="define('PHPRACK_PATH', '${project.basedir}/phpRack');"/>
         <php expression="set_error_handler(create_function('', 'return true;'));"/>
-        <phpdoc title="API Documentation, rev.${svn.lastrevision}"
+        <phpdoc title="API Documentation, rev.${git.hash}"
             destdir="${project.basedir}/build/apidocs"
             sourcecode="false" quiet="true"
             output="HTML:frames:default">
