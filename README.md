@@ -40,8 +40,8 @@ the first option, but the second one is OK for smaller projects.
 
 ### Create `phprack.php`
 
-You should create `phprack.php` in your project's public directory (see full
-reference), e.g.:
+You should create `phprack.php` in your project's public directory
+(see [full reference](https://github.com/yegor256/phprack/wiki/Bootstrap)), e.g.:
 
 ```php
 <?php
@@ -53,10 +53,12 @@ $phpRackConfig = array(
 include '../library/phpRack/bootstrap.php';
 ```
 
-Create integration tests
+### Create integration tests
 
 Write integration tests in the directory rack-tests, each one has to extend the
-class `PhpRack_Test` (see full list of assertions). For example, file `MyTest.php`:
+class `PhpRack_Test` (see
+[full list of assertions](https://github.com/yegor256/phprack/wiki/Assertions)).
+For example, file `MyTest.php`:
 
 ```php
 <?php
@@ -80,47 +82,6 @@ class MyTest extends phpRack_Test
 Go to this URL: `http://your-website-url/phprack.php` and enjoy. Try this link
 to see what you're going to see on your site:
 ​[http://www.phprack.com/phprack.php](http://www.phprack.com/phprack.php).
-
-## Testing
-
-In order to test phpRack in the development environment you need
-to install and configure:
-
- * PHP 5.2 (http://www.php.net)
- * xdebug (http://www.xdebug.org)
- * Phing (http://www.phing.info)
- * PHPUnit (http://www.phpunit.de/)
- * PHPCS (http://pear.php.net/package/PHP_CodeSniffer)
- * PHPMD (http://www.phpmd.org)
- * jslint (http://www.jslint.com)
- * xmllint (http://xmlsoft.org/xmllint.html)
- * jscoverage (http://siliconforks.com/jscoverage/)
-
-In order to run phpRack in a web browser locally you should configure your
-Apache HTTP Server with the following instructions (we assume that you checked
-out phpRack source code from Subversion to /code/phpRack):
-
-```
-<Directory /code/phpRack/test/test-web-front>
-  Allow from all
-</Directory>
-Alias /phpRack "/code/phpRack/test/test-web-front"
-
-When it's done (don't forget to restart Apache) you can use this URL:
-
-```
-http://localhost/phpRack/phprack.php
-```
-
-In order to validate JavaScript code correctness and test coverage
-you should run "phing jscoverage" and then open this URL:
-
-```
-http://localhost/phpRack/QUnit.php
-```
-
-To see code coverage click "Coverage report" and see the report in a newly
-opened window.
 
 DISCLAIMER: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
