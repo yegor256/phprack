@@ -34,9 +34,9 @@ Let's do them one by one:
 
 ### Upload phpRack library
 
-You should attach phpRack SVN repository to your project repository, or upload
-phpRack to your server (see Download page for details). We encourage you to use
-the first option, but the second one is OK for smaller projects.
+Download [ZIP archive](https://github.com/yegor256/phprack/archive/master.zip)
+of phpRach and unpack it to `public_html/phpRack` or some other directory on
+your production server.
 
 ### Create `phprack.php`
 
