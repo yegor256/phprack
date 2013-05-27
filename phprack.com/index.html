@@ -3,7 +3,20 @@
 <head>
     <style>
     * {
+        margin: 0;
+        padding: 0;
         font-family: Verdana;
+    }
+    #center {
+        width: 300px;
+        height: 150px;
+        background-color: red;
+        position: absolute;
+        top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
     }
     </style>
     <title>phpRack -- Integration Testing Framework</title>
@@ -15,26 +28,19 @@
         <img style="position: absolute; top: 0; right: 0; border: 0;"
             src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"/>
     </a>
-    <table height="100%" width="100%">
-        <tr>
-            <td align="center">
-                <div style="width: 500px;">
-                    <p>
-                        <img src="http://img.phprack.com/logo.png" border="0" /><br/>
-                        <a href="https://github.com/yegor256/phprack/wiki">documentation</a> &middot;
-                        <a href="https://github.com/yegor256/phprack/issues?state=open">bugs</a> &middot;
-                        <a href="https://github.com/yegor256/phprack/archive/master.zip">download</a>
-                        <br/>
-                        <a href="http://www.phprack.com/phprack.php">try how it works</a>
-                        <br/>
-                        <a href="http://www.phprack.com/api">API</a> &middot;
-                        <a href="http://www.phprack.com/coverage">coverage</a> &middot;
-                        <a href="http://ci.fazend.com:8080/job/phpRack/">CI</a>
-                    </p>
-                </div>
-            </td>
-        </tr>
-    </table>
+    <span></span>
+    <div id="center">
+        <img src="http://img.phprack.com/logo.png" border="0" /><br/>
+        <a href="https://github.com/yegor256/phprack/wiki">documentation</a> &middot;
+        <a href="https://github.com/yegor256/phprack/issues?state=open">bugs</a> &middot;
+        <a href="https://github.com/yegor256/phprack/archive/master.zip">download</a>
+        <br/>
+        <a href="http://www.phprack.com/phprack.php">try how it works</a>
+        <br/>
+        <a href="http://www.phprack.com/api">API</a> &middot;
+        <a href="http://www.phprack.com/coverage">coverage</a> &middot;
+        <a href="http://ci.fazend.com:8080/job/phpRack/">CI</a>
+    </div>
     <script type="text/javascript">
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-1963507-15']);
