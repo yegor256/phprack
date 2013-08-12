@@ -35,7 +35,8 @@ $iterator->setExclude('/.svn/')
     <script type="text/javascript"
         src="<?php echo str_replace('\\', '/', $file->getPathname()); ?>">
     </script>
-<?php endforeach; ?>
+<?php
+endforeach; ?>
 
 <h1 id="qunit-header">phpRack Test Suite</h1>
 <h2 id="qunit-banner"></h2>

@@ -71,7 +71,7 @@ class phpRack_Adapters_Os
 
             /* all other systems */
             default:
-            throw new phpRack_Exception('Unknown operating system');
+                throw new phpRack_Exception('Unknown operating system');
         }
     }
 
