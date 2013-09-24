@@ -72,7 +72,7 @@ class phpRack_View
     /**
      * Getter dispatcher, used inside view script
      *
-     * @param string Name of the property to get
+     * @param $name string Name of the property to get
      * @return mixed
      * @see $this->_injected
      * @throws phpRack_Exception If such property is absent
@@ -88,7 +88,7 @@ class phpRack_View
     /**
      * Inject variables into class
      *
-     * @param array Associative array of variables to inject, where keys are names
+     * @param $injects array Associative array of variables to inject, where keys are names
      *      and values are real values to be used later in view script.
      * @return $this
      * @see bootstrap.php
@@ -104,8 +104,8 @@ class phpRack_View
     /**
      * Render the view and return HTML
      *
-     * @param string Name of the script to render, inside "/layout"
-     * @return HTML
+     * @param $script string Name of the script to render, inside "/layout"
+     * @return string HTML
      * @see bootstrap.php
      */
     public function render($script = 'index.phtml')
@@ -122,7 +122,7 @@ class phpRack_View
     /**
      * Escapes special chars "\" and "'" in javascript
      *
-     * @param string Path of the file to be rendered in JavaScript
+     * @param $path string Path of the file to be rendered in JavaScript
      * @return string
      * @see #13
      * @see index.phtml
@@ -135,7 +135,7 @@ class phpRack_View
     /**
      * Compress JS code
      *
-     * @param string Javascript code, before compression
+     * @param $jsCode string Javascript code, before compression
      * @return string Javascript code, compressed
      * @see compressedHtml
      */
@@ -164,7 +164,7 @@ class phpRack_View
     /**
      * Compress HTML content
      *
-     * @param string HTML content, before compression
+     * @param $html string HTML content, before compression
      * @return string HTML content, compressed
      */
     public function compressedHtml($html)
@@ -238,7 +238,7 @@ class phpRack_View
     /**
      * Return a compressed version of CSS
      *
-     * @param string Relative path of CSS script, inside /layout dir
+     * @param $css string Relative path of CSS script, inside /layout dir
      * @return string CSS content compressed
      */
     public function compressedCss($css)

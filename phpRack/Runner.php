@@ -270,11 +270,11 @@ class phpRack_Runner
     }
 
     /**
-     * Run one test and return JSON result
+     * Run one test and return JSON result.
      *
-     * @param string Test file name (absolute name of PHP file)
-     * @param string Unique token to return back, if required
-     * @param array Associative array of options to be used for setAjaxOptions()
+     * @param $fileName string Test file name (absolute name of PHP file)
+     * @param $token string Unique token to return back, if required
+     * @param $options array Associative array of options to be used for setAjaxOptions()
      * @return string JSON
      * @throws phpRack_Exception
      * @see bootstrap.php
@@ -326,7 +326,7 @@ class phpRack_Runner
     /**
      * Notify admin about suite failure
      *
-     * @param string Full suite text report
+     * @param $report string Full suite text report
      * @return void
      * @see runSuite()
      * @throws phpRack_Exception

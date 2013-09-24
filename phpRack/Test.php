@@ -125,8 +125,8 @@ abstract class phpRack_Test
     /**
      * Create new instance of the class, using PHP absolute file name
      *
-     * @param string ID of the test, absolute (!) file name
-     * @param phpRack_Runner Instance of test runner
+     * @param $fileName string ID of the test, absolute (!) file name
+     * @param $runner phpRack_Runner Instance of test runner
      * @return phpRack_Test
      * @throws phpRack_Exception
      */
@@ -171,7 +171,7 @@ abstract class phpRack_Test
     /**
      * Dispatches property-like calls to the class
      *
-     * @param string Name of the property to get
+     * @param $name string Name of the property to get
      * @return mixed
      * @throws phpRack_Exception If nothing found
      */
@@ -294,7 +294,7 @@ abstract class phpRack_Test
     /**
      * Set ajax options
      *
-     * @param array List of options to set
+     * @param $options array List of options to set
      * @return void
      * @see phpRack_Package_Disc_File::tail()
      */
@@ -323,9 +323,9 @@ abstract class phpRack_Test
     /**
      * Simple assertion method to compare two values
      *
-     * @param mixed What we're expecting to have
-     * @param mixed What we actually have
-     * @param string Optional message to show
+     * @param $dest mixed What we're expecting to have
+     * @param $src mixed What we actually have
+     * @param $message string Optional message to show
      * @return $this
      */
     public function assertEquals($dest, $src, $message = null)

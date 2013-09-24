@@ -107,7 +107,7 @@ try {
      */
     require_once PHPRACK_PATH . '/View.php';
 
-    // if it's CLI enviroment - just show a full test report
+    // if it's CLI environment - just show a full test report
     if ($runner->isCliEnvironment()) {
         throw new Exception($runner->runSuite());
     }
