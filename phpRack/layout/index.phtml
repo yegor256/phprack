@@ -52,7 +52,7 @@
         <?php
         $jsCalls[$i] = array(
             'divId'              => 'div#d' . $i,
-            'fileName'           => $this->jsPath($test->getFileName()),
+            'label'              => $this->jsPath($test->getLabel()),
             'autoStart'          => !empty($ajaxOptions['autoStart']) && !defined('INSTRUMENTED') ? true : false,
             'pauseWhenFocusLost' => !empty($ajaxOptions['pauseWhenFocusLost']) ? true : false,
             'data'               => !empty($ajaxOptions['data']) ? $ajaxOptions['data'] : new stdClass,

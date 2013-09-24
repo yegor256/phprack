@@ -166,13 +166,13 @@ try {
      */
     unset($options['_']);
 
-    $fileName = $options[PHPRACK_AJAX_TAG];
+    $label = $options[PHPRACK_AJAX_TAG];
     unset($options[PHPRACK_AJAX_TAG]);
     $token = $options[PHPRACK_AJAX_TOKEN];
     unset($options[PHPRACK_AJAX_TOKEN]);
 
     header('Content-Type: application/json');
-    throw new Exception($runner->run($fileName, $token, $options));
+    throw new Exception($runner->run($label, $token, $options));
 
 } catch (Exception $e) {
     /**

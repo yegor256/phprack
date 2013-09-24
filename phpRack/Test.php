@@ -110,8 +110,8 @@ abstract class phpRack_Test
      * this method "private" leads to problems in PHP 5.2.5 and maybe earlier
      * versions.
      *
-     * @param string ID of the test, absolute (!) file name
-     * @param phpRack_Runner Instance of test runner
+     * @param $fileName string ID of the test, absolute (!) file name
+     * @param $runner phpRack_Runner Instance of test runner
      * @return void
      * @see factory()
      */
@@ -125,34 +125,30 @@ abstract class phpRack_Test
     /**
      * Create new instance of the class, using PHP absolute file name
      *
-     * @param $fileName string ID of the test, absolute (!) file name
+     * @param $label string ID of the test, its label
      * @param $runner phpRack_Runner Instance of test runner
      * @return phpRack_Test
      * @throws phpRack_Exception
      */
-    public static function factory($fileName, phpRack_Runner $runner)
+    public static function factory($label, phpRack_Runner $runner)
     {
+        $fileName = $runner->getDir() . '/' . $label;
         if (!file_exists($fileName)) {
             throw new phpRack_Exception("File '{$fileName}' is not found");
         }
-
         if (!preg_match(phpRack_Runner::TEST_PATTERN, $fileName)) {
             throw new phpRack_Exception("File '{$fileName}' is not named properly, can't run it");
         }
-
         // fix for windows "\" path separator
         $fileName = preg_replace('/\\\\+/', '/', $fileName);
-
         // convert filename to class name, support also subdirs in tests dir
         $className = str_replace(
             '/',
             '_',
             substr($fileName, strlen($runner->getDir()) + 1, -4)
         );
-
         // workaround against ZCA static code analysis
         eval('require_once $fileName;');
-
         if (!class_exists($className)) {
             $match = array();
             // for back compatibility we should still support class names
@@ -164,7 +160,6 @@ abstract class phpRack_Test
                 throw new phpRack_Exception("Class '{$className}' is not defined in '{$fileName}'");
             }
         }
-
         return new $className($fileName, $runner);
     }
 
@@ -356,7 +351,7 @@ abstract class phpRack_Test
     /**
      * Log one message
      *
-     * @param string The message
+     * @param $message string The message
      * @param ... A number of parameters, passed to sprintf()
      * @return void
      */

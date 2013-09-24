@@ -125,6 +125,7 @@ class RunnerTest extends AbstractTest
     {
         $tests = $this->_runner->getTests();
         $test = array_shift($tests);
+        $this->assertNotNull($test, "Test is null, why?");
         $result = $test->run();
         $this->assertTrue($result instanceof phpRack_Result);
         $this->assertTrue(is_bool($result->wasSuccessful()));
@@ -136,6 +137,7 @@ class RunnerTest extends AbstractTest
         ini_set('date.timezone', null);
         $tests = $this->_runner->getTests();
         $this->assertTrue(is_array($tests));
+        $this->assertTrue(count($tests) > 0, "No tests, why?");
         $result = $tests[0]->run();
         $this->assertRegExp('/date\.timezone/', $result->getLog(), 'Default TZ warning missing');
     }
@@ -145,6 +147,7 @@ class RunnerTest extends AbstractTest
         ini_set('date.timezone', 'EST');
         $tests = $this->_runner->getTests();
         $this->assertTrue(is_array($tests));
+        $this->assertTrue(count($tests) > 0, "No tests, why?");
         $result = $tests[0]->run();
         $this->assertNotRegExp('/date\.timezone/', $result->getLog(), 'Default TZ warning exists, why?');
     }

@@ -87,27 +87,24 @@ abstract class phpRack_Suite_Test extends phpRack_Test
     /**
      * Create new instance of the class, using PHP absolute file name
      *
-     * @param string ID of the test, absolute (!) file name
-     * @param phpRack_Runner Instance of test runner
+     * @param $label string ID of the test, its label
+     * @param $runner phpRack_Runner Instance of test runner
      * @return phpRack_Suite_Test
      * @throws phpRack_Exception
      */
-    public static function factory($fileName, phpRack_Runner $runner)
+    public static function factory($label, phpRack_Runner $runner)
     {
+        $fileName = PHPRACK_PATH . '/Suite/library/' . $label;
         if (!file_exists($fileName)) {
             throw new phpRack_Exception("File '{$fileName}' is not found");
         }
-
         if (!preg_match(phpRack_Runner::TEST_PATTERN, $fileName)) {
             throw new phpRack_Exception("File '{$fileName}' is not named properly, can't run it");
         }
-
         // workaround against ZCA static code analysis
         eval('require_once $fileName;');
-
         // fix for Windows
         $fileName = preg_replace('/\\\\+/', '/', $fileName);
-
         // extract relative part of path
         $path = substr(
             $fileName,
@@ -116,11 +113,9 @@ abstract class phpRack_Suite_Test extends phpRack_Test
         );
         // convert path to class name
         $className = 'phpRack_Suite_' . preg_replace('/\/+/', '_', $path);
-
         if (!class_exists($className)) {
             throw new phpRack_Exception("Class '{$className}' is not defined in '{$fileName}'");
         }
-
         return new $className($fileName, $runner);
     }
 }

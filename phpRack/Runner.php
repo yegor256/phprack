@@ -201,18 +201,22 @@ class phpRack_Runner
     public function getTests()
     {
         $tests = array();
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getDir())) as $file) {
+        $dir = $this->getDir();
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $file) {
+            $label = substr($file->getRealPath(), strlen($dir) + 1);
             switch (true) {
-                case preg_match(self::TEST_PATTERN, $file->getFilename()):
-                    $tests[] = phpRack_Test::factory(strval($file), $this);
+                case preg_match(self::TEST_PATTERN, $label):
+                    $tests[] = phpRack_Test::factory($label, $this);
                     break;
-
-                case preg_match(self::SUITE_PATTERN, $file->getFilename()):
-                    $suite = phpRack_Suite::factory(strval($file), $this);
+                case preg_match(self::SUITE_PATTERN, $label):
+                    $suite = phpRack_Suite::factory($label, $this);
                     foreach ($suite->getTests() as $test) {
                         $tests[] = $test;
                     }
                     break;
+                default:
+                    // just ignore the file and move on
+                    continue;
             }
         }
         return $tests;
@@ -272,14 +276,14 @@ class phpRack_Runner
     /**
      * Run one test and return JSON result.
      *
-     * @param $fileName string Test file name (absolute name of PHP file)
+     * @param $label string Test label
      * @param $token string Unique token to return back, if required
      * @param $options array Associative array of options to be used for setAjaxOptions()
      * @return string JSON
      * @throws phpRack_Exception
      * @see bootstrap.php
      */
-    public function run($fileName, $token = 'token', $options = array())
+    public function run($label, $token = 'token', $options = array())
     {
         if (!$this->getAuth()->isAuthenticated()) {
             throw new phpRack_Exception("Authentication failed, please login first");
@@ -290,12 +294,12 @@ class phpRack_Runner
              * @see phpRack_Suite
              */
             require_once PHPRACK_PATH . '/Suite/Test.php';
-            $test = phpRack_Suite_Test::factory($fileName, $this);
+            $test = phpRack_Suite_Test::factory($label, $this);
             if (isset($options['config'])) {
                 $test->setConfig($options['config']);
             }
         } else {
-            $test = phpRack_Test::factory($fileName, $this);
+            $test = phpRack_Test::factory($label, $this);
         }
         unset($options['config']);
         unset($options['suiteTest']);

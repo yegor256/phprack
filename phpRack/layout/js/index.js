@@ -602,7 +602,7 @@ $(
             // Create test object
 
             var data = call.data;
-            data[phpParams.ajaxTag] = call.fileName;
+            data[phpParams.ajaxTag] = call.label;
             data[phpParams.ajaxToken] = call.divId;
 
             var test = new phpRack_Test(

@@ -70,25 +70,23 @@ abstract class phpRack_Suite
     /**
      * Create new instance of the class, using PHP absolute file name
      *
-     * @param string ID of the suite, absolute (!) file name
+     * @param $label string ID of the suite, its label
      * @param phpRack_Runner Instance of test runner
      * @return phpRack_Suite
      * @throws phpRack_Exception
      * @see _addSuite()
      * @see phpRack_Runner::getTests()
      */
-    public static function factory($fileName, phpRack_Runner $runner)
+    public static function factory($label, phpRack_Runner $runner)
     {
+        $fileName = $runner->getDir() . '/' . $label;
         if (!file_exists($fileName)) {
             throw new phpRack_Exception("File '{$fileName}' is not found");
         }
-
         if (!preg_match(phpRack_Runner::SUITE_PATTERN, $fileName)) {
             throw new phpRack_Exception("File '{$fileName}' is not named properly, can't run it");
         }
-
         $className = pathinfo($fileName, PATHINFO_FILENAME);
-
         // workaround against ZCA static code analysis
         eval('require_once $fileName;');
         return new $className($runner);
@@ -123,8 +121,8 @@ abstract class phpRack_Suite
      * Suite is a collection of tests. Name of the suite ($suiteName) is a name
      * of directory in "phpRack/Suite/library".
      *
-     * @param string Suite name
-     * @param array config
+     * @param $suiteName string Suite name
+     * @param $config array config
      * @return $this
      * @throws phpRack_Exception if suite can't be found
      * @see MySuite::_init()
@@ -133,18 +131,15 @@ abstract class phpRack_Suite
     protected function _addSuite($suiteName, array $config = array())
     {
         $dir = PHPRACK_PATH . '/Suite/library/' . $suiteName;
-
         // create suite file iterator
         require_once PHPRACK_PATH . '/Adapters/Files/DirectoryFilterIterator.php';
         $iterator = phpRack_Adapters_Files_DirectoryFilterIterator::factory($dir)
             ->setExtensions('php');
-
         require_once PHPRACK_PATH . '/Suite/Test.php';
-
         foreach ($iterator as $file) {
-            $testPath = realpath($file->getPathname());
+            $label = substr($file->getRealPath(), strlen($dir));
             // phpRack_Exception is possible here
-            $test = phpRack_Suite_Test::factory($testPath, $this->_runner);
+            $test = phpRack_Suite_Test::factory($suiteName . $label, $this->_runner);
             $test->setConfig($config);
             $this->_tests[] = $test;
         }
@@ -157,8 +152,8 @@ abstract class phpRack_Suite
      * Test should be located in our test library, inside "phpRack/Suite/library"
      * directory, and should be inherited from {@link phpRack_Suite_Test} class.
      *
-     * @param string Suite name
-     * @param array config
+     * @param $testName string Suite name
+     * @param $config array config
      * @return $this
      * @throws phpRack_Exception if test can't be found
      * @see MySuite::_init()
@@ -166,10 +161,9 @@ abstract class phpRack_Suite
      */
     protected function _addTest($testName, array $config = array())
     {
-        $testPath = PHPRACK_PATH . '/Suite/library/' . $testName . 'Test.php';
         require_once PHPRACK_PATH . '/Suite/Test.php';
         // Exception is possible here
-        $test = phpRack_Suite_Test::factory($testPath, $this->_runner);
+        $test = phpRack_Suite_Test::factory($testName . 'Test.php', $this->_runner);
         $test->setConfig($config);
         $this->_tests[] = $test;
         return $this;
@@ -178,7 +172,7 @@ abstract class phpRack_Suite
     /**
      * Construct the class
      *
-     * @param phpRack_Runner Instance of test runner
+     * @param $runner phpRack_Runner Instance of test runner
      * @return void
      * @see factory()
      */
