@@ -48,26 +48,42 @@ require_once PHPRACK_PATH . '/Exception.php';
 class phpRack_Package_Qos extends phpRack_Package
 {
     /**
-     * Check latency for the given url(s)
+     * Check latency for the given URL(s).
      *
-     * @param string|array of options
-     * @return $this
+     * <p>Expected options are:
+     *
+     * <code>
+     * array(
+     *   'scenario' => array(
+     *     'http://www.google.com/',
+     *     'http://www.amazon.com/',
+     *   ),
+     *   'testsTotal' => 7,
+     *   'peakMs' => 5000,
+     *   'averageMs' => 2000,
+     * )
+     * </code>
+     *
+     * <p>In this example, in total, there will be seven HTTP requests made. Every next
+     * HTTP request will get a URL from the 'scenario' array. When all requests
+     * are finished their performance will be compared to <code>peakMs</code>
+     * and <code>averageMs</code>.
+     *
+     * @param $options string|array of options
+     * @return phpRack_Package_Qos This object
      * @throws phpRack_Exception if invalid option was passed
      * @throws phpRack_Exception if no url was passed
      */
     public function latency($options)
     {
         $options = $this->_prepareLatencyOptions($options);
-
         /**
          * @see phpRack_Adapters_Url
          */
         require_once PHPRACK_PATH . '/Adapters/Url.php';
-
         $totalRequestsTime = 0;
         $requestsCompleted = 0;
         reset($options['scenario']);
-
         while ($requestsCompleted < $options['testsTotal']) {
             $url = current($options['scenario']);
             if ($url === false) {
@@ -80,12 +96,10 @@ class phpRack_Package_Qos extends phpRack_Package
             $content = $urlAdapter->getContent();
             $requestTime = microtime(true) - $start;
             $requestTimeInMs = intval($requestTime * 1000);
-
             $this->_log(
                 "HTTP to {$url}: {$requestTimeInMs}ms, "
                 . strlen($content) . ' bytes'
             );
-
             // check single query time meets limit
             if ($requestTimeInMs > $options['peakMs']) {
                 $this->_failure(
@@ -93,15 +107,12 @@ class phpRack_Package_Qos extends phpRack_Package
                 );
                 return $this;
             }
-
             $totalRequestsTime += $requestTime;
             $requestsCompleted++;
             next($options['scenario']);
         }
-
         // check average queries time meets limit
         $averageMs = intval($totalRequestsTime / $options['testsTotal'] * 1000);
-
         if ($averageMs < $options['averageMs']) {
             $this->_success("Average latency {$averageMs}ms");
         } else {
@@ -113,10 +124,10 @@ class phpRack_Package_Qos extends phpRack_Package
     }
 
     /**
-     * Prepare latency options (validate them and set defaults options if some option was missed)
+     * Prepare latency options (validate them and set defaults options if some option was missed).
      *
-     * @param string|array of options
-     * @return array
+     * @param $options string|array of options
+     * @return array Options prepared
      * @throws phpRack_Exception if invalid option was passed
      * @throws phpRack_Exception if no url was passed
      */
@@ -125,14 +136,12 @@ class phpRack_Package_Qos extends phpRack_Package
         if (is_string($options)) {
             $options = array('scenario' => array($options));
         }
-
         $defaultOptions = array(
             'scenario'   => array(),
             'averageMs'  => 500,
             'peakMs'     => 1500,
             'testsTotal' => 5
         );
-
         // validate options
         foreach (array_keys($options) as $key) {
             if (!array_key_exists($key, $defaultOptions)) {
@@ -140,7 +149,6 @@ class phpRack_Package_Qos extends phpRack_Package
             }
         }
         $options = array_merge($defaultOptions, $options);
-
         if (empty($options['scenario'])) {
             throw new phpRack_Exception('You must specify at least one url to check');
         }
