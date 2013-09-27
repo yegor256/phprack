@@ -107,7 +107,7 @@ class phpRack_Runner
     /**
      * Construct the class
      *
-     * @param array Options to set to the class
+     * @param $options array Options to set to the class
      * @return void
      * @throws phpRack_Exception If an option is invalid
      * @see bootstrap.php
@@ -256,7 +256,6 @@ class phpRack_Runner
             $success ? phpRack_Test::OK : phpRack_Test::FAILURE,
             $duration / 60
         );
-
         // notify about suite failure
         if (!$success) {
             try {
@@ -269,7 +268,6 @@ class phpRack_Runner
                 );
             }
         }
-
         return $report;
     }
 
@@ -304,10 +302,8 @@ class phpRack_Runner
         unset($options['config']);
         unset($options['suiteTest']);
         $test->setAjaxOptions($options);
-
         $result = $test->run();
         $options = $test->getAjaxOptions();
-
         /**
          * @see phpRack_Runner_Logger
          */
@@ -345,11 +341,9 @@ class phpRack_Runner
         if (empty($this->_options['notify'])) {
             return;
         }
-
         if (!is_array($this->_options['notify'])) {
             throw new phpRack_Exception("Parameter 'notify' should be an array, '{$this->_options['notify']}' given");
         }
-
         if (array_key_exists('email', $this->_options['notify'])) {
             /**
              * @see phpRack_Adapters_Notifier_Mail
