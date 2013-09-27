@@ -53,7 +53,7 @@ require_once PHPRACK_PATH . '/Exception.php';
 class phpRack_Package_Network_Url extends phpRack_Package
 {
     /**
-     * Adapter used for cummunication with server
+     * Adapter used for communication with the server.
      *
      * @var phpRack_Adapters_Url
      * @see url()
@@ -62,7 +62,8 @@ class phpRack_Package_Network_Url extends phpRack_Package
     private $_adapter;
 
     /**
-     * Contain url passed to url function, used in other methods of this class
+     * Contains URL passed to url() function, used in other
+     * methods of this class.
      *
      * @var string
      * @see url()
@@ -71,10 +72,10 @@ class phpRack_Package_Network_Url extends phpRack_Package
     private $_url;
 
     /**
-     * Set URL and validate it
+     * Set URL and validate it.
      *
-     * @param string URL
-     * @param array Options which will affect connection
+     * @param $url string URL
+     * @param $options array Options which will affect connection
      * @return $this
      * @throws phpRack_Exception if URL is invalid
      */
@@ -86,37 +87,32 @@ class phpRack_Package_Network_Url extends phpRack_Package
     }
 
     /**
-     * Make HTTP call and check that pattern exists in result
+     * Make HTTP call and check that pattern exists in result.
      *
-     * @param string Pattern to check
+     * @param $pattern string Pattern to check
      * @return $this
      * @see url()
      * @throws phpRack_Exception If this method is called before url()
      * @throws phpRack_Exception If can't connect
      */
-    public function regex($pattern)
+    public function regex($pattern = '/.*/')
     {
         if (empty($this->_url)) {
             throw new phpRack_Exception('url() function must be called before');
         }
-
         $content = $this->_adapter->getContent();
-
         $found = @preg_match($pattern, $content);
-
         // If regexp pattern is invalid, try to use it as string pattern
         if ($found === false) {
             $this->_log('Regex is not valid, try to use it as string');
             $found = (strpos($content, $pattern) !== false);
         }
-
         // If pattern was found in content
         if ($found) {
             $this->_success("Pattern '{$pattern}' was found on '{$this->_url}'");
         } else {
             $this->_failure("Pattern '{$pattern}' was NOT found on '{$this->_url}'");
         }
-
         return $this;
     }
 }

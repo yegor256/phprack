@@ -82,8 +82,8 @@ class phpRack_Adapters_Url
     /**
      * Constructor
      *
-     * @param string URL
-     * @param array Options
+     * @param $url string URL
+     * @param $options array Options
      * @return void
      * @throws phpRack_Exception if URL is not valid
      * @throws phpRack_Exception if some of passed options is not recognized
@@ -94,34 +94,27 @@ class phpRack_Adapters_Url
         if (!preg_match('#^\w+://#', $url)) {
             $url = 'http://' . $url;
         }
-
         $urlParts = @parse_url($url);
-
         // If there was url parsing error
         if ($urlParts === false) {
             throw new phpRack_Exception('This is NOT valid url');
         }
-
         // Set host
         $this->_host = $urlParts['host'];
-
         // Set url path
         if (isset($urlParts['path'])) {
             $this->_path = $urlParts['path'];
         } else {
             $this->_path = '/';
         }
-
         // Check if have query params after "?", if yes attach them to our _path
         if (isset($urlParts['query'])) {
             $this->_path .= '?' . $urlParts['query'];
         }
-
         // Check if port number was passed in URL
         if (isset($urlParts['port'])) {
             $this->_port = $urlParts['port'];
         }
-
         // Overwrite default options
         foreach ($options as $option => $value) {
             if (!array_key_exists($option, $this->_options)) {
@@ -134,8 +127,8 @@ class phpRack_Adapters_Url
     /**
      * Factory, to simplify calls
      *
-     * @param string URL
-     * @param array Options
+     * @param $url string URL
+     * @param $options array Options
      * @return phpRack_Adapters_Url
      */
     public static function factory($url, array $options = array())
@@ -155,7 +148,6 @@ class phpRack_Adapters_Url
         if (!$this->_socket) {
             $errorNumber = null;
             $errorString = null;
-
             // Try to open connection to server
             $this->_socket = @fsockopen(
                 $this->_host,
@@ -165,7 +157,6 @@ class phpRack_Adapters_Url
                 $this->_options['connectTimeout']
             );
         }
-
         // If can't connect
         if (!$this->_socket) {
             throw new phpRack_Exception(
@@ -202,7 +193,6 @@ class phpRack_Adapters_Url
             assert($e instanceof phpRack_Exception); // for ZCA only
             return false;
         }
-
         return true;
     }
 
@@ -217,19 +207,14 @@ class phpRack_Adapters_Url
     {
         // Try to connect with server, if can't will throw exception
         $this->_connect();
-
         // Create HTTP request
         $request = "GET {$this->_path} HTTP/1.1\r\n"
             . "Host: {$this->_host}\r\n"
             . "Connection: Close\r\n\r\n\r\n";
-
         // Send request
         fwrite($this->_socket, $request);
-
         $response = '';
-
         stream_set_timeout($this->_socket, $this->_options['readTimeout']);
-
         // Key must be underscored because of array format
         // returned by stream_get_meta_data() function
         $info = array('timed_out' => false);
@@ -239,15 +224,12 @@ class phpRack_Adapters_Url
             $response .= $line;
             $info = stream_get_meta_data($this->_socket);
         }
-
         // Close connection
         $this->_disconnect();
-
         // If connection timeouted
         if ($info['timed_out']) {
             throw new phpRack_Exception('Connection timed out!');
         }
-
         return $response;
     }
 }

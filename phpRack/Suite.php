@@ -71,7 +71,7 @@ abstract class phpRack_Suite
      * Create new instance of the class, using PHP absolute file name
      *
      * @param $label string ID of the suite, its label
-     * @param phpRack_Runner Instance of test runner
+     * @param $runner phpRack_Runner Instance of test runner
      * @return phpRack_Suite
      * @throws phpRack_Exception
      * @see _addSuite()
