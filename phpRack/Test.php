@@ -49,33 +49,40 @@ require_once PHPRACK_PATH . '/Assertion.php';
 abstract class phpRack_Test
 {
 
+    /**
+     * Success marker.
+     */
     const OK = 'OK';
+
+    /**
+     * Failure marker.
+     */
     const FAILURE = 'FAILURE';
 
     /**
      * This timezone will be used in there is NO timezone
-     * set on the server
+     * set on the server.
      *
      * @see setUp()
      */
     const DEFAULT_TIMEZONE = 'EST';
 
     /**
-     * ID of the test (unique in the system)
+     * ID of the test (unique in the system).
      *
      * @var string
      */
     protected $_fileName;
 
     /**
-     * Runner of tests
+     * Runner of tests.
      *
      * @var phpRack_Runner
      */
     protected $_runner;
 
     /**
-     * Assertion to use
+     * Assertion to use.
      *
      * @var phpRack_Assertion
      * @see __get()
@@ -143,8 +150,7 @@ abstract class phpRack_Test
         $fileName = preg_replace('/\\\\+/', '/', $fileName);
         // convert filename to class name, support also subdirs in tests dir
         $className = str_replace(
-            '/',
-            '_',
+            '/', '_',
             substr($fileName, strlen($runner->getDir()) + 1, -4)
         );
         // workaround against ZCA static code analysis
@@ -212,7 +218,6 @@ abstract class phpRack_Test
     {
         // clean all previous results, if any
         $this->assert->getResult()->clean();
-
         // find all methods that start with "test" and call them
         $rc = new ReflectionClass($this);
         foreach ($rc->getMethods() as $method) {
@@ -221,10 +226,8 @@ abstract class phpRack_Test
             }
             try {
                 $this->setUp();
-
                 // to avoid test cancelation because time is over
                 set_time_limit(0);
-
                 call_user_func(
                     array($this, $method->getName()),
                     $this->_ajaxOptions['tag']
@@ -242,7 +245,6 @@ abstract class phpRack_Test
                 ->fail();
             }
         }
-
         // add final log line, summarizing the test execution
         $this->assert->getResult()->addLog(
             sprintf(
@@ -251,7 +253,6 @@ abstract class phpRack_Test
                 $this->assert->getResult()->getDuration()
             )
         );
-
         // return instance of phpRack_Result class
         return $this->assert->getResult();
     }
@@ -345,7 +346,6 @@ abstract class phpRack_Test
      */
     protected function _init()
     {
-
     }
 
     /**

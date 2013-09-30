@@ -223,6 +223,18 @@ class phpRack_Runner
     }
 
     /**
+     * Create URL of a test that can be used outside of
+     * phpRack front page to retrieve test results in JSON.
+     *
+     * @return string URL of the test
+     */
+    public function getTestURL($label)
+    {
+        return $_SERVER['REQUEST_URI'] . '?' . PHPRACK_AJAX_TAG
+            . '=' . urlencode($label);
+    }
+
+    /**
      * Run all tests and return a text report about their execution
      *
      * @return string

@@ -45,7 +45,6 @@ class RunnerTest extends AbstractTest
         } else {
             $login = $hash = false; // no authentication
         }
-
         $auth = $this->_runner->getAuth()->authenticate($login, $hash, true);
         $this->assertTrue($auth instanceof phpRack_Runner_Auth_Result);
         $this->assertTrue(
@@ -53,7 +52,6 @@ class RunnerTest extends AbstractTest
             "Invalid auth with authenticate(), " .
             "login: '{$login}', hash: '{$hash}', message: '{$auth->getMessage()}'"
         );
-
         $this->assertTrue(
             $this->_runner->getAuth()->isAuthenticated(),
             "Invalid result in isAuthenticated(), " .
@@ -72,12 +70,10 @@ class RunnerTest extends AbstractTest
         );
         // Injecting values into config
         $authArray = array_merge($phpRackConfig, $authArray);
-        
         // Removing htaccess authentication in case it is set
         if (array_key_exists('htpasswd', $authArray)) {
             unset($authArray['htpasswd']);
         }
-        
         // Creating instance of Runner to test it with our config
         $runner = new phpRack_Runner($authArray);
         $_SERVER['PHP_AUTH_USER'] = $authArray['auth']['username'];
@@ -157,5 +153,15 @@ class RunnerTest extends AbstractTest
         $report = $this->_runner->runSuite();
         $this->assertFalse(empty($report), "Empty test report, why?");
     }
-    
+
+    public function testRunnerCanBuildTestJsonUrl()
+    {
+        $_SERVER['REQUEST_URI'] = '/hey/phprack.php';
+        $url = $this->_runner->getTestURL('Hey/MyTest.php');
+        $this->assertEquals(
+            $url, '/hey/phprack.php?' . PHPRACK_AJAX_TAG . '=Hey%2FMyTest.php',
+            'URL produced by getTestURL() is not correct'
+        );
+    }
+
 }
