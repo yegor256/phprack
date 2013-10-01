@@ -89,7 +89,7 @@ try {
         throw new Exception('Invalid configuration: global $phpRackConfig is missed');
     }
     if (!defined('PHPRACK_VERSION')) {
-        define('PHPRACK_VERSION', '0.2dev');
+        define('PHPRACK_VERSION', '1.0');
     }
     if (!defined('PHPRACK_AJAX_TAG')) {
         define('PHPRACK_AJAX_TAG', 'test');
