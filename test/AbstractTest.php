@@ -20,12 +20,13 @@ $phpRackConfig = array(
  * but here we should set them explicitly, for tests only
  */
 $_SERVER['REQUEST_URI'] = 'no-URL-it-is-testing.com';
+$_SERVER['SERVER_ADDR'] = '127.0.0.1';
 define('PHPRACK_AJAX_TAG', 'testing-tag');
 define('PHPRACK_AJAX_TOKEN', 'testing-token');
 
 /**
  * Added to avoid an error if tests are executed in different order
- * and PHPRACK_VERSION is required but doesn't defined 
+ * and PHPRACK_VERSION is required but doesn't defined
  * @see layout.phtml
  */
 define('PHPRACK_VERSION', '0.1test');
@@ -72,7 +73,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
      * in your unit tests. Only if you're testing the mechanism of their
      * instantiation. If you're testing packages, use the approach explained
      * above in PHP snippet.
-     * 
+     *
      * @see PHPUnit_Framework_TestCase::run()
      * @see tearDown()
      */
@@ -104,19 +105,19 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
         unset($this->_test);
         unset($this->_runner);
     }
-    
+
     /**
      * Log one message in testing
      *
      * @param $message string|Exception Message to log
      * @return void
      */
-    protected function _log($message) 
+    protected function _log($message)
     {
         if ($message instanceof Exception) {
             $message = get_class($message) . ': ' . $message->getMessage();
         }
         echo $message . "\n";
     }
-    
+
 }
