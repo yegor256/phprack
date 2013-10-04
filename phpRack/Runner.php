@@ -230,7 +230,7 @@ class phpRack_Runner
      */
     public function getTestURL($label)
     {
-        return $_SERVER['REQUEST_URI'] . '?' . PHPRACK_AJAX_TAG
+        return $_SERVER['PHP_SELF'] . '?' . PHPRACK_AJAX_TAG
             . '=' . urlencode($label);
     }
 

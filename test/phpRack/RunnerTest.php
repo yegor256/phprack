@@ -156,7 +156,7 @@ class RunnerTest extends AbstractTest
 
     public function testRunnerCanBuildTestJsonUrl()
     {
-        $_SERVER['REQUEST_URI'] = '/hey/phprack.php';
+        $_SERVER['PHP_SELF'] = '/hey/phprack.php';
         $url = $this->_runner->getTestURL('Hey/MyTest.php');
         $this->assertEquals(
             $url, '/hey/phprack.php?' . PHPRACK_AJAX_TAG . '=Hey%2FMyTest.php',
