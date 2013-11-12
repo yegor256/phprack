@@ -151,23 +151,19 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
     public function accept()
     {
         $file = $this->current();
-
         // Ignore "dots files" which appear in some systems
         if (trim($file, '.') == '') {
             return false;
         }
-
         if (!is_null($this->_maxDepth)
             && substr_count(substr($file, strlen($this->_dir) + 1), '/') > $this->_maxDepth
         ) {
             return false;
         }
-
         // Ignore files which don't match extensionsPattern
         if ($this->_extensionsPattern && !preg_match($this->_extensionsPattern, $file)) {
             return false;
         }
-
         // Ignore files which match excludePattern
         if ($this->_excludePatterns) {
             foreach ($this->_excludePatterns as $pattern) {
@@ -176,7 +172,6 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
                 }
             }
         }
-
         // Everything rest is allowable
         return true;
     }
