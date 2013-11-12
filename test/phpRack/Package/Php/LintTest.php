@@ -79,5 +79,14 @@ class phpRack_Package_Php_LintTest extends AbstractTest
         $this->_package->lint($this->_testFilesDir . '/notexists', $options);
         $this->assertFalse($this->_result->wasSuccessful());
     }
+
+    /**
+     * Tests if lint does not check folders.
+     */
+    public function testLintWithFolder()
+    {
+        $this->_package->lint($this->_testFilesDir . '/php/empty', $options);
+        $this->assertTrue($this->_result->wasSuccessful());
+    }
     
 }

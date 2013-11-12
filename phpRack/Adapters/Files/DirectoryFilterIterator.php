@@ -152,6 +152,9 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
     {
         $file = $this->current();
 
+        if (is_dir ($file)) {
+            return false;
+        }
         // Ignore "dots files" which appear in some systems
         if (trim($file, '.') == '') {
             return false;

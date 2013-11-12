@@ -30,6 +30,16 @@ class phpRack_Package_ShellTest extends AbstractTest
     public function testBasicRequestWorks()
     {
         $this->_package->exec('who am i');
+
+    }
+
+    /**
+     * Tests for shell output text.
+     */
+    public function testRequestOutput()
+    {
+        $this->_package->exec('dir', '/test/');
+
     }
 
 }

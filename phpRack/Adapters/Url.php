@@ -232,4 +232,13 @@ class phpRack_Adapters_Url
         }
         return $response;
     }
+    /**
+     * Get response code of URL passed to constructor.
+     * @return string response code of URL.
+     */
+    public function getResponseCode() {
+        $content = $this->getContent();
+        $code = substr($content,9,3);
+        return $code;
+    }
 }
