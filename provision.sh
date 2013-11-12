@@ -4,7 +4,7 @@ export DEBIAN_FRONTEND=noninteractive
 hostname vagrant && echo -e "\n127.0.0.1 vagrant\n" >> /etc/hosts
 
 apt-get -y update \
-    && apt-get -y install mc htop zip unzip git make openjdk-7-jdk jscoverage ant ant-contrib python-software-properties sendmail \
+    && apt-get -y install zip unzip git make openjdk-7-jdk jscoverage python-software-properties sendmail \
     && apt-get -y upgrade
 update-java-alternatives --set java-1.7.0-openjdk-amd64
 /usr/bin/add-apt-repository ppa:ondrej/php5-oldstable \
