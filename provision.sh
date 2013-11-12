@@ -19,10 +19,10 @@ pear channel-discover pear.phing.info \
     && pear channel-discover pear.phpdoc.org
 pear upgrade
 pear install --force --alldeps PHP_CodeSniffer \
+    PhpDocumentor \
     phing/phing \
     pear.phpunit.de/PHPUnit \
     phpmd/PHP_PMD \
-    phpdoc/phpDocumentor-alpha \
     Net_FTP Net_SMTP Mail
 
 if [ ! -e /etc/php5/cli/conf.d/xdebug.ini ]; then
