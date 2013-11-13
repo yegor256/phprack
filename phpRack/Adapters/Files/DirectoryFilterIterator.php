@@ -164,10 +164,10 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
         if (is_dir($file)) {
             return false;
         }
+        // Ignore "dots files" which appear in some systems
         if (trim($file, '.') == '') {
             return false;
         }
-
         if (!is_null($this->_maxDepth)
             && substr_count(substr($file, strlen($this->_dir) + 1), '/') > $this->_maxDepth
         ) {
@@ -183,12 +183,10 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
      */
     private function _validByOptions($file)
     {
-
         // Ignore files which don't match extensionsPattern
         if ($this->_extensionsPattern && !preg_match($this->_extensionsPattern, $file)) {
             return false;
         }
-
         // Ignore files which match excludePattern
         if ($this->_excludePatterns) {
             foreach ($this->_excludePatterns as $pattern) {

@@ -83,6 +83,28 @@ Go to this URL: `http://your-website-url/phprack.php` and enjoy. Try this link
 to see what you're going to see on your site:
 ​[http://www.phprack.com/phprack.php](http://www.phprack.com/phprack.php).
 
+## How to contribute?
+
+First, fork our repository and clone it to your local machine and install
+[Vagrant](http://www.vagrantup.com/). Then, run:
+
+> vagrant up
+
+A virtual machine with pre-installed requisites will be ready in a few
+minutes. Login to it and go to `/vagrant` directory:
+
+> vagrant ssh
+
+Then, in the virtual machine run:
+
+> phing
+
+All tests should pass. If you see any problems, please submit an
+new issue to us.
+
+After you make your changes don't forget to run `phing` again to make
+sure you didn't break anything. When ready, submit a pull request.
+
 DISCLAIMER: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE

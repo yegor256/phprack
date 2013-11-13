@@ -17,8 +17,8 @@ class phpRack_Package_Php_LintTest extends AbstractTest
 {
     
     /**
-    * Directory where we have sample files, will be set it in setUp() function
-    */
+     * Directory where we have sample files, will be set it in setUp() function.
+     */
     private $_testFilesDir;
 
     /**

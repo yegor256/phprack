@@ -199,7 +199,7 @@ class phpRack_Package_Php extends phpRack_Package
     }
 
     /**
-     * Check files in directory have correct php syntax
+     * Check files in directory have correct php syntax.
      *
      * Possible options are:
      *
@@ -226,37 +226,29 @@ class phpRack_Package_Php extends phpRack_Package
     {
         require_once PHPRACK_PATH . '/Adapters/File.php';
         $dir = phpRack_Adapters_File::factory($dir)->getFileName();
-
         if (!file_exists($dir)) {
             $this->_failure("Directory '{$dir}' does not exist");
             return $this;
         }
-
         // Create our file iterator
         require_once PHPRACK_PATH . '/Adapters/Files/DirectoryFilterIterator.php';
         $iterator = phpRack_Adapters_Files_DirectoryFilterIterator::factory($dir);
-
         if (!empty($options['exclude'])) {
             $iterator->setExclude($options['exclude']);
         }
-
         if (!empty($options['extensions'])) {
             $iterator->setExtensions($options['extensions']);
         }
-
         $lintCommand = 'php -l';
-
         $valid = $invalid = 0;
         foreach ($iterator as $file) {
             $file = realpath($file->getPathname());
             $command = $lintCommand . ' ' . escapeshellarg($file) . ' 2>&1';
-
             /**
              * @see phpRack_Adapters_Shell_Command
              */
             require_once PHPRACK_PATH . '/Adapters/Shell/Command.php';
             $output = phpRack_Adapters_Shell_Command::factory($command)->run();
-
             if (preg_match('#^No syntax errors detected#', $output)) {
                 if (!empty($options['verbose'])) {
                     $this->_success("File '{$file}' is valid");
@@ -268,7 +260,6 @@ class phpRack_Package_Php extends phpRack_Package
                 $invalid++;
             }
         }
-
         // notify phpRack about success in the test
         if (!$invalid) {
             $this->_success("{$valid} files are LINT-valid");
