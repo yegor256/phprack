@@ -35,7 +35,7 @@ class phpRack_Package_SimpleTest extends AbstractTest
      */
     public function testSuccess()
     {
-        $this->_package->success();
+        $this->_package->success("Successful test");
         $this->assertTrue($this->_result->wasSuccessful());
     }
 
@@ -44,7 +44,7 @@ class phpRack_Package_SimpleTest extends AbstractTest
      */
     public function testFailure()
     {
-        $this->_package->fail();
+        $this->_package->fail("Failed test");
         $this->assertFalse($this->_result->wasSuccessful());
     }
 

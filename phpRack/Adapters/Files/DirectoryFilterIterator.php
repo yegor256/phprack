@@ -151,7 +151,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
     public function accept()
     {
         $file = $this->current();
-        return ($this->_validFile($file) && !$this->_validByOptions($file));
+        return ($this->_validFile($file) && $this->_validByOptions($file));
     }
 
     /**
