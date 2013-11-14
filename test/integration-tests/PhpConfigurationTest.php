@@ -32,6 +32,23 @@ class PhpConfigurationTest extends phpRack_Test
         $this->assert->php->extensions->fileinfo->isAlive();
     }
 
+    /**
+     * Test for the extension which does not exist.
+     */
+    public function testPhpExtensionsNotExist()
+    {
+        $this->assert->php->extensions
+            ->isLoaded('someIncorrectExtensionName');
+    }
+
+    /**
+     * Tests showAll() function of hpRack_Package_Php_Extensions.
+     */
+    public function testShowAllExtensions()
+    {
+        $this->assert->php->extensions->showAll();
+    }
+
     public function testPhpFunctionExist()
     {
         $this->assert->php
