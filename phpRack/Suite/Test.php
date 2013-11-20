@@ -118,4 +118,13 @@ abstract class phpRack_Suite_Test extends phpRack_Test
         }
         return new $className($fileName, $runner);
     }
+
+    /**
+     * Get tests label.
+     * @return string
+     */
+    public function getLabel()
+    {
+        return ltrim(substr($this->_fileName, strlen(PHPRACK_PATH . '/Suite/library/')), '/');
+    }
 }
