@@ -93,4 +93,18 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
             $this->markTestIncomplete();
         }
     }
+
+    public function testValidResponseCode()
+    {
+        $this->_package->url('http://www.google.com/')
+        ->responseCode('/^[2|3]/');
+        $this->assertTrue($this->_result->wasSuccessful());
+    }
+
+    public function testInvalidResponseCode()
+    {
+        $this->_package->url('http://www.google.com/some_wrong_link')
+            ->responseCode('/^[2|3]/');
+        $this->assertFalse($this->_result->wasSuccessful());
+    }
 }

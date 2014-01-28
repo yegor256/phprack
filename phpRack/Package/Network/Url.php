@@ -115,4 +115,22 @@ class phpRack_Package_Network_Url extends phpRack_Package
         }
         return $this;
     }
+    /**
+     * Checks for http response code.
+     * @var string regexp pattern of the valid http response code.
+     * @return  boolean.
+     * @throws phpRack_Exception If this method is called before url()
+     */
+    public function responseCode($pattern)
+    {
+        if (empty($this->_url)) {
+            throw new phpRack_Exception('url() function must be called before');
+        }
+        $code = $this->_adapter->getResponseCode();
+        if (preg_match($pattern, $code)) {
+            $this->_success("Valid response code {$code} was returned by the link '{$this->_url}'");
+        } else {
+            $this->_failure("Invalid response code {$code} was returned by the link '{$this->_url}'");
+        }
+    }
 }
