@@ -4,7 +4,7 @@
     "keywords":["php", "test", "integration", "deployment"],
     "type":"library",
     "license":"BSD-3-Clause",
-    "version": "1.1",
+    "version": "2.0-SNAPSHOT",
     "authors":[
         {
             "name":"Yegor Bugayenko",
