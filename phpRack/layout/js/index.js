@@ -604,7 +604,9 @@ $(
             var data = call.data;
             data[phpParams.ajaxTag] = call.label;
             data[phpParams.ajaxToken] = call.divId;
-
+            if (call.suiteTest != undefined && call.suiteTest == true) {
+                data['suiteTest'] = call.suiteTest;
+            }
             var test = new phpRack_Test(
                 {
                     id: call.divId,
