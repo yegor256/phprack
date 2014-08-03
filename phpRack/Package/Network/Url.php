@@ -83,6 +83,7 @@ class phpRack_Package_Network_Url extends phpRack_Package
     {
         $this->_adapter = phpRack_Adapters_Url::factory($url, $options);
         $this->_url = $url;
+
         return $this;
     }
 
@@ -113,12 +114,13 @@ class phpRack_Package_Network_Url extends phpRack_Package
         } else {
             $this->_failure("Pattern '{$pattern}' was NOT found on '{$this->_url}'");
         }
+
         return $this;
     }
     /**
      * Checks for http response code.
      * @var string regexp pattern of the valid http response code.
-     * @return  boolean.
+     * @return boolean.
      * @throws phpRack_Exception If this method is called before url()
      */
     public function responseCode($pattern)

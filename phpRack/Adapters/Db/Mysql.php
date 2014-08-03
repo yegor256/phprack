@@ -127,7 +127,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
      * Execute SQL query on the server
      *
      * @param string SQL query
-     * @return string Raw result from the server, in text
+     * @return string            Raw result from the server, in text
      * @throws phpRack_Exception If something wrong happens there
      * @see mysql_query()
      */
@@ -168,7 +168,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
     /**
      * Show database schema
      *
-     * @return string Raw result from the server, in text
+     * @return string            Raw result from the server, in text
      * @throws phpRack_Exception If connect() method wasn't executed earlier
      * @throws phpRack_Exception If no database was selected as current
      * @throws phpRack_Exception Passed from query()
@@ -205,13 +205,14 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
                 }
             }
         }
+
         return $response;
     }
 
     /**
      * Show connections and their status
      *
-     * @return string Raw result from the server, in text
+     * @return string            Raw result from the server, in text
      * @throws phpRack_Exception If connect() method wasn't executed earlier
      * @see phpRack_Package_Db_Mysql::showConnections()
      */
@@ -232,7 +233,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
     /**
      * Show server info
      *
-     * @return string Raw result from the server, in text
+     * @return string            Raw result from the server, in text
      * @throws phpRack_Exception If connect() method wasn't executed earlier
      * @see phpRack_Package_Db_Mysql::showServerInfo()
      */
@@ -279,6 +280,7 @@ class phpRack_Adapters_Db_Mysql extends phpRack_Adapters_Db_Abstract
 
         // Mysql variables. We do not need to check privileges here
         $out .= $this->query('SHOW GLOBAL VARIABLES') . "\n";
+
         return $out;
     }
 

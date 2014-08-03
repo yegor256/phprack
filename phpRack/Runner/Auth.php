@@ -175,6 +175,7 @@ class phpRack_Runner_Auth
                     'hash'     => $hash,
                 )
             );
+
         return $adapter->authenticate();
     }
 
@@ -185,7 +186,7 @@ class phpRack_Runner_Auth
      * we should save them in COOKIE in order to avoid further login requests.
      *
      * @throws phpRack_Exception if some required request parameter is missed
-     * @return array with retrieved login and hash
+     * @return array             with retrieved login and hash
      */
     private function _tryHttpPost()
     {
@@ -201,6 +202,7 @@ class phpRack_Runner_Auth
             $login . ':' . $hash, // hashed form of login and pwd
             time() + self::COOKIE_LIFETIME // cookie expiration date
         );
+
         return array (
             'login' => $login,
             'hash'  => $hash
@@ -214,7 +216,7 @@ class phpRack_Runner_Auth
      * bridge, we don't store them anywhere
      *
      * @throws phpRack_Exception if some required request parameter is missed
-     * @return array with retrieved login and hash
+     * @return array             with retrieved login and hash
      */
     private function _tryHttpGet()
     {
@@ -223,6 +225,7 @@ class phpRack_Runner_Auth
         ) {
             return array();
         }
+
         return array (
             'login' => $_GET[self::GET_LOGIN],
             'hash'  => md5($_GET[self::GET_PWD])
@@ -249,6 +252,7 @@ class phpRack_Runner_Auth
         // we already have authentication information in COOKIE, we just
         // need to parse it and validate
         $data = explode(':', $_COOKIE[self::COOKIE_NAME]);
+
         return array (
             'login' => $data[0],
             'hash'  => $data[1]
@@ -270,6 +274,7 @@ class phpRack_Runner_Auth
         ) {
             return array();
         }
+
         return array (
             'login' => $_SERVER['PHP_AUTH_USER'],
             'hash'  => md5($_SERVER['PHP_AUTH_PW'])
@@ -313,6 +318,7 @@ class phpRack_Runner_Auth
                 $result = array('login' => false, 'hash'=> false);
         }
         $this->_authResult = $this->authenticate($result['login'], $result['hash'], true);
+
         return $this->_authResult->isValid();
     }
 
@@ -321,13 +327,14 @@ class phpRack_Runner_Auth
      *
      * @return phpRack_Runner_Auth_Result
      * @see boostrap.php
-     * @throws phpRack_Exception If the result is not set yet
+     * @throws phpRack_Exception          If the result is not set yet
      */
     public function getAuthResult()
     {
         if (!isset($this->_authResult)) {
             throw new phpRack_Exception("AuthResult is not set yet, use authenticate() before");
         }
+
         return $this->_authResult;
     }
 
@@ -345,6 +352,7 @@ class phpRack_Runner_Auth
          * @see phpRack_Runner_Auth_Result
          */
         require_once PHPRACK_PATH . '/Runner/Auth/Result.php';
+
         return $this->_authResult = new phpRack_Runner_Auth_Result($result, $message);
     }
 

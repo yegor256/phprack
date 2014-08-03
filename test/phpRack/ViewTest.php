@@ -20,7 +20,7 @@ require_once PHPRACK_PATH . '/View.php';
 
 class ViewTest extends AbstractTest
 {
-    
+
     public function testRenderingReturnsValidHtml()
     {
         global $phpRackConfig;
@@ -28,9 +28,9 @@ class ViewTest extends AbstractTest
 
         $view = new phpRack_View();
         $view->assign(array('runner' => $runner));
-        
+
         $html = $view->render();
         $this->assertFalse(empty($html), "Empty HTML, why?");
     }
-        
+
 }

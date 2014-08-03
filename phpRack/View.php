@@ -98,6 +98,7 @@ class phpRack_View
         foreach ($injects as $name=>$value) {
             $this->_injected[$name] = $value;
         }
+
         return $this;
     }
 
@@ -116,6 +117,7 @@ class phpRack_View
         ob_start();
         // workaround against ZCA static code analysis
         eval("include PHPRACK_PATH . '/layout/layout.phtml';");
+
         return $this->compressedHtml(ob_get_clean());
     }
 
@@ -232,6 +234,7 @@ class phpRack_View
         /**
          * fix output due to libxml2 bug described in #53
          */
+
         return preg_replace('/<!\[CDATA\[\s*(\/\/)?\]\]>/', '//', $dom->saveXml());
     }
 
@@ -251,6 +254,7 @@ class phpRack_View
             '/([\,\;\:\{\}])\s+/' => '${1}', // compress trailing white spaces
             '/\/\*.*?\*\//'       => '', // kill comments at all
         );
+
         return preg_replace(
             array_keys($replacers),
             $replacers,

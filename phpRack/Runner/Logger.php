@@ -77,8 +77,10 @@ class phpRack_Runner_Logger
                 $head = substr($log, 0, $cutSize / 2);
                 $tail = substr($log, -1 * $cutSize / 2);
             }
+
             return $head . "\n\n... content skipped (" . ($len - $max) . " bytes) ...\n\n" . $tail;
         }
+
         return $log;
     }
 
@@ -89,7 +91,7 @@ class phpRack_Runner_Logger
      * @return string Proper UTF-8 formatted string
      * @see run()
      * @see #60 I think that this method shall be extensively tested. Now I have problems
-     *      with content that is not in English.
+     *                with content that is not in English.
      */
     public static function utf8Encode($str)
     {

@@ -45,10 +45,10 @@ class phpRack_Adapters_Cpu
      * CPU adapter factory return adapter depending on operating system
      *
      * @return phpRack_Adapters_Cpu_Abstract
-     * @throws phpRack_Exception If OS is not supported
+     * @throws phpRack_Exception             If OS is not supported
      * @see For MacOS I think we should use system_profiler shell command.
-     *      After that we can parse it output in similar way like we do it for
-     *      Windows or Linux
+     *                                       After that we can parse it output in similar way like we do it for
+     *                                       Windows or Linux
      * @todo #17 How about Mac OS? There is no /proc directory in Mac OS
      */
     public static function factory()
@@ -65,6 +65,7 @@ class phpRack_Adapters_Cpu
         }
         eval ('require_once $classFile;'); // for ZCA validation
         $className = 'phpRack_Adapters_Cpu_' . ucfirst($os);
+
         return new $className();
     }
 }

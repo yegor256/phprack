@@ -61,7 +61,7 @@ class phpRack_Suite_ServerHealth_TopProcessesTest extends phpRack_Suite_Test
      *
      * @return void
      * @todo #48 This test works only on Linux, so we should change it
-     *      soon to something more portable
+     *              soon to something more portable
      */
     public function testShowProcesses()
     {

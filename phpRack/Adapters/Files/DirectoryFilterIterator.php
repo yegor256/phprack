@@ -113,6 +113,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
             $extension = preg_quote(trim($extension));
         }
         $this->_extensionsPattern = '/(\.' . implode('|', $extensions). ')$/';
+
         return $this;
     }
 
@@ -128,6 +129,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
             $excludePatterns = array($excludePatterns);
         }
         $this->_excludePatterns = $excludePatterns;
+
         return $this;
     }
 
@@ -140,6 +142,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
     public function setMaxDepth($maxDepth)
     {
         $this->_maxDepth = $maxDepth;
+
         return $this;
     }
 
@@ -151,6 +154,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
     public function accept()
     {
         $file = $this->current();
+
         return ($this->_validFile($file) && $this->_validByOptions($file));
     }
 
@@ -173,6 +177,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
         ) {
             return false;
         }
+
         return true;
     }
 
@@ -195,6 +200,7 @@ class phpRack_Adapters_Files_DirectoryFilterIterator extends FilterIterator
                 }
             }
         }
+
         return true;
     }
 

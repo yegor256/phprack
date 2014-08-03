@@ -89,6 +89,7 @@ abstract class phpRack_Suite
         $className = pathinfo($fileName, PATHINFO_FILENAME);
         // workaround against ZCA static code analysis
         eval('require_once $fileName;');
+
         return new $className($runner);
     }
 
@@ -143,6 +144,7 @@ abstract class phpRack_Suite
             $test->setConfig($config);
             $this->_tests[] = $test;
         }
+
         return $this;
     }
 
@@ -166,6 +168,7 @@ abstract class phpRack_Suite
         $test = phpRack_Suite_Test::factory($testName . 'Test.php', $this->_runner);
         $test->setConfig($config);
         $this->_tests[] = $test;
+
         return $this;
     }
 
@@ -176,7 +179,7 @@ abstract class phpRack_Suite
      * @return void
      * @see factory()
      */
-    protected final function __construct(phpRack_Runner $runner)
+    final protected function __construct(phpRack_Runner $runner)
     {
         $this->_runner = $runner;
         $this->_init();

@@ -92,7 +92,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
 
         $port = 25;
         if (!empty($this->_options['port'])) {
-            $port = (int)$this->_options['port'];
+            $port = (int) $this->_options['port'];
         }
 
         $protocol = 'tcp';
@@ -189,6 +189,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
             $this->_log("Can't write to a socket", true);
         }
         $this->_log($msg, false);
+
         return $this;
     }
 
@@ -197,7 +198,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
      *
      * Second parameter used as time limit for read stream
      *
-     * @param int|array $code
+     * @param  int|array         $code
      * @param int Timeout (Default: 300)
      * @throws phpRack_Exception if can't change stream timeout
      * @throws phpRack_Exception if can't read from the socket
@@ -228,6 +229,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
         } while (strpos($msg, '-') === 0);
 
         $this->_log($log, $hasError);
+
         return $this;
     }
 
@@ -237,8 +239,8 @@ class phpRack_Adapters_Notifier_Mail_Smtp
      *
      * @see _mustBe()
      * @see _query()
-     * @param string $msg
-     * @param bool $throwError
+     * @param  string            $msg
+     * @param  bool              $throwError
      * @throws phpRack_Exception if $throwError eq. true
      * @return void
      */

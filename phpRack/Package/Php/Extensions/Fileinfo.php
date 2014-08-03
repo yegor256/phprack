@@ -52,6 +52,7 @@ class phpRack_Package_Php_Extensions_Fileinfo extends phpRack_Package
     {
         if (!extension_loaded('fileinfo')) {
             $this->_failure("Extension 'fileinfo' is NOT loaded, we can't validate it any further");
+
             return $this;
         }
 
@@ -59,16 +60,19 @@ class phpRack_Package_Php_Extensions_Fileinfo extends phpRack_Package
         $finfo = new finfo(FILEINFO_MIME, $magic);
         if (!$finfo) {
             $this->_failure("finfo() failed to load magic: '{$magic}'");
+
             return $this;
         }
 
         $type = @$finfo->file(__FILE__);
         if (strpos($type, 'text/') !== 0) {
             $this->_failure("finfo() failed to detect PHP file type, returned: '{$type}'");
+
             return $this;
         }
 
         $this->_success("Extension 'fileinfo' is configured properly");
+
         return $this;
     }
 

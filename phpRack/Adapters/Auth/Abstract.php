@@ -64,6 +64,7 @@ abstract class phpRack_Adapters_Auth_Abstract
     public function setOptions($options)
     {
         $this->_options = $options;
+
         return $this;
     }
 
@@ -79,6 +80,7 @@ abstract class phpRack_Adapters_Auth_Abstract
         foreach ($request as $key => $value) {
             $this->_request[$key] = $value;
         }
+
         return $this;
     }
 
@@ -104,6 +106,7 @@ abstract class phpRack_Adapters_Auth_Abstract
          * @see phpRack_Runner_Auth_Result
          */
         require_once PHPRACK_PATH . '/Runner/Auth/Result.php';
+
         return new phpRack_Runner_Auth_Result($result, $message);
     }
 

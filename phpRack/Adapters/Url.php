@@ -191,8 +191,10 @@ class phpRack_Adapters_Url
             $this->_connect();
         } catch (phpRack_Exception $e) {
             assert($e instanceof phpRack_Exception); // for ZCA only
+
             return false;
         }
+
         return true;
     }
 
@@ -200,7 +202,7 @@ class phpRack_Adapters_Url
      * Get content of URL passed to constructor
      *
      * @see __construct()
-     * @return string Content of URL
+     * @return string            Content of URL
      * @throws phpRack_Exception If can't get content for some reason
      */
     public function getContent()
@@ -230,6 +232,7 @@ class phpRack_Adapters_Url
         if ($info['timed_out']) {
             throw new phpRack_Exception('Connection timed out!');
         }
+
         return $response;
     }
     /**
@@ -240,6 +243,7 @@ class phpRack_Adapters_Url
     {
         $content = $this->getContent();
         $code = substr($content, 9, 3);
+
         return $code;
     }
 }

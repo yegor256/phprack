@@ -21,8 +21,9 @@ class ParametrizedTest extends PhpRack_Test
     public function testFiles($tag = null)
     {
         if ($tag) {
-            $files = $this->_getFiles(); 
+            $files = $this->_getFiles();
             $this->assert->disc->file->cat($files[$tag]);
+
             return;
         }
         $this->_log("Click one of the tags...");
@@ -33,6 +34,7 @@ class ParametrizedTest extends PhpRack_Test
         foreach (glob(PHPRACK_PATH . '/*.php') as $file) {
             $files[pathinfo($file, PATHINFO_FILENAME)] = $file;
         }
+
         return $files;
     }
 }

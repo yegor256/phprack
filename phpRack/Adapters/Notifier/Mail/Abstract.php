@@ -100,6 +100,7 @@ abstract class phpRack_Adapters_Notifier_Mail_Abstract
     public function setBody($plain)
     {
         $this->_body = trim($plain);
+
         return $this;
     }
 
@@ -112,18 +113,20 @@ abstract class phpRack_Adapters_Notifier_Mail_Abstract
     public function setSubject($text)
     {
         $this->_subject = $text;
+
         return $this;
     }
 
     /**
      * Sets destination mail or mails.
      *
-     * @param string|array $mails
+     * @param  string|array          $mails
      * @return phpRack_Adapters_Mail
      */
     public function setTo($mails)
     {
         $this->_to = (!is_array($mails)) ? array($mails) : $mails;
+
         return $this;
     }
 
@@ -144,6 +147,7 @@ abstract class phpRack_Adapters_Notifier_Mail_Abstract
         if (empty($this->_body)) {
             throw new phpRack_Exception('Body is not specified');
         }
+
         return true;
     }
 

@@ -86,6 +86,7 @@ class phpRack_Package_Php extends phpRack_Package
                 "PHP function '{$name}' does NOT exist: function_exists('{$name}') returned FALSE"
             );
         }
+
         return $this;
     }
 
@@ -116,6 +117,7 @@ class phpRack_Package_Php extends phpRack_Package
         } else {
             $this->_log("php.ini '{$param}' is set to '{$this->_iniValue}', it's OK");
         }
+
         return $this;
     }
 
@@ -140,6 +142,7 @@ class phpRack_Package_Php extends phpRack_Package
         // checking digit part
         if (!preg_match('~^\d+(K|M|G)?$~i', $value)) {
             $this->_failure("php.ini value has incorrect numeric format: '{$value}'");
+
             return $this;
         }
 
@@ -167,6 +170,7 @@ class phpRack_Package_Php extends phpRack_Package
         // maybe it's CLI version, not HTML?
         if (strpos($html, '<') !== 0) {
             $this->_log($html);
+
             return $this;
         }
 
@@ -228,6 +232,7 @@ class phpRack_Package_Php extends phpRack_Package
         $dir = phpRack_Adapters_File::factory($dir)->getFileName();
         if (!file_exists($dir)) {
             $this->_failure("Directory '{$dir}' does not exist");
+
             return $this;
         }
         // Create our file iterator
@@ -272,6 +277,7 @@ class phpRack_Package_Php extends phpRack_Package
                 $invalid
             )
         );
+
         return $this;
     }
 
@@ -296,6 +302,7 @@ class phpRack_Package_Php extends phpRack_Package
         if ($mask) {
             $size *= $sizeSet[$mask];
         }
+
         return $size;
     }
 }

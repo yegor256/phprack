@@ -103,6 +103,7 @@ class phpRack_Adapters_Config_Ini extends phpRack_Adapters_Config
             }
             $currentElement = $value;
         }
+
         return $dataArray;
     }
 

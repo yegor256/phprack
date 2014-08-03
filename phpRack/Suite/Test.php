@@ -62,7 +62,7 @@ abstract class phpRack_Suite_Test extends phpRack_Test
      * @return void
      * @throws phpRack_Exception
      */
-    public final function setConfig(array $config = array())
+    final public function setConfig(array $config = array())
     {
         foreach ($config as $name=>$value) {
             if (!array_key_exists($name, $this->_config)) {
@@ -116,6 +116,7 @@ abstract class phpRack_Suite_Test extends phpRack_Test
         if (!class_exists($className)) {
             throw new phpRack_Exception("Class '{$className}' is not defined in '{$fileName}'");
         }
+
         return new $className($fileName, $runner);
     }
 

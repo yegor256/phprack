@@ -67,6 +67,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
         ) {
             throw new phpRack_Exception("Unable to find bogomips value in cpuinfo");
         }
+
         return floatval($matches[1]);
     }
 
@@ -91,6 +92,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
         ) {
             throw new phpRack_Exception('Unable to find CPU MHz value in cpuinfo');
         }
+
         return floatval($matches[1]);
     }
 
@@ -111,6 +113,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
         require_once PHPRACK_PATH . '/Adapters/Shell/Command.php';
         // Exception is possible here
         $result = phpRack_Adapters_Shell_Command::factory($command)->run();
+
         return $result;
     }
 }

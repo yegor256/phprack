@@ -60,6 +60,7 @@ class phpRack_Adapters_Cpu_Windows extends phpRack_Adapters_Cpu_Abstract
          * On Windows return approximated result which can be calculated using
          * this formula: CPU clock * 2
          */
+
         return $this->getCpuFrequency() * 2;
     }
 
@@ -100,6 +101,7 @@ class phpRack_Adapters_Cpu_Windows extends phpRack_Adapters_Cpu_Abstract
                 "Unable to get maxClockSpeed using COM 'Winmgmts://' and '{$query}' query"
             );
         }
+
         return floatval($maxClockSpeed);
     }
 }

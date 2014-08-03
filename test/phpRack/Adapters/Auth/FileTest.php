@@ -78,6 +78,7 @@ class Adapters_Auth_FileTest extends AbstractTest
         $data = file($this->_config['htpasswd']);
         $info = array();
         list($info['login'], $info['hash']) = explode(':', $data[0]);
+
         return $info;
     }
 }

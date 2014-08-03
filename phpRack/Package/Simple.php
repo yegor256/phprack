@@ -52,6 +52,7 @@ class phpRack_Package_Simple extends phpRack_Package
     public function fail($msg)
     {
         $this->_failure($msg);
+
         return $this;
     }
 
@@ -64,6 +65,7 @@ class phpRack_Package_Simple extends phpRack_Package
     public function success($msg)
     {
         $this->_success($msg);
+
         return $this;
     }
 
@@ -80,6 +82,7 @@ class phpRack_Package_Simple extends phpRack_Package
         } else {
             $this->_failure('Failed to assert that variable is TRUE');
         }
+
         return $this;
     }
 
@@ -96,6 +99,7 @@ class phpRack_Package_Simple extends phpRack_Package
         } else {
             $this->_failure('Failed to assert that variable is FALSE');
         }
+
         return $this;
     }
 
