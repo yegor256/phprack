@@ -73,6 +73,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
     public function setMaxBytesToRender($maxBytesToRender)
     {
         $this->_maxBytesToRender = $maxBytesToRender;
+
         return $this;
     }
 
@@ -100,15 +101,18 @@ class phpRack_Package_Disc_File extends phpRack_Package
                     filesize($fileName)
                 )
             );
+
             return $this->tail($fileName);
         }
 
         $content = file_get_contents($fileName);
         if ($content === false) {
             $this->_failure("Failed file_get_contents('{$fileName}')");
+
             return $this;
         }
         $this->_log($content);
+
         return $this;
     }
 
@@ -175,6 +179,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         } while ($offset > 0 && $linesCount > 0);
 
         $this->_log($content);
+
         return $this;
     }
 
@@ -207,24 +212,28 @@ class phpRack_Package_Disc_File extends phpRack_Package
         $fileSize = @filesize($fileName);
         if ($fileSize === false) {
             $this->_failure("Failed to filesize('{$fileName}')");
+
             return $this;
         }
 
         // if it is first request or file was truncated, send all x last lines
         if (!isset($options['fileLastOffset']) || $fileSize < $options['fileLastOffset']) {
             $this->tail($fileName, $linesCount);
+
             return $this;
         }
 
         $fp = @fopen($fileName, 'rb');
         if (!$fp) {
             $this->_failure("Failed to fopen('{$fileName}')");
+
             return $this;
         }
         // get only new content since last time
         $content = @stream_get_contents($fp, -1, $options['fileLastOffset']);
         if ($content === false) {
             $this->_failure("Failed to stream_get_contents({$fp}/'{$fileName}', -1, {$options['fileLastOffset']})");
+
             return $this;
         }
 
@@ -232,10 +241,12 @@ class phpRack_Package_Disc_File extends phpRack_Package
         $offset = @ftell($fp);
         if ($offset === false) {
             $this->_failure("Failed to ftell({$fp}/'{$fileName}')");
+
             return $this;
         }
         if (@fclose($fp) === false) {
             $this->_failure("Failed to fclose({$fp}/'{$fileName}')");
+
             return $this;
         }
 
@@ -247,6 +258,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
                 'data' => array('fileLastOffset' => $offset),
             )
         );
+
         return $this;
     }
 
@@ -271,6 +283,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         $fp = @fopen($fileName, 'rb');
         if ($fp === false) {
             $this->_failure("Failed to fopen('{$fileName}')");
+
             return $this;
         }
 
@@ -291,10 +304,12 @@ class phpRack_Package_Disc_File extends phpRack_Package
 
         if (@fclose($fp) === false) {
             $this->_failure("Failed to fclose('{$fileName}')");
+
             return $this;
         }
 
         $this->_log($content);
+
         return $this;
     }
 
@@ -314,6 +329,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         } else {
             $this->_failure("File '{$fileName}' does not exist");
         }
+
         return $this;
     }
 
@@ -333,6 +349,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         } else {
             $this->_failure("File '{$fileName}' is not readable");
         }
+
         return $this;
     }
 
@@ -352,6 +369,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         } else {
             $this->_failure("File '{$fileName}' is not writable");
         }
+
         return $this;
     }
 
@@ -371,6 +389,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         } else {
             $this->_failure("File '{$fileName}' is not a directory");
         }
+
         return $this;
     }
 
@@ -384,6 +403,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
     {
         if (!file_exists($fileName)) {
             $this->_failure("File '{$fileName}' is not found");
+
             return false;
         }
 
@@ -395,6 +415,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
                 $this->_modifiedOn(filemtime($fileName))
             )
         );
+
         return true;
     }
 

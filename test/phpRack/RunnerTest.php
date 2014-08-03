@@ -32,7 +32,7 @@ class RunnerTest extends AbstractTest
         global $phpRackConfig;
         $this->_runner = new phpRack_Runner($phpRackConfig);
     }
-    
+
     public function testAuthenticationWorksProperly()
     {
         global $phpRackConfig;
@@ -58,7 +58,7 @@ class RunnerTest extends AbstractTest
             "login: '{$login}', hash: '{$hash}', message: '{$auth->getMessage()}'"
         );
     }
-    
+
     public function testHeaderAuthenticationWorksProperly()
     {
         global $phpRackConfig;
@@ -83,7 +83,7 @@ class RunnerTest extends AbstractTest
             'Invalid auth using header'
         );
     }
-    
+
     public function testGetParamsAuthenticationWorksProperly()
     {
         global $phpRackConfig;
@@ -95,12 +95,12 @@ class RunnerTest extends AbstractTest
         );
         // Injecting values into config
         $authArray = array_merge($phpRackConfig, $authArray);
-        
+
         // Removing htaccess authentication in case it is set
         if (array_key_exists('htpasswd', $authArray)) {
             unset($authArray['htpasswd']);
         }
-        
+
         // Creating instance of Runner to test it with our config
         $runner = new phpRack_Runner($authArray);
         $_GET[phpRack_Runner_Auth::GET_LOGIN] = $authArray['auth']['username'];
@@ -110,13 +110,13 @@ class RunnerTest extends AbstractTest
             'Invalid auth using get parameters (Phing bridge)'
         );
     }
-    
+
     public function testTestFilesAreCollectedCorrectly()
     {
         $tests = $this->_runner->getTests();
         $this->assertFalse(empty($tests), "List of tests is empty, why?");
     }
-    
+
     public function testIndividualTestCanBeExecuted()
     {
         $tests = $this->_runner->getTests();

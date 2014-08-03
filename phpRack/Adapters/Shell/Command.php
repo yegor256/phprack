@@ -131,7 +131,7 @@ class phpRack_Adapters_Shell_Command
      * That is reason why we must pass to this function custom env
      * param.
      *
-     * @return string Command execution output
+     * @return string            Command execution output
      * @throws phpRack_Exception if from some reason command can't be executed
      * @throws phpRack_Exception if command process was terminated
      * @see phpRack_Package_Php::lint()

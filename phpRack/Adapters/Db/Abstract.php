@@ -56,7 +56,7 @@ abstract class phpRack_Adapters_Db_Abstract
      * Execute SQL query on the server
      *
      * @param string SQL query
-     * @return string Raw result from the server, in text
+     * @return string            Raw result from the server, in text
      * @throws phpRack_Exception If something wrong happens there
      */
     abstract public function query($sql);
@@ -78,7 +78,7 @@ abstract class phpRack_Adapters_Db_Abstract
      *
      * @param string JDBC URL to parse
      * @throws phpRack_Exception If JDBC URL have wrong format
-     * @return array We set "adapter", "host", "port", "database", "params"
+     * @return array             We set "adapter", "host", "port", "database", "params"
      */
     protected function _parseJdbcUrl($url)
     {

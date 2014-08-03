@@ -50,7 +50,7 @@ class phpRack_Adapters_Pear
      *
      * @param string Package name
      * @return phpRack_Adapters_Pear_Package|null
-     * @throws phpRack_Exception If PEAR is not installed properly
+     * @throws phpRack_Exception                  If PEAR is not installed properly
      * @see phpRack_Package_Pear::package()
      */
     public function getPackage($name)
@@ -60,15 +60,17 @@ class phpRack_Adapters_Pear
             $package->getVersion();
         } catch (phpRack_Exception $e) {
             assert($e instanceof phpRack_Exception); // for ZCA only
+
             return null;
         }
+
         return $package;
     }
 
     /**
      * Get full list of installed packages
      *
-     * @return array of phpRack_Adapters_Pear_Package
+     * @return array             of phpRack_Adapters_Pear_Package
      * @throws phpRack_Exception If some problem appear during package informations loading
      * @see phpRack_Package_Pear::showList()
      */

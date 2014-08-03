@@ -65,6 +65,7 @@ class phpRack_Adapters_Auth_File extends phpRack_Adapters_Auth_Abstract
                 return $this->_validated(true);
             }
         }
+
         return $this->_validated(false, 'Invalid login credentials provided');
     }
 }

@@ -53,6 +53,7 @@ class phpRack_Adapters_Notifier_Mail_Sendmail extends phpRack_Adapters_Notifier_
     public function send()
     {
         $this->_validateBeforeSend();
+
         return mail(
             $this->_to[0],
             $this->_getEncodedSubject(),

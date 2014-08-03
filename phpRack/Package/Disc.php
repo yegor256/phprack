@@ -59,6 +59,7 @@ class phpRack_Package_Disc extends phpRack_Package
 
         if (!file_exists($dir)) {
             $this->_failure("Directory '{$dir}' is absent");
+
             return $this;
         }
 
@@ -113,6 +114,7 @@ class phpRack_Package_Disc extends phpRack_Package
 
             $lines[] = $line . ($attribs ? ': ' . implode('; ', $attribs) : false);
         }
+
         return $lines;
     }
 

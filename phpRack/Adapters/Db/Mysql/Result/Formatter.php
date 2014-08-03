@@ -109,6 +109,7 @@ class phpRack_Adapters_Db_Mysql_Result_Formatter
         if ($pos === false || strlen($result) == $pos + 1) {
             return '';
         }
+
         return substr($result, $pos + 1);
     }
 

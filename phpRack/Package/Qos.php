@@ -71,8 +71,8 @@ class phpRack_Package_Qos extends phpRack_Package
      *
      * @param $options string|array of options
      * @return phpRack_Package_Qos This object
-     * @throws phpRack_Exception if invalid option was passed
-     * @throws phpRack_Exception if no url was passed
+     * @throws phpRack_Exception   if invalid option was passed
+     * @throws phpRack_Exception   if no url was passed
      */
     public function latency($options)
     {
@@ -105,6 +105,7 @@ class phpRack_Package_Qos extends phpRack_Package
                 $this->_failure(
                     "Peak latency is {$requestTimeInMs}ms, but value below {$options['peakMs']}ms was expected"
                 );
+
                 return $this;
             }
             $totalRequestsTime += $requestTime;
@@ -120,6 +121,7 @@ class phpRack_Package_Qos extends phpRack_Package
                 "Average latency is {$averageMs}ms, but {$options['averageMs']}ms was expected"
             );
         }
+
         return $this;
     }
 
@@ -127,7 +129,7 @@ class phpRack_Package_Qos extends phpRack_Package
      * Prepare latency options (validate them and set defaults options if some option was missed).
      *
      * @param $options string|array of options
-     * @return array Options prepared
+     * @return array             Options prepared
      * @throws phpRack_Exception if invalid option was passed
      * @throws phpRack_Exception if no url was passed
      */
@@ -152,6 +154,7 @@ class phpRack_Package_Qos extends phpRack_Package
         if (empty($options['scenario'])) {
             throw new phpRack_Exception('You must specify at least one url to check');
         }
+
         return $options;
     }
 }

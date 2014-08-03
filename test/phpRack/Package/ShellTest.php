@@ -15,7 +15,7 @@ require_once PHPRACK_PATH . '/Package/Shell.php';
 
 class phpRack_Package_ShellTest extends AbstractTest
 {
-    
+
     /**
      * @var phpRack_Package_Shell
      */

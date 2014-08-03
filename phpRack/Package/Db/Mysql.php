@@ -96,7 +96,7 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
         try {
             $this->_adapter->connect($jdbcUrl);
             $this->_success("Connected successfully to MySQL server '{$host}':'{$port}'");
-        } catch(phpRack_Exception $e) {
+        } catch (phpRack_Exception $e) {
             assert($e instanceof phpRack_Exception); // for ZCA only
             $this->_failure("Can't connect to MySQL server '{$host}':'{$port}', login: '{$username}'");
         }
@@ -223,6 +223,7 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
         }
 
         $this->_log($result);
+
         return $this;
     }
 
@@ -239,6 +240,7 @@ class phpRack_Package_Db_Mysql extends phpRack_Package
         }
 
         $this->_log($this->_adapter->showServerInfo());
+
         return $this;
     }
 

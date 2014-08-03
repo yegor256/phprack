@@ -107,6 +107,7 @@ class phpRack_Adapters_Pear_Package
         if (!preg_match('/^Release Version\s+(\S+)/m', $this->_rawInfo, $matches)) {
             throw new Exception('Invalid version for the package');
         }
+
         return $matches[1];
     }
 

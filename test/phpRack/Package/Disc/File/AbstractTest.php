@@ -63,6 +63,7 @@ abstract class phpRack_Package_Disc_File_AbstractTest extends AbstractTest
         if ($pos === false || strlen($fileContent) == $pos + 1) {
             return '';
         }
+
         return substr($fileContent, $pos + 1);
     }
 }

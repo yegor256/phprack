@@ -18,7 +18,7 @@ class Php_PhpConfigurationIsValidTest extends PhpRack_Test
             )
         );
     }
-    
+
     public function testPhpLint()
     {
         $options = array(
@@ -32,7 +32,7 @@ class Php_PhpConfigurationIsValidTest extends PhpRack_Test
         $this->assert->php
             ->lint('../test/phpRack/Package/Php/_files/php', $options);
     }
-    
+
     public function testPhpLintOfApplication()
     {
         $options = array(
@@ -43,5 +43,5 @@ class Php_PhpConfigurationIsValidTest extends PhpRack_Test
         $this->assert->php
             ->lint('./', $options);
     }
-    
+
 }

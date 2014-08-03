@@ -147,6 +147,7 @@ class phpRack_Runner
     public function isCliEnvironment()
     {
         global $_SERVER;
+
         return empty($_SERVER['DOCUMENT_ROOT']);
     }
 
@@ -162,6 +163,7 @@ class phpRack_Runner
         if (empty($this->_options['auth']['onlySSL'])) {
             return true;
         }
+
         return !empty($_SERVER['HTTPS']);
     }
 
@@ -178,6 +180,7 @@ class phpRack_Runner
         if (!file_exists($dir)) {
             throw new phpRack_Exception("Test directory '{$dir}' is not found");
         }
+
         return realpath($dir);
     }
 
@@ -219,6 +222,7 @@ class phpRack_Runner
                     continue;
             }
         }
+
         return $tests;
     }
 
@@ -280,6 +284,7 @@ class phpRack_Runner
                 );
             }
         }
+
         return $report;
     }
 
@@ -289,7 +294,7 @@ class phpRack_Runner
      * @param $label string Test label
      * @param $token string Unique token to return back, if required
      * @param $options array Associative array of options to be used for setAjaxOptions()
-     * @return string JSON
+     * @return string            JSON
      * @throws phpRack_Exception
      * @see bootstrap.php
      */
@@ -320,6 +325,7 @@ class phpRack_Runner
          * @see phpRack_Runner_Logger
          */
         require_once PHPRACK_PATH . '/Runner/Logger.php';
+
         return json_encode(
             array(
                 'success' => $result->wasSuccessful(),
@@ -343,9 +349,9 @@ class phpRack_Runner
      * @see runSuite()
      * @throws phpRack_Exception
      * @todo Now we work only with one notifier, which is in class phpRack_Mail. Later
-     *      we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we
-     *      should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
-     *      notifiers there.
+     *                           we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we
+     *                           should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
+     *                           notifiers there.
      */
     protected function _notifyAboutFailure($report)
     {

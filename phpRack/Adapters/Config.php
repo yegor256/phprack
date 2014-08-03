@@ -95,6 +95,7 @@ class phpRack_Adapters_Config
         if (!array_key_exists($name, $this->_data)) {
             throw new phpRack_Exception("Config option '{$name}' doesn't exist");
         }
+
         return $this->_data[$name];
     }
 

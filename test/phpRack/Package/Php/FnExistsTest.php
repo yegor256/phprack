@@ -35,7 +35,7 @@ class phpRack_Package_Php_FnExistsTest extends AbstractTest
         $this->_package->fnExists($name);
         if (!is_null($exists)) {
             $this->assertEquals(
-                $exists, 
+                $exists,
                 $this->_result->wasSuccessful(),
                 "Function '{$name}' returned invalid result"
             );

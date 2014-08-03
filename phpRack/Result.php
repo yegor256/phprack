@@ -157,6 +157,7 @@ class phpRack_Result
     public function addLog($line)
     {
         $this->_lines[] = $line;
+
         return $this;
     }
 

@@ -75,6 +75,7 @@ class phpRack_Package_Cpu_Performance extends phpRack_Package
         } catch (phpRack_Exception $e) {
             $this->_failure("CPU problem: {$e->getMessage()}");
         }
+
         return $this;
     }
 }

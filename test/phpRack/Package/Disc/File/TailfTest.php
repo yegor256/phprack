@@ -18,7 +18,7 @@ class phpRack_Package_Disc_File_TailfTest extends phpRack_Package_Disc_File_Abst
     public function testTailf()
     {
         $linesCountToRetrieve = 100;
-        $fileName = $this->_testFilesDir . '/1000lines.txt'; 
+        $fileName = $this->_testFilesDir . '/1000lines.txt';
         $this->_package->tailf($fileName, $linesCountToRetrieve);
         $this->assertTrue($this->_result->wasSuccessful());
 

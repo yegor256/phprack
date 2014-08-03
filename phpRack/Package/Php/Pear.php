@@ -101,6 +101,7 @@ class phpRack_Package_Php_Pear extends phpRack_Package
         } catch (Exception $e) {
             $this->_failure("PEAR problem: {$e->getMessage()}");
         }
+
         return $this;
     }
 
@@ -146,6 +147,7 @@ class phpRack_Package_Php_Pear extends phpRack_Package
         } catch (phpRack_Exception $e) {
             $this->_failure("PEAR problem: {$e->getMessage()}");
         }
+
         return $this;
     }
 
@@ -160,6 +162,7 @@ class phpRack_Package_Php_Pear extends phpRack_Package
     {
         if (is_null($this->_package)) {
             $this->_failure("PEAR package is absent, can't compare versions");
+
             return $this;
         }
 
@@ -178,6 +181,7 @@ class phpRack_Package_Php_Pear extends phpRack_Package
                 )
             );
         }
+
         return $this;
     }
 

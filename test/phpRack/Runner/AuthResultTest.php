@@ -13,7 +13,6 @@ require_once 'AbstractTest.php';
  */
 require_once PHPRACK_PATH . '/Runner/Auth/Result.php';
 
-
 class AuthResultTest extends AbstractTest
 {
     public function testResultInitializeProperly()

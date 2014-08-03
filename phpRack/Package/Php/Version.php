@@ -57,6 +57,7 @@ class phpRack_Package_Php_Version extends phpRack_Package
         } else {
             $this->_failure('PHP version is ' . phpversion() . ", older than {$version}");
         }
+
         return $this;
     }
 

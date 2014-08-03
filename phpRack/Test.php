@@ -122,7 +122,7 @@ abstract class phpRack_Test
      * @return void
      * @see factory()
      */
-    protected final function __construct($fileName, phpRack_Runner $runner)
+    final protected function __construct($fileName, phpRack_Runner $runner)
     {
         $this->_fileName = realpath($fileName);
         $this->_runner = $runner;
@@ -166,6 +166,7 @@ abstract class phpRack_Test
                 throw new phpRack_Exception("Class '{$className}' is not defined in '{$fileName}'");
             }
         }
+
         return new $className($fileName, $runner);
     }
 
@@ -176,12 +177,13 @@ abstract class phpRack_Test
      * @return mixed
      * @throws phpRack_Exception If nothing found
      */
-    public final function __get($name)
+    final public function __get($name)
     {
         if ($name == 'assert') {
             if (!isset($this->_assertion)) {
                 $this->_assertion = phpRack_Assertion::factory($this);
             }
+
             return $this->_assertion;
         }
         throw new phpRack_Exception("Property '{$name}' not found in " . get_class($this));
@@ -214,7 +216,7 @@ abstract class phpRack_Test
      * @return phpRack_Result
      * @see phpRack_Runner::run()
      */
-    public final function run()
+    final public function run()
     {
         // clean all previous results, if any
         $this->assert->getResult()->clean();
@@ -334,6 +336,7 @@ abstract class phpRack_Test
         } else {
             $this->_log("Comparison succeeded");
         }
+
         return $this;
     }
 

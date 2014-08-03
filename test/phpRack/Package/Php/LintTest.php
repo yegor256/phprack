@@ -15,7 +15,7 @@ require_once PHPRACK_PATH . '/Package/Php.php';
 
 class phpRack_Package_Php_LintTest extends AbstractTest
 {
-    
+
     /**
      * Directory where we have sample files, will be set it in setUp() function.
      */
@@ -88,5 +88,5 @@ class phpRack_Package_Php_LintTest extends AbstractTest
         $this->_package->lint($this->_testFilesDir . '/php/empty');
         $this->assertTrue($this->_result->wasSuccessful());
     }
-    
+
 }

@@ -115,7 +115,7 @@ class phpRack_Package
      * @return void
      * @throws Exception
      */
-    public final function __call($name, array $args)
+    final public function __call($name, array $args)
     {
         throw new phpRack_Exception(
             sprintf(
@@ -187,11 +187,12 @@ class phpRack_Package
      * @param mixed What to do? STRING will log this string
      * @return $this
      */
-    public final function onSuccess($action)
+    final public function onSuccess($action)
     {
         if ($this->_latestCallSuccess) {
             $this->_log($action);
         }
+
         return $this;
     }
 
@@ -201,11 +202,12 @@ class phpRack_Package
      * @param mixed What to do? STRING will log this string
      * @return $this
      */
-    public final function onFailure($action)
+    final public function onFailure($action)
     {
         if (!$this->_latestCallSuccess) {
             $this->_log($action);
         }
+
         return $this;
     }
 
@@ -218,6 +220,7 @@ class phpRack_Package
     protected function _getName()
     {
         $sectors = explode('_', get_class($this)); // e.g. "phpRack_Package_Php_Version"
+
         return implode(
             '/',
             array_slice(

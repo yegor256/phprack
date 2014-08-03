@@ -65,6 +65,7 @@ class phpRack_Adapters_Notifier_Mail
         }
         eval("require_once '{$classFile}';"); // for ZCA validation
         $transportClass = 'phpRack_Adapters_Notifier_Mail_' . $transport;
+
         return new $transportClass($params);
     }
 }
