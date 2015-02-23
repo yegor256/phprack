@@ -1,5 +1,10 @@
 <img src="http://img.phprack.com/logo.png" style="width: 137px; height: 36px;"/>
 
+[![Made By Teamed.io](http://img.teamed.io/btn.svg)](http://www.teamed.io)
+[![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/phprack)](http://www.rultor.com/p/yegor256/phprack)
+
+[![Build Status](https://travis-ci.org/yegor256/phprack.svg?branch=master)](https://travis-ci.org/yegor256/phprack)
+
 Read about phpRack in ​[php|Architect June 2010](http://www.phparch.com/magazine/2010/june/):
 "Integration Testing with phpRack Framework".
 
