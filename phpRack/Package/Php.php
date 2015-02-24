@@ -143,10 +143,10 @@ class phpRack_Package_Php extends phpRack_Package
             return $this;
         }
 
-        if ($this->_sizeFormat($value) < $this->_sizeFormat($this->_iniValue)) {
-            $this->_success("php.ini value is set to {$this->_iniValue}, {$value} required");
-        } else {
+        if ($this->_sizeFormat($value) > $this->_sizeFormat($this->_iniValue)) {
             $this->_failure("php.ini value has only {$this->_iniValue}, but {$value} is required");
+        } else {
+            $this->_success("php.ini value is set to {$this->_iniValue}, {$value} required");
         }
 
         // check
