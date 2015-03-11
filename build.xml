@@ -33,6 +33,7 @@
 -->
 <project name="phpRack tests" basedir="." default="main">
     <tstamp/>
+    <php expression="include('vendor/autoload.php')"/>
     <includepath classpath="${project.basedir}"/>
     <includepath classpath="${project.basedir}/test/"/>
     <php expression="ini_set('memory_limit', '128M');"/>
