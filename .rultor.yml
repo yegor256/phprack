@@ -19,7 +19,7 @@ deploy:
   - yegor256
 release:
   script: |
-    ./vendor/phing/phing/bin/phing
+    ./vendor/phing/phing/bin/phing main doc
     mkdir build/ftp-upload
     cp phpRack/* build/ftp-upload
     cp src/test/integration-test/* build/ftp-upload
