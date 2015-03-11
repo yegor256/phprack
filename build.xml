@@ -89,7 +89,6 @@
     <target name="jscoverage" description="JSCoverage">
         <exec command="jscoverage
             -v
-            --exclude=.svn
             --exclude=jquery-1.4.2.min.js
             ${project.basedir}/src/phpRack/layout/js
             ${project.basedir}/build/instrumented-js" escape="false" checkreturn="true" passthru="true"/>
