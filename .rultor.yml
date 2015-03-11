@@ -9,3 +9,9 @@ install: |
 merge:
   script: |
     ./vendor/phing/phing/bin/phing
+deploy:
+  script: |
+    ./vendor/phing/phing/bin/phing
+release:
+  script: |
+    ./vendor/phing/phing/bin/phing
