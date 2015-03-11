@@ -1,7 +1,7 @@
 language: php
 install:
   - pecl install xdebug
-  - echo "extension=xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "zend_extension=xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - composer install
 script:
   - ./vendor/phing/phing/bin/phing
