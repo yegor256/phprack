@@ -129,7 +129,7 @@
         </tar>
     </target>
     <target name="doc" description="Generate phpDocumentor files">
-        <php expression="define('PHPRACK_PATH', '${project.basedir}/src/phpRack');"/>
+        <!-- <php expression="define('PHPRACK_PATH', '${project.basedir}/src/phpRack');"/> -->
         <php expression="set_error_handler(create_function('', 'return true;'));"/>
         <phpdoc title="API Documentation, rev.${git.hash}" destdir="${project.basedir}/build/apidocs" sourcecode="false" quiet="true" output="HTML:frames:default">
             <fileset dir="${project.basedir}/phpRack">
@@ -140,46 +140,5 @@
                 <include name="LICENSE.txt"/>
             </projdocfileset>
         </phpdoc>
-    </target>
-    <target name="deploy" description="Deploy stable TGZ by FTP and other files">
-        <property file="${project.basedir}/../external.properties"/>
-        <mkdir dir="${project.basedir}/build/ftp-upload"/>
-        <copy todir="${project.basedir}/build/ftp-upload">
-            <filterchain>
-                <stripwhitespace/>
-            </filterchain>
-            <fileset dir="${project.basedir}/src">
-                <include name="phpRack/**"/>
-            </fileset>
-            <fileset dir="${project.basedir}/src/test">
-                <include name="integration-tests/**"/>
-            </fileset>
-        </copy>
-        <copy todir="${project.basedir}/build/ftp-upload/public">
-            <fileset dir="${project.basedir}/phprack.com">
-                <include name="**/*"/>
-                <exclude name=".svn/**"/>
-            </fileset>
-            <fileset dir="${project.basedir}/src/phpRack/layout">
-                <include name="logo.png"/>
-            </fileset>
-            <fileset dir="${project.basedir}/src/">
-                <include name="LICENSE.txt"/>
-            </fileset>
-        </copy>
-        <copy todir="${project.basedir}/build/ftp-upload/public/api">
-            <fileset dir="${project.basedir}/build/apidocs">
-                <include name="**/*"/>
-            </fileset>
-        </copy>
-        <copy todir="${project.basedir}/build/ftp-upload/public/coverage">
-            <fileset dir="${project.basedir}/build/coverage">
-                <include name="**/*"/>
-            </fileset>
-        </copy>
-        <echo message="uploading PHP code to the server..."/>
-        <ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}" clearfirst="true" port="${ftp.port}" passive="true">
-            <fileset dir="${project.basedir}/build/ftp-upload"/>
-        </ftpdeploy>
     </target>
 </project>

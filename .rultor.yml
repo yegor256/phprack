@@ -18,6 +18,16 @@ deploy:
   commanders:
   - yegor256
 release:
-  script: ./vendor/phing/phing/bin/phing
+  script: |
+    ./vendor/phing/phing/bin/phing
+    mkdir build/ftp-upload
+    cp phpRack/* build/ftp-upload
+    cp src/test/integration-test/* build/ftp-upload
+    cp phprack.com/* build/ftp-upload/public
+    cp src/phpRack/layout/logo.png build/ftp-upload/public
+    cp src/LICENSE.txt build/ftp-upload/public
+    cp build/apidocs build/ftp-upload/public/api
+    cp build/coverage build/ftp-upload/public/coverage
+    # upload by ftp
   commanders:
   - yegor256
