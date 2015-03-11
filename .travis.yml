@@ -7,5 +7,6 @@ install:
 - pecl install xdebug
 - echo "zend_extension=xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 - composer install
+- npm install jscoverage -g
 script:
 - ./vendor/phing/phing/bin/phing
