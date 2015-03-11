@@ -1,7 +1,6 @@
 architect:
-- yegor256
-- yegor256
 - davvd
+- yegor256
 install: |
   sudo pecl install xdebug
   echo "zend_extension=xdebug.so" > xdebug.ini
@@ -11,9 +10,14 @@ install: |
 merge:
   script: |
     ./vendor/phing/phing/bin/phing
+  commanders:
+  - yegor256
 deploy:
   script: |
     ./vendor/phing/phing/bin/phing
+  commanders:
+  - yegor256
 release:
-  script: |
-    ./vendor/phing/phing/bin/phing
+  script: ./vendor/phing/phing/bin/phing
+  commanders:
+  - yegor256
