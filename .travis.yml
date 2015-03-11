@@ -1,4 +1,7 @@
 language: php
+cache:
+  directories:
+  - vendor
 install:
 - wget http://pear.php.net/go-pear.phar
 - php go-pear.phar
