@@ -1,7 +1,9 @@
 language: php
 install:
-  - pecl install xdebug
-  - echo "zend_extension=xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - composer install
+- wget http://pear.php.net/go-pear.phar
+- php go-pear.phar
+- pecl install xdebug
+- echo "zend_extension=xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+- composer install
 script:
-  - ./vendor/phing/phing/bin/phing
+- ./vendor/phing/phing/bin/phing
