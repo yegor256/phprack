@@ -4,7 +4,8 @@ architect:
 - davvd
 install: |
   sudo pecl install xdebug
-  echo "zend_extension=xdebug.so" > /etc/php5/cli/conf.d/xdebug.ini
+  echo "zend_extension=xdebug.so" > xdebug.ini
+  sudo mv xdebug.ini /etc/php5/cli/conf.d
   composer install
 merge:
   script: |
