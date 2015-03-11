@@ -7,7 +7,7 @@ install: |
   echo "zend_extension=xdebug.so" > xdebug.ini
   sudo mv xdebug.ini /etc/php5/cli/conf.d
   composer install
-  npm install jscoverage -g
+  sudo npm install jscoverage -g
 merge:
   script: |
     ./vendor/phing/phing/bin/phing
