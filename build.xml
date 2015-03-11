@@ -39,7 +39,7 @@
     <php expression="ini_set('memory_limit', '128M');"/>
     <property name="package.name" value="phpRack-stable"/>
     <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz"/>
-    <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca, jscoverage, doc">
+    <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca, jscoverage">
     </target>
     <exec command="git log -n 1 --pretty=format:%h" outputproperty="git.hash"/>
     <target name="clean" description="Remove all build-related files">
@@ -129,7 +129,7 @@
         </tar>
     </target>
     <target name="doc" description="Generate phpDocumentor files">
-        <!-- <php expression="define('PHPRACK_PATH', '${project.basedir}/src/phpRack');"/> -->
+        <php expression="if (!defined('PHPRACK_PATH')) define('PHPRACK_PATH', '${project.basedir}/src/phpRack');"/>
         <php expression="set_error_handler(create_function('', 'return true;'));"/>
         <phpdoc title="API Documentation, rev.${git.hash}" destdir="${project.basedir}/build/apidocs" sourcecode="false" quiet="true" output="HTML:frames:default">
             <fileset dir="${project.basedir}/phpRack">
