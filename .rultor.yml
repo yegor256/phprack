@@ -2,3 +2,10 @@ architect:
 - yegor256
 - yegor256
 - davvd
+install: |
+  pecl install xdebug
+  echo "zend_extension=xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  composer install
+merge:
+  script: |
+    ./vendor/phing/phing/bin/phing
