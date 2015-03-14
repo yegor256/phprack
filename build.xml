@@ -33,12 +33,13 @@
 -->
 <project name="phpRack tests" basedir="." default="main">
     <tstamp/>
+    <php expression="include('vendor/autoload.php')"/>
     <includepath classpath="${project.basedir}"/>
     <includepath classpath="${project.basedir}/test/"/>
     <php expression="ini_set('memory_limit', '128M');"/>
     <property name="package.name" value="phpRack-stable"/>
     <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz"/>
-    <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca, jscoverage, doc">
+    <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca, jscoverage">
     </target>
     <exec command="git log -n 1 --pretty=format:%h" outputproperty="git.hash"/>
     <target name="clean" description="Remove all build-related files">
@@ -46,77 +47,69 @@
     </target>
     <target name="lint" description="Run syntax check for all classes">
         <phplint haltonfailure="yes" level="verbose">
-            <fileset dir="${project.basedir}">
+            <fileset dir="${project.basedir}/src">
                 <include name="**/*.php"/>
                 <include name="**/*.html"/>
                 <include name="**/*.phtml"/>
-                <exclude name=".svn/**"/>
-                <exclude name="build/**"/>
             </fileset>
         </phplint>
     </target>
     <target name="jslint" description="Validate syntax in all JS files">
+        <!--
         <jsllint haltonfailure="true">
             <fileset dir="${project.basedir}">
                 <include name="**/index.js"/>
                 <exclude name="build/**"/>
             </fileset>
         </jsllint>
+        -->
     </target>
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
-        <exec command="phpcs
+        <exec command="${project.basedir}/vendor/squizlabs/php_codesniffer/scripts/phpcs
             -n
             --report=full
             --standard=Zend
-            --ignore='.svn/*,build/**'
             --extensions='php,phtml'
-            ${project.basedir}" escape="false" checkreturn="true" passthru="true"/>
+            ${project.basedir}/src" escape="false" checkreturn="true" passthru="true"/>
     </target>
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
-        <exec command="phpmd
-            ${project.basedir}
+        <exec command="${project.basedir}/vendor/phpmd/phpmd/src/bin/phpmd
+            ${project.basedir}/src
             text
             codesize,unusedcode
             --extensions='php,phtml'" escape="false" checkreturn="true" passthru="true"/>
     </target>
     <target name="zca" description="Zend Code Analyzer">
         <zendcodeanalyzer analyzerPath="zca" haltonwarning="true">
-            <fileset dir="${project.basedir}">
+            <fileset dir="${project.basedir}/src">
                 <include name="**/*.php"/>
                 <include name="**/*.phtml"/>
-                <exclude name=".svn/**"/>
-                <exclude name="build/**"/>
             </fileset>
         </zendcodeanalyzer>
     </target>
     <target name="jscoverage" description="JSCoverage">
         <exec command="jscoverage
             -v
-            --exclude=.svn
             --exclude=jquery-1.4.2.min.js
-            ${project.basedir}/phpRack/layout/js
+            ${project.basedir}/src/phpRack/layout/js
             ${project.basedir}/build/instrumented-js" escape="false" checkreturn="true" passthru="true"/>
     </target>
     <target name="test" description="Run all existing unit-tests">
         <mkdir dir="${project.basedir}/build"/>
         <property name="coverage.database" value="${project.basedir}/build/coverage.data"/>
         <coverage-setup database="${coverage.database}">
-            <fileset dir="${project.basedir}/phpRack">
+            <fileset dir="${project.basedir}/src/phpRack">
                 <include name="**/*.php"/>
-                <exclude name=".svn/**"/>
-                <exclude name="build/**"/>
             </fileset>
         </coverage-setup>
         <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
             <formatter type="plain" usefile="no"/>
             <batchtest>
-                <fileset dir="${project.basedir}/test">
+                <fileset dir="${project.basedir}/src/test">
                     <include name="**/*Test*.php"/>
                     <exclude name="**/Abstract*.php"/>
                     <exclude name="**/_*.php"/>
-                    <exclude name=".svn/**"/>
                     <exclude name="**/integration-tests/**"/>
-                    <exclude name="build/**"/>
                 </fileset>
             </batchtest>
         </phpunit>
@@ -129,16 +122,14 @@
     </target>
     <target name="package" description="Package the product into TGZ">
         <tar destfile="${build.tgz}" compression="gzip">
-            <fileset dir="${project.basedir}">
+            <fileset dir="${project.basedir}/src">
                 <include name="phpRack/**"/>
                 <include name="LICENSE.txt"/>
-                <exclude name=".svn/**"/>
-                <exclude name="build/**"/>
             </fileset>
         </tar>
     </target>
     <target name="doc" description="Generate phpDocumentor files">
-        <php expression="define('PHPRACK_PATH', '${project.basedir}/phpRack');"/>
+        <php expression="if (!defined('PHPRACK_PATH')) define('PHPRACK_PATH', '${project.basedir}/src/phpRack');"/>
         <php expression="set_error_handler(create_function('', 'return true;'));"/>
         <phpdoc title="API Documentation, rev.${git.hash}" destdir="${project.basedir}/build/apidocs" sourcecode="false" quiet="true" output="HTML:frames:default">
             <fileset dir="${project.basedir}/phpRack">
@@ -149,48 +140,5 @@
                 <include name="LICENSE.txt"/>
             </projdocfileset>
         </phpdoc>
-    </target>
-    <target name="deploy" description="Deploy stable TGZ by FTP and other files">
-        <property file="${project.basedir}/../external.properties"/>
-        <mkdir dir="${project.basedir}/build/ftp-upload"/>
-        <copy todir="${project.basedir}/build/ftp-upload">
-            <filterchain>
-                <stripwhitespace/>
-            </filterchain>
-            <fileset dir="${project.basedir}">
-                <include name="phpRack/**"/>
-                <exclude name=".svn/**"/>
-            </fileset>
-            <fileset dir="${project.basedir}/test">
-                <include name="integration-tests/**"/>
-                <exclude name=".svn/**"/>
-            </fileset>
-        </copy>
-        <copy todir="${project.basedir}/build/ftp-upload/public">
-            <fileset dir="${project.basedir}/phprack.com">
-                <include name="**/*"/>
-                <exclude name=".svn/**"/>
-            </fileset>
-            <fileset dir="${project.basedir}/phpRack/layout">
-                <include name="logo.png"/>
-            </fileset>
-            <fileset dir="${project.basedir}/">
-                <include name="LICENSE.txt"/>
-            </fileset>
-        </copy>
-        <copy todir="${project.basedir}/build/ftp-upload/public/api">
-            <fileset dir="${project.basedir}/build/apidocs">
-                <include name="**/*"/>
-            </fileset>
-        </copy>
-        <copy todir="${project.basedir}/build/ftp-upload/public/coverage">
-            <fileset dir="${project.basedir}/build/coverage">
-                <include name="**/*"/>
-            </fileset>
-        </copy>
-        <echo message="uploading PHP code to the server..."/>
-        <ftpdeploy host="${ftp.host}" username="${ftp.username}" password="${ftp.password}" clearfirst="true" port="${ftp.port}" passive="true">
-            <fileset dir="${project.basedir}/build/ftp-upload"/>
-        </ftpdeploy>
     </target>
 </project>

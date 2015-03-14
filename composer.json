@@ -1,18 +1,25 @@
 {
-    "name":"tpc2/phprack",
-    "description":"Light framework for automation of integration tests",
-    "keywords":["php", "test", "integration", "deployment"],
-    "type":"library",
-    "license":"BSD-3-Clause",
-    "version": "2.0-SNAPSHOT",
-    "authors":[
+    "name": "yegor256/phprack",
+    "description": "Light framework for automation of integration tests",
+    "keywords": ["php", "test", "integration", "deployment"],
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "version": "2.0-beta",
+    "authors": [
         {
-            "name":"Yegor Bugayenko",
-            "homepage":"https://github.com/yegor256"
+            "name": "Yegor Bugayenko",
+            "homepage": "https://github.com/yegor256"
         }
     ],
     "homepage": "http://www.phprack.com",
-    "require":{
+    "require": {
         "php":">=5.2.0"
+    },
+    "require-dev": {
+        "phing/phing": "2.10.1",
+        "phpdocumentor/phpdocumentor": "2.8.2",
+        "phpmd/phpmd": "2.2.1",
+        "squizlabs/php_codesniffer": "2.3.0",
+        "phpunit/phpunit": "4.5.0"
     }
 }
