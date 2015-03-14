@@ -13,7 +13,8 @@
     ],
     "homepage": "http://www.phprack.com",
     "require": {
-        "php":">=5.2.0"
+        "php":">=5.2.0",
+        "ext-com_dotnet": "*"
     },
     "require-dev": {
         "phing/phing": "2.10.1",
