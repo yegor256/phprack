@@ -1,6 +1,6 @@
 <?php
 
-require_once 'AbstractTest.php';
+require_once 'src/test/AbstractTest.php';
 
 require_once PHPRACK_PATH . '/Package/Shell.php';
 

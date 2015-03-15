@@ -1,6 +1,6 @@
 <?php
 
-require_once 'AbstractTest.php';
+require_once 'src/test/AbstractTest.php';
 
 class phpRack_Package_Php_VersionTest extends AbstractTest
 {
