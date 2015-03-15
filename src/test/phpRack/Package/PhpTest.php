@@ -10,19 +10,19 @@ class phpRack_Package_PhpTest extends AbstractTest
     /**
      * @var phpRack_Package_Php
      */
-    private $package;
+    private $_package;
 
     /**
      *
      * @var phpRack_Result
      */
-    private $result;
+    private $_result;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->package = $this->_test->assert->php;
-        $this->result = $this->_test->assert->getResult();
+        $this->_package = $this->_test->assert->php;
+        $this->_result = $this->_test->assert->getResult();
     }
 
     protected function tearDown()
@@ -38,8 +38,8 @@ class phpRack_Package_PhpTest extends AbstractTest
     public function testAtLeastIsLowerThanRequired()
     {
         ini_set('default_socket_timeout', 60);
-        $this->package->ini('default_socket_timeout')->atLeast(50);
-        $this->assertTrue($this->result->wasSuccessful(), 'atleast 50 required and 60 isset');
+        $this->_package->ini('default_socket_timeout')->atLeast(50);
+        $this->assertTrue($this->_result->wasSuccessful(), 'atleast 50 required and 60 isset');
     }
 
     /**
@@ -49,8 +49,8 @@ class phpRack_Package_PhpTest extends AbstractTest
     public function testAtLeastIsHigherThanRequired()
     {
         ini_set('default_socket_timeout', 60);
-        $this->package->ini('default_socket_timeout')->atLeast(70);
-        $this->assertFalse($this->result->wasSuccessful(), 'atleast 70 required but 60 isset');
+        $this->_package->ini('default_socket_timeout')->atLeast(70);
+        $this->assertFalse($this->_result->wasSuccessful(), 'atleast 70 required but 60 isset');
     }
 
     /**
@@ -60,8 +60,8 @@ class phpRack_Package_PhpTest extends AbstractTest
     public function testAtLeastIsEqualToRequired()
     {
         ini_set('default_socket_timeout', 60);
-        $this->package->ini('default_socket_timeout')->atLeast(60);
-        $this->assertTrue($this->result->wasSuccessful(), 'atleast 60 required and 60 isset');
+        $this->_package->ini('default_socket_timeout')->atLeast(60);
+        $this->assertTrue($this->_result->wasSuccessful(), 'atleast 60 required and 60 isset');
     }
 
     /**
@@ -70,8 +70,8 @@ class phpRack_Package_PhpTest extends AbstractTest
     public function testIniHasIncorrectNumericFormat()
     {
         ini_set('default_socket_timeout', '60S');
-        $this->package->ini('default_socket_timeout')->atLeast('60S');
-        $this->assertFalse($this->result->wasSuccessful(), 'php.ini value has incorrect numeric format');
+        $this->_package->ini('default_socket_timeout')->atLeast('60S');
+        $this->assertFalse($this->_result->wasSuccessful(), 'php.ini value has incorrect numeric format');
     }
 
     /**
@@ -81,8 +81,8 @@ class phpRack_Package_PhpTest extends AbstractTest
     public function testIniKiloPrefixMultipliers()
     {
         ini_set('default_socket_timeout', '60K');
-        $this->package->ini('default_socket_timeout')->atLeast(60 * phpRack_Package_Php::SIZE_FORMAT);
-        $this->assertTrue($this->result->wasSuccessful());
+        $this->_package->ini('default_socket_timeout')->atLeast(60 * phpRack_Package_Php::SIZE_FORMAT);
+        $this->assertTrue($this->_result->wasSuccessful());
     }
 
     /**
@@ -92,8 +92,10 @@ class phpRack_Package_PhpTest extends AbstractTest
     public function testIniMegaPrefixMultiplier()
     {
         ini_set('default_socket_timeout', '60M');
-        $this->package->ini('default_socket_timeout')->atLeast(60 * phpRack_Package_Php::SIZE_FORMAT * phpRack_Package_Php::SIZE_FORMAT);
-        $this->assertTrue($this->result->wasSuccessful());
+        $this->_package
+                ->ini('default_socket_timeout')
+                ->atLeast(60 * phpRack_Package_Php::SIZE_FORMAT ^ 2);
+        $this->assertTrue($this->_result->wasSuccessful());
     }
 
     /**
@@ -103,8 +105,10 @@ class phpRack_Package_PhpTest extends AbstractTest
     public function testIniGigaPrefixMultiplier()
     {
         ini_set('default_socket_timeout', '60G');
-        $this->package->ini('default_socket_timeout')->atLeast(60 * phpRack_Package_Php::SIZE_FORMAT * phpRack_Package_Php::SIZE_FORMAT * phpRack_Package_Php::SIZE_FORMAT);
-        $this->assertTrue($this->result->wasSuccessful());
+        $this->_package
+                ->ini('default_socket_timeout')
+                ->atLeast(60 * phpRack_Package_Php::SIZE_FORMAT ^ 3);
+        $this->assertTrue($this->_result->wasSuccessful());
     }
 
 }

@@ -15,12 +15,6 @@ class phpRack_Package_Php_VersionTest extends AbstractTest
      */
     private $_result;
 
-    /**
-     * major.minor version
-     * @var float
-     */
-    private $version;
-
     public function setUp()
     {
         parent::setUp();
