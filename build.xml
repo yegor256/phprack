@@ -33,7 +33,12 @@
 -->
 <project name="phpRack tests" basedir="." default="main">
     <tstamp/>
-    <php expression="include('vendor/autoload.php')"/>
+    <if>
+        <available property="vendor.autoload" file="${project.basedir}/vendor/autoload.php"/>
+	<then>
+	    <autoloader autoloaderpath="vendor/autoload.php"/>
+	</then>
+    </if>
     <includepath classpath="${project.basedir}"/>
     <includepath classpath="${project.basedir}/test/"/>
     <php expression="ini_set('memory_limit', '128M');"/>
@@ -55,6 +60,7 @@
         </phplint>
     </target>
     <target name="jslint" description="Validate syntax in all JS files">
+        <echo msg="Task is disabled"/>
         <!--
         <jsllint haltonfailure="true">
             <fileset dir="${project.basedir}">
@@ -65,19 +71,26 @@
         -->
     </target>
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
-        <exec command="${project.basedir}/vendor/squizlabs/php_codesniffer/scripts/phpcs
-            -n
-            --report=full
-            --standard=Zend
-            --extensions='php,phtml'
-            ${project.basedir}/src" escape="false" checkreturn="true" passthru="true"/>
+        <phpcodesniffer standard="Zend" allowedFileExtensions="php,phtml" showWarnings="false">
+	    <fileset dir="${project.basedir}/src"/>
+        </phpcodesniffer>
     </target>
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
-        <exec command="${project.basedir}/vendor/phpmd/phpmd/src/bin/phpmd
-            ${project.basedir}/src
-            text
-            codesize,unusedcode
-            --extensions='php,phtml'" escape="false" checkreturn="true" passthru="true"/>
+        <if>
+	    <available property="phpmd.phar.exists" file="/usr/local/bin/phpmd.phar"/>
+	    <then>
+	        <exec command="php /usr/local/bin/phpmd.phar
+		    ${project.basedir}/src
+		    text
+		    codesize,unusedcode
+		    --extensions='php,phtml'" escape="false" checkreturn="true" passthru="true"/>
+	    </then>
+	    <else>
+	        <phpmd allowedFileExtensions="php,phtml" rulesets="codesize,unusedcode" format="text">
+                    <fileset dir="${project.basedir}/src"/>
+                </phpmd>
+	    </else>
+	</if>
     </target>
     <target name="zca" description="Zend Code Analyzer">
         <zendcodeanalyzer analyzerPath="zca" haltonwarning="true">
@@ -102,17 +115,35 @@
                 <include name="**/*.php"/>
             </fileset>
         </coverage-setup>
-        <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
-            <formatter type="plain" usefile="no"/>
-            <batchtest>
-                <fileset dir="${project.basedir}/src/test">
-                    <include name="**/*Test*.php"/>
-                    <exclude name="**/Abstract*.php"/>
-                    <exclude name="**/_*.php"/>
-                    <exclude name="**/integration-tests/**"/>
-                </fileset>
-            </batchtest>
-        </phpunit>
+	<if>
+	    <available property="phpunit.phar.exists" file="/usr/local/bin/phpunit"/>
+	    <then>
+                <phpunit pharLocation="/usr/local/bin/phpunit" printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
+		    <formatter type="plain" usefile="no"/>
+		    <batchtest>
+                        <fileset dir="${project.basedir}/src/test">
+		            <include name="**/*Test*.php"/>
+			    <exclude name="**/Abstract*.php"/>
+			    <exclude name="**/_*.php"/>
+                            <exclude name="**/integration-tests/**"/>
+		        </fileset>
+		    </batchtest>
+	        </phpunit>
+	    </then>
+	    <else>
+                <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
+                    <formatter type="plain" usefile="no"/>
+                    <batchtest>
+                        <fileset dir="${project.basedir}/src/test">
+                            <include name="**/*Test*.php"/>
+                            <exclude name="**/Abstract*.php"/>
+                            <exclude name="**/_*.php"/>
+                            <exclude name="**/integration-tests/**"/>
+                        </fileset>
+                    </batchtest>
+                 </phpunit>
+            </else>
+	</if>
         <mkdir dir="${project.basedir}/build/coverage"/>
         <coverage-report outfile="${project.basedir}/build/coverage.xml">
             <report todir="${project.basedir}/build/coverage"/>

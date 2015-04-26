@@ -12,17 +12,13 @@ update-java-alternatives --set java-1.7.0-openjdk-amd64
     && apt-get -y install php-pear php5 php5-dev php5-curl php5-xsl php5-sqlite php5-gd php5-mysql php5-mcrypt php5-memcached
 
 pear channel-discover pear.phing.info \
-    && pear channel-discover pear.phpunit.de \
     && pear channel-discover pear.symfony-project.com \
-    && pear channel-discover pear.phpmd.org \
     && pear channel-discover pear.pdepend.org \
     && pear channel-discover pear.phpdoc.org
 pear upgrade
 pear install --force --alldeps PHP_CodeSniffer \
     PhpDocumentor \
     phing/phing \
-    pear.phpunit.de/PHPUnit \
-    phpmd/PHP_PMD \
     Net_FTP Net_SMTP Mail
 
 if [ ! -e /etc/php5/cli/conf.d/xdebug.ini ]; then
@@ -48,4 +44,15 @@ if [ ! -e /usr/local/bin/phantomjs ]; then
     rm -rf phantomjs-1.9.1-linux-x86_64.tar;
     mv phantomjs-1.9.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs;
     rm -rf phantomjs-1.9.1-linux-x86_64;
+fi
+
+if [ ! -e /usr/local/bin/phpmd.phar ];  then
+    wget -c http://static.phpmd.org/php/latest/phpmd.phar
+    mv phpmd.phar /usr/local/bin/phpmd.phar
+fi
+
+if [ ! -e /usr/local/bin/phpunit ]; then
+    wget https://phar.phpunit.de/phpunit.phar
+    chmod +x phpunit.phar
+    sudo mv phpunit.phar /usr/local/bin/phpunit
 fi
