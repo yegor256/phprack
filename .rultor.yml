@@ -10,8 +10,7 @@ install: |
 merge:
   script: |
     ./vendor/phing/phing/bin/phing
-  commanders:
-  - yegor256
+  commanders: []
 deploy:
   script: |
     ./vendor/phing/phing/bin/phing
