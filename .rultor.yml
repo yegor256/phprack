@@ -14,8 +14,6 @@ merge:
 deploy:
   script: |
     ./vendor/phing/phing/bin/phing
-  commanders:
-  - yegor256
 release:
   script: |
     ./vendor/phing/phing/bin/phing main doc
