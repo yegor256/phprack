@@ -1,6 +1,6 @@
 <img src="http://img.phprack.com/logo.png" style="width: 137px; height: 36px;"/>
 
-[![Made By Teamed.io](http://img.teamed.io/btn.svg)](http://www.teamed.io)
+[![Managed by Zerocracy](http://www.zerocracy.com/badge.svg)](http://www.zerocracy.com)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/phprack)](http://www.rultor.com/p/yegor256/phprack)
 
 [![Build Status](https://travis-ci.org/yegor256/phprack.svg?branch=master)](https://travis-ci.org/yegor256/phprack)
