@@ -3,6 +3,7 @@
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/phprack)](http://www.rultor.com/p/yegor256/phprack)
 
 [![Build Status](https://travis-ci.org/yegor256/phprack.svg?branch=master)](https://travis-ci.org/yegor256/phprack)
+[![PDD status](http://www.0pdd.com/svg?name=yegor256/phprack)](http://www.0pdd.com/p?name=yegor256/phprack)
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/phprack)](https://hitsofcode.com/view/github/yegor256/phprack)
 
 Read about phpRack in ​[php|Architect June 2010](http://www.phparch.com/magazine/2010/june/):
