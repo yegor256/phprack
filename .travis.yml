@@ -1,12 +1,13 @@
 language: php
+php:
+  - '7.0'
 cache:
   directories:
   - vendor
 install:
-- sudo ln -s $(which pear) /usr/local/bin/pear
-- pecl install xdebug
-- echo "zend_extension=xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-- composer install
-- npm install jscoverage -g
+  - sudo ln -s $(which pear) /usr/local/bin/pear
+  - echo "zend_extension=xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - composer install
+  - npm install jscoverage -g
 script:
-- ./vendor/phing/phing/bin/phing
+  - ./vendor/phing/phing/bin/phing
