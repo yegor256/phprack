@@ -1,9 +1,9 @@
-<img src="http://img.phprack.com/logo.png" style="width: 137px; height: 36px;"/>
+<img src="http://img.phprack.com/logo.png" width="137px" height="36px"/>
 
-[![Managed by Zerocracy](http://www.zerocracy.com/badge.svg)](http://www.zerocracy.com)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/phprack)](http://www.rultor.com/p/yegor256/phprack)
 
 [![Build Status](https://travis-ci.org/yegor256/phprack.svg?branch=master)](https://travis-ci.org/yegor256/phprack)
+[![Hits-of-Code](https://hitsofcode.com/github/yegor256/phprack)](https://hitsofcode.com/view/github/yegor256/phprack)
 
 Read about phpRack in ​[php|Architect June 2010](http://www.phparch.com/magazine/2010/june/):
 "Integration Testing with phpRack Framework".
@@ -109,18 +109,4 @@ new issue to us.
 
 After you make your changes don't forget to run `phing` again to make
 sure you didn't break anything. When ready, submit a pull request.
-
-DISCLAIMER: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/tpc2/phprack/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
