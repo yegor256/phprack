@@ -20,6 +20,6 @@
         "phpdocumentor/phpdocumentor": "2.8.2",
         "phpmd/phpmd": "2.2.1",
         "squizlabs/php_codesniffer": "2.3.0",
-        "phpunit/phpunit": "4.5.0"
+        "phpunit/phpunit": "9.5.26"
     }
 }
