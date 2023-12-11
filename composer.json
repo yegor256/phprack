@@ -18,7 +18,7 @@
     "require-dev": {
         "phing/phing": "2.10.1",
         "phpdocumentor/phpdocumentor": "2.8.2",
-        "phpmd/phpmd": "2.2.1",
+        "phpmd/phpmd": "2.15.0",
         "squizlabs/php_codesniffer": "2.3.0",
         "phpunit/phpunit": "4.5.0"
     }
