@@ -22,6 +22,6 @@ class phpRack_Adapters_Files_DirectoryFilterIteratorTest extends AbstractTest
             ->setExtensions('php, phtml')
             ->setExclude('/\.svn/')
             ->setMaxDepth(0);
-        $this->assertGreaterThan(0, count($iterator), 'Empty iterator, why?');
+        $this->assertGreaterThan(0, iterator_count($iterator), 'Empty iterator, why?');
     }
 }

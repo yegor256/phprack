@@ -44,7 +44,7 @@
     <php expression="ini_set('memory_limit', '128M');"/>
     <property name="package.name" value="phpRack-stable"/>
     <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz"/>
-    <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca, jscoverage">
+    <target name="main" depends="lint, jslint, phpcs, phpmd, test">
     </target>
     <exec executable="git" outputproperty="git.hash">
         <arg value="log"/>

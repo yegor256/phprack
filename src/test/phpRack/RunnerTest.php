@@ -146,7 +146,11 @@ class RunnerTest extends AbstractTest
         $this->assertTrue(is_array($tests));
         $this->assertTrue(count($tests) > 0, "No tests, why?");
         $result = $tests[0]->run();
-        $this->assertDoesNotMatchRegularExpression('/date\.timezone/', $result->getLog(), 'Default TZ warning exists, why?');
+        $this->assertDoesNotMatchRegularExpression(
+            '/date\.timezone/',
+            $result->getLog(),
+            'Default TZ warning exists'
+        );
     }
 
     public function testWeCanRunEntireSuiteInOneCall()
