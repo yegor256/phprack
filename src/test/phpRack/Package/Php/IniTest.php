@@ -31,22 +31,22 @@ class phpRack_Package_Php_IniTest extends AbstractTest
     /**
      * @dataProvider atLeastProvider
      */
-    public function testAtLeast($data)
+    public function testAtLeast($value, $assertion)
     {
-        $this->_package->ini('memory_limit')->atLeast($data[0]);
-        $this->{$data[1]}($this->_result->wasSuccessful());
+        $this->_package->ini('memory_limit')->atLeast($value);
+        $this->{$assertion}($this->_result->wasSuccessful());
     }
 
-    public static function atLeastProvider()
+    public function atLeastProvider()
     {
         $provider = array(
-            array(array('2M', 'assertTrue')),
-            array(array('1', 'assertTrue')),
+            array('2M', 'assertTrue'),
+            array('1', 'assertTrue'),
         );
         if (ini_get('memory_limit') !== '-1') {
-            $provider[] = array(array('1000000K', 'assertFalse'));
+            $provider[] = array('1000000K', 'assertFalse');
         }
-        $provider[] = array(array('10Gigabyte', 'assertFalse'));
+        $provider[] = array('10Gigabyte', 'assertFalse');
         return $provider;
     }
 }
