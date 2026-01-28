@@ -320,10 +320,10 @@ class phpRack_Runner
      * @return void
      * @see runSuite()
      * @throws phpRack_Exception
-     * @todo Now we work only with one notifier, which is in class phpRack_Mail. Later
-     *      we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we
-     *      should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
-     *      notifiers there.
+     * @todo #1 Now we work only with one notifier, which is in class phpRack_Mail. Later
+     *  we should add other notifiers, like SMS, IRC, ICQ, etc. When we add them we
+     *  should move our phpRack_Mail class to phpRack_Notifier_Mail and create other
+     *  notifiers there.
      */
     protected function _notifyAboutFailure($report)
     {
@@ -359,7 +359,7 @@ class phpRack_Runner
             );
             $mail->setBody($report);
             /**
-             * @todo Only one recipient is supported now
+             * @todo #1 Only one recipient is supported now. Let's support more.
              */
             $mail->setTo($this->_options['notify']['email']['recipients']);
             $mail->send();

@@ -115,8 +115,8 @@ try {
         $view->assign(array('runner' => $runner));
         /**
          * @todo #57 this line leads to the problem explained in the ticket,
-         * on some servers, not everywhere. I don't know what is the reason, that's
-         * why the line is commented for now.
+         *  on some servers, not everywhere. I don't know what is the reason, that's
+         *  why the line is commented for now.
          */
         // header('Content-Type: application/xhtml+xml');
         throw new Exception($view->render());

@@ -41,8 +41,8 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
     {
         /**
          * @todo #32 we need to register a valid SMTP account with GOOGLE MAIL
-         * and configure it here, to enable real-life unit testing of the
-         * functionality
+         *  and configure it here, to enable real-life unit testing of the
+         *  functionality.
          */
         $a = array(
             'tls'      => true,
