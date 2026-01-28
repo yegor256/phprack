@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id$
+ * AAAAA
  */
 
 /**
@@ -21,7 +21,7 @@ class ParametrizedTest extends PhpRack_Test
     public function testFiles($tag = null)
     {
         if ($tag) {
-            $files = $this->_getFiles(); 
+            $files = $this->_getFiles();
             $this->assert->disc->file->cat($files[$tag]);
             return;
         }

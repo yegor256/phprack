@@ -110,4 +110,3 @@ new issue to us.
 
 After you make your changes don't forget to run `phing` again to make
 sure you didn't break anything. When ready, submit a pull request.
-

@@ -56,10 +56,10 @@ var jscoverage_inLengthyOperation = false;
 Possible states:
 			isInvertedMode	isServer	isReport	tabs
 normal			false		false		false		Browser
-inverted		true		false		false		
+inverted		true		false		false
 server, normal		false		true		false		Browser, Store
 server, inverted	true		true		false		Store
-report			false		false		true		
+report			false		false		true
 */
 var jscoverage_isInvertedMode = false;
 var jscoverage_isServer = false;

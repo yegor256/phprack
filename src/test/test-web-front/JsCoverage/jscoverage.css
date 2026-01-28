@@ -303,7 +303,7 @@ tabs
 #tabs div.disabled {
   /* windows system color GrayText */
   color: #808080;
-  cursor: default; 
+  cursor: default;
 }
 
 .TabPage {

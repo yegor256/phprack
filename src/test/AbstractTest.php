@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id$
+ * AAAAA
  */
 
 use PHPUnit\Framework\TestCase;

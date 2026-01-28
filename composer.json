@@ -1,24 +1,29 @@
 {
-    "name": "yegor256/phprack",
-    "description": "Light framework for automation of integration tests",
-    "keywords": ["php", "test", "integration", "deployment"],
-    "type": "library",
-    "license": "BSD-3-Clause",
-    "version": "2.0-beta",
-    "authors": [
-        {
-            "name": "Yegor Bugayenko",
-            "homepage": "https://github.com/yegor256"
-        }
-    ],
-    "homepage": "http://www.phprack.com",
-    "require": {
-        "php":">=8.1"
-    },
-    "require-dev": {
-        "phing/phing": "^3.0",
-        "phpmd/phpmd": "^2.15",
-        "squizlabs/php_codesniffer": "^3.8",
-        "phpunit/phpunit": "^10.5"
+  "authors": [
+    {
+      "homepage": "https://github.com/yegor256",
+      "name": "Yegor Bugayenko"
     }
+  ],
+  "description": "Light framework for automation of integration tests",
+  "homepage": "http://www.phprack.com",
+  "keywords": [
+    "php",
+    "test",
+    "integration",
+    "deployment"
+  ],
+  "license": "BSD-3-Clause",
+  "name": "yegor256/phprack",
+  "require": {
+    "php": ">=8.1"
+  },
+  "require-dev": {
+    "phing/phing": "^3.0",
+    "phpmd/phpmd": "^2.15",
+    "phpunit/phpunit": "^10.5",
+    "squizlabs/php_codesniffer": "^3.8"
+  },
+  "type": "library",
+  "version": "2.0-beta"
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id$
+ * AAAAA
  */
 
 /**
@@ -15,7 +15,7 @@ class PhpConfigurationTest extends phpRack_Test
     {
         $this->assert->php->version
             ->atLeast('5.2');
-            
+
         $this->assert
             ->isTrue(function_exists('lcfirst'))
             ->onSuccess("Method lcfirst() exists, it's PHP5.3 for sure")
@@ -28,7 +28,7 @@ class PhpConfigurationTest extends phpRack_Test
             ->isLoaded('xsl')
             ->isLoaded('simplexml')
             ->isLoaded('fileinfo');
-            
+
         $this->assert->php->extensions->fileinfo->isAlive();
     }
 

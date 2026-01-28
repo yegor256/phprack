@@ -1,6 +1,8 @@
 .claude/
+.DS_Store
 .idea/
 .vagrant/
 build/
 composer.lock
+node_modules/
 vendor/
