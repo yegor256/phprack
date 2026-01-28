@@ -1,6 +1,7 @@
 <?php
 /**
- * AAAAA
+ * SPDX-FileCopyrightText: Copyright (c) Yegor Bugayenko, 2010-2026
+ * SPDX-License-Identifier: MIT
  */
 
 global $phpRackConfig;

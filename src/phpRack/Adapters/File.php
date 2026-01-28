@@ -1,6 +1,7 @@
 <?php
 /**
- * AAAAA
+ * SPDX-FileCopyrightText: Copyright (c) Yegor Bugayenko, 2010-2026
+ * SPDX-License-Identifier: MIT
  *
  * @version $Id: Package.php 82 2010-03-16 13:46:41Z yegor256@yahoo.com $
  * @category phpRack
