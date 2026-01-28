@@ -1,6 +1,7 @@
 <?php
 /**
- * @version $Id: CustomTest.php 82 2010-03-16 13:46:41Z yegor256@yahoo.com $
+ * SPDX-FileCopyrightText: Copyright (c) Yegor Bugayenko, 2009-2026
+ * SPDX-License-Identifier: MIT
  */
 
 /**

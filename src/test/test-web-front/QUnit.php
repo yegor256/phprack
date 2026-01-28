@@ -1,4 +1,9 @@
 <?php
+/**
+ * SPDX-FileCopyrightText: Copyright (c) Yegor Bugayenko, 2009-2026
+ * SPDX-License-Identifier: MIT
+ */
+
 define('INSTRUMENTED', dirname(__FILE__) . '/../../build/instrumented-js');
 if (!is_dir(INSTRUMENTED)) {
     exit("'" . INSTRUMENTED . "' directory does NOT exist, execute 'phing' first");

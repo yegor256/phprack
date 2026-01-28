@@ -1,6 +1,7 @@
 <?php
 /**
- * @version $Id: BootstrapTest.php 88 2010-03-17 07:09:16Z yegor256@yahoo.com $
+ * SPDX-FileCopyrightText: Copyright (c) Yegor Bugayenko, 2009-2026
+ * SPDX-License-Identifier: MIT
  */
 
 /**

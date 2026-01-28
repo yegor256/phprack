@@ -1,53 +1,44 @@
 <?xml version="1.0"?>
 <!--
- * phpRack
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt. It is also available
- * through the world-wide-web at this URL: http://www.phprack.com/LICENSE.txt
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@phprack.com so we can send you a copy immediately.
- *
- * SPDX-FileCopyrightText: Copyright (c) 2009-2026, phpRack.com, Inc.
+ * SPDX-FileCopyrightText: Copyright (c) 2009-2026, Yegor Bugayenko
  * SPDX-License-Identifier: MIT
 -->
 <project name="phpRack tests" basedir="." default="main">
-    <tstamp/>
-    <if>
-        <available property="vendor.autoload" file="${project.basedir}/vendor/autoload.php"/>
-	<then>
-	    <autoloader autoloaderpath="vendor/autoload.php"/>
-	</then>
-    </if>
-    <includepath classpath="${project.basedir}"/>
-    <includepath classpath="${project.basedir}/test/"/>
-    <php expression="ini_set('memory_limit', '128M');"/>
-    <property name="package.name" value="phpRack-stable"/>
-    <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz"/>
-    <target name="main" depends="lint, jslint, phpcs, phpmd, test">
+  <tstamp/>
+  <if>
+    <available property="vendor.autoload" file="${project.basedir}/vendor/autoload.php"/>
+    <then>
+      <autoloader autoloaderpath="vendor/autoload.php"/>
+    </then>
+  </if>
+  <includepath classpath="${project.basedir}"/>
+  <includepath classpath="${project.basedir}/test/"/>
+  <php expression="ini_set('memory_limit', '128M');"/>
+  <property name="package.name" value="phpRack-stable"/>
+  <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz"/>
+  <target name="main" depends="lint, jslint, phpcs, phpmd, test">
     </target>
-    <exec executable="git" outputproperty="git.hash">
-        <arg value="log"/>
-        <arg value="-n"/>
-        <arg value="1"/>
-        <arg value="--pretty=format:%h"/>
-    </exec>
-    <target name="clean" description="Remove all build-related files">
-        <delete dir="${project.basedir}/build"/>
-    </target>
-    <target name="lint" description="Run syntax check for all classes">
-        <phplint haltonfailure="yes" level="verbose">
-            <fileset dir="${project.basedir}/src">
-                <include name="**/*.php"/>
-                <include name="**/*.html"/>
-                <include name="**/*.phtml"/>
-            </fileset>
-        </phplint>
-    </target>
-    <target name="jslint" description="Validate syntax in all JS files">
-        <echo msg="Task is disabled"/>
-        <!--
+  <exec executable="git" outputproperty="git.hash">
+    <arg value="log"/>
+    <arg value="-n"/>
+    <arg value="1"/>
+    <arg value="--pretty=format:%h"/>
+  </exec>
+  <target name="clean" description="Remove all build-related files">
+    <delete dir="${project.basedir}/build"/>
+  </target>
+  <target name="lint" description="Run syntax check for all classes">
+    <phplint haltonfailure="yes" level="verbose">
+      <fileset dir="${project.basedir}/src">
+        <include name="**/*.php"/>
+        <include name="**/*.html"/>
+        <include name="**/*.phtml"/>
+      </fileset>
+    </phplint>
+  </target>
+  <target name="jslint" description="Validate syntax in all JS files">
+    <echo msg="Task is disabled"/>
+    <!--
         <jsllint haltonfailure="true">
             <fileset dir="${project.basedir}">
                 <include name="**/index.js"/>
@@ -55,77 +46,77 @@
             </fileset>
         </jsllint>
         -->
-    </target>
-    <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
-        <exec executable="${project.basedir}/vendor/bin/phpcs" checkreturn="true" passthru="true">
-            <arg value="--standard=Zend"/>
-            <arg value="--extensions=php,phtml"/>
-            <arg value="-n"/>
-            <arg value="${project.basedir}/src"/>
+  </target>
+  <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
+    <exec executable="${project.basedir}/vendor/bin/phpcs" checkreturn="true" passthru="true">
+      <arg value="--standard=Zend"/>
+      <arg value="--extensions=php,phtml"/>
+      <arg value="-n"/>
+      <arg value="${project.basedir}/src"/>
+    </exec>
+  </target>
+  <target name="phpmd" description="PHP Mess Detector (PHPMD)">
+    <if>
+      <available property="phpmd.phar.exists" file="/usr/local/bin/phpmd.phar"/>
+      <then>
+        <exec executable="php" checkreturn="true" passthru="true">
+          <arg value="/usr/local/bin/phpmd.phar"/>
+          <arg value="${project.basedir}/src"/>
+          <arg value="text"/>
+          <arg value="codesize,unusedcode"/>
+          <arg value="--extensions=php,phtml"/>
         </exec>
-    </target>
-    <target name="phpmd" description="PHP Mess Detector (PHPMD)">
-        <if>
-	    <available property="phpmd.phar.exists" file="/usr/local/bin/phpmd.phar"/>
-	    <then>
-	        <exec executable="php" checkreturn="true" passthru="true">
-		    <arg value="/usr/local/bin/phpmd.phar"/>
-		    <arg value="${project.basedir}/src"/>
-		    <arg value="text"/>
-		    <arg value="codesize,unusedcode"/>
-		    <arg value="--extensions=php,phtml"/>
-		</exec>
-	    </then>
-	    <else>
-	        <phpmd allowedFileExtensions="php,phtml" rulesets="codesize,unusedcode" format="text">
-                    <fileset dir="${project.basedir}/src"/>
-                </phpmd>
-	    </else>
-	</if>
-    </target>
-    <target name="zca" description="Zend Code Analyzer">
-        <zendcodeanalyzer analyzerPath="zca" haltonwarning="true">
-            <fileset dir="${project.basedir}/src">
-                <include name="**/*.php"/>
-                <include name="**/*.phtml"/>
-            </fileset>
-        </zendcodeanalyzer>
-    </target>
-    <target name="jscoverage" description="JSCoverage">
-        <exec executable="jscoverage" checkreturn="true" passthru="true">
-            <arg value="-v"/>
-            <arg value="--exclude=jquery-1.4.2.min.js"/>
-            <arg value="${project.basedir}/src/phpRack/layout/js"/>
-            <arg value="${project.basedir}/build/instrumented-js"/>
-        </exec>
-    </target>
-    <target name="test" description="Run all existing unit-tests">
-        <mkdir dir="${project.basedir}/build"/>
-        <exec executable="${project.basedir}/vendor/bin/phpunit" checkreturn="true" passthru="true">
-            <arg value="--bootstrap"/>
-            <arg value="${project.basedir}/src/test/bootstrap.php"/>
-            <arg value="${project.basedir}/src/test/phpRack"/>
-        </exec>
-    </target>
-    <target name="package" description="Package the product into TGZ">
-        <tar destfile="${build.tgz}" compression="gzip">
-            <fileset dir="${project.basedir}/src">
-                <include name="phpRack/**"/>
-                <include name="LICENSE.txt"/>
-            </fileset>
-        </tar>
-    </target>
-    <target name="doc" description="Generate phpDocumentor files">
-        <php expression="if (!defined('PHPRACK_PATH')) define('PHPRACK_PATH', '${project.basedir}/src/phpRack');"/>
-        <php expression="set_error_handler(create_function('', 'return true;'));"/>
-        <phpdoc title="API Documentation, rev.${git.hash}" destdir="${project.basedir}/build/apidocs" sourcecode="false" quiet="true" output="HTML:frames:default">
-            <fileset dir="${project.basedir}/phpRack">
-                <include name="**/*.php"/>
-            </fileset>
-            <projdocfileset dir=".">
-                <include name="README.txt"/>
-                <include name="LICENSE.txt"/>
-            </projdocfileset>
-        </phpdoc>
-    </target>
+      </then>
+      <else>
+        <phpmd allowedFileExtensions="php,phtml" rulesets="codesize,unusedcode" format="text">
+          <fileset dir="${project.basedir}/src"/>
+        </phpmd>
+      </else>
+    </if>
+  </target>
+  <target name="zca" description="Zend Code Analyzer">
+    <zendcodeanalyzer analyzerPath="zca" haltonwarning="true">
+      <fileset dir="${project.basedir}/src">
+        <include name="**/*.php"/>
+        <include name="**/*.phtml"/>
+      </fileset>
+    </zendcodeanalyzer>
+  </target>
+  <target name="jscoverage" description="JSCoverage">
+    <exec executable="jscoverage" checkreturn="true" passthru="true">
+      <arg value="-v"/>
+      <arg value="--exclude=jquery-1.4.2.min.js"/>
+      <arg value="${project.basedir}/src/phpRack/layout/js"/>
+      <arg value="${project.basedir}/build/instrumented-js"/>
+    </exec>
+  </target>
+  <target name="test" description="Run all existing unit-tests">
+    <mkdir dir="${project.basedir}/build"/>
+    <exec executable="${project.basedir}/vendor/bin/phpunit" checkreturn="true" passthru="true">
+      <arg value="--bootstrap"/>
+      <arg value="${project.basedir}/src/test/bootstrap.php"/>
+      <arg value="${project.basedir}/src/test/phpRack"/>
+    </exec>
+  </target>
+  <target name="package" description="Package the product into TGZ">
+    <tar destfile="${build.tgz}" compression="gzip">
+      <fileset dir="${project.basedir}/src">
+        <include name="phpRack/**"/>
+        <include name="LICENSE.txt"/>
+      </fileset>
+    </tar>
+  </target>
+  <target name="doc" description="Generate phpDocumentor files">
+    <php expression="if (!defined('PHPRACK_PATH')) define('PHPRACK_PATH', '${project.basedir}/src/phpRack');"/>
+    <php expression="set_error_handler(create_function('', 'return true;'));"/>
+    <phpdoc title="API Documentation, rev.${git.hash}" destdir="${project.basedir}/build/apidocs" sourcecode="false" quiet="true" output="HTML:frames:default">
+      <fileset dir="${project.basedir}/phpRack">
+        <include name="**/*.php"/>
+      </fileset>
+      <projdocfileset dir=".">
+        <include name="README.txt"/>
+        <include name="LICENSE.txt"/>
+      </projdocfileset>
+    </phpdoc>
+  </target>
 </project>

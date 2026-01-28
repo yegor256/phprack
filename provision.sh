@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2009-2026, Yegor Bugayenko
+# SPDX-License-Identifier: MIT
 
 export DEBIAN_FRONTEND=noninteractive
 hostname vagrant && echo -e "\n127.0.0.1 vagrant\n" >> /etc/hosts
@@ -30,7 +32,7 @@ if [ ! -e /usr/local/bin/jsl ]; then
     wget --quiet http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz;
     tar xzf jsl-0.3.0-src.tar.gz;
     rm -rf jsl-0.3.0-src.tar.gz;
-    cd jsl-0.3.0/src;
+    cd jsl-0.3.0/src || exit 1;
     make -f Makefile.ref;
     sudo mv Linux_All_DBG.OBJ/jsl /usr/local/bin/jsl;
     cd ../..;

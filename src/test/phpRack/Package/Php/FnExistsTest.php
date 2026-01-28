@@ -1,6 +1,7 @@
 <?php
 /**
- * @version $Id: IniTest.php 605 2010-07-08 05:00:52Z yegor256@yahoo.com $
+ * SPDX-FileCopyrightText: Copyright (c) Yegor Bugayenko, 2009-2026
+ * SPDX-License-Identifier: MIT
  */
 
 /**

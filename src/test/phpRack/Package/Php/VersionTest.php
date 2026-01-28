@@ -1,4 +1,8 @@
 <?php
+/**
+ * SPDX-FileCopyrightText: Copyright (c) Yegor Bugayenko, 2009-2026
+ * SPDX-License-Identifier: MIT
+ */
 
 require_once 'src/test/AbstractTest.php';
 

@@ -19,10 +19,12 @@ path = [
     "**/*.json",
     "**/*.md",
     "**/*.pdf",
+    "**/*.gif",
     "**/*.png",
     "**/*.svg",
     "**/*.txt",
     "**/*.vm",
+    "src/test/test-web-front/JsCoverage/*",
     "**/CNAME",
     "**/Gemfile.lock",
     "Gemfile.lock",
@@ -30,5 +32,5 @@ path = [
     "renovate.json",
 ]
 precedence = "override"
-SPDX-FileCopyrightText = "Copyright (c) 2025 Yegor Bugayenko"
+SPDX-FileCopyrightText = "Copyright (c) 2009-2026 Yegor Bugayenko"
 SPDX-License-Identifier = "MIT"

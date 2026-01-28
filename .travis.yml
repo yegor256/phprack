@@ -7,7 +7,7 @@
 # obtain it through the world-wide-web, please send an email
 # to license@phprack.com so we can send you a copy immediately.
 #
-# SPDX-FileCopyrightText: Copyright (c) 2009-2026, phpRack.com, Inc.
+# SPDX-FileCopyrightText: Copyright (c) 2009-2026, Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
 language: php

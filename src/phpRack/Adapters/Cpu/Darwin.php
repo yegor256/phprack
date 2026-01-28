@@ -1,6 +1,6 @@
 <?php
 /**
- * SPDX-FileCopyrightText: Copyright (c) Yegor Bugayenko, 2010-2026
+ * SPDX-FileCopyrightText: Copyright (c) Yegor Bugayenko, 2009-2026
  * SPDX-License-Identifier: MIT
  *
  * @version $Id: Linux.php 447 2010-04-24 03:59:09Z yegor256@yahoo.com $

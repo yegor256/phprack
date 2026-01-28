@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Copyright (c) 2009-2026, Yegor Bugayenko
+# SPDX-License-Identifier: MIT
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu1204"
   config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
