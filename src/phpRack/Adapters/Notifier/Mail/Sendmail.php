@@ -81,7 +81,7 @@ class phpRack_Adapters_Notifier_Mail_Sendmail extends phpRack_Adapters_Notifier_
         return implode(
             "\r\n",
             array_map(
-                create_function('$v, $k', 'return $k . ": " . $v;'),
+                fn($v, $k) => $k . ": " . $v,
                 $headers,
                 array_keys($headers)
             )

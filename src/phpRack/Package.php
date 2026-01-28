@@ -222,7 +222,7 @@ class phpRack_Package
             '/',
             array_slice(
                 array_map(
-                    create_function('$a', 'return strtolower($a[0]) . substr($a, 1);'),
+                    fn($a) => strtolower($a[0]) . substr($a, 1),
                     $sectors
                 ),
                 2

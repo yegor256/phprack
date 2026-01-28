@@ -50,9 +50,7 @@ ini_set('html_errors', false);
  * implement own error detection mechanism.
  */
 set_error_handler(
-    create_function(
-        '$errno, $errstr, $errfile, $errline',
-        '
+    function ($errno, $errstr, $errfile, $errline) {
         if (in_array($errno, array(E_WARNING)) && error_reporting() == 0) {
             return;
         }
@@ -63,8 +61,7 @@ set_error_handler(
             $errfile,
             $errline
         );
-        '
-    )
+    }
 );
 /**
  * Fix for IIS, see https://github.com/tpc2/phprack/issues/84.
