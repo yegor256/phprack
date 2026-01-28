@@ -20,8 +20,6 @@ When the product is deployed to production,
   you want to be sure that the services you need are configured and available.
 If they are not, you want a detailed notification before your end-users notice.
 
-<img src="http://img.phprack.com/diagram.png" style="width: 530px; height: 243px;"/>
-
 This is where phpRack helps.
 Add phpRack to your project and write a few tests.
 All these tests will be executed when requested
