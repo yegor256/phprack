@@ -16,5 +16,3 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: crate-ci/typos@v1.35.4
-        with:
-          config: ./typos_config.toml

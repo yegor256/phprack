@@ -8,33 +8,30 @@
 Read about phpRack in [php|Architect June 2010][phpArchitect]:
   _Integration Testing with phpRack Framework_.
 
-**phpRack** is a light framework for automation of integration tests.
-By integration tests we mean software modules that should be executed in the
-  production environment, in order to validate that said environment is configured
-  as expected.
-For example your product is a web2.0 application which depends on
-  proper configuration of PHP, Apache, MySQL and availability of YouTube, Flickr
-  and GoogleMaps API's.
-Your product is properly tested with unit tests
-  (obviously you're using stubs for said services and components).
-When the product is deployed to the production environment,
-  you want to be sure that the services
-  you need are configured and available.
-If they are not — you want to get a notification about it before your end-users.
-And you want to get a detailed notification.
+**phpRack** is a lightweight framework for integration test automation.
+Integration tests are checks that run in the production environment
+  to validate that it is configured as expected.
+For example, your product is a web application that depends on
+  PHP, Apache, MySQL, and the availability of YouTube, Flickr,
+  and Google Maps APIs.
+Your product is tested with unit tests
+  that use stubs for these services and components.
+When the product is deployed to production,
+  you want to be sure that the services you need are configured and available.
+If they are not, you want a detailed notification before your end-users notice.
 
 <img src="http://img.phprack.com/diagram.png" style="width: 530px; height: 243px;"/>
 
-This is when phpRack is mandatory.
-You shall add phpRack to your project, and write a number of tests.
+This is where phpRack helps.
+Add phpRack to your project and write a few tests.
 All these tests will be executed when requested
-  and will produce a detailed report, both only and by email.
+  and will produce a detailed report, both online and by email.
 It will save you a lot of time during deployment and later,
   during maintenance of your product.
 
 ## Quick Start
 
-To start using phpRack you should do three operations:
+To start using phpRack, follow these three steps:
 
 * Upload phpRack library to your server
 * Create `phprack.php` file in your `public_html` directory
@@ -45,7 +42,7 @@ Let's do them one by one:
 ### Upload phpRack library
 
 Download [ZIP archive](https://github.com/yegor256/phprack/archive/master.zip)
-  of phpRach and unpack it to `public_html/phpRack` or some other directory on
+  of phpRack and unpack it to `public_html/phpRack` or some other directory on
   your production server.
 
 ### Create `phprack.php`
@@ -65,8 +62,8 @@ include '../library/phpRack/bootstrap.php';
 
 ### Create integration tests
 
-Write integration tests in the directory rack-tests, each one has to extend the
-class `PhpRack_Test` (see
+Write integration tests in the `rack-tests` directory. Each test must extend
+`phpRack_Test` (see
 [full list of assertions](https://github.com/yegor256/phprack/wiki/Assertions)).
 For example, file `MyTest.php`:
 
@@ -95,32 +92,22 @@ Try this link to see what you're going to see on your site:
 
 ## How to contribute?
 
-First, fork our repository and clone it to your local machine and install
-  [Vagrant](http://www.vagrantup.com/).
-Then, run:
+Fork the repository, clone it to your local machine, and install dependencies:
 
 ```bash
-vagrant up
+composer install
 ```
 
-A virtual machine with pre-installed requisites will be ready in a few
-minutes. Login to it and go to `/vagrant` directory:
+Then run the build:
 
 ```bash
-vagrant ssh
-```
-
-Then, in the virtual machine run:
-
-```bash
-phing
+./vendor/bin/phing
 ```
 
 All tests should pass.
-If you see any problems, please submit an new issue to us.
+If you see any problems, please submit a new issue.
 
-After you make your changes don't forget to run `phing` again to make
-  sure you didn't break anything.
+After making your changes, run `phing` again to make sure you didn't break anything.
 When ready, submit a pull request.
 
 [phpArchitect]: http://www.phparch.com/magazine/2010/june/
