@@ -48,7 +48,7 @@ class phpRack_Adapters_Pear
      * Get full list of installed packages
      *
      * @return array of phpRack_Adapters_Pear_Package
-     * @throws phpRack_Exception If some problem appear during package informations loading
+     * @throws phpRack_Exception If some problem appear during package information loading
      * @see phpRack_Package_Pear::showList()
      */
     public function getAllPackages()

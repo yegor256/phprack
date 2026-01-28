@@ -83,7 +83,7 @@ abstract class phpRack_Suite
     }
 
     /**
-     * Allow child class to add tests and sub suites by overwritting this
+     * Allow child class to add tests and sub suites by overwriting this
      * method
      *
      * @return void

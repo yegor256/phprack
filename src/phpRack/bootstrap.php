@@ -56,7 +56,7 @@ if (!isset($_SERVER['REQUEST_URI'])) {
 try {
     /**
      * This variable ($phpRackConfig) shall be declared and filled with
-     * values in your phprack.php file, which calls this bootstraper. For
+     * values in your phprack.php file, which calls this bootstrapper. For
      * complete reference on this variable see:
      * @see http://trac.fazend.com/phpRack/wiki/Bootstrap
      */
@@ -132,7 +132,7 @@ try {
      */
     $options = $_GET;
     /**
-     * '_' param is automatically added by jQuery with current time in miliseconds,
+     * '_' param is automatically added by jQuery with current time in milliseconds,
      * when we call $.ajax function with cache = false. We unset it to have
      * no exception in phpRack_Test::setAjaxOptions()
      */

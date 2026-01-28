@@ -299,7 +299,7 @@ class phpRack_Runner_Auth
      * Get current auth result, if it exists
      *
      * @return phpRack_Runner_Auth_Result
-     * @see boostrap.php
+     * @see bootstrap.php
      * @throws phpRack_Exception If the result is not set yet
      */
     public function getAuthResult()

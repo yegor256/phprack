@@ -19,7 +19,7 @@ require_once PHPRACK_PATH . '/Package.php';
 require_once PHPRACK_PATH . '/Adapters/File.php';
 
 /**
- * File informations and content.
+ * File information and content.
  *
  * @package Tests
  * @subpackage packages
@@ -131,15 +131,15 @@ class phpRack_Package_Disc_File extends phpRack_Package
             $readBuffer = fread($fp, self::READ_BUFFER_SIZE);
             $linesCountInReadBuffer = substr_count($readBuffer, "\n");
 
-            // If we have enought lines extract from last readed fragment only required lines
+            // If we have enough lines extract from last read fragment only required lines
             if ($linesCountInReadBuffer >= $linesCount) {
                 $readBuffer = implode("\n", array_slice(explode("\n", $readBuffer), -$linesCount));
             }
 
-            // Update how many lines still need to be readed
+            // Update how many lines still need to be read
             $linesCount -= $linesCountInReadBuffer;
 
-            // Attach last readed lines at beggining of earlier readed fragments
+            // Attach last read lines at beginning of earlier read fragments
             $content = $readBuffer . $content;
 
             if (strlen($content) > $this->_maxBytesToRender) {
@@ -246,7 +246,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
         }
 
         $content = '';
-        $readedLinesCount = 0;
+        $readLinesCount = 0;
         $fp = @fopen($fileName, 'rb');
         if ($fp === false) {
             $this->_failure("Failed to fopen('{$fileName}')");
@@ -254,9 +254,9 @@ class phpRack_Package_Disc_File extends phpRack_Package
         }
 
         // Read line by line until we have required count or we reach EOF
-        while ($readedLinesCount < $linesCount && !feof($fp)) {
+        while ($readLinesCount < $linesCount && !feof($fp)) {
             $content .= @fgets($fp);
-            $readedLinesCount++;
+            $readLinesCount++;
             if (strlen($content) > $this->_maxBytesToRender) {
                 $this->_log(
                     sprintf(
@@ -380,7 +380,7 @@ class phpRack_Package_Disc_File extends phpRack_Package
     /**
      * Show when this file was modified
      *
-     * @param integer Time/date when this file was modifed, result of filemtime()
+     * @param integer Time/date when this file was modified, result of filemtime()
      * @return string
      * @see _isFileExists()
      */

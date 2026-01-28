@@ -47,7 +47,7 @@ class phpRack_Package_Php extends phpRack_Package
      *
      * <code>
      * class MyTest extends phpRack_Test {
-     *   public fuction testPhpIni() {
+     *   public function testPhpIni() {
      *     $this->assert->php->fnExists('lcfirst');
      *   }
      * }
@@ -75,7 +75,7 @@ class phpRack_Package_Php extends phpRack_Package
      *
      * <code>
      * class MyTest extends phpRack_Test {
-     *   public fuction testPhpIni() {
+     *   public function testPhpIni() {
      *     $this->assert->php->ini('short_open_tag');
      *   }
      * }
@@ -105,7 +105,7 @@ class phpRack_Package_Php extends phpRack_Package
      *
      * <code>
      * class MyTest extends phpRack_Test {
-     *   public fuction testPhpIniAtleast() {
+     *   public function testPhpIniAtleast() {
      *     $this->assert->php->ini('memory_limit')->atLeast('128M');
      *   }
      * }

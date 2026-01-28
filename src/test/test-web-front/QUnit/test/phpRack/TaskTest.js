@@ -34,13 +34,13 @@ $(
             "test groups tasks in same dir",
             function() {
                 var $label = $('div.taskGroupControl span.label:contains(\'Php\')');
-                ok($label.length, 'Attachs control label');
+                ok($label.length, 'Attaches control label');
 
                 var $taskGroupControl = $label.parent('div.taskGroupControl');
-                ok($taskGroupControl.length, 'Attachs group control div');
+                ok($taskGroupControl.length, 'Attaches group control div');
 
                 var $taskGroupContainer = $taskGroupControl.next('div.taskGroupContainer');
-                ok($taskGroupContainer.length, 'Attachs group container div');
+                ok($taskGroupContainer.length, 'Attaches group container div');
 
                 ok(!$taskGroupContainer.is(':visible'), 'Hides task group container by default');
                 $label.click();

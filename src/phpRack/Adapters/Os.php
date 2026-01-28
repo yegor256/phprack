@@ -20,7 +20,7 @@ require_once PHPRACK_PATH . '/Exception.php';
 class phpRack_Adapters_Os
 {
     /**
-     * System constants used for simplify comparisions
+     * System constants used for simplify comparisons
      */
     const WINDOWS = 'Windows';
     const LINUX = 'Linux';

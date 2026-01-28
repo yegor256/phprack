@@ -68,7 +68,7 @@ class phpRack_Adapters_Cpu_Windows extends phpRack_Adapters_Cpu_Abstract
         }
 
         /**
-         * If returned $cpus set was empty(some error occured)
+         * If returned $cpus set was empty(some error occurred)
          *
          * We can't check it earlier with empty($cpus) or count($cpus)
          * because $cpus is object and doesn't implement countable

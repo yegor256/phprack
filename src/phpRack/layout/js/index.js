@@ -22,7 +22,7 @@ function phpRack_TaskQueue()
 {
     var that = {
         queue: [], // Used for storing waiting tasks
-        threadsCount: 1, // How many concurent threads we can have
+        threadsCount: 1, // How many concurrent threads we can have
         activeThreadsCount: 0, // How many threads is currently running
         // Callback function executed after each task is finished
         onTaskFinish: function()
@@ -36,7 +36,7 @@ function phpRack_TaskQueue()
             that.queue.push(task);
             that._runNextTask();
         },
-        // Control tasks proccessing
+        // Control tasks processing
         _runNextTask: function()
         {
             // If we have free thread
@@ -329,7 +329,7 @@ function phpRack_Test(options)
             // if window has focus, and result message is expanded
             if ((phpRack_Window.hasFocus() || !that.options.pauseWhenFocusLost) &&
                  that.$message.is(":visible")) {
-                var delay = seconds * 1000; // in miliseconds
+                var delay = seconds * 1000; // in milliseconds
                 // execute run() method with passed reload timeout
                 that.timeoutId = window.setTimeout(that.run, delay);
             } else {
@@ -429,7 +429,7 @@ function phpRack_Test(options)
                             message += XMLHttpRequest.responseText;
                         } else {
                             // We received malformed JSON
-                            // (php script throwed some warning, unhandled exception, extra data, etc...)
+                            // (php script thrown some warning, unhandled exception, extra data, etc...)
                             if (typeof errorThrown == 'object') {
                                 message = errorThrown.toString();
                             } else {
@@ -501,7 +501,7 @@ function phpRack_Task_Grouper()
                         function()
                         {
                             var $sign = $(this).find('div.sign');
-                            // toogle sign for show/hide
+                            // toggle sign for show/hide
                             if ($sign.text() == '+') {
                                 $sign.text('-');
                             } else {

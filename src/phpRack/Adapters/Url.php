@@ -69,7 +69,7 @@ class phpRack_Adapters_Url
      */
     public function __construct($url, array $options = array())
     {
-        // If url has not sheme defined - add it
+        // If url has not scheme defined - add it
         if (!preg_match('#^\w+://#', $url)) {
             $url = 'http://' . $url;
         }

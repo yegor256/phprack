@@ -52,7 +52,7 @@ abstract class phpRack_Suite_Test extends phpRack_Test
 
         /**
          * set ajax option with config values, because we need to receive these
-         * informations back from front end
+         * information back from front end
          */
         $this->setAjaxOptions(
             array(

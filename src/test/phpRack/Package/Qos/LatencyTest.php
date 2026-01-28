@@ -43,7 +43,7 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
 
     /**
      */
-    public function testWithotUrl(): void
+    public function testWithoutUrl(): void
     {
         $this->expectException(phpRack_Exception::class);
         $this->_qos->latency(

@@ -156,7 +156,7 @@ class phpRack_Adapters_Notifier_Mail_Smtp
     }
 
     /**
-     * Writes data to the connetion (stream)
+     * Writes data to the connection (stream)
      *
      * @var string Message to send to SMTP server
      * @return $this

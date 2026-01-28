@@ -36,7 +36,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
     public function getBogoMips()
     {
         $matches = array();
-        // on Linux parse ouput of "cat /proc/cpuinfo" command
+        // on Linux parse output of "cat /proc/cpuinfo" command
         if (
             !preg_match(
                 '/^bogomips\s*:\s*(.*)/m',
@@ -59,7 +59,7 @@ class phpRack_Adapters_Cpu_Linux extends phpRack_Adapters_Cpu_Abstract
      */
     public function getCpuFrequency()
     {
-        // on Linux parse ouput of "cat /proc/cpuinfo" command
+        // on Linux parse output of "cat /proc/cpuinfo" command
         $matches = array();
         if (
             !preg_match(

@@ -317,7 +317,7 @@ abstract class phpRack_Test
     }
 
     /**
-     * Allow child class to overwrite test default options, by overwritting this method
+     * Allow child class to overwrite test default options, by overwriting this method
      * If you want disable ajax auto start it is proper place for that
      *
      * @return void

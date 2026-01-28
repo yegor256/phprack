@@ -94,7 +94,7 @@ class phpRack_Adapters_Shell_Command
      * proc_open(). It works on Windows XP, Ubuntu Linux and solve
      * problem on phprack.com server.
      * But from some reason on MacOS there is some problem with
-     * this env value reseting, and we lose some privilege? Due to
+     * this env value resetting, and we lose some privilege? Due to
      * this fact, our unit tests fail, because PEAR test produce
      * error:
      *
@@ -123,7 +123,7 @@ class phpRack_Adapters_Shell_Command
         );
 
         $pipes = array();
-        // execute command and get its proccess resource
+        // execute command and get its process resource
         $this->_process = proc_open(
             $this->_command,
             $descriptors,
@@ -151,7 +151,7 @@ class phpRack_Adapters_Shell_Command
         while (true) {
             $readPipes = array();
 
-            // check that we readed everything from pipes
+            // check that we read everything from pipes
             foreach ($pipes as $pipe) {
                 if (!feof($pipe)) {
                     $readPipes[] = $pipe;
@@ -192,7 +192,7 @@ class phpRack_Adapters_Shell_Command
 
             // if child process was terminated
             if ($changedStreamsCount === false) {
-                throw new phpRack_Exception('Proccess was terminated');
+                throw new phpRack_Exception('Process was terminated');
             }
 
             // check client connection is still opened
@@ -207,7 +207,7 @@ class phpRack_Adapters_Shell_Command
         // close pipes to avoid deadlock during proc_close()
         fclose($pipes[self::PIPE_STD_OUT]);
 
-        // close proccess and cleanup
+        // close process and cleanup
         proc_close($this->_process);
         $this->_process = null;
 

@@ -43,7 +43,7 @@ class phpRack_Package_Php_IniTest extends AbstractTest
             array(array('2M', 'assertTrue')), // 2 megabyte
             array(array('1', 'assertTrue')), // 1 byte
             array(array('1000000K', 'assertFalse')), // about 1G
-            array(array('10Gigabyte', 'assertFalse')) // wrong foramt
+            array(array('10Gigabyte', 'assertFalse')) // wrong format
         );
     }
 }

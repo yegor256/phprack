@@ -31,7 +31,7 @@ class phpRack_Adapters_Db_Mysql_Result_Formatter
         // create array for storing columns meta data
         $columns = array_fill(0, mysql_num_fields($result), array());
 
-        // determine columns lenght and create columns headers
+        // determine columns length and create columns headers
         foreach ($columns as $columnIndex => &$column) {
             // get column data for this index
             $column['meta'] = mysql_fetch_field($result, $columnIndex);

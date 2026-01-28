@@ -216,7 +216,7 @@ class phpRack_Runner
      * Run all tests and return a text report about their execution
      *
      * @return string
-     * @see boostrap.php
+     * @see bootstrap.php
      */
     public function runSuite()
     {
