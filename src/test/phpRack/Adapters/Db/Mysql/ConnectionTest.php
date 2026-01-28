@@ -28,26 +28,26 @@ class phpRack_Adapters_Db_Mysql_ConnectionTest extends phpRack_Adapters_Db_Mysql
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testConnectWithNotExistedDb()
+    public function testConnectWithNotExistedDb(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_adapter->connect('jdbc:mysql://localhost:3306/notexists');
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testInvalidJdbcUrl()
+    public function testInvalidJdbcUrl(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_adapter->connect('invalidjdbc');
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testQueryWithoutConnect()
+    public function testQueryWithoutConnect(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_adapter->query("SELECT 1");
     }
 
@@ -75,10 +75,10 @@ class phpRack_Adapters_Db_Mysql_ConnectionTest extends phpRack_Adapters_Db_Mysql
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testShowConnectionsWithoutConnect()
+    public function testShowConnectionsWithoutConnect(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_adapter->showConnections();
     }
 

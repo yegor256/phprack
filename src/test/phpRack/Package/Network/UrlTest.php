@@ -43,10 +43,10 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testUrlWithInvalidUrl()
+    public function testUrlWithInvalidUrl(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_package->url('http://');
     }
 
@@ -75,10 +75,10 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testRegexWithoutUrlCall()
+    public function testRegexWithoutUrlCall(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_package->regex('/google\.com/');
     }
 

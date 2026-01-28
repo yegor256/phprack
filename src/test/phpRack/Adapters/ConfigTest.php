@@ -42,11 +42,9 @@ class Adapters_ConfigTest extends AbstractTest
         $this->assertFalse(isset($this->_config->notExistingKey));
     }
 
-    /**
-     * @expectedException phpRack_Exception
-     */
-    public function testGetWithNotExistingKey()
+    public function testGetWithNotExistingKey(): void
     {
-       $this->_config->notExistingKey;
+        $this->expectException(phpRack_Exception::class);
+        $this->_config->notExistingKey;
     }
 }

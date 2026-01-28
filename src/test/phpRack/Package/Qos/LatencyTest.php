@@ -41,10 +41,10 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testWithotUrl()
+    public function testWithotUrl(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_qos->latency(
             array(
                 'scenario' => array()
@@ -53,10 +53,10 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testWithInvalidUrl()
+    public function testWithInvalidUrl(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_qos->latency(
             array(
                 'scenario' => array('/index.html')
@@ -65,10 +65,10 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testWithInvalidOption()
+    public function testWithInvalidOption(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_qos->latency(
             array(
                 'scenario' => array(

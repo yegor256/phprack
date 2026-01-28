@@ -28,18 +28,18 @@ class phpRack_Package_Db_Mysql_ShowSchemaTest extends phpRack_Package_Db_Mysql_A
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testShowSchemaWithoutConnect()
+    public function testShowSchemaWithoutConnect(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_package->showSchema();
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testShowSchemaWithoutDbExists()
+    public function testShowSchemaWithoutDbExists(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_getPackageWithValidConnect()
             ->showSchema();
     }

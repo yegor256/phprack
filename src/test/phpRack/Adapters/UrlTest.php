@@ -31,10 +31,10 @@ class Adapters_UrlTest extends AbstractTest
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testFactoryWithInvalidUrl()
+    public function testFactoryWithInvalidUrl(): void
     {
+        $this->expectException(phpRack_Exception::class);
         phpRack_Adapters_Url::factory('http://');
     }
 
@@ -51,10 +51,10 @@ class Adapters_UrlTest extends AbstractTest
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testFactoryWithInvalidOptions()
+    public function testFactoryWithInvalidOptions(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $options = array(
             'invalidOption' => false
         );

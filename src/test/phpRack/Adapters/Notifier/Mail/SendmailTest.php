@@ -64,19 +64,19 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testSendWithoutToException()
+    public function testSendWithoutToException(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_adapter->setBody('Test');
         $this->_adapter->send();
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testSendWithoutBodyException()
+    public function testSendWithoutBodyException(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_adapter->setTo('test@phprack.com');
         $this->_adapter->send();
     }

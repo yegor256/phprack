@@ -136,7 +136,7 @@ class RunnerTest extends AbstractTest
         $this->assertTrue(is_array($tests));
         $this->assertTrue(count($tests) > 0, "No tests, why?");
         $result = $tests[0]->run();
-        $this->assertRegExp('/date\.timezone/', $result->getLog(), 'Default TZ warning missing');
+        $this->assertMatchesRegularExpression('/date\.timezone/', $result->getLog(), 'Default TZ warning missing');
     }
 
     public function testWorksWhenDefaultTimeZoneSet()
@@ -146,7 +146,7 @@ class RunnerTest extends AbstractTest
         $this->assertTrue(is_array($tests));
         $this->assertTrue(count($tests) > 0, "No tests, why?");
         $result = $tests[0]->run();
-        $this->assertNotRegExp('/date\.timezone/', $result->getLog(), 'Default TZ warning exists, why?');
+        $this->assertDoesNotMatchRegularExpression('/date\.timezone/', $result->getLog(), 'Default TZ warning exists, why?');
     }
 
     public function testWeCanRunEntireSuiteInOneCall()

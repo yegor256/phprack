@@ -37,26 +37,26 @@ class phpRack_Adapters_Db_Mysql_DatabaseInfoTest extends phpRack_Adapters_Db_Mys
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testShowServerInfoWithoutConnect()
+    public function testShowServerInfoWithoutConnect(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_adapter->showServerInfo();
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testSchemaWithoutConnect()
+    public function testSchemaWithoutConnect(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_adapter->showSchema();
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testSchemaWithoutDatabaseSelect()
+    public function testSchemaWithoutDatabaseSelect(): void
     {
+        $this->expectException(phpRack_Exception::class);
         try {
             $this->_adapter->connect('jdbc:mysql://localhost');
         } catch (Exception $e) {

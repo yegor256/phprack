@@ -29,18 +29,18 @@ class phpRack_Package_Db_Mysql_TableExistsTest extends phpRack_Package_Db_Mysql_
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testTableExistsWithoutConnect()
+    public function testTableExistsWithoutConnect(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_package->tableExists(self::VALID_TABLE);
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testTableExistsWithoutDbExists()
+    public function testTableExistsWithoutDbExists(): void
     {
+        $this->expectException(phpRack_Exception::class);
         $this->_getPackageWithValidConnect()
             ->tableExists(self::INVALID_TABLE);
     }

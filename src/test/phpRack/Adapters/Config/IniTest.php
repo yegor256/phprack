@@ -45,18 +45,18 @@ class Adapters_Config_IniTest extends AbstractTest
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testWithNotExistingFile()
+    public function testWithNotExistingFile(): void
     {
+        $this->expectException(phpRack_Exception::class);
         new phpRack_Adapters_Config_Ini('noexistingfile.ini', 'production');
     }
 
     /**
-     * @expectedException phpRack_Exception
      */
-    public function testWithNotExistingSection()
+    public function testWithNotExistingSection(): void
     {
+        $this->expectException(phpRack_Exception::class);
         new phpRack_Adapters_Config_Ini($this->_iniFilename, 'notexistingsection');
     }
 
