@@ -122,6 +122,12 @@ class phpRack_Package_Php extends phpRack_Package
             return $this;
         }
 
+        // -1 means unlimited, so any atLeast check passes
+        if ($this->_iniValue === '-1') {
+            $this->_success("php.ini value is set to unlimited (-1), {$value} required");
+            return $this;
+        }
+
         if ($this->_sizeFormat($value) > $this->_sizeFormat($this->_iniValue)) {
             $this->_failure("php.ini value has only {$this->_iniValue}, but {$value} is required");
         } else {

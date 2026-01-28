@@ -29,7 +29,7 @@ class phpRack_Package_Php_IniTest extends AbstractTest
     }
 
     /**
-     * @dataProvider testAtLeastProvider
+     * @dataProvider atLeastProvider
      */
     public function testAtLeast($data)
     {
@@ -37,13 +37,16 @@ class phpRack_Package_Php_IniTest extends AbstractTest
         $this->{$data[1]}($this->_result->wasSuccessful());
     }
 
-    public function testAtLeastProvider()
+    public static function atLeastProvider()
     {
-        return array(
-            array(array('2M', 'assertTrue')), // 2 megabyte
-            array(array('1', 'assertTrue')), // 1 byte
-            array(array('1000000K', 'assertFalse')), // about 1G
-            array(array('10Gigabyte', 'assertFalse')) // wrong format
+        $provider = array(
+            array(array('2M', 'assertTrue')),
+            array(array('1', 'assertTrue')),
         );
+        if (ini_get('memory_limit') !== '-1') {
+            $provider[] = array(array('1000000K', 'assertFalse'));
+        }
+        $provider[] = array(array('10Gigabyte', 'assertFalse'));
+        return $provider;
     }
 }
