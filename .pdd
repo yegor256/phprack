@@ -1,6 +1,6 @@
 --source=.
 --verbose
 --exclude vendor/**/*
---rule min-words:5
+--rule min-words:3
 --rule min-estimate:0
 --rule max-estimate:90
