@@ -215,8 +215,7 @@ class phpRack_Runner
                     }
                     break;
                 default:
-                    // just ignore the file and move on
-                    continue;
+                    continue 2;
             }
         }
         return $tests;

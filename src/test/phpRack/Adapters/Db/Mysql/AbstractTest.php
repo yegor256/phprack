@@ -22,13 +22,13 @@ abstract class phpRack_Adapters_Db_Mysql_AbstractTest extends AbstractTest
      */
     protected $_adapter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_adapter = new phpRack_Adapters_Db_Mysql();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->_adapter);
         parent::tearDown();

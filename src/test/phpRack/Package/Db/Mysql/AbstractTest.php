@@ -42,14 +42,14 @@ abstract class phpRack_Package_Db_Mysql_AbstractTest extends AbstractTest
     const VALID_DATABASE = 'test';
     const VALID_TABLE = 'test';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_result = $this->_test->assert->getResult();
         $this->_package = $this->_test->assert->db->mysql;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->_package);
         parent::tearDown();

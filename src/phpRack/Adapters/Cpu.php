@@ -63,7 +63,7 @@ class phpRack_Adapters_Cpu
         if (!file_exists($classFile)) {
             throw new phpRack_Exception("OS '{$os}' is not supported yet");
         }
-        eval ('require_once $classFile;'); // for ZCA validation
+        eval('require_once $classFile;');
         $className = 'phpRack_Adapters_Cpu_' . ucfirst($os);
         return new $className();
     }

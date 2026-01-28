@@ -25,7 +25,7 @@ class Adapters_Auth_FileTest extends AbstractTest
      */
     private $_auth;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->_config['htpasswd'] = @tempnam(sys_get_temp_dir(), 'prk');
         if ($this->_config['htpasswd'] === false) {
@@ -44,7 +44,7 @@ class Adapters_Auth_FileTest extends AbstractTest
         $this->_auth->setOptions($this->_config);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         @unlink($this->_config['htpasswd']);
     }

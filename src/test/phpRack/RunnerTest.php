@@ -26,7 +26,7 @@ require_once PHPRACK_PATH . '/Result.php';
 class RunnerTest extends AbstractTest
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         global $phpRackConfig;

@@ -37,7 +37,7 @@ abstract class phpRack_Package_Disc_File_AbstractTest extends AbstractTest
      */
     protected $_result;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_result = $this->_test->assert->getResult();
@@ -45,7 +45,7 @@ abstract class phpRack_Package_Disc_File_AbstractTest extends AbstractTest
         $this->_testFilesDir = PHPRACK_PATH . '/../test/phpRack/Package/Disc/_files';
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         clearstatcache();
         // Remove tmp file

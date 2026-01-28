@@ -10,7 +10,7 @@ require_once 'src/test/AbstractTest.php';
 
 class Runner_AuthOption_OnlySslTest extends AbstractTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         global $phpRackConfig;
         $authOptions = array(
@@ -29,7 +29,7 @@ class Runner_AuthOption_OnlySslTest extends AbstractTest
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->_runner);
     }

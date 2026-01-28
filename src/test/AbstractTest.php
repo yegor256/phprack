@@ -3,6 +3,8 @@
  * @version $Id$
  */
 
+use PHPUnit\Framework\TestCase;
+
 define('PHPRACK_PATH', realpath(dirname(__FILE__) . '/../phpRack'));
 
 /**
@@ -31,7 +33,7 @@ define('PHPRACK_AJAX_TOKEN', 'testing-token');
  */
 define('PHPRACK_VERSION', '0.1test');
 
-abstract class AbstractTest extends PHPUnit_Framework_TestCase
+abstract class AbstractTest extends TestCase
 {
     /**
      * @var phpRack_Runner
@@ -72,7 +74,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
      * @see PHPUnit_Framework_TestCase::run()
      * @see tearDown()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         global $phpRackConfig;
         /**
@@ -95,7 +97,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
      * @see PHPUnit_Framework_TestCase::run()
      * @see setUp()
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->_test);
         unset($this->_runner);

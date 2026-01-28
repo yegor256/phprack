@@ -20,7 +20,7 @@ class phpRack_Package_Php_FnExistsTest extends AbstractTest
      */
     private $_result;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_package = $this->_test->assert->php;

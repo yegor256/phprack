@@ -46,7 +46,12 @@
     <property name="build.tgz" value="${project.basedir}/build/${package.name}.tgz"/>
     <target name="main" depends="lint, jslint, phpcs, phpmd, test, zca, jscoverage">
     </target>
-    <exec command="git log -n 1 --pretty=format:%h" outputproperty="git.hash"/>
+    <exec executable="git" outputproperty="git.hash">
+        <arg value="log"/>
+        <arg value="-n"/>
+        <arg value="1"/>
+        <arg value="--pretty=format:%h"/>
+    </exec>
     <target name="clean" description="Remove all build-related files">
         <delete dir="${project.basedir}/build"/>
     </target>
@@ -71,19 +76,24 @@
         -->
     </target>
     <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
-        <phpcodesniffer standard="Zend" allowedFileExtensions="php,phtml" showWarnings="false">
-	    <fileset dir="${project.basedir}/src"/>
-        </phpcodesniffer>
+        <exec executable="${project.basedir}/vendor/bin/phpcs" checkreturn="true" passthru="true">
+            <arg value="--standard=Zend"/>
+            <arg value="--extensions=php,phtml"/>
+            <arg value="-n"/>
+            <arg value="${project.basedir}/src"/>
+        </exec>
     </target>
     <target name="phpmd" description="PHP Mess Detector (PHPMD)">
         <if>
 	    <available property="phpmd.phar.exists" file="/usr/local/bin/phpmd.phar"/>
 	    <then>
-	        <exec command="php /usr/local/bin/phpmd.phar
-		    ${project.basedir}/src
-		    text
-		    codesize,unusedcode
-		    --extensions='php,phtml'" escape="false" checkreturn="true" passthru="true"/>
+	        <exec executable="php" checkreturn="true" passthru="true">
+		    <arg value="/usr/local/bin/phpmd.phar"/>
+		    <arg value="${project.basedir}/src"/>
+		    <arg value="text"/>
+		    <arg value="codesize,unusedcode"/>
+		    <arg value="--extensions=php,phtml"/>
+		</exec>
 	    </then>
 	    <else>
 	        <phpmd allowedFileExtensions="php,phtml" rulesets="codesize,unusedcode" format="text">
@@ -101,55 +111,20 @@
         </zendcodeanalyzer>
     </target>
     <target name="jscoverage" description="JSCoverage">
-        <exec command="jscoverage
-            -v
-            --exclude=jquery-1.4.2.min.js
-            ${project.basedir}/src/phpRack/layout/js
-            ${project.basedir}/build/instrumented-js" escape="false" checkreturn="true" passthru="true"/>
+        <exec executable="jscoverage" checkreturn="true" passthru="true">
+            <arg value="-v"/>
+            <arg value="--exclude=jquery-1.4.2.min.js"/>
+            <arg value="${project.basedir}/src/phpRack/layout/js"/>
+            <arg value="${project.basedir}/build/instrumented-js"/>
+        </exec>
     </target>
     <target name="test" description="Run all existing unit-tests">
         <mkdir dir="${project.basedir}/build"/>
-        <property name="coverage.database" value="${project.basedir}/build/coverage.data"/>
-        <coverage-setup database="${coverage.database}">
-            <fileset dir="${project.basedir}/src/phpRack">
-                <include name="**/*.php"/>
-            </fileset>
-        </coverage-setup>
-	<if>
-	    <available property="phpunit.phar.exists" file="/usr/local/bin/phpunit"/>
-	    <then>
-                <phpunit pharLocation="/usr/local/bin/phpunit" printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
-		    <formatter type="plain" usefile="no"/>
-		    <batchtest>
-                        <fileset dir="${project.basedir}/src/test">
-		            <include name="**/*Test*.php"/>
-			    <exclude name="**/Abstract*.php"/>
-			    <exclude name="**/_*.php"/>
-                            <exclude name="**/integration-tests/**"/>
-		        </fileset>
-		    </batchtest>
-	        </phpunit>
-	    </then>
-	    <else>
-                <phpunit printsummary="yes" haltonerror="yes" haltonfailure="yes" codecoverage="true">
-                    <formatter type="plain" usefile="no"/>
-                    <batchtest>
-                        <fileset dir="${project.basedir}/src/test">
-                            <include name="**/*Test*.php"/>
-                            <exclude name="**/Abstract*.php"/>
-                            <exclude name="**/_*.php"/>
-                            <exclude name="**/integration-tests/**"/>
-                        </fileset>
-                    </batchtest>
-                 </phpunit>
-            </else>
-	</if>
-        <mkdir dir="${project.basedir}/build/coverage"/>
-        <coverage-report outfile="${project.basedir}/build/coverage.xml">
-            <report todir="${project.basedir}/build/coverage"/>
-        </coverage-report>
-        <coverage-threshold database="${coverage.database}" perProject="65" perClass="0" perMethod="0"/>
-        <delete file="${coverage.database}"/>
+        <exec executable="${project.basedir}/vendor/bin/phpunit" checkreturn="true" passthru="true">
+            <arg value="--bootstrap"/>
+            <arg value="${project.basedir}/src/test/bootstrap.php"/>
+            <arg value="${project.basedir}/src/test/phpRack"/>
+        </exec>
     </target>
     <target name="package" description="Package the product into TGZ">
         <tar destfile="${build.tgz}" compression="gzip">

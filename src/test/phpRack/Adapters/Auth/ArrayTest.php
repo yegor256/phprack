@@ -27,7 +27,7 @@ class Adapters_Auth_ArrayTest extends AbstractTest
      */
     private $_auth;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->_auth = new phpRack_Adapters_Auth_Array();
         $this->_auth->setOptions($this->_config);

@@ -17,7 +17,7 @@ class Adapters_Config_IniTest extends AbstractTest
 {
     private $_iniFilename;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->_iniFilename = dirname(__FILE__) . '/_files/app.ini';
     }

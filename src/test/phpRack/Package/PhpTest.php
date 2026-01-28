@@ -18,14 +18,14 @@ class phpRack_Package_PhpTest extends AbstractTest
      */
     private $_result;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_package = $this->_test->assert->php;
         $this->_result = $this->_test->assert->getResult();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         ini_restore('default_socket_timeout');

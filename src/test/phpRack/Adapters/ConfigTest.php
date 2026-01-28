@@ -17,7 +17,7 @@ class Adapters_ConfigTest extends AbstractTest
 {
     private $_config;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $data = array(
             'configKey' => 'configValue',

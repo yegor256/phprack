@@ -15,7 +15,7 @@ class phpRack_Package_Php_VersionTest extends AbstractTest
      */
     private $_result;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->_package = $this->_test->assert->php;

@@ -15,7 +15,7 @@ class phpRack_Package_Php_PearTest extends AbstractTest
      */
     private $_package;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_package = $this->_test->assert->php->pear;

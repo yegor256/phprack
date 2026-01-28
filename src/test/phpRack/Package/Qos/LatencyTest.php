@@ -15,7 +15,7 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
      */
     private $_qos;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_qos = $this->_test->assert->qos;

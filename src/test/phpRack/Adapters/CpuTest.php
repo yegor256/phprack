@@ -22,13 +22,13 @@ class Adapters_CpuTest extends AbstractTest
      */
     private $_adapter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_adapter = phpRack_Adapters_Cpu::factory();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->_adapter);
         parent::tearDown();
