@@ -2,6 +2,7 @@
 
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/phprack)](http://www.rultor.com/p/yegor256/phprack)
 
+[![phing](https://github.com/yegor256/phprack/actions/workflows/phing.yml/badge.svg)](https://github.com/yegor256/phprack/actions/workflows/phing.yml)
 [![PDD status](http://www.0pdd.com/svg?name=yegor256/phprack)](http://www.0pdd.com/p?name=yegor256/phprack)
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/phprack)](https://hitsofcode.com/view/github/yegor256/phprack)
 
