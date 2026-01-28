@@ -29,8 +29,6 @@ All these tests will be executed when requested
 It will save you a lot of time during deployment and later,
   during maintenance of your product.
 
-## Quick Start
-
 To start using phpRack, follow these three steps:
 
 * Upload phpRack library to your server
@@ -39,16 +37,12 @@ To start using phpRack, follow these three steps:
 
 Let's do them one by one:
 
-### Upload phpRack library
-
 Download [ZIP archive](https://github.com/yegor256/phprack/archive/master.zip)
   of phpRack and unpack it to `public_html/phpRack` or some other directory on
   your production server.
 
-### Create `phprack.php`
-
-You should create `phprack.php` in your project's public directory
-(see [full reference](https://github.com/yegor256/phprack/wiki/Bootstrap)), e.g.:
+Create `phprack.php` in your project's public directory
+  (see [full reference][ref]), e.g.:
 
 ```php
 <?php
@@ -59,8 +53,6 @@ $phpRackConfig = array(
 // absolute path to the bootstrap script on your server
 include '../library/phpRack/bootstrap.php';
 ```
-
-### Create integration tests
 
 Write integration tests in the `rack-tests` directory. Each test must extend
 `phpRack_Test` (see
@@ -111,3 +103,4 @@ After making your changes, run `phing` again to make sure you didn't break anyth
 When ready, submit a pull request.
 
 [phpArchitect]: http://www.phparch.com/magazine/2010/june/
+[ref]: https://github.com/yegor256/phprack/wiki/Bootstrap
