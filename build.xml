@@ -93,9 +93,8 @@
   <target name="test" description="Run all existing unit-tests">
     <mkdir dir="${project.basedir}/build"/>
     <exec executable="${project.basedir}/vendor/bin/phpunit" checkreturn="true" passthru="true">
-      <arg value="--bootstrap"/>
-      <arg value="${project.basedir}/src/test/bootstrap.php"/>
-      <arg value="${project.basedir}/src/test/phpRack"/>
+      <arg value="--configuration"/>
+      <arg value="${project.basedir}/phpunit.xml"/>
     </exec>
   </target>
   <target name="package" description="Package the product into TGZ">
