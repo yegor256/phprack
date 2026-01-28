@@ -1,5 +1,5 @@
 #!/bin/bash
-# SPDX-FileCopyrightText: Copyright (c) 2009-2026, Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2009-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
 export DEBIAN_FRONTEND=noninteractive
