@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * @see AbstractTest
  */
@@ -35,9 +37,7 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider testPublicFunctionsProvider
-     */
+    #[DataProvider('publicFunctionsProvider')]
     public function testPublicFunctionsWork($a, $b)
     {
         $result = $this->_adapter->{$a}($b);
@@ -46,7 +46,7 @@ class Adapters_Notifier_Mail_SendmailTest extends AbstractTest
         );
     }
 
-    public function testPublicFunctionsProvider()
+    public static function publicFunctionsProvider()
     {
         return array(
             array('setTo', 'test@phprack.com'),

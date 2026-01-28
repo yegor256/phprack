@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * @see AbstractTest
  */
@@ -28,16 +30,14 @@ class phpRack_Package_Php_IniTest extends AbstractTest
         $this->_result = $this->_test->assert->getResult();
     }
 
-    /**
-     * @dataProvider atLeastProvider
-     */
+    #[DataProvider('atLeastProvider')]
     public function testAtLeast($value, $assertion)
     {
         $this->_package->ini('memory_limit')->atLeast($value);
         $this->{$assertion}($this->_result->wasSuccessful());
     }
 
-    public function atLeastProvider()
+    public static function atLeastProvider()
     {
         $provider = array(
             array('2M', 'assertTrue'),

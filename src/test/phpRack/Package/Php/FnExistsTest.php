@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * @see AbstractTest
  */
@@ -28,9 +30,7 @@ class phpRack_Package_Php_FnExistsTest extends AbstractTest
         $this->_result = $this->_test->assert->getResult();
     }
 
-    /**
-     * @dataProvider providerFunctionNames
-     */
+    #[DataProvider('providerFunctionNames')]
     public function testAtLeast($name, $exists)
     {
         $this->_package->fnExists($name);
@@ -43,7 +43,7 @@ class phpRack_Package_Php_FnExistsTest extends AbstractTest
         }
     }
 
-    public function providerFunctionNames()
+    public static function providerFunctionNames()
     {
         return array(
             array('lcfirst', null),

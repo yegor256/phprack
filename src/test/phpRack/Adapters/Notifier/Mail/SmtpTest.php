@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * @see AbstractTest
  */
@@ -16,9 +18,7 @@ require_once PHPRACK_PATH . '/Adapters/Notifier/Mail/Smtp.php';
 
 class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
 {
-    /**
-     * @dataProvider testPublicFunctionsProvider
-     */
+    #[DataProvider('publicFunctionsProvider')]
     public function testPublicFunctionsWork($a, $b)
     {
         $adapter = new phpRack_Adapters_Notifier_Mail_Smtp();
@@ -28,7 +28,7 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
         );
     }
 
-    public function testPublicFunctionsProvider()
+    public static function publicFunctionsProvider()
     {
         return array(
             array('setTo', 'test@phprack.com'),
