@@ -10,11 +10,11 @@
 require_once 'src/test/AbstractTest.php';
 
 /**
- * @see phpRack_Package_Db_Mysql_AbstractTest
+ * @see phpRack_Package_Db_Mysql_TestCase
  */
-require_once PHPRACK_PATH . '/../test/phpRack/Package/Db/Mysql/AbstractTest.php';
+require_once PHPRACK_PATH . '/../test/phpRack/Package/Db/Mysql/TestCase.php';
 
-class phpRack_Package_Db_Mysql_TableExistsTest extends phpRack_Package_Db_Mysql_AbstractTest
+class phpRack_Package_Db_Mysql_TableExistsTest extends phpRack_Package_Db_Mysql_TestCase
 {
     public function testTableExists()
     {

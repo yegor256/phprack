@@ -10,11 +10,11 @@
 require_once 'src/test/AbstractTest.php';
 
 /**
- * @see phpRack_Adapters_Db_Mysql_AbstractTest
+ * @see phpRack_Adapters_Db_Mysql_TestCase
  */
-require_once PHPRACK_PATH . '/../test/phpRack/Adapters/Db/Mysql/AbstractTest.php';
+require_once PHPRACK_PATH . '/../test/phpRack/Adapters/Db/Mysql/TestCase.php';
 
-class phpRack_Adapters_Db_Mysql_ConnectionTest extends phpRack_Adapters_Db_Mysql_AbstractTest
+class phpRack_Adapters_Db_Mysql_ConnectionTest extends phpRack_Adapters_Db_Mysql_TestCase
 {
 
     public function testWeCanConnectToDb()

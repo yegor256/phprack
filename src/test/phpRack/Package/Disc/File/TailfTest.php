@@ -10,11 +10,11 @@
 require_once 'src/test/AbstractTest.php';
 
 /**
- * @see phpRack_Package_Disc_File_AbstractTest
+ * @see phpRack_Package_Disc_File_TestCase
  */
-require_once PHPRACK_PATH . '/../test/phpRack/Package/Disc/File/AbstractTest.php';
+require_once PHPRACK_PATH . '/../test/phpRack/Package/Disc/File/TestCase.php';
 
-class phpRack_Package_Disc_File_TailfTest extends phpRack_Package_Disc_File_AbstractTest
+class phpRack_Package_Disc_File_TailfTest extends phpRack_Package_Disc_File_TestCase
 {
     public function testTailf(): void
     {

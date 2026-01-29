@@ -14,7 +14,7 @@ require_once 'src/test/AbstractTest.php';
  */
 require_once PHPRACK_PATH . '/Package/Disc/File.php';
 
-abstract class phpRack_Package_Disc_File_AbstractTest extends AbstractTest
+abstract class phpRack_Package_Disc_File_TestCase extends AbstractTest
 {
     /**
      * Directory where we have sample files, will be set it in setUp() function

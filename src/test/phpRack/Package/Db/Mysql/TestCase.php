@@ -14,7 +14,7 @@ require_once 'src/test/AbstractTest.php';
  */
 require_once PHPRACK_PATH . '/Package/Db/Mysql.php';
 
-abstract class phpRack_Package_Db_Mysql_AbstractTest extends AbstractTest
+abstract class phpRack_Package_Db_Mysql_TestCase extends AbstractTest
 {
     /**
      * @var phpRack_Package_Db_Mysql
