@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (c) 2009-2026 Yegor Bugayenko
  * SPDX-License-Identifier: MIT
 -->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd" bootstrap="src/test/bootstrap.php" colors="true" failOnRisky="false" failOnWarning="false">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd" bootstrap="src/test/bootstrap.php" colors="true" failOnRisky="false" failOnWarning="false" failOnDeprecation="false" failOnPhpunitDeprecation="false" displayDetailsOnTestsThatTriggerWarnings="false" displayDetailsOnTestsThatTriggerDeprecations="false">
   <testsuites>
     <testsuite name="default">
       <directory>src/test/phpRack</directory>
