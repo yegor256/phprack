@@ -35,12 +35,14 @@ class phpRack_Package_Network_UrlTest extends AbstractTest
 
     public function testUrl()
     {
-        $this->_package->url('http://www.google.com');
+        $result = $this->_package->url('http://www.google.com');
+        $this->assertInstanceOf(phpRack_Package_Network_Url::class, $result, 'url did not return self');
     }
 
     public function testUrlWithUrlWithoutScheme()
     {
-        $this->_package->url('www.google.com');
+        $result = $this->_package->url('www.google.com');
+        $this->assertInstanceOf(phpRack_Package_Network_Url::class, $result, 'url did not return self');
     }
 
     /**

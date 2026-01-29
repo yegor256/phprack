@@ -21,14 +21,14 @@ class Adapters_UrlTest extends AbstractTest
         $url = phpRack_Adapters_Url::factory('http://www.google.com');
         $accessible = $url->isAccessible();
         if (!$accessible) {
-            $this->markTestIncomplete();
+            $this->markTestSkipped('url is not accessible');
         }
         try {
-            $url->getContent();
+            $content = $url->getContent();
         } catch (Exception $e) {
-            $this->_log($e);
-            $this->markTestIncomplete();
+            $this->markTestSkipped($e->getMessage());
         }
+        $this->assertIsString($content, 'content is not a string');
     }
 
     /**

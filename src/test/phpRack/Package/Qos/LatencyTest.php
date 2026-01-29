@@ -24,12 +24,13 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
 
     public function testSingleUrl()
     {
-        $this->_qos->latency('http://www.phprack.com');
+        $result = $this->_qos->latency('http://www.phprack.com');
+        $this->assertInstanceOf(phpRack_Package_Qos::class, $result, 'latency did not return self');
     }
 
     public function testMultiUrl()
     {
-        $this->_qos->latency(
+        $result = $this->_qos->latency(
             array(
                 'scenario' => array(
                     'http://www.phprack.com',
@@ -39,6 +40,7 @@ class phpRack_Package_Qos_LatencyTest extends AbstractTest
                 'peakMs' => 2000, // 2s maximum per request
             )
         );
+        $this->assertInstanceOf(phpRack_Package_Qos::class, $result, 'latency did not return self');
     }
 
     /**

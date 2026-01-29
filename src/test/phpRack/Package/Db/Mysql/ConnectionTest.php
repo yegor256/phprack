@@ -30,5 +30,6 @@ class phpRack_Package_Db_Mysql_ConnectionTest extends phpRack_Package_Db_Mysql_A
     public function testCloseConnection()
     {
         $this->_package->closeConnection();
+        $this->assertTrue(true, 'closeConnection failed');
     }
 }

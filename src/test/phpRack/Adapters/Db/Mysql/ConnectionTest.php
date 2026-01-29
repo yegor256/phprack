@@ -23,9 +23,9 @@ class phpRack_Adapters_Db_Mysql_ConnectionTest extends phpRack_Adapters_Db_Mysql
             $this->_adapter->connect('jdbc:mysql://localhost:3306/test');
             $this->_adapter->query('SELECT 1');
         } catch (Exception $e) {
-            // ignore it
-            $this->_log($e);
+            $this->markTestSkipped($e->getMessage());
         }
+        $this->assertTrue($this->_adapter->isConnected(), 'adapter is not connected');
     }
 
     /**
@@ -69,10 +69,11 @@ class phpRack_Adapters_Db_Mysql_ConnectionTest extends phpRack_Adapters_Db_Mysql
     {
         try {
             $this->_adapter->connect('jdbc:mysql://localhost');
-            $this->_adapter->showConnections();
+            $count = $this->_adapter->showConnections();
         } catch (Exception $e) {
             $this->markTestSkipped($e->getMessage());
         }
+        $this->assertIsInt($count, 'connections count is not an integer');
     }
 
     /**

@@ -49,28 +49,31 @@ class Adapters_PearTest extends AbstractTest
     {
         try {
             $package = $this->_adapter->getPackage('PEAR');
-            $package->getVersion();
+            $version = $package->getVersion();
         } catch (Exception $e) {
             $this->markTestSkipped($e->getMessage());
         }
+        $this->assertIsString($version, 'version is not a string');
     }
 
     public function testGetAllPackages()
     {
         try {
-            $this->_adapter->getAllPackages();
+            $packages = $this->_adapter->getAllPackages();
         } catch (Exception $e) {
             $this->markTestSkipped($e->getMessage());
         }
+        $this->assertIsArray($packages, 'packages is not an array');
     }
 
     public function testGetPackageRawInfo()
     {
         try {
             $package = $this->_adapter->getPackage('PEAR');
-            $package->getRawInfo();
+            $info = $package->getRawInfo();
         } catch (Exception $e) {
             $this->markTestSkipped($e->getMessage());
         }
+        $this->assertIsArray($info, 'raw info is not an array');
     }
 }

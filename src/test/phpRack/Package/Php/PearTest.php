@@ -24,33 +24,39 @@ class phpRack_Package_Php_PearTest extends AbstractTest
 
     public function testPackage()
     {
-        $this->_package->package('PEAR');
+        $result = $this->_package->package('PEAR');
+        $this->assertInstanceOf(phpRack_Package_Php_Pear::class, $result, 'package did not return self');
     }
 
     public function testPackageWithNotExistingPearPackage()
     {
-        $this->_package->package('NotExistingPearPackage');
+        $result = $this->_package->package('NotExistingPearPackage');
+        $this->assertInstanceOf(phpRack_Package_Php_Pear::class, $result, 'package did not return self');
     }
 
     public function testAtLeast()
     {
-        $this->_package->package('PEAR')
+        $result = $this->_package->package('PEAR')
             ->atLeast('1.0');
+        $this->assertInstanceOf(phpRack_Package_Php_Pear::class, $result, 'atLeast did not return self');
     }
 
     public function testAtLeastWithVeryHighVersion()
     {
-        $this->_package->package('PEAR')
+        $result = $this->_package->package('PEAR')
             ->atLeast('999.0');
+        $this->assertInstanceOf(phpRack_Package_Php_Pear::class, $result, 'atLeast did not return self');
     }
 
     public function testAtLeastWithoutPackage()
     {
-        $this->_package->atLeast('1.0');
+        $result = $this->_package->atLeast('1.0');
+        $this->assertInstanceOf(phpRack_Package_Php_Pear::class, $result, 'atLeast did not return self');
     }
 
     public function testShowList()
     {
-        $this->_package->showList();
+        $result = $this->_package->showList();
+        $this->assertInstanceOf(phpRack_Package_Php_Pear::class, $result, 'showList did not return self');
     }
 }

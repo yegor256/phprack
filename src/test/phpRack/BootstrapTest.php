@@ -22,7 +22,8 @@ class BootstrapTest extends AbstractTest
         ob_start();
         include PHPRACK_PATH . '/bootstrap.php';
         $result = ob_get_clean();
-        $this->assertFalse(empty($result));
+        restore_error_handler();
+        $this->assertFalse(empty($result), 'bootstrap result is empty');
     }
 
     public function testHttpGetRequestDeliversValidJSON()
@@ -42,7 +43,8 @@ class BootstrapTest extends AbstractTest
         ob_start();
         include PHPRACK_PATH . '/bootstrap.php';
         $result = ob_get_clean();
-        $this->assertFalse(empty($result));
+        restore_error_handler();
+        $this->assertFalse(empty($result), 'HTTP GET result is empty');
     }
 
 }

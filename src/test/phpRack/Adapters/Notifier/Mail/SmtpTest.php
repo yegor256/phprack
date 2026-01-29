@@ -57,13 +57,9 @@ class Adapters_Notifier_Mail_SmtpTest extends AbstractTest
         $adapter->setSubject('Unit Test');
 
         try {
-            $this->assertTrue($adapter->send());
+            $this->assertTrue($adapter->send(), 'send returned false');
         } catch (Exception $e) {
-            $msg = $e->getMessage();
-            if (strpos($msg, 'Wrong answer') === 0) {
-                $this->_log($msg);
-                // $this->markTestIncomplete($msg);
-            }
+            $this->markTestSkipped($e->getMessage());
         }
     }
 

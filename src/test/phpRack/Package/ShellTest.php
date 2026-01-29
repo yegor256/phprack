@@ -30,8 +30,8 @@ class phpRack_Package_ShellTest extends AbstractTest
 
     public function testBasicRequestWorks()
     {
-        $this->_package->exec('who am i');
-
+        $result = $this->_package->exec('who am i');
+        $this->assertInstanceOf(phpRack_Package_Shell::class, $result, 'exec did not return self');
     }
 
     /**
@@ -39,8 +39,8 @@ class phpRack_Package_ShellTest extends AbstractTest
      */
     public function testRequestOutput()
     {
-        $this->_package->exec('dir', '/test/');
-
+        $result = $this->_package->exec('dir', '/test/');
+        $this->assertInstanceOf(phpRack_Package_Shell::class, $result, 'exec did not return self');
     }
 
 }

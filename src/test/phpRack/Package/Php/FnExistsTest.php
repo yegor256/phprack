@@ -34,19 +34,17 @@ class phpRack_Package_Php_FnExistsTest extends AbstractTest
     public function testAtLeast($name, $exists)
     {
         $this->_package->fnExists($name);
-        if (!is_null($exists)) {
-            $this->assertEquals(
-                $exists,
-                $this->_result->wasSuccessful(),
-                "Function '{$name}' returned invalid result"
-            );
-        }
+        $this->assertEquals(
+            $exists,
+            $this->_result->wasSuccessful(),
+            "Function '{$name}' returned invalid result"
+        );
     }
 
     public static function providerFunctionNames()
     {
         return array(
-            array('lcfirst', null),
+            array('lcfirst', true),
             array('some_function_that_is_absent', false),
             array('invalid name', false),
             array('printf', true)

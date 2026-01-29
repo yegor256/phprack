@@ -24,11 +24,13 @@ class phpRack_Package_Cpu_PerformanceTest extends AbstractTest
 
     public function testAtLeast()
     {
-        $this->_package->atLeast(1.0);
+        $result = $this->_package->atLeast(1.0);
+        $this->assertInstanceOf(phpRack_Package_Cpu_Performance::class, $result, 'atLeast did not return self');
     }
 
     public function testAtLeastWithVeryBigValue()
     {
-        $this->_package->atLeast(1000000000.0);
+        $result = $this->_package->atLeast(1000000000.0);
+        $this->assertInstanceOf(phpRack_Package_Cpu_Performance::class, $result, 'atLeast did not return self');
     }
 }
