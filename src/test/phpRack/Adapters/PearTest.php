@@ -74,6 +74,6 @@ class Adapters_PearTest extends AbstractTest
         } catch (Exception $e) {
             $this->markTestSkipped($e->getMessage());
         }
-        $this->assertIsArray($info, 'raw info is not an array');
+        $this->assertIsString($info, 'raw info is not a string');
     }
 }
