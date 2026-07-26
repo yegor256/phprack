@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- * SPDX-FileCopyrightText: FCopyright (c) 2009-2026 Yegor Bugayenko
- * SPDX-License-Identifier: MIT
+* SPDX-FileCopyrightText: FCopyright (c) 2009-2026 Yegor Bugayenko
+* SPDX-License-Identifier: MIT
 -->
 <project name="phpRack tests" basedir="." default="main">
   <tstamp/>
@@ -39,13 +39,13 @@
   <target name="jslint" description="Validate syntax in all JS files">
     <echo msg="Task is disabled"/>
     <!--
-        <jsllint haltonfailure="true">
-            <fileset dir="${project.basedir}">
-                <include name="**/index.js"/>
-                <exclude name="build/**"/>
-            </fileset>
-        </jsllint>
-        -->
+    <jsllint haltonfailure="true">
+    <fileset dir="${project.basedir}">
+    <include name="**/index.js"/>
+    <exclude name="build/**"/>
+    </fileset>
+    </jsllint>
+    -->
   </target>
   <target name="phpcs" description="Validate the quality of PHP code with PHPCS utility">
     <exec executable="${project.basedir}/vendor/bin/phpcs" checkreturn="true" passthru="true">
