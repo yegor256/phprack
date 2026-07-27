@@ -62,6 +62,7 @@ class phpRack_Package_Qos extends phpRack_Package
         require_once PHPRACK_PATH . '/Adapters/Url.php';
         $totalRequestsTime = 0;
         $requestsCompleted = 0;
+        $requestTimesMs = array();
         reset($options['scenario']);
         while ($requestsCompleted < $options['testsTotal']) {
             $url = current($options['scenario']);
@@ -79,16 +80,24 @@ class phpRack_Package_Qos extends phpRack_Package
                 "HTTP to {$url}: {$requestTimeInMs}ms, "
                 . strlen($content) . ' bytes'
             );
-            // check single query time meets limit
-            if ($requestTimeInMs > $options['peakMs']) {
-                $this->_failure(
-                    "Peak latency is {$requestTimeInMs}ms, but value below {$options['peakMs']}ms was expected"
-                );
-                return $this;
-            }
+            $requestTimesMs[] = $requestTimeInMs;
             $totalRequestsTime += $requestTime;
             $requestsCompleted++;
             next($options['scenario']);
+        }
+        // peak latency is the average of the 5% slowest requests (#82)
+        rsort($requestTimesMs);
+        $topCount = max(1, (int) ceil(count($requestTimesMs) * 0.05));
+        $topSum = 0;
+        for ($i = 0; $i < $topCount; $i++) {
+            $topSum += $requestTimesMs[$i];
+        }
+        $peakMs = intval($topSum / $topCount);
+        if ($peakMs > $options['peakMs']) {
+            $this->_failure(
+                "Peak latency is {$peakMs}ms, but value below {$options['peakMs']}ms was expected"
+            );
+            return $this;
         }
         // check average queries time meets limit
         $averageMs = intval($totalRequestsTime / $options['testsTotal'] * 1000);
