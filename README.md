@@ -40,8 +40,7 @@ Download [ZIP archive](https://github.com/yegor256/phprack/archive/master.zip)
   of phpRack and unpack it to `public_html/phpRack` or some other directory on
   your production server.
 
-Create `phprack.php` in your project's public directory
-  (see [full reference][ref]), e.g.:
+Create `phprack.php` in your project's public directory, e.g.:
 
 ```php
 <?php
@@ -54,8 +53,7 @@ include '../library/phpRack/bootstrap.php';
 ```
 
 Write integration tests in the `rack-tests` directory. Each test must extend
-`phpRack_Test` (see
-[full list of assertions](https://github.com/yegor256/phprack/wiki/Assertions)).
+`phpRack_Test`.
 For example, file `MyTest.php`:
 
 ```php
@@ -78,8 +76,8 @@ class MyTest extends phpRack_Test
 ```
 
 Go to this URL: `http://your-website-url/phprack.php` and enjoy.
-Try this link to see what you're going to see on your site:
-  [http://www.phprack.com/phprack.php](http://www.phprack.com/phprack.php).
+Try the archived demo report to see what you're going to see on your site:
+  [phpRack demo report][demo].
 
 ## How to contribute?
 
@@ -101,5 +99,5 @@ If you see any problems, please submit a new issue.
 After making your changes, run `phing` again to make sure you didn't break anything.
 When ready, submit a pull request.
 
-[phpArchitect]: http://www.phparch.com/magazine/2010/june/
-[ref]: https://github.com/yegor256/phprack/wiki/Bootstrap
+[phpArchitect]: https://web.archive.org/web/20100829154626/http://www.phparch.com/magazine/2010/june/
+[demo]: https://web.archive.org/web/20190425055243/http://www.phprack.com/phprack.php
